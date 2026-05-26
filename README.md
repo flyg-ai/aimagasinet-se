@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# aimagasinet.se
 
-## Getting Started
+Next.js 14 (App Router) + Supabase + Tailwind + TypeScript.
 
-First, run the development server:
+## Struktur
+
+```
+aimagasinet.se/
+├── export/          # rådata från gamla WP-sajten (posts/pages/categories/tags/media)
+└── web/             # Next.js-projektet (det här)
+    ├── app/
+    │   ├── page.tsx               # startsida — lista artiklar
+    │   ├── [slug]/page.tsx        # artikel/sida
+    │   └── kategori/[slug]/page.tsx
+    ├── lib/supabase.ts            # Supabase-klienter (publik + admin)
+    ├── scripts/import-wp.ts       # importer från ../export/*.json → Supabase
+    └── supabase/migrations/0001_init.sql
+```
+
+## Komma igång
+
+### 1. Supabase
+
+1. Skapa ett projekt på [supabase.com](https://supabase.com).
+2. Öppna **SQL Editor** → klistra in `supabase/migrations/0001_init.sql` → kör.
+3. Kopiera `.env.local.example` till `.env.local` och fyll i:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (Settings → API → service_role)
+
+### 2. Importera WP-innehåll
+
+```bash
+npm run import
+```
+
+Läser `../export/{posts,pages,categories,tags,media}.json` och upsert:ar i tabellerna
+`categories` och `articles`. Idempotent — säkert att köra om.
+
+### 3. Kör dev-servern
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+→ <http://localhost:3000>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Tabell | Kolumner |
+|--------|----------|
+| `categories` | `slug` (pk), `name`, `description` |
+| `articles`   | `id`, `slug`, `title`, `content_mdx`, `excerpt`, `category`→`categories.slug`, `tags text[]`, `featured_image`, `type` (`post`\|`page`), `published_at`, `seo_title`, `seo_description` |
 
-## Learn More
+RLS är på; publik läsning tillåten via `select`-policy. Skrivningar kräver service role.
 
-To learn more about Next.js, take a look at the following resources:
+## Noter
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **`content_mdx` innehåller WP-HTML** just nu, inte ren MDX. Fältnamnet är reserverat
+  för en framtida konvertering. Rendering sker via `dangerouslySetInnerHTML` på
+  `[slug]`-sidan.
+- **Pages vs posts:** Båda lagras i `articles` med `type`-fältet. De ~45 "pages" från WP
+  är i praktiken recensioner och guider, så de visas på samma sätt som vanliga posts.
+- **Featured images:** Pekar tills vidare på `https://aimagasinet.se/wp-content/uploads/…`.
+  Vill du serva lokalt: skriv en migrering som pekar om till `/uploads/…` och flytta
+  in `../export/media/` under `public/uploads/`.
+- **ISR:** Sidor revalideras var 5:e minut (`export const revalidate = 300`).

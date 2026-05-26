@@ -2,26 +2,386 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme tokens ──────────────────────────────────────────────
+   Light theme is the default. Toggle dark mode later by adding
+   `class="dark"` to the <html> element — no further changes needed.
+   ────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Surfaces */
+  --bg-page:        #ffffff;
+  --bg-card:        #ffffff;
+  --bg-soft:        #f4f4f5;            /* zinc-100 */
+  --bg-muted:       #fafafa;            /* zinc-50  */
+  --bg-overlay:     rgba(255,255,255,0.85);
+
+  /* Foreground */
+  --fg:             #18181b;            /* zinc-900 */
+  --fg-muted:       #3f3f46;            /* zinc-700 */
+  --fg-subtle:      #71717a;            /* zinc-500 */
+  --fg-faint:       #a1a1aa;            /* zinc-400 */
+
+  /* Borders */
+  --line:           #e4e4e7;            /* zinc-200 */
+  --line-strong:    #d4d4d8;            /* zinc-300 */
+  --line-subtle:    #f4f4f5;            /* zinc-100 */
+
+  /* Accent (cyan brand, picked for light bg contrast) */
+  --accent:         #0891b2;            /* cyan-600 */
+  --accent-hover:   #0e7490;            /* cyan-700 */
+  --accent-soft:    #cffafe;            /* cyan-100 */
+  --accent-soft-border: #67e8f9;        /* cyan-300 */
+  --accent-fg:      #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  color-scheme: dark;
+
+  --bg-page:        #09090b;            /* zinc-950 */
+  --bg-card:        rgba(24,24,27,0.4); /* zinc-900/40 */
+  --bg-soft:        #18181b;            /* zinc-900 */
+  --bg-muted:       #18181b;
+  --bg-overlay:     rgba(9,9,11,0.85);
+
+  --fg:             #fafafa;            /* zinc-50  */
+  --fg-muted:       #d4d4d8;            /* zinc-300 */
+  --fg-subtle:      #a1a1aa;            /* zinc-400 */
+  --fg-faint:       #71717a;            /* zinc-500 */
+
+  --line:           #27272a;            /* zinc-800 */
+  --line-strong:    #3f3f46;            /* zinc-700 */
+  --line-subtle:    rgba(39,39,42,0.6);
+
+  --accent:         #22d3ee;            /* cyan-400 */
+  --accent-hover:   #67e8f9;            /* cyan-300 */
+  --accent-soft:    rgba(34,211,238,0.1);
+  --accent-soft-border: rgba(34,211,238,0.3);
+  --accent-fg:      #09090b;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--fg);
+}
+
+/* ─── Cards ───────────────────────────────────────── */
+.card {
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ─── Breaking-news ticker ─────────────────────────── */
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+}
+.ticker-track {
+  display: inline-flex;
+  gap: 2.5rem;
+  animation: ticker 80s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Blinking LIVE dot */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+.live-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* Hide scrollbar on horizontal category filter */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Hide legacy WP "AI compare" widget — replaced by HubTemplate ComparisonTable.
+   Markup from WP looks like: <div id="ai-compare" class="ai-compare">…</div>
+   plus standalone .ai-vs-* rows. */
+.ai-compare,
+[class^="ai-vs-"],
+[class*=" ai-vs-"] {
+  display: none !important;
+}
+
+/* ─── Magazine prose: strip WP boxes + drop-cap + lead ──────────
+   Scoped to `.magazine-prose` (HubTemplate's editorial section).
+   Neutralises light WP container boxes that would clash with the
+   light card design, and adds magazine-style typography flourishes. */
+
+.magazine-prose .wp-block-group,
+.magazine-prose .wp-block-columns,
+.magazine-prose .wp-block-column,
+.magazine-prose .wp-block-cover,
+.magazine-prose .wp-block-media-text,
+.magazine-prose .has-background,
+.magazine-prose [class*="has-"][class*="background-color"] {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.magazine-prose [style*="background-color"],
+.magazine-prose [style*="background:"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+.magazine-prose [style*="box-shadow"] {
+  box-shadow: none !important;
+}
+
+/* Drop-cap on the first paragraph */
+.magazine-prose .prose > p:first-of-type::first-letter {
+  float: left;
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 0.85;
+  margin-right: 0.625rem;
+  margin-top: 0.5rem;
+  color: #4f46e5; /* indigo-600 */
+}
+
+/* WP's optional .lead class — boost as magazine lead paragraph */
+.magazine-prose .prose .lead,
+.magazine-prose .prose p.lead {
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: var(--fg);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+/* Don't drop-cap a lead paragraph if it's first — let it stand on its own */
+.magazine-prose .prose > p.lead:first-of-type::first-letter {
+  all: unset;
+}
+
+/* Constrain inline images (tool logos in hub content) so they don't take
+   over the layout. WP exports them as full-size which can be 400×400+. */
+.magazine-prose img {
+  max-height: 80px;
+  width: auto;
+  display: inline-block;
+}
+
+/* Style WP's `a.ai-button` anchors as proper CTA buttons — they otherwise
+   pick up prose's blue underline-on-hover treatment. */
+.magazine-prose a.ai-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  background-color: #4f46e5;        /* indigo-600 */
+  color: #ffffff !important;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease;
+}
+.magazine-prose a.ai-button:hover {
+  background-color: #4338ca;        /* indigo-700 */
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+/* ─── Per-tool review boxes in WP content ───────────────────────
+   Markup from WP:
+     <div class="ai-tool-box">
+       <div class="ai-tool-header">
+         <img alt="…" />
+         <div><h2>…</h2><div class="ai-stars">…</div></div>
+       </div>
+       <div class="ai-pros-cons">
+         <div class="ai-pros">…</div>
+         <div class="ai-cons">…</div>
+       </div>
+     </div>
+*/
+
+/* 3. Box hela kortet */
+.magazine-prose .ai-tool-box {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--bg-card);
+}
+
+/* 1. Logga + rubrik på samma rad */
+.magazine-prose .ai-tool-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.magazine-prose .ai-tool-header img {
+  max-height: 60px;
+  width: auto;
+  flex-shrink: 0;
+}
+/* h2 inuti header sitter intill loggan — släng prose-h2:s mt-14 + indigo
+   border-left + pl-4 så det inte krockar med flex-layouten */
+.magazine-prose .ai-tool-header h2 {
+  margin: 0;
+  border-left: 0;
+  padding-left: 0;
+}
+.magazine-prose .ai-tool-header .ai-stars {
+  margin-top: 0.25rem;
+}
+
+/* 2. Pros/cons sida vid sida på desktop, staplade på mobil */
+.magazine-prose .ai-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 640px) {
+  .magazine-prose .ai-pros-cons {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
+}
+
+/* ─── WP HTML content → dark theme overrides ─────────
+   Scoped to `.prose-invert` so light-themed templates (e.g. HubTemplate
+   for /ai-verktyg/[kategori]) using plain `.prose` are unaffected.
+   ────────────────────────────────────────────────── */
+
+/* Tables */
+.prose-invert table {
+  background-color: transparent !important;
+  border-color: rgb(39 39 42) !important;   /* zinc-800 */
+  color: rgb(212 212 216);                  /* zinc-300 */
+}
+.prose-invert thead,
+.prose-invert tfoot {
+  background-color: rgb(24 24 27 / 0.6) !important; /* zinc-900/60 */
+}
+.prose-invert th,
+.prose-invert td {
+  background-color: transparent !important;
+  border-color: rgb(39 39 42) !important;
+  color: rgb(212 212 216) !important;
+}
+.prose-invert th {
+  color: rgb(244 244 245) !important;       /* zinc-100 */
+}
+.prose-invert tr {
+  background-color: transparent !important;
+  border-color: rgb(39 39 42) !important;
+}
+.prose-invert tbody tr:nth-child(even) {
+  background-color: rgb(24 24 27 / 0.3) !important;
+}
+
+/* Figures & captions */
+.prose-invert figure,
+.prose-invert .wp-block-image,
+.prose-invert .wp-block-image figure {
+  background-color: transparent !important;
+}
+.prose-invert figcaption {
+  color: rgb(161 161 170) !important;       /* zinc-400 */
+}
+
+/* Common WP block containers — kill light backgrounds, lighten borders */
+.prose-invert .wp-block-group,
+.prose-invert .wp-block-columns,
+.prose-invert .wp-block-column,
+.prose-invert .wp-block-quote,
+.prose-invert .wp-block-pullquote,
+.prose-invert .wp-block-cover,
+.prose-invert .wp-block-media-text,
+.prose-invert .has-background {
+  background-color: rgb(24 24 27 / 0.4) !important; /* zinc-900/40 */
+  border-color: rgb(39 39 42) !important;
+  color: rgb(212 212 216) !important;
+}
+
+/* WP color preset classes */
+.prose-invert .has-white-background-color,
+.prose-invert .has-very-light-gray-background-color,
+.prose-invert .has-light-gray-background-color,
+.prose-invert .has-pale-pink-background-color,
+.prose-invert .has-pale-cyan-blue-background-color {
+  background-color: rgb(24 24 27 / 0.5) !important;
+}
+.prose-invert .has-black-color,
+.prose-invert .has-very-dark-gray-color,
+.prose-invert .has-dark-gray-color {
+  color: rgb(228 228 231) !important;       /* zinc-200 */
+}
+.prose-invert .has-white-color {
+  color: rgb(244 244 245) !important;
+}
+
+/* Inline-style escape hatch — attribute-selector match on common light values */
+.prose-invert [style*="background-color:#fff"],
+.prose-invert [style*="background-color: #fff"],
+.prose-invert [style*="background-color:#FFF"],
+.prose-invert [style*="background-color: #FFF"],
+.prose-invert [style*="background:#fff"],
+.prose-invert [style*="background: #fff"],
+.prose-invert [style*="background-color:white"],
+.prose-invert [style*="background-color: white"],
+.prose-invert [style*="background:white"],
+.prose-invert [style*="background: white"],
+.prose-invert [style*="background-color:rgb(255"],
+.prose-invert [style*="background-color: rgb(255"],
+.prose-invert [style*="background-color:#f"],
+.prose-invert [style*="background-color: #f"] {
+  background-color: rgb(24 24 27 / 0.4) !important;
+}
+.prose-invert [style*="color:#000"],
+.prose-invert [style*="color: #000"],
+.prose-invert [style*="color:#111"],
+.prose-invert [style*="color: #111"],
+.prose-invert [style*="color:#222"],
+.prose-invert [style*="color: #222"],
+.prose-invert [style*="color:black"],
+.prose-invert [style*="color: black"],
+.prose-invert [style*="color:rgb(0"],
+.prose-invert [style*="color: rgb(0"] {
+  color: rgb(228 228 231) !important;       /* zinc-200 */
+}
+.prose-invert [style*="border-color:#"],
+.prose-invert [style*="border-color: #"],
+.prose-invert [style*="border:1px solid #"],
+.prose-invert [style*="border: 1px solid #"],
+.prose-invert [style*="border:2px solid #"],
+.prose-invert [style*="border: 2px solid #"] {
+  border-color: rgb(39 39 42) !important;
 }
