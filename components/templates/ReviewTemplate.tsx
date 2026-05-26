@@ -59,6 +59,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
     logo: 'bg-emerald-500',
+    fallbackUrl: 'https://chat.openai.com',
     company: 'OpenAI', model: 'GPT-5', founded: 2015, hq: 'San Francisco, USA',
     useCases: ['Allmänt skrivande', 'Sammanfattning av dokument', 'Kreativ ideation', 'Brainstorming', 'Översättning'],
     ratingCriteria: [
@@ -74,6 +75,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   claude: {
     logo: 'bg-orange-500',
+    fallbackUrl: 'https://claude.ai',
     company: 'Anthropic', model: 'Claude Opus 4.7', founded: 2021, hq: 'San Francisco, USA',
     useCases: ['Långform-skrivande', 'Juridiska dokument', 'Vetenskaplig analys', 'Programmering', 'Resonemang i flera steg'],
     ratingCriteria: [
@@ -89,6 +91,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   gemini: {
     logo: 'bg-sky-500',
+    fallbackUrl: 'https://gemini.google.com',
     company: 'Google', model: 'Gemini 2.5 Pro', founded: 1998, hq: 'Mountain View, USA',
     useCases: ['Workspace-integration', 'Stora dokument', 'Multimodal analys', 'Research', 'Data-summering'],
     ratingCriteria: [
@@ -104,6 +107,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   'jasper-ai': {
     logo: 'bg-amber-500',
+    fallbackUrl: 'https://www.jasper.ai',
     company: 'Jasper', model: 'Jasper 4', founded: 2021, hq: 'Austin, USA',
     useCases: ['Marknadsföringscopy', 'Sociala medier', 'Annonstexter', 'Bloggar', 'Brand voice'],
     ratingCriteria: [
@@ -119,6 +123,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   writesonic: {
     logo: 'bg-violet-500',
+    fallbackUrl: 'https://writesonic.com',
     company: 'Writesonic', model: 'Sonic 4', founded: 2020, hq: 'Bangalore, Indien',
     useCases: ['SEO-artiklar', 'Snabb copy', 'Annonser', 'E-post', 'Produktbeskrivningar'],
     ratingCriteria: [
@@ -134,6 +139,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   'copy-ai': {
     logo: 'bg-rose-500',
+    fallbackUrl: 'https://www.copy.ai',
     company: 'Copy.ai', model: 'Copy GPT', founded: 2020, hq: 'Memphis, USA',
     useCases: ['Sociala medier', 'Säljmejl', 'Annonser', 'Produktbeskrivningar', 'Slogans'],
     ratingCriteria: [
@@ -217,6 +223,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* ── Bild ─────────────────────────────────────────────── */
   midjourney: {
     logo: 'bg-violet-700',
+    fallbackUrl: 'https://www.midjourney.com',
     company: 'Midjourney', model: 'V7', founded: 2021, hq: 'San Francisco, USA',
     useCases: ['Konceptkonst', 'Reklamvisualer', 'Bokomslag', 'Mood boards', 'Karaktärsdesign'],
     ratingCriteria: [
@@ -232,6 +239,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   'dalle-3': {
     logo: 'bg-emerald-500',
+    fallbackUrl: 'https://openai.com/dall-e-3',
     company: 'OpenAI', model: 'DALL·E 3', founded: 2015, hq: 'San Francisco, USA',
     useCases: ['Snabba illustrationer i ChatGPT', 'Bloggbilder', 'Sociala medier', 'Pedagogiska bilder', 'Enkla loggor'],
     ratingCriteria: [
@@ -249,6 +257,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* ── Ljud / musik ─────────────────────────────────────── */
   'suno-ai': {
     logo: 'bg-amber-600',
+    fallbackUrl: 'https://suno.com',
     company: 'Suno', model: 'V4', founded: 2022, hq: 'Cambridge, USA',
     useCases: ['Demos för låtskrivare', 'Podcast-intros', 'Reklamjinglar', 'TikTok-musik', 'Soundtracks'],
     ratingCriteria: [
@@ -264,6 +273,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   },
   elevenlabs: {
     logo: 'bg-zinc-900',
+    fallbackUrl: 'https://elevenlabs.io',
     company: 'ElevenLabs', model: 'v3', founded: 2022, hq: 'New York / London',
     useCases: ['Audiobooks', 'Podcast-narration', 'Reklamröster', 'Spelröster', 'Dubbing'],
     ratingCriteria: [
@@ -281,6 +291,7 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* ── Kod ──────────────────────────────────────────────── */
   'cursor-ai': {
     logo: 'bg-zinc-900',
+    fallbackUrl: 'https://www.cursor.com',
     company: 'Anysphere', model: 'Cursor (uses Claude 4.7 / GPT-5)', founded: 2022, hq: 'San Francisco, USA',
     useCases: ['Daglig kodning', 'Refactoring', 'Test-skrivning', 'Bug-fixing', 'Inlärning av nya kodbaser'],
     ratingCriteria: [
@@ -294,8 +305,27 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: '14 dagar Pro gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Daglig professionell kodning' },
     label: 'Redaktionens val',
   },
+  workflows: {
+    logo: 'bg-violet-600',
+    ctaName: 'Zapier',
+    fallbackUrl: 'https://zapier.com',
+    company: 'AI-Magasinet', model: 'Översikt', founded: 2024, hq: 'Sverige',
+    useCases: ['Lead-flöden mellan SaaS', 'AI-triggers från e-post', 'Automatisk rapportering', 'CRM-uppdateringar', 'Slack-notiser'],
+    ratingCriteria: [
+      { label: 'Bredd', score: 9.0 }, { label: 'Användarvänlighet', score: 8.5 },
+      { label: 'Pris', score: 8.0 }, { label: 'Integrationer', score: 9.5 },
+      { label: 'Pålitlighet', score: 8.8 }, { label: 'Dokumentation', score: 8.7 },
+    ],
+    tags: ['Översikt', 'Workflows', 'Integration', 'No-code'],
+    pros: ['Bred jämförelse', 'Konkreta exempel', 'Praktisk guide'],
+    cons: ['Inte en enskild produkt', 'Generell översikt'],
+    offer: { title: 'Zapier 14 dagar Pro gratis', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Workflows mellan SaaS-verktyg' },
+    label: 'Översikt',
+  },
+
   'github-copilot': {
     logo: 'bg-indigo-700',
+    fallbackUrl: 'https://github.com/features/copilot',
     company: 'GitHub (Microsoft)', model: 'Copilot (GPT-5 / Claude 4)', founded: 2008, hq: 'San Francisco, USA',
     useCases: ['Inline-autocomplete', 'PR-recensioner', 'Tester', 'Dokumentation', 'CLI-arbetsflöden'],
     ratingCriteria: [

@@ -27,10 +27,11 @@ export function parseRating(html: string | null | undefined): Rating | null {
 
 /**
  * Pull a clean tool name out of an article title.
- *   "ChatGPT – Recension, Test & Guide (2026)"  →  "ChatGPT"
- *   "Cursor AI – Komplett Guide"                 →  "Cursor AI"
- * Splits on em/en-dash or " - ", keeps the first part.
+ *   "ChatGPT – Recension, Test & Guide (2026)"      → "ChatGPT"
+ *   "Cursor AI – Komplett Guide"                     → "Cursor AI"
+ *   "Kling AI: Bästa Verktyget för AI-Video 2026"    → "Kling AI"
+ * Splits on em/en-dash, " - ", or ":" — keeps the first part.
  */
 export function toolNameFromTitle(title: string): string {
-  return title.split(/\s+[–—-]\s+/)[0].trim();
+  return title.split(/\s+[–—-]\s+|:\s+/)[0].trim();
 }

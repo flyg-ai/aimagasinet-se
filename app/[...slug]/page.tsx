@@ -10,7 +10,12 @@ import {
 } from '@/components/templates/HubTemplate';
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate';
 import { YrkesHubTemplate } from '@/components/templates/YrkesHubTemplate';
-import { parseRating } from '@/lib/rating';
+import {
+  StandalonePageTemplate,
+  STANDALONE_RELATED_PARENT,
+  isStandaloneSlug,
+} from '@/components/templates/StandalonePageTemplate';
+import { parseRating, toolNameFromTitle } from '@/lib/rating';
 
 export const revalidate = 300;
 
@@ -92,30 +97,15 @@ async function getSiblings(parentSlug: string | null, excludeSlug: string) {
   return await selectCards({ parentSlug, excludeSlug });
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const a = await getArticle(pathFromParams(params.slug));
-  if (!a) return {};
-  return {
-    title: a.seo_title || a.title,
-    description: a.seo_description || a.excerpt || undefined,
-    alternates: { canonical: a.path },
-    openGraph: {
-      title: a.seo_title || a.title,
-      description: a.seo_description || a.excerpt || undefined,
-      type: 'article',
-      publishedTime: a.published_at || undefined,
-      images: a.featured_image ? [{ url: a.featured_image }] : undefined,
-    },
-  };
-}
-
 /* ── Route classification ──────────────────────────────────────
    Pages are mapped to templates by URL section + depth + children.
    Specific-path handlers run first, then section rules, then a depth
    fallback. Each branch eagerly returns to keep the flow flat. */
 
-function classify(path: string, depth: number, articleType: 'post' | 'page'): {
-  kind: 'yrkesHub' | 'hub' | 'review' | 'article';
+type Kind = 'yrkesHub' | 'hub' | 'review' | 'standalone' | 'article';
+
+function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): {
+  kind: Kind;
   reason: string;
 } {
   // Posts always go to ArticleTemplate
@@ -152,8 +142,53 @@ function classify(path: string, depth: number, articleType: 'post' | 'page'): {
     return { kind: 'review', reason: '/ai-verktyg/[kategori]/[tool] depth-3+ review' };
   }
 
-  // Default — posts, standalone depth-1 guides, master indexes
+  // Depth-1 standalone guides (no parent, longread/guide format)
+  if (depth === 1 && isStandaloneSlug(slug)) {
+    return { kind: 'standalone', reason: 'depth-1 standalone guide' };
+  }
+
+  // Default — posts, standalone depth-1 guides not in the registry, master indexes
   return { kind: 'article', reason: 'default → ArticleTemplate' };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const path = pathFromParams(params.slug);
+  const a = await getArticle(path);
+  if (!a) return {};
+  const depth = path.split('/').filter(Boolean).length;
+  const kind = classify(path, depth, a.type, a.slug).kind;
+
+  // Per-template title formatting. Description defaults to excerpt across the
+  // board — seo_description wins if explicitly set in the DB.
+  const description = a.seo_description || a.excerpt || undefined;
+  const year = new Date().getFullYear();
+
+  // Review pages always use the canonical "[Tool] Recension [Year]" format —
+  // overrides seo_title because the format is editorial spec. Other templates
+  // prefer seo_title when set, fall back to article title. The site-name
+  // suffix " | AI-Magasinet" is appended automatically by metadata.title.template
+  // in layout.tsx — don't include it here.
+  let title: string;
+  if (kind === 'review') {
+    title = `${toolNameFromTitle(a.title)} Recension ${year}`;
+  } else if (a.seo_title) {
+    title = a.seo_title;
+  } else {
+    title = a.title;
+  }
+
+  return {
+    title,
+    description,
+    alternates: { canonical: a.path },
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: a.published_at || undefined,
+      images: a.featured_image ? [{ url: a.featured_image }] : undefined,
+    },
+  };
 }
 
 export default async function CatchAllPage({ params }: Props) {
@@ -162,7 +197,7 @@ export default async function CatchAllPage({ params }: Props) {
   if (!a) notFound();
 
   const depth = path.split('/').filter(Boolean).length;
-  const decision = classify(path, depth, a.type);
+  const decision = classify(path, depth, a.type, a.slug);
 
   console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
@@ -184,6 +219,12 @@ export default async function CatchAllPage({ params }: Props) {
   if (decision.kind === 'review') {
     const siblings = await getSiblings(a.parent_slug, a.slug);
     return <ReviewTemplate article={a} siblings={siblings} />;
+  }
+
+  if (decision.kind === 'standalone') {
+    const relatedParent = STANDALONE_RELATED_PARENT[a.slug];
+    const related = relatedParent ? await getChildren(relatedParent) : [];
+    return <StandalonePageTemplate article={a} related={related} />;
   }
 
   const children = await getChildren(a.slug);

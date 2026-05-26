@@ -81,6 +81,8 @@ const RANK_LABELS = [
 const KNOWN: Record<string, Partial<ToolProfile>> = {
   chatgpt: {
     logo: 'bg-emerald-500',
+    ctaName: 'ChatGPT',
+    fallbackUrl: 'https://chat.openai.com',
     tagline: 'Allround AI för text, kod och analys',
     tags: ['GPT-5', 'Custom GPTs', 'Canvas', 'Röst & syn'],
     pros: ['Snabb och korrekt', 'Stort ekosystem av GPTs', 'Bäst röstläge'],
@@ -90,6 +92,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   claude: {
     logo: 'bg-orange-500',
+    ctaName: 'Claude',
+    fallbackUrl: 'https://claude.ai',
     tagline: 'Bäst på långform, kod och nyanserat resonemang',
     tags: ['Claude 4 Opus', 'Projects', 'Artifacts', '200k context'],
     pros: ['Bäst på långform', 'Säker källhantering', 'Skarp på nyans'],
@@ -99,6 +103,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   gemini: {
     logo: 'bg-sky-500',
+    ctaName: 'Gemini',
+    fallbackUrl: 'https://gemini.google.com',
     tagline: 'Googles multimodala AI med enorm kontext',
     tags: ['Gemini 2.5 Pro', '1M context', 'Workspace', 'Multimodal'],
     pros: ['Enorm kontext', 'Integrerat med Google', 'Stark på multimodal'],
@@ -108,6 +114,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   mistral: {
     logo: 'bg-violet-500',
+    ctaName: 'Mistral',
+    fallbackUrl: 'https://chat.mistral.ai',
     tags: ['Le Chat', 'EU-data', 'Open source', 'Mixtral'],
     pros: ['Helt EU-baserat', 'Snabbt och billigt', 'Bra svenska'],
     cons: ['Mindre ekosystem', 'Färre integrationer'],
@@ -116,6 +124,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   perplexity: {
     logo: 'bg-teal-500',
+    ctaName: 'Perplexity',
+    fallbackUrl: 'https://www.perplexity.ai',
     tags: ['Källor inbyggt', 'Pages', 'Research', 'Live web'],
     pros: ['Källor på allt', 'Snabb research-flöde', 'Citerar korrekt'],
     cons: ['Smalare användning', 'Pro krävs för långt'],
@@ -124,6 +134,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   copilot: {
     logo: 'bg-indigo-500',
+    ctaName: 'Copilot',
+    fallbackUrl: 'https://copilot.microsoft.com',
     tags: ['GPT-5', 'Microsoft 365', 'Word & Excel', 'Enterprise'],
     pros: ['Integrerat i Office', 'Bra för team', 'Säkerhet i fokus'],
     cons: ['Kräver M365-licens', 'Sämre i webb-UI'],
@@ -132,6 +144,8 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   rytr: {
     logo: 'bg-rose-500',
+    ctaName: 'Rytr',
+    fallbackUrl: 'https://rytr.me',
     tags: ['40+ mallar', '30+ språk', 'Enkelt UI', 'Billigast pro'],
     pros: ['Lågt pris', 'Många mallar', 'Lätt att lära sig'],
     cons: ['Modellen är inte topp', 'Begränsad kontext'],
@@ -140,11 +154,59 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   deepseek: {
     logo: 'bg-fuchsia-500',
+    ctaName: 'DeepSeek',
+    fallbackUrl: 'https://www.deepseek.com',
     tags: ['V3', 'Open source', 'Lågt pris', 'API'],
     pros: ['Extremt billigt', 'Open source-vikter', 'Bra på kod'],
     cons: ['Svensk dialog svagare', 'Mindre community'],
     offer: { title: 'API-credits 5 USD gratis', price: 'Gratis · API 0.2 USD/M tokens', bestFor: 'Utvecklare som vill skala' },
     label: 'Bästa pris',
+  },
+  'jasper-ai': {
+    logo: 'bg-amber-500',
+    ctaName: 'Jasper AI',
+    fallbackUrl: 'https://www.jasper.ai',
+    tagline: 'AI-copy med konsistent brand voice',
+    tags: ['Brand Voice', 'SEO-mode', 'Templates', 'Teams'],
+    pros: ['Konsistent brand voice', 'Många mallar', 'Bra för team'],
+    cons: ['Högre pris', 'Smal modell-grund'],
+    offer: { title: 'Jasper 7 dagar gratis', price: 'Gratis · Creator 49 USD/mån', bestFor: 'Marknadsföring' },
+    label: 'Bäst för marknadsföring',
+  },
+  writesonic: {
+    logo: 'bg-violet-500',
+    ctaName: 'Writesonic',
+    fallbackUrl: 'https://writesonic.com',
+    tagline: 'Snabb AI-copy med SEO-läge',
+    tags: ['SEO mode', 'Bulk', 'Chatsonic', 'API'],
+    pros: ['Snabb', 'Bra pris', 'Bulk-funktion för SEO'],
+    cons: ['Svenska är ojämn', 'Mindre nyans i text'],
+    offer: { title: 'Gratisplan med 10k ord/mån', price: 'Gratis · Pro 16 USD/mån', bestFor: 'SEO och snabb copy' },
+    label: 'Bäst för SEO',
+  },
+  'copy-ai': {
+    logo: 'bg-rose-500',
+    ctaName: 'Copy.ai',
+    fallbackUrl: 'https://www.copy.ai',
+    tagline: 'AI-workflows för säljteam och sociala medier',
+    tags: ['Workflows', 'Templates', 'Brand voice', 'API'],
+    pros: ['Många mallar', 'Workflows-automation', 'Lågt instegspris'],
+    cons: ['Begränsad svenska', 'Mindre kraftfull modell'],
+    offer: { title: 'Free forever-plan', price: 'Gratis · Pro 36 USD/mån', bestFor: 'Säljteam och social media' },
+    label: 'Bäst för säljteam',
+  },
+
+  /* ── Automation (editorial article, not a single tool) ── */
+  workflows: {
+    logo: 'bg-violet-600',
+    ctaName: 'Zapier',
+    fallbackUrl: 'https://zapier.com',
+    tagline: 'AI-workflows: jämför Zapier, Make och n8n',
+    tags: ['Översikt', 'Workflows', 'Integration', 'No-code'],
+    pros: ['Bred jämförelse', 'Konkreta exempel', 'Pratisk guide'],
+    cons: ['Inte en enskild produkt', 'Generell översikt'],
+    offer: { title: 'Zapier 14 dagar Pro gratis', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Workflows mellan SaaS-verktyg' },
+    label: 'Översikt',
   },
 
   /* ── Video ────────────────────────────────────────────── */

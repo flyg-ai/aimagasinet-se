@@ -67,15 +67,75 @@ export default async function RootLayout({
 
         <main>{children}</main>
 
-        <footer className="mt-24 border-t border-line-subtle">
-          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-10 text-sm text-fg-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div>
-              <span className="font-black uppercase tracking-tight text-fg-muted">
-                AI-Magasinet
-              </span>{' '}
-              · Svenskt magasin om artificiell intelligens
+        <footer className="mt-24 border-t border-line bg-card">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="rounded bg-accent px-1.5 py-0.5 text-sm font-black text-accent-fg">
+                    AI
+                  </span>
+                  <span className="font-black uppercase tracking-tight text-fg">
+                    Magasinet
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed text-fg-subtle">
+                  Svenskt magasin om artificiell intelligens — nyheter, guider
+                  och oberoende verktygsrecensioner.
+                </p>
+              </div>
+
+              <nav aria-label="Kategorier">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                  Kategorier
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/kategori/ai-nyheter" className="text-fg-subtle hover:text-accent">AI-Nyheter</Link></li>
+                  <li><Link href="/ai-verktyg" className="text-fg-subtle hover:text-accent">AI-Verktyg</Link></li>
+                  <li><Link href="/ai-video" className="text-fg-subtle hover:text-accent">AI-Video</Link></li>
+                  <li><Link href="/ai-guiden" className="text-fg-subtle hover:text-accent">AI-Guiden</Link></li>
+                </ul>
+              </nav>
+
+              <nav aria-label="Om oss">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                  Om
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/om-oss" className="text-fg-subtle hover:text-accent">Om Oss</Link></li>
+                  <li><Link href="/kontakt" className="text-fg-subtle hover:text-accent">Kontakt</Link></li>
+                </ul>
+              </nav>
+
+              <div>
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                  Kontakt
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li>
+                    <a href="mailto:redaktionen@aimagasinet.se" className="text-fg-subtle hover:text-accent">
+                      redaktionen@aimagasinet.se
+                    </a>
+                  </li>
+                  <li>
+                    <a href="mailto:annonsering@aimagasinet.se" className="text-fg-subtle hover:text-accent">
+                      annonsering@aimagasinet.se
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div>© {new Date().getFullYear()} AI-Magasinet</div>
+
+            <div className="mt-10 border-t border-line-subtle pt-6">
+              <p className="text-xs leading-relaxed text-fg-subtle">
+                <span className="font-bold text-fg-muted">Annonsörsinformation:</span>{' '}
+                AI-Magasinet kan få provision när du klickar på vissa länkar på
+                denna sida. Det påverkar inte vår rankning.
+              </p>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-wider text-fg-faint">
+                © {new Date().getFullYear()} AI-Magasinet
+              </p>
+            </div>
           </div>
         </footer>
       </body>
