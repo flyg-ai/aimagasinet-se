@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { ArticleTemplate } from '@/components/templates/ArticleTemplate';
-import { HubTemplate, type HubChild } from '@/components/templates/HubTemplate';
+import {
+  HubTemplate,
+  hasVirtualHubChildren,
+  type HubChild,
+} from '@/components/templates/HubTemplate';
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate';
 import { YrkesHubTemplate } from '@/components/templates/YrkesHubTemplate';
 import { parseRating } from '@/lib/rating';
@@ -168,7 +172,10 @@ export default async function CatchAllPage({ params }: Props) {
 
   if (decision.kind === 'hub') {
     const items = await getHubChildren(a.slug);
-    if (items.length > 0) {
+    // Hub renders if it has either DB children OR virtual children defined
+    // in HubTemplate. Lets early-stage hubs (e.g. ai-automation) show the
+    // topplistan from virtuals alone instead of falling back to article.
+    if (items.length > 0 || hasVirtualHubChildren(a.slug)) {
       return <HubTemplate article={a} items={items} />;
     }
     console.warn('[CatchAllPage] hub had no children → falling back to ArticleTemplate', { slug: a.slug });

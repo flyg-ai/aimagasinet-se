@@ -81,6 +81,7 @@ const RANK_LABELS = [
 const KNOWN: Record<string, Partial<ToolProfile>> = {
   chatgpt: {
     logo: 'bg-emerald-500',
+    tagline: 'Allround AI för text, kod och analys',
     tags: ['GPT-5', 'Custom GPTs', 'Canvas', 'Röst & syn'],
     pros: ['Snabb och korrekt', 'Stort ekosystem av GPTs', 'Bäst röstläge'],
     cons: ['Knapphändig källhantering', 'Begränsningar i gratisläget'],
@@ -89,6 +90,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   claude: {
     logo: 'bg-orange-500',
+    tagline: 'Bäst på långform, kod och nyanserat resonemang',
     tags: ['Claude 4 Opus', 'Projects', 'Artifacts', '200k context'],
     pros: ['Bäst på långform', 'Säker källhantering', 'Skarp på nyans'],
     cons: ['Långsammare än GPT', 'Dyrare per token'],
@@ -97,6 +99,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   },
   gemini: {
     logo: 'bg-sky-500',
+    tagline: 'Googles multimodala AI med enorm kontext',
     tags: ['Gemini 2.5 Pro', '1M context', 'Workspace', 'Multimodal'],
     pros: ['Enorm kontext', 'Integrerat med Google', 'Stark på multimodal'],
     cons: ['Ojämn svenska', 'Beroende av Google-konto'],
@@ -150,6 +153,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Kling',
     score: 9.4,
     fallbackUrl: 'https://klingai.com',
+    tagline: 'Realistisk AI-video från text eller bild',
     tags: ['Kling 1.6', 'Realism', 'Lip sync', 'Image-to-video'],
     pros: ['Marknadens mest realistiska video', 'Lång clip-längd', 'Stark image-to-video'],
     cons: ['Engelska prompts ojämn', 'Mindre community utanför Kina'],
@@ -161,6 +165,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Runway',
     score: 9.1,
     fallbackUrl: 'https://runwayml.com',
+    tagline: 'Video, redigering och effekter i ett',
     tags: ['Gen-3 Alpha', 'Redigering', 'Effekter', 'Image-to-video'],
     pros: ['Inbyggd redigeringsstudio', 'Avancerad kamerakontroll', 'Brett ekosystem av effekter'],
     cons: ['Dyrt för längre projekt', 'Mindre stark på text-i-bild'],
@@ -172,6 +177,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Pika Labs',
     score: 8.7,
     fallbackUrl: 'https://pika.art',
+    tagline: 'Snabb text- och bild-till-video',
     tags: ['Pika 2.0', 'Text/bild → video', 'Pikaffects', 'Lip sync'],
     pros: ['Snabbaste i klassen', 'Roliga effekter (Pikaffects)', 'Lågt pris för premium'],
     cons: ['Mindre filmisk än Runway/Sora', 'Kortare clip-längd'],
@@ -188,6 +194,58 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     cons: ['sora.com nedlagt — endast via ChatGPT', 'Begränsad åtkomst för svenska användare'],
     offer: { title: 'Begränsad åtkomst', price: 'Endast via ChatGPT Plus 20 USD/mån', bestFor: 'AI-genererad video från text' },
     label: 'Begränsad tillgång',
+  },
+
+  /* ── Ljud / musik ─────────────────────────────────────── */
+  'suno-ai': {
+    logo: 'bg-amber-600',
+    ctaName: 'Suno',
+    score: 9.2,
+    fallbackUrl: 'https://suno.com',
+    tagline: 'Skapa komplett musik från en textprompt',
+    tags: ['V4', 'Custom lyrics', '4 min spår', 'Stems-export'],
+    pros: ['Snabbast i klassen', 'Bra på lyrik', 'Stems för efterproduktion'],
+    cons: ['Mindre nyans än Udio', 'Kommersiella rättigheter kräver Pro'],
+    offer: { title: '50 spår gratis varje månad', price: 'Gratis · Pro 8 USD/mån', bestFor: 'Musik från text' },
+    label: 'Redaktionens val',
+  },
+  elevenlabs: {
+    logo: 'bg-zinc-900',
+    ctaName: 'ElevenLabs',
+    score: 9.5,
+    fallbackUrl: 'https://elevenlabs.io',
+    tagline: 'Världsledande röstsyntes på 30+ språk',
+    tags: ['v3', 'Voice clone', '32 språk', 'Dubbing'],
+    pros: ['Marknadens mest naturliga röster', 'Stark voice cloning', 'Utmärkt svenska'],
+    cons: ['Pris skalar snabbt', 'Voice cloning kräver verifiering'],
+    offer: { title: '10k tecken gratis varje månad', price: 'Gratis · Starter 5 USD/mån', bestFor: 'Röstsyntes & text-till-tal' },
+    label: 'Bäst för röst',
+  },
+
+  /* ── Kod ──────────────────────────────────────────────── */
+  'cursor-ai': {
+    logo: 'bg-zinc-900',
+    ctaName: 'Cursor',
+    score: 9.5,
+    fallbackUrl: 'https://cursor.com',
+    tagline: 'AI-first kodeditor som förstår hela din kodbas',
+    tags: ['Composer', 'Tab', 'Multi-file edits', 'MCP'],
+    pros: ['Branschens skarpaste AI-editor', 'Bra context-hantering', 'Stöd för flera modeller'],
+    cons: ['Pris högt för soloutvecklare', 'Bara desktop'],
+    offer: { title: '14 dagar Pro gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Daglig professionell kodning' },
+    label: 'Redaktionens val',
+  },
+  'github-copilot': {
+    logo: 'bg-indigo-700',
+    ctaName: 'Copilot',
+    score: 9.1,
+    fallbackUrl: 'https://github.com/features/copilot',
+    tagline: 'AI-assistent direkt i din editor',
+    tags: ['Inline', 'Chat', 'PR review', 'Enterprise'],
+    pros: ['Bred IDE-integration', 'Bästa enterprise-stödet', 'Konkurrenskraftigt pris'],
+    cons: ['Mindre agentisk än Cursor', 'Subtila skillnader på modeller'],
+    offer: { title: 'Free tier för individer', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Team och enterprise' },
+    label: 'Bäst för team',
   },
 };
 
@@ -209,6 +267,10 @@ type ToolProfile = {
    *  with rel="nofollow noopener" (not "sponsored") since it's an editorial
    *  reference, not an affiliate placement. */
   fallbackUrl?: string;
+  /** Short editorial one-liner (≤ 60 chars) used in RankRow as the verktyg's
+   *  description. Wins over article.excerpt, which often starts with
+   *  WP-injected metadata like "RECENSION • AI-VERKTYG FÖR KOD …". */
+  tagline?: string;
 };
 
 /* ─── Helpers ──────────────────────────────────────────────────── */
@@ -262,7 +324,35 @@ function buildProfile(child: HubChild): ToolProfile {
     ctaName: known.ctaName,
     score: known.score,
     fallbackUrl: known.fallbackUrl,
+    tagline: known.tagline,
   };
+}
+
+/** Strip WP-injected eyebrow/nav prefixes from an excerpt and cap at 60 chars.
+ *  WP imports often start with patterns like "RECENSION • AI-VERKTYG FÖR KOD
+ *  Hoppa till kort summering …" — strip the full eyebrow + jump-link, then
+ *  truncate. The "Hoppa till X" anchor is treated as a few lowercase Swedish
+ *  words so we don't accidentally swallow the real sentence that follows. */
+function cleanExcerpt(excerpt: string | null | undefined): string | null {
+  if (!excerpt) return null;
+  let s = excerpt.trim();
+  // 1. Strip "[eyebrow…] Hoppa till [lowercase anchor words]" — anything from
+  //    string-start through the jump-link. No /i flag: with it, [a-zåäö]
+  //    becomes case-insensitive and swallows the real sentence after the anchor.
+  s = s.replace(/^.*?Hoppa till(?:\s+[a-zåäö]+)+\.?\s*/, '');
+  // 2. Strip leading WP category eyebrow ("RECENSION • CATEGORY [★ rating]")
+  //    up to the first sentence-cased Swedish word. Allows any noise chars
+  //    (stars, parens, numbers) between the keyword and the real sentence.
+  //    Capped at 100 chars so it can't swallow a real paragraph.
+  s = s.replace(
+    /^(?:RECENSION|GUIDE|ANALYS|TEST|JÄMFÖRELSE)\b.{0,100}?(?=[A-ZÅÄÖ][a-zåäö])/,
+    ''
+  );
+  // 3. Strip any remaining leading all-caps eyebrow ("AI ÄR FRAMTIDEN — ").
+  s = s.replace(/^[A-ZÅÄÖ0-9\s•·:|–—-]+?(?=[A-ZÅÄÖ][a-zåäö])/, '');
+  s = s.trim();
+  if (s.length > 60) s = s.slice(0, 57).trimEnd() + '…';
+  return s || null;
 }
 
 function getRating(child: HubChild): Rating {
@@ -338,7 +428,167 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
       affiliate_url: null, rating: null, isUpcoming: true,
     },
   ],
+
+  'ai-ljud-och-musik': [
+    {
+      slug: 'udio-virtual', title: 'Udio', path: '#',
+      excerpt: 'Suno-konkurrent med fokus på musikalisk nyans och realistisk produktionskvalitet.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'mubert-virtual', title: 'Mubert', path: '#',
+      excerpt: 'Royaltyfri AI-musik streamad i realtid — perfekt för streamers, podcasts och bakgrundsmusik.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'aiva-virtual', title: 'AIVA', path: '#',
+      excerpt: 'AI-kompositör för filmmusik, spel och klassiska arrangemang — exporterar noter och MIDI.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'soundraw-virtual', title: 'Soundraw', path: '#',
+      excerpt: 'Royaltyfri AI-musik för creators — anpassa längd, energi och instrument per spår.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'boomy-virtual', title: 'Boomy', path: '#',
+      excerpt: 'Skapa låtar på sekunder och publicera direkt till Spotify, Apple Music och TikTok.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'splice-virtual', title: 'Splice', path: '#',
+      excerpt: 'AI-sökning bland miljontals samples och AI-stems-separation för producenter.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'lalal-ai-virtual', title: 'Lalal.ai', path: '#',
+      excerpt: 'Branschledande AI för stems-separation — isolera sång, trummor, bas och andra spår.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'adobe-podcast-virtual', title: 'Adobe Podcast', path: '#',
+      excerpt: 'Studio-kvalitet på röstinspelningar via AI-förbättring — gratis i webbläsaren.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+  ],
+
+  'ai-kod-verktyg': [
+    {
+      slug: 'tabnine-virtual', title: 'Tabnine', path: '#',
+      excerpt: 'Privacy-first kodassistent — kan köras lokalt eller on-prem för enterprise med strikta krav.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'codeium-virtual', title: 'Codeium', path: '#',
+      excerpt: 'Gratis AI-autocomplete för 70+ språk och 40+ IDE:er — populärast bland soloutvecklare.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'amazon-codewhisperer-virtual', title: 'Amazon CodeWhisperer', path: '#',
+      excerpt: 'AWS-optimerad kodassistent med security scans — gratis för enskilda utvecklare.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'replit-ai-virtual', title: 'Replit AI', path: '#',
+      excerpt: 'Agent som bygger hela appar i webbläsaren — från prompt till deploy på minuter.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'jetbrains-ai-virtual', title: 'JetBrains AI', path: '#',
+      excerpt: 'Inbyggd AI-assistent i IntelliJ, PyCharm, WebStorm — djup integration i JetBrains-flödet.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'sourcegraph-cody-virtual', title: 'Sourcegraph Cody', path: '#',
+      excerpt: 'AI med hela kodbasen som kontext — bäst för stora repos och cross-file refactoring.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'pieces-virtual', title: 'Pieces', path: '#',
+      excerpt: 'Snippet- och kontextminne för utvecklare — lokal AI som kommer ihåg din kodhistorik.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'windsurf-virtual', title: 'Windsurf', path: '#',
+      excerpt: 'Codeiums agentiska editor — Cursor-rival med fokus på flow och autonoma multi-file edits.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+  ],
+
+  'ai-automation': [
+    {
+      slug: 'make-virtual', title: 'Make', path: '#',
+      excerpt: 'Visuell automation med AI-moduler — bäst för komplexa flöden med många villkor och loopar.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'zapier-ai-virtual', title: 'Zapier AI', path: '#',
+      excerpt: 'Mest använda automationsplattformen — 7000+ integrationer och inbyggda AI-actions.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'n8n-virtual', title: 'n8n', path: '#',
+      excerpt: 'Open source-automation som kan självhostas — fullständig kontroll över data och AI-noder.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'power-automate-virtual', title: 'Microsoft Power Automate', path: '#',
+      excerpt: 'Microsofts automation med Copilot-integration — djupt inbäddat i Microsoft 365 och Azure.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'bardeen-virtual', title: 'Bardeen', path: '#',
+      excerpt: 'AI-agenter i Chrome som scrapar, klickar och fyller formulär åt dig på vilken sajt som helst.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'relay-app-virtual', title: 'Relay.app', path: '#',
+      excerpt: 'Human-in-the-loop automation — AI-flöden som pausar för bekräftelse vid kritiska steg.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'activepieces-virtual', title: 'ActivePieces', path: '#',
+      excerpt: 'Open source-alternativ till Zapier med AI-pieces — gratis för upp till 5000 tasks/månad.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'pipedream-virtual', title: 'Pipedream', path: '#',
+      excerpt: 'Kodbara workflows för utvecklare — JavaScript/Python-steg blandat med 2500+ integrationer.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+  ],
 };
+
+/** True if a hub slug has at least one virtual child defined here.
+ *  Used by the route to allow Hub rendering when DB has no real children
+ *  yet (e.g. early-stage automation hub). */
+export function hasVirtualHubChildren(slug: string): boolean {
+  return (VIRTUAL_HUB_CHILDREN[slug]?.length ?? 0) > 0;
+}
 
 // Extend KNOWN profiles with scores/labels/CTA-names for the virtual children
 // so they sort and render consistently with curated real tools.
@@ -396,6 +646,229 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     cons: ['Smalt användningsområde', 'Mindre realistisk'],
     offer: { title: '7 dagar Pro gratis', price: 'Gratis · Pro 15 USD/mån', bestFor: 'Musiker och artister' },
     label: 'Bäst för musikvideor',
+  },
+
+  /* ── Ljud & musik ─────────────────────────────────────── */
+  'udio-virtual': {
+    logo: 'bg-rose-600', ctaName: 'Udio', score: 9.0,
+    fallbackUrl: 'https://www.udio.com',
+    tags: ['Musikalisk nyans', 'Lyrik-AI', 'Stems', 'Remix'],
+    pros: ['Mer musikalisk realism än Suno', 'Stark på instrumental', 'Bra svensk text-stöd'],
+    cons: ['Långsammare', 'Färre exportformat'],
+    offer: { title: '10 spår gratis/dag', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Musikproduktion med AI' },
+    label: 'Bäst för musikalisk nyans',
+  },
+  'mubert-virtual': {
+    logo: 'bg-teal-600', ctaName: 'Mubert', score: 8.2,
+    fallbackUrl: 'https://mubert.com',
+    tags: ['Streaming', 'Royaltyfri', 'Realtid', 'API'],
+    pros: ['Oändlig bakgrundsmusik', 'Royaltyfri för creators', 'API för utvecklare'],
+    cons: ['Mindre konstnärlig kontroll', 'Smal nyttighet'],
+    offer: { title: 'Gratis för personligt bruk', price: 'Gratis · Creator 14 USD/mån', bestFor: 'Streamers och content-creators' },
+    label: 'Bäst för bakgrundsmusik',
+  },
+  'aiva-virtual': {
+    logo: 'bg-indigo-600', ctaName: 'AIVA', score: 8.5,
+    fallbackUrl: 'https://www.aiva.ai',
+    tags: ['Filmmusik', 'MIDI-export', 'Klassiskt', 'Spel'],
+    pros: ['Exporterar noter och MIDI', 'Klassisk musikteori', 'Bra för film & spel'],
+    cons: ['Lägre kvalitet på populärmusik', 'Mindre intuitivt UI'],
+    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Standard 15 EUR/mån', bestFor: 'Film-, spel- och klassisk musik' },
+    label: 'Bäst för kompositörer',
+  },
+  'soundraw-virtual': {
+    logo: 'bg-emerald-600', ctaName: 'Soundraw', score: 8.0,
+    fallbackUrl: 'https://soundraw.io',
+    tags: ['Royaltyfri', 'Anpassningsbar', 'Stems', 'Mood-baserad'],
+    pros: ['Granulär anpassning per spår', 'Stems-export', 'Royaltyfri kommersiellt'],
+    cons: ['Begränsad stilbredd', 'Vattenstämpel i gratis'],
+    offer: { title: 'Gratis preview', price: 'Creator 17 USD/mån', bestFor: 'YouTube-creators och reklam' },
+    label: 'Bäst för YouTubers',
+  },
+  'boomy-virtual': {
+    logo: 'bg-fuchsia-600', ctaName: 'Boomy', score: 7.4,
+    fallbackUrl: 'https://boomy.com',
+    tags: ['1-klick', 'Spotify-release', 'Royaltyandel', 'Enkelt'],
+    pros: ['Snabbast att komma igång', 'Publicera till streaming-tjänster', 'Tjäna royalty'],
+    cons: ['Begränsad kontroll', 'Lägre produktionskvalitet'],
+    offer: { title: '25 låtar gratis', price: 'Gratis · Creator 10 USD/mån', bestFor: 'Snabb publicering till streaming' },
+    label: 'Bäst för nybörjare',
+  },
+  'splice-virtual': {
+    logo: 'bg-orange-600', ctaName: 'Splice', score: 8.3,
+    fallbackUrl: 'https://splice.com',
+    tags: ['Samples', 'AI-sökning', 'Stems-separation', 'Producenter'],
+    pros: ['Miljontals samples', 'AI hittar matchande loops', 'Producent-favorit'],
+    cons: ['Kräver DAW-kunskap', 'Inte gen-AI för hela låtar'],
+    offer: { title: 'Sample-bibliotek från 8 USD/mån', price: 'Creator 8 USD/mån', bestFor: 'Musikproducenter' },
+    label: 'Bäst för producenter',
+  },
+  'lalal-ai-virtual': {
+    logo: 'bg-sky-600', ctaName: 'Lalal.ai', score: 8.7,
+    fallbackUrl: 'https://www.lalal.ai',
+    tags: ['Stems-separation', 'Vocal isolation', 'Karaoke', 'API'],
+    pros: ['Marknadsledande separation', 'Snabb', 'Stöd för 10+ stems'],
+    cons: ['Smalt användningsområde', 'Begränsade minuter i gratis'],
+    offer: { title: '10 min gratis/månad', price: 'Gratis · Lite 9 USD/mån', bestFor: 'Karaoke, remix och stems' },
+    label: 'Bäst för stems-separation',
+  },
+  'adobe-podcast-virtual': {
+    logo: 'bg-rose-700', ctaName: 'Adobe Podcast', score: 8.6,
+    fallbackUrl: 'https://podcast.adobe.com',
+    tags: ['AI Enhance', 'Brusreducering', 'Gratis', 'Webb'],
+    pros: ['Studio-kvalitet i webbläsaren', 'Helt gratis', 'Adobe-kvalitet'],
+    cons: ['Endast röstförbättring', 'Köbaserat vid hög belastning'],
+    offer: { title: 'Helt gratis', price: 'Gratis · ingår i Creative Cloud', bestFor: 'Podcasters och röstinspelning' },
+    label: 'Bäst gratis-verktyget',
+  },
+
+  /* ── Kod ──────────────────────────────────────────────── */
+  'tabnine-virtual': {
+    logo: 'bg-slate-700', ctaName: 'Tabnine', score: 8.4,
+    fallbackUrl: 'https://www.tabnine.com',
+    tags: ['Privacy-first', 'On-prem', 'Enterprise', 'Lokal modell'],
+    pros: ['Kan köras lokalt eller on-prem', 'Strikt privacy', 'Enterprise-fokus'],
+    cons: ['Mindre kraftfull än Cursor/Copilot', 'Lägre modell-kvalitet'],
+    offer: { title: 'Gratis Basic', price: 'Gratis · Pro 12 USD/mån', bestFor: 'Enterprise med strikta datakrav' },
+    label: 'Bäst för privacy',
+  },
+  'codeium-virtual': {
+    logo: 'bg-emerald-700', ctaName: 'Codeium', score: 8.6,
+    fallbackUrl: 'https://codeium.com',
+    tags: ['Gratis', '70+ språk', '40+ IDE:er', 'Autocomplete'],
+    pros: ['Generös gratisversion', 'Brett språkstöd', 'Snabb autocomplete'],
+    cons: ['Mindre agentisk', 'Pro-features är begränsade'],
+    offer: { title: 'Helt gratis för individer', price: 'Gratis · Teams 12 USD/mån', bestFor: 'Soloutvecklare och hobbyprojekt' },
+    label: 'Bäst gratis',
+  },
+  'amazon-codewhisperer-virtual': {
+    logo: 'bg-orange-700', ctaName: 'CodeWhisperer', score: 8.0,
+    fallbackUrl: 'https://aws.amazon.com/codewhisperer/',
+    tags: ['AWS', 'Security scan', 'Gratis individuell', 'Q Developer'],
+    pros: ['AWS-optimerad', 'Inbyggd security scan', 'Gratis för enskilda'],
+    cons: ['AWS-bias i förslag', 'Mindre stark utanför AWS'],
+    offer: { title: 'Gratis för individer', price: 'Gratis · Pro 19 USD/mån', bestFor: 'AWS-utvecklare' },
+    label: 'Bäst för AWS-stack',
+  },
+  'replit-ai-virtual': {
+    logo: 'bg-orange-500', ctaName: 'Replit AI', score: 8.3,
+    fallbackUrl: 'https://replit.com',
+    tags: ['Browser-IDE', 'Agent', 'Deploy', 'Nybörjarvänligt'],
+    pros: ['Bygg och deploya i webbläsaren', 'Agent-funktion', 'Lätt att komma igång'],
+    cons: ['Begränsat för stora projekt', 'Pris skalar snabbt'],
+    offer: { title: 'Gratisplan', price: 'Gratis · Core 25 USD/mån', bestFor: 'Prototyper och nybörjare' },
+    label: 'Bäst för prototyper',
+  },
+  'jetbrains-ai-virtual': {
+    logo: 'bg-violet-700', ctaName: 'JetBrains AI', score: 8.7,
+    fallbackUrl: 'https://www.jetbrains.com/ai/',
+    tags: ['IntelliJ', 'PyCharm', 'WebStorm', 'JetBrains-integration'],
+    pros: ['Djup IDE-integration', 'Bra refactoring', 'Skarp för JVM-språk'],
+    cons: ['Kräver JetBrains-licens', 'Bara i JetBrains-editorer'],
+    offer: { title: '7 dagar gratis', price: 'AI Pro 10 USD/mån', bestFor: 'JetBrains-användare' },
+    label: 'Bäst för JetBrains',
+  },
+  'sourcegraph-cody-virtual': {
+    logo: 'bg-fuchsia-700', ctaName: 'Cody', score: 8.5,
+    fallbackUrl: 'https://sourcegraph.com/cody',
+    tags: ['Hela kodbasen', 'Cross-file', 'Enterprise', 'Code search'],
+    pros: ['Bäst på stora kodbaser', 'Cross-file kontext', 'Enterprise-säkerhet'],
+    cons: ['Setup-tid för enterprise', 'Mindre snabbt än Copilot'],
+    offer: { title: 'Gratis Free-plan', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Stora monorepos' },
+    label: 'Bäst för stora repos',
+  },
+  'pieces-virtual': {
+    logo: 'bg-teal-700', ctaName: 'Pieces', score: 7.8,
+    fallbackUrl: 'https://pieces.app',
+    tags: ['Snippet-minne', 'Lokal AI', 'Kontext', 'Cross-app'],
+    pros: ['Lokal AI för privacy', 'Minne över sessioner', 'Cross-app-snippet-hantering'],
+    cons: ['Smalt användningsområde', 'Tidig produkt'],
+    offer: { title: 'Helt gratis', price: 'Gratis · Pro kommer', bestFor: 'Snippets och AI-kontext' },
+    label: 'Bäst för snippets',
+  },
+  'windsurf-virtual': {
+    logo: 'bg-cyan-700', ctaName: 'Windsurf', score: 8.9,
+    fallbackUrl: 'https://codeium.com/windsurf',
+    tagline: 'Agentisk kodeditor för komplexa flows',
+    tags: ['Agent', 'Multi-file', 'Cascade', 'Flow-mode'],
+    pros: ['Cursor-rival med flow-fokus', 'Stark agent-mode', 'Snabb autonom redigering'],
+    cons: ['Nyare än Cursor', 'Mindre community ännu'],
+    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Pro 15 USD/mån', bestFor: 'Agentisk kodning' },
+    label: 'Bäst utmanare',
+  },
+
+  /* ── Automation ───────────────────────────────────────── */
+  'make-virtual': {
+    logo: 'bg-violet-600', ctaName: 'Make', score: 9.0,
+    fallbackUrl: 'https://www.make.com',
+    tags: ['Visuell builder', 'Komplexa flöden', 'AI-moduler', 'Webhooks'],
+    pros: ['Mest kraftfulla visuella builder', 'Stöd för komplex logik', 'Bra prismodell'],
+    cons: ['Brantare inlärningskurva', 'Färre integrationer än Zapier'],
+    offer: { title: '1000 operationer gratis', price: 'Gratis · Core 9 USD/mån', bestFor: 'Komplexa automationsflöden' },
+    label: 'Redaktionens val',
+  },
+  'zapier-ai-virtual': {
+    logo: 'bg-orange-600', ctaName: 'Zapier', score: 8.9,
+    fallbackUrl: 'https://zapier.com',
+    tags: ['7000+ appar', 'AI Actions', 'Tables', 'Interfaces'],
+    pros: ['Flest integrationer på marknaden', 'Enkelt att komma igång', 'AI Actions inbyggt'],
+    cons: ['Dyrt för stora volymer', 'Mindre flexibelt än Make'],
+    offer: { title: '100 tasks gratis/mån', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Snabb SaaS-integration' },
+    label: 'Mest använda',
+  },
+  'n8n-virtual': {
+    logo: 'bg-rose-600', ctaName: 'n8n', score: 8.7,
+    fallbackUrl: 'https://n8n.io',
+    tags: ['Open source', 'Self-host', 'AI-noder', 'Kod-noder'],
+    pros: ['Fullt open source', 'Kan självhostas', 'Bra för utvecklare'],
+    cons: ['Kräver tekniskt kunnande', 'Mindre polerat UI'],
+    offer: { title: 'Self-host gratis', price: 'Gratis · Cloud 20 EUR/mån', bestFor: 'Tekniska team som vill äga data' },
+    label: 'Bäst open source',
+  },
+  'power-automate-virtual': {
+    logo: 'bg-sky-700', ctaName: 'Power Automate', score: 8.4,
+    fallbackUrl: 'https://powerautomate.microsoft.com',
+    tags: ['Microsoft 365', 'Copilot', 'RPA', 'Enterprise'],
+    pros: ['Djup Microsoft 365-integration', 'Copilot-stöd inbyggt', 'Enterprise-säkerhet'],
+    cons: ['Komplext utanför MS-stacken', 'Licensmodellen är förvirrande'],
+    offer: { title: 'Ingår i M365 (vissa licenser)', price: 'Från 15 USD/användare/mån', bestFor: 'Microsoft 365-företag' },
+    label: 'Bäst för Microsoft-stack',
+  },
+  'bardeen-virtual': {
+    logo: 'bg-emerald-600', ctaName: 'Bardeen', score: 8.2,
+    fallbackUrl: 'https://www.bardeen.ai',
+    tags: ['Chrome-extension', 'Web scraping', 'Agent', 'No-code'],
+    pros: ['Direkt i Chrome', 'AI-agent som klickar och skrapar', 'Inga API:er krävs'],
+    cons: ['Begränsat till webben', 'Stabilitet vid sajt-ändringar'],
+    offer: { title: '100 credits gratis/mån', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Web-skrapning och agenter' },
+    label: 'Bäst för webb-agenter',
+  },
+  'relay-app-virtual': {
+    logo: 'bg-indigo-700', ctaName: 'Relay.app', score: 8.0,
+    fallbackUrl: 'https://www.relay.app',
+    tags: ['Human-in-the-loop', 'AI-flöden', 'Approval', 'Modern UI'],
+    pros: ['Pausar för mänsklig granskning', 'Modernt UI', 'Bra för kritiska flöden'],
+    cons: ['Mindre integrationer än Zapier', 'Tidig produkt'],
+    offer: { title: '200 steg gratis/mån', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Kritiska AI-flöden med kontroll' },
+    label: 'Bäst för human-in-the-loop',
+  },
+  'activepieces-virtual': {
+    logo: 'bg-fuchsia-600', ctaName: 'ActivePieces', score: 7.9,
+    fallbackUrl: 'https://www.activepieces.com',
+    tags: ['Open source', 'AI-pieces', 'Self-host', 'Generös gratis'],
+    pros: ['Open source-alternativ till Zapier', 'Generös gratisversion', 'AI-pieces inbyggt'],
+    cons: ['Färre integrationer', 'Mindre community'],
+    offer: { title: '5000 tasks gratis/mån', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Open source-team med tight budget' },
+    label: 'Bäst gratis open source',
+  },
+  'pipedream-virtual': {
+    logo: 'bg-lime-700', ctaName: 'Pipedream', score: 8.3,
+    fallbackUrl: 'https://pipedream.com',
+    tags: ['Kod-steg', 'JS/Python', '2500+ appar', 'Utvecklare'],
+    pros: ['Kodbara workflows', 'Kombinera kod med integrationer', 'Bra dokumentation'],
+    cons: ['Mindre nybörjarvänligt', 'Kräver kodkunskap'],
+    offer: { title: 'Gratis 10k credits/mån', price: 'Gratis · Basic 29 USD/mån', bestFor: 'Utvecklare som vill koda i flöden' },
+    label: 'Bäst för utvecklare',
   },
 };
 
@@ -605,6 +1078,8 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
   const p = buildProfile(child);
   const r = getRating(child);
   const isTop = rank === 1;
+  // Curated tagline wins; otherwise fall back to a WP-cleaned excerpt.
+  const description = p.tagline ?? cleanExcerpt(child.excerpt);
 
   return (
     <li
@@ -653,9 +1128,9 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
               </span>
             )}
           </div>
-          {child.excerpt && (
+          {description && (
             <p className="mt-1 line-clamp-2 text-sm leading-snug text-fg-subtle">
-              {child.excerpt}
+              {description}
             </p>
           )}
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -729,6 +1204,7 @@ function BestInTest({ child }: { child: HubChild }) {
   const name = toolNameFromTitle(child.title);
   const p = buildProfile(child);
   const year = new Date().getFullYear();
+  const description = p.tagline ?? cleanExcerpt(child.excerpt);
 
   return (
     <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
@@ -748,8 +1224,8 @@ function BestInTest({ child }: { child: HubChild }) {
             <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
               {name}
             </h3>
-            {child.excerpt && (
-              <p className="mt-2 max-w-2xl text-fg-subtle">{child.excerpt}</p>
+            {description && (
+              <p className="mt-2 max-w-2xl text-fg-subtle">{description}</p>
             )}
             <div className="mt-4 flex flex-wrap gap-1.5">
               {p.tags.map((tag) => (
