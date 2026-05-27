@@ -1447,12 +1447,6 @@ function ReviewsSection({ ranked }: { ranked: HubChild[] }) {
       className="border-t border-line bg-muted"
     >
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-        <div className="mb-3 flex items-center gap-3">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-600" />
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
-            Recensioner · {year}
-          </span>
-        </div>
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
           <h2
             id="reviews"
@@ -1461,7 +1455,7 @@ function ReviewsSection({ ranked }: { ranked: HubChild[] }) {
             Verktyg för verktyg
           </h2>
           <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-faint sm:inline">
-            {reviews.length} testade
+            {reviews.length} testade · {year}
           </span>
         </div>
 
