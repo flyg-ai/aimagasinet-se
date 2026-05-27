@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
+import { YRKE_HUB_KNOWN } from '@/lib/yrke-tools';
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -77,8 +78,10 @@ const RANK_LABELS = [
   'Bästa gratisversionen',
 ];
 
-/** Curated profiles for well-known tools. Falls back to deterministic mock. */
+/** Curated profiles for well-known tools. Falls back to deterministic mock.
+ *  Yrke-topic tools are merged in from lib/yrke-tools.ts at module load. */
 const KNOWN: Record<string, Partial<ToolProfile>> = {
+  ...YRKE_HUB_KNOWN,
   chatgpt: {
     logo: 'bg-emerald-500',
     ctaName: 'ChatGPT',

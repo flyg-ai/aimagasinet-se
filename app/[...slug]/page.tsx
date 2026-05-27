@@ -129,12 +129,15 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   if (path === '/ai-verktyg/foretag/yrke') return { kind: 'yrkesHub', reason: 'yrkes-hub path' };
 
   // /ai-verktyg/foretag/yrke/[yrke] (depth 4) and [yrke]/[topic] (depth 5)
-  // → HubTemplate. Depth-4 pages have DB children that fill the topplistan;
-  // depth-5 pages have no children but ship a topplista baked into
-  // content_mdx, which HubTemplate's editorial section renders in
-  // magazine-prose with a sidebar.
-  if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) {
-    return { kind: 'hub', reason: '/foretag/yrke/* hub' };
+  // → HubTemplate. Depth-6 (and beyond) under the same prefix is the
+  // tool-review level (e.g. .../seo/chatgpt-seo) and routes to review.
+  if (path.startsWith('/ai-verktyg/foretag/yrke/')) {
+    if (depth >= 4 && depth <= 5) {
+      return { kind: 'hub', reason: '/foretag/yrke/* hub (depth 4-5)' };
+    }
+    if (depth >= 6) {
+      return { kind: 'review', reason: '/foretag/yrke/*/* review (depth 6+)' };
+    }
   }
 
   // Remaining /ai-verktyg/foretag/* (depth 2 already handled above) → article

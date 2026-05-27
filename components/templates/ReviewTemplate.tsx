@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { parseRating, toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
+import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
 
 /* ─── Types ────────────────────────────────────────────────────── */
 
@@ -56,6 +57,10 @@ const GENERIC_USE_CASES = [
 ];
 
 const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
+  /* Yrke-topic tools (SEO/copy/ads/social/bokföring/redovisning) — merged
+   * in from lib/yrke-tools.ts so the data lives in a single source. */
+  ...YRKE_REVIEW_KNOWN,
+
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
     logo: 'bg-emerald-500',

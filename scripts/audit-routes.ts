@@ -29,7 +29,10 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   if (path === '/ai-verktyg') return 'masterHub';
   if (path === '/ai-verktyg/foretag') return 'foretagHub';
   if (path === '/ai-verktyg/foretag/yrke') return 'yrkesHub';
-  if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) return 'hub';
+  if (path.startsWith('/ai-verktyg/foretag/yrke/')) {
+    if (depth >= 4 && depth <= 5) return 'hub';
+    if (depth >= 6) return 'review';
+  }
   if (path.startsWith('/ai-verktyg/foretag/')) return 'article';
   if (path === '/ai-verktyg/gratis' || path.startsWith('/ai-verktyg/gratis/')) return 'article';
   if (path === '/ai-video') return 'hub';
