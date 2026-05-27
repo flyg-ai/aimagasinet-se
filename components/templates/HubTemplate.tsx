@@ -897,14 +897,16 @@ export function HubTemplate({
 
       {ranked.length > 0 && <ComparisonTable ranked={ranked} />}
 
-      <EditorialSection article={a} ranked={ranked} />
-
       {/* Long-form review cards — one per real child, mirrors the layout of
           ai-text-verktyg's bottom section but rendered programmatically so
-          every hub (yrke included) gets the same treatment. */}
+          every hub (yrke included) gets the same treatment. Comes before
+          the editorial body so the recension-cards sit close to the
+          topplistan / comparison and the editorial guide closes the page. */}
       {ranked.some((c) => !c.isUpcoming) && (
         <ReviewsSection ranked={ranked} />
       )}
+
+      <EditorialSection article={a} ranked={ranked} />
     </article>
   );
 }
