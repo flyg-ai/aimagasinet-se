@@ -53,7 +53,10 @@ export default async function RootLayout({
               href="/"
               className="group flex shrink-0 items-center gap-2 text-xl font-black tracking-tight"
             >
-              <span className="rounded bg-accent px-1.5 py-0.5 text-sm font-black text-accent-fg">
+              {/* Hardcoded indigo (not bg-accent / text-accent-fg) so the
+                  badge survives any token / dark-mode regression — earlier
+                  it was rendering white-on-white in production. */}
+              <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                 AI
               </span>
               <span className="hidden font-black uppercase tracking-tight text-fg sm:inline">
@@ -72,7 +75,7 @@ export default async function RootLayout({
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <div className="mb-4 flex items-center gap-2">
-                  <span className="rounded bg-accent px-1.5 py-0.5 text-sm font-black text-accent-fg">
+                  <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                     AI
                   </span>
                   <span className="font-black uppercase tracking-tight text-fg">

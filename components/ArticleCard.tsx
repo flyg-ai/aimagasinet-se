@@ -28,9 +28,10 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-fg-faint">
-            <span className="font-mono text-xs uppercase tracking-wider">no image</span>
-          </div>
+          // Styled cover for articles without featured_image: indigo gradient
+          // + title's first letter as a watermark. Reads as "intentional" instead
+          // of "missing image".
+          <CardCover title={a.title} />
         )}
       </div>
       <div className="p-5">
@@ -59,6 +60,38 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
   );
 }
 
+/** Cover shown when an article has no featured_image. Picks a stable accent
+ *  color from the title hash so adjacent cards don't look identical, and
+ *  paints the title's first letter as a watermark. */
+function CardCover({ title, small = false }: { title: string; small?: boolean }) {
+  const palettes = [
+    'from-indigo-500 to-violet-700',
+    'from-sky-500 to-indigo-700',
+    'from-emerald-500 to-teal-700',
+    'from-amber-500 to-rose-600',
+    'from-fuchsia-500 to-rose-700',
+    'from-cyan-500 to-blue-700',
+  ];
+  let h = 0;
+  for (let i = 0; i < title.length; i++) h = ((h * 31 + title.charCodeAt(i)) >>> 0);
+  const palette = palettes[h % palettes.length];
+  const initial = (title.trim().charAt(0) || '★').toUpperCase();
+
+  return (
+    <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${palette}`}>
+      <span
+        aria-hidden
+        className={
+          'font-black text-white/30 ' +
+          (small ? 'text-4xl' : 'text-7xl sm:text-8xl')
+        }
+      >
+        {initial}
+      </span>
+    </div>
+  );
+}
+
 /* Compact horizontal card for the hero sidebar (image left, text right). */
 export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
   return (
@@ -75,7 +108,9 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-        ) : null}
+        ) : (
+          <CardCover title={a.title} small />
+        )}
       </div>
       <div className="min-w-0 flex-1">
         <CategoryBadge slug={a.category} size="sm" />
