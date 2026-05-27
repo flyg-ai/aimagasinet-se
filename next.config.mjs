@@ -2,7 +2,10 @@
 const nextConfig = {
   images: {
     remotePatterns: [
+      // Legacy WP origin — kept for any leftover content_mdx inline images.
       { protocol: 'https', hostname: 'aimagasinet.se' },
+      // Supabase Storage — destination for migrated/new images.
+      { protocol: 'https', hostname: '**.supabase.co' },
     ],
   },
   async redirects() {
