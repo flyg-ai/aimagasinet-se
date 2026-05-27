@@ -8,6 +8,7 @@
 import { config as loadEnv } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { isStandaloneSlug } from '../components/templates/StandalonePageTemplate';
+import { isYrkesRollSlug } from '../components/templates/YrkesRollTemplate';
 
 loadEnv({ path: '.env.local' });
 
@@ -22,7 +23,7 @@ type Row = { slug: string; title: string; type: 'post' | 'page'; path: string; p
 
 // Mirror app/[...slug]/page.tsx::classify
 type Kind =
-  | 'masterHub' | 'foretagHub' | 'yrkesHub' | 'hub' | 'review'
+  | 'masterHub' | 'foretagHub' | 'yrkesHub' | 'yrkesRoll' | 'hub' | 'review'
   | 'standalone' | 'article';
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): Kind {
   if (articleType === 'post') return 'article';
@@ -30,6 +31,7 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   if (path === '/ai-verktyg/foretag') return 'foretagHub';
   if (path === '/ai-verktyg/foretag/yrke') return 'yrkesHub';
   if (path.startsWith('/ai-verktyg/foretag/yrke/')) {
+    if (depth === 4 && isYrkesRollSlug(slug)) return 'yrkesRoll';
     if (depth >= 4 && depth <= 5) return 'hub';
     if (depth >= 6) return 'review';
   }

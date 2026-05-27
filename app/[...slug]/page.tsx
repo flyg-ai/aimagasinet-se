@@ -16,6 +16,11 @@ import {
 } from '@/components/templates/StandalonePageTemplate';
 import { MasterHubTemplate } from '@/components/templates/MasterHubTemplate';
 import { ForetagHubTemplate } from '@/components/templates/ForetagHubTemplate';
+import {
+  YrkesRollTemplate,
+  getYrkesRollSpec,
+  isYrkesRollSlug,
+} from '@/components/templates/YrkesRollTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
 
 export const revalidate = 300;
@@ -109,6 +114,7 @@ type Kind =
   | 'masterHub'
   | 'foretagHub'
   | 'yrkesHub'
+  | 'yrkesRoll'
   | 'hub'
   | 'review'
   | 'standalone'
@@ -130,10 +136,17 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   // /ai-verktyg/foretag/yrke — yrkes-hub (existing template)
   if (path === '/ai-verktyg/foretag/yrke') return { kind: 'yrkesHub', reason: 'yrkes-hub path' };
 
-  // /ai-verktyg/foretag/yrke/[yrke] (depth 4) and [yrke]/[topic] (depth 5)
-  // → HubTemplate. Depth-6 (and beyond) under the same prefix is the
-  // tool-review level (e.g. .../seo/chatgpt-seo) and routes to review.
+  // /ai-verktyg/foretag/yrke/[yrke] tree:
+  //   depth 4 — yrkesroll landing (marknadsforing, ekonomi-redovisning).
+  //             If a YrkesRollSpec is registered for the slug, render the
+  //             discovery template (subcategory grid + top-picks); else
+  //             fall back to the topic hub layout.
+  //   depth 5 — topic hub (seo, content-copywriting, bokforing, …).
+  //   depth 6+ — individual tool review.
   if (path.startsWith('/ai-verktyg/foretag/yrke/')) {
+    if (depth === 4 && isYrkesRollSlug(slug)) {
+      return { kind: 'yrkesRoll', reason: '/foretag/yrke/[yrke] yrkesroll landing' };
+    }
     if (depth >= 4 && depth <= 5) {
       return { kind: 'hub', reason: '/foretag/yrke/* hub (depth 4-5)' };
     }
@@ -254,6 +267,11 @@ export default async function CatchAllPage({ params }: Props) {
 
   if (decision.kind === 'yrkesHub') {
     return <YrkesHubTemplate article={a} />;
+  }
+
+  if (decision.kind === 'yrkesRoll') {
+    const spec = getYrkesRollSpec(a.slug)!;
+    return <YrkesRollTemplate article={a} spec={spec} />;
   }
 
 
