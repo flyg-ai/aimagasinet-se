@@ -542,107 +542,10 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
     },
   ],
 
-  'ai-kod-verktyg': [
-    {
-      slug: 'tabnine-virtual', title: 'Tabnine', path: '#',
-      excerpt: 'Privacy-first kodassistent — kan köras lokalt eller on-prem för enterprise med strikta krav.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'codeium-virtual', title: 'Codeium', path: '#',
-      excerpt: 'Gratis AI-autocomplete för 70+ språk och 40+ IDE:er — populärast bland soloutvecklare.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'amazon-codewhisperer-virtual', title: 'Amazon CodeWhisperer', path: '#',
-      excerpt: 'AWS-optimerad kodassistent med security scans — gratis för enskilda utvecklare.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'replit-ai-virtual', title: 'Replit AI', path: '#',
-      excerpt: 'Agent som bygger hela appar i webbläsaren — från prompt till deploy på minuter.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'jetbrains-ai-virtual', title: 'JetBrains AI', path: '#',
-      excerpt: 'Inbyggd AI-assistent i IntelliJ, PyCharm, WebStorm — djup integration i JetBrains-flödet.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'sourcegraph-cody-virtual', title: 'Sourcegraph Cody', path: '#',
-      excerpt: 'AI med hela kodbasen som kontext — bäst för stora repos och cross-file refactoring.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'pieces-virtual', title: 'Pieces', path: '#',
-      excerpt: 'Snippet- och kontextminne för utvecklare — lokal AI som kommer ihåg din kodhistorik.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'windsurf-virtual', title: 'Windsurf', path: '#',
-      excerpt: 'Codeiums agentiska editor — Cursor-rival med fokus på flow och autonoma multi-file edits.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-  ],
-
-  'ai-automation': [
-    {
-      slug: 'make-virtual', title: 'Make', path: '#',
-      excerpt: 'Visuell automation med AI-moduler — bäst för komplexa flöden med många villkor och loopar.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'zapier-ai-virtual', title: 'Zapier AI', path: '#',
-      excerpt: 'Mest använda automationsplattformen — 7000+ integrationer och inbyggda AI-actions.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'n8n-virtual', title: 'n8n', path: '#',
-      excerpt: 'Open source-automation som kan självhostas — fullständig kontroll över data och AI-noder.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'power-automate-virtual', title: 'Microsoft Power Automate', path: '#',
-      excerpt: 'Microsofts automation med Copilot-integration — djupt inbäddat i Microsoft 365 och Azure.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'bardeen-virtual', title: 'Bardeen', path: '#',
-      excerpt: 'AI-agenter i Chrome som scrapar, klickar och fyller formulär åt dig på vilken sajt som helst.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'relay-app-virtual', title: 'Relay.app', path: '#',
-      excerpt: 'Human-in-the-loop automation — AI-flöden som pausar för bekräftelse vid kritiska steg.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'activepieces-virtual', title: 'ActivePieces', path: '#',
-      excerpt: 'Open source-alternativ till Zapier med AI-pieces — gratis för upp till 5000 tasks/månad.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'pipedream-virtual', title: 'Pipedream', path: '#',
-      excerpt: 'Kodbara workflows för utvecklare — JavaScript/Python-steg blandat med 2500+ integrationer.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-  ],
+  // ai-kod-verktyg + ai-automation virtuals promoted to real DB articles —
+  // see scripts/create-reviews.ts. VIRTUAL_KNOWN entries kept under their
+  // new (non-suffixed) slugs so the hub topplistan still gets curated
+  // profiles when fetching from the DB.
 };
 
 /** True if a hub slug has at least one virtual child defined here.
@@ -785,7 +688,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   },
 
   /* ── Kod ──────────────────────────────────────────────── */
-  'tabnine-virtual': {
+  tabnine: {
     logo: 'bg-slate-700', ctaName: 'Tabnine', score: 8.4,
     fallbackUrl: 'https://www.tabnine.com',
     tags: ['Privacy-first', 'On-prem', 'Enterprise', 'Lokal modell'],
@@ -794,7 +697,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis Basic', price: 'Gratis · Pro 12 USD/mån', bestFor: 'Enterprise med strikta datakrav' },
     label: 'Bäst för privacy',
   },
-  'codeium-virtual': {
+  codeium: {
     logo: 'bg-emerald-700', ctaName: 'Codeium', score: 8.6,
     fallbackUrl: 'https://codeium.com',
     tags: ['Gratis', '70+ språk', '40+ IDE:er', 'Autocomplete'],
@@ -803,7 +706,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Helt gratis för individer', price: 'Gratis · Teams 12 USD/mån', bestFor: 'Soloutvecklare och hobbyprojekt' },
     label: 'Bäst gratis',
   },
-  'amazon-codewhisperer-virtual': {
+  'amazon-codewhisperer': {
     logo: 'bg-orange-700', ctaName: 'CodeWhisperer', score: 8.0,
     fallbackUrl: 'https://aws.amazon.com/codewhisperer/',
     tags: ['AWS', 'Security scan', 'Gratis individuell', 'Q Developer'],
@@ -812,7 +715,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis för individer', price: 'Gratis · Pro 19 USD/mån', bestFor: 'AWS-utvecklare' },
     label: 'Bäst för AWS-stack',
   },
-  'replit-ai-virtual': {
+  'replit-ai': {
     logo: 'bg-orange-500', ctaName: 'Replit AI', score: 8.3,
     fallbackUrl: 'https://replit.com',
     tags: ['Browser-IDE', 'Agent', 'Deploy', 'Nybörjarvänligt'],
@@ -821,7 +724,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratisplan', price: 'Gratis · Core 25 USD/mån', bestFor: 'Prototyper och nybörjare' },
     label: 'Bäst för prototyper',
   },
-  'jetbrains-ai-virtual': {
+  'jetbrains-ai': {
     logo: 'bg-violet-700', ctaName: 'JetBrains AI', score: 8.7,
     fallbackUrl: 'https://www.jetbrains.com/ai/',
     tags: ['IntelliJ', 'PyCharm', 'WebStorm', 'JetBrains-integration'],
@@ -830,7 +733,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '7 dagar gratis', price: 'AI Pro 10 USD/mån', bestFor: 'JetBrains-användare' },
     label: 'Bäst för JetBrains',
   },
-  'sourcegraph-cody-virtual': {
+  'sourcegraph-cody': {
     logo: 'bg-fuchsia-700', ctaName: 'Cody', score: 8.5,
     fallbackUrl: 'https://sourcegraph.com/cody',
     tags: ['Hela kodbasen', 'Cross-file', 'Enterprise', 'Code search'],
@@ -839,7 +742,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis Free-plan', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Stora monorepos' },
     label: 'Bäst för stora repos',
   },
-  'pieces-virtual': {
+  pieces: {
     logo: 'bg-teal-700', ctaName: 'Pieces', score: 7.8,
     fallbackUrl: 'https://pieces.app',
     tags: ['Snippet-minne', 'Lokal AI', 'Kontext', 'Cross-app'],
@@ -848,7 +751,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Helt gratis', price: 'Gratis · Pro kommer', bestFor: 'Snippets och AI-kontext' },
     label: 'Bäst för snippets',
   },
-  'windsurf-virtual': {
+  windsurf: {
     logo: 'bg-cyan-700', ctaName: 'Windsurf', score: 8.9,
     fallbackUrl: 'https://codeium.com/windsurf',
     tagline: 'Agentisk kodeditor för komplexa flows',
@@ -860,7 +763,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   },
 
   /* ── Automation ───────────────────────────────────────── */
-  'make-virtual': {
+  make: {
     logo: 'bg-violet-600', ctaName: 'Make', score: 9.0,
     fallbackUrl: 'https://www.make.com',
     tags: ['Visuell builder', 'Komplexa flöden', 'AI-moduler', 'Webhooks'],
@@ -869,7 +772,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '1000 operationer gratis', price: 'Gratis · Core 9 USD/mån', bestFor: 'Komplexa automationsflöden' },
     label: 'Redaktionens val',
   },
-  'zapier-ai-virtual': {
+  'zapier-ai': {
     logo: 'bg-orange-600', ctaName: 'Zapier', score: 8.9,
     fallbackUrl: 'https://zapier.com',
     tags: ['7000+ appar', 'AI Actions', 'Tables', 'Interfaces'],
@@ -878,7 +781,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '100 tasks gratis/mån', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Snabb SaaS-integration' },
     label: 'Mest använda',
   },
-  'n8n-virtual': {
+  n8n: {
     logo: 'bg-rose-600', ctaName: 'n8n', score: 8.7,
     fallbackUrl: 'https://n8n.io',
     tags: ['Open source', 'Self-host', 'AI-noder', 'Kod-noder'],
@@ -887,7 +790,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Self-host gratis', price: 'Gratis · Cloud 20 EUR/mån', bestFor: 'Tekniska team som vill äga data' },
     label: 'Bäst open source',
   },
-  'power-automate-virtual': {
+  'power-automate': {
     logo: 'bg-sky-700', ctaName: 'Power Automate', score: 8.4,
     fallbackUrl: 'https://powerautomate.microsoft.com',
     tags: ['Microsoft 365', 'Copilot', 'RPA', 'Enterprise'],
@@ -896,7 +799,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Ingår i M365 (vissa licenser)', price: 'Från 15 USD/användare/mån', bestFor: 'Microsoft 365-företag' },
     label: 'Bäst för Microsoft-stack',
   },
-  'bardeen-virtual': {
+  bardeen: {
     logo: 'bg-emerald-600', ctaName: 'Bardeen', score: 8.2,
     fallbackUrl: 'https://www.bardeen.ai',
     tags: ['Chrome-extension', 'Web scraping', 'Agent', 'No-code'],
@@ -905,7 +808,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '100 credits gratis/mån', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Web-skrapning och agenter' },
     label: 'Bäst för webb-agenter',
   },
-  'relay-app-virtual': {
+  'relay-app': {
     logo: 'bg-indigo-700', ctaName: 'Relay.app', score: 8.0,
     fallbackUrl: 'https://www.relay.app',
     tags: ['Human-in-the-loop', 'AI-flöden', 'Approval', 'Modern UI'],
@@ -914,7 +817,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '200 steg gratis/mån', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Kritiska AI-flöden med kontroll' },
     label: 'Bäst för human-in-the-loop',
   },
-  'activepieces-virtual': {
+  activepieces: {
     logo: 'bg-fuchsia-600', ctaName: 'ActivePieces', score: 7.9,
     fallbackUrl: 'https://www.activepieces.com',
     tags: ['Open source', 'AI-pieces', 'Self-host', 'Generös gratis'],
@@ -923,7 +826,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '5000 tasks gratis/mån', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Open source-team med tight budget' },
     label: 'Bäst gratis open source',
   },
-  'pipedream-virtual': {
+  pipedream: {
     logo: 'bg-lime-700', ctaName: 'Pipedream', score: 8.3,
     fallbackUrl: 'https://pipedream.com',
     tags: ['Kod-steg', 'JS/Python', '2500+ appar', 'Utvecklare'],
