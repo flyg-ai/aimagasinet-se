@@ -55,10 +55,10 @@ export default async function RootLayout({
               href="/"
               className="group flex shrink-0 items-center gap-2 text-xl font-black tracking-tight"
             >
-              {/* Cyan-600 matches the original accent token (--accent: #0891b2)
-                  before we hardcoded it to indigo. Keeping it hardcoded to
-                  survive token regressions. */}
-              <span className="rounded bg-cyan-600 px-1.5 py-0.5 text-sm font-black text-white">
+              {/* indigo-600 matches the brand color the user wants on the
+                  AI badge. Hardcoded so the badge doesn't depend on the
+                  CSS-var-backed bg-accent token (which has regressed before). */}
+              <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                 AI
               </span>
               <span className="hidden font-black uppercase tracking-tight text-zinc-900 sm:inline">
@@ -77,7 +77,7 @@ export default async function RootLayout({
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <div className="mb-4 flex items-center gap-2">
-                  <span className="rounded bg-cyan-600 px-1.5 py-0.5 text-sm font-black text-white">
+                  <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                     AI
                   </span>
                   <span className="font-black uppercase tracking-tight text-zinc-900">
