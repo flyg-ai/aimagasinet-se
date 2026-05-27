@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
+import { ContactForm } from '@/components/ContactForm';
 
 /** Renders /kontakt. Hero + visual form mock (no submit logic) + contact
  *  info cards + FAQ. */
@@ -57,98 +58,19 @@ function FormMock() {
       <h2 id="form" className="mb-6 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
         Hör av dig
       </h2>
-
-      {/* Visual mock — no submit handler. Button type="button" prevents
-          the browser from refreshing the page on click. */}
-      <form
-        className="space-y-5 rounded-xl border border-line bg-card p-6 sm:p-8"
-      >
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field id="name" label="Namn" placeholder="Förnamn Efternamn" type="text" />
-          <Field id="email" label="E-post" placeholder="namn@företag.se" type="email" />
-        </div>
-
-        <div>
-          <label htmlFor="subject" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
-            Ämne
-          </label>
-          <select
-            id="subject"
-            className="w-full rounded-md border border-line-strong bg-card px-3 py-2.5 text-sm text-fg focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            defaultValue=""
-          >
-            <option value="" disabled>Välj ett ämne</option>
-            <option>Tips på AI-verktyg att testa</option>
-            <option>Idé för en guide eller artikel</option>
-            <option>Annonsering & samarbeten</option>
-            <option>Rättelse eller felrapport</option>
-            <option>Annat</option>
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="message" className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
-            Meddelande
-          </label>
-          <textarea
-            id="message"
-            rows={6}
-            placeholder="Berätta lite mer om vad det gäller…"
-            className="w-full rounded-md border border-line-strong bg-card px-3 py-2.5 text-sm text-fg placeholder:text-fg-faint focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
-            ⓘ Vi svarar inom en arbetsdag
-          </span>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700"
-          >
-            Skicka <span aria-hidden>›</span>
-          </button>
-        </div>
-      </form>
+      <ContactForm />
     </section>
-  );
-}
-
-function Field({
-  id, label, placeholder, type,
-}: {
-  id: string; label: string; placeholder: string; type: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        className="w-full rounded-md border border-line-strong bg-card px-3 py-2.5 text-sm text-fg placeholder:text-fg-faint focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-      />
-    </div>
   );
 }
 
 function ContactInfo() {
   const items: { label: string; value: string; href: string; note: string; icon: string }[] = [
     {
-      label: 'Redaktionen',
-      value: 'redaktionen@aimagasinet.se',
-      href: 'mailto:redaktionen@aimagasinet.se',
-      note: 'Tips, frågor om innehållet, rättelser.',
-      icon: '✎',
-    },
-    {
-      label: 'Annonsering',
-      value: 'annonsering@aimagasinet.se',
-      href: 'mailto:annonsering@aimagasinet.se',
-      note: 'Mediakit, samarbeten, sponsrade tester.',
-      icon: '◧',
+      label: 'E-post',
+      value: 'kontakt@aimagasinet.se',
+      href: 'mailto:kontakt@aimagasinet.se',
+      note: 'Tips på verktyg, frågor om innehållet, annonsering och samarbeten — vi svarar inom en arbetsdag.',
+      icon: '✉',
     },
   ];
 
@@ -216,15 +138,15 @@ function Faq() {
     },
     {
       q: 'Kan jag tipsa er om ett verktyg ni borde testa?',
-      a: 'Absolut. Skicka en kort beskrivning + länk till redaktionen@aimagasinet.se. Vi prioriterar verktyg som funkar i svenska arbetsflöden eller som löser ett tydligt problem för svenska användare.',
+      a: 'Absolut. Skicka en kort beskrivning + länk till kontakt@aimagasinet.se. Vi prioriterar verktyg som funkar i svenska arbetsflöden eller som löser ett tydligt problem för svenska användare.',
     },
     {
       q: 'Skriver ni gästinlägg eller anlitar externa skribenter?',
-      a: 'Ja, för specialiserade områden anlitar vi branschexperter. Skicka en kort pitch + två tidigare arbetsprover till redaktionen@aimagasinet.se så återkommer vi om det matchar pipeline.',
+      a: 'Ja, för specialiserade områden anlitar vi branschexperter. Skicka en kort pitch + två tidigare arbetsprover till kontakt@aimagasinet.se så återkommer vi om det matchar pipeline.',
     },
     {
       q: 'Hittade ett faktafel — vart anmäler jag?',
-      a: 'Tack för att du tar dig tid. Mejla redaktionen@aimagasinet.se med URL + vad som är fel, så rättar vi och uppdaterar artikeln med en kort rättelse-not.',
+      a: 'Tack för att du tar dig tid. Mejla kontakt@aimagasinet.se med URL + vad som är fel, så rättar vi och uppdaterar artikeln med en kort rättelse-not.',
     },
   ];
 

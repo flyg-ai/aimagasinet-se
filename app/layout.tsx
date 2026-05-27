@@ -113,13 +113,8 @@ export default async function RootLayout({
                 </h3>
                 <ul className="space-y-2 text-sm">
                   <li>
-                    <a href="mailto:redaktionen@aimagasinet.se" className="text-fg-subtle hover:text-accent">
-                      redaktionen@aimagasinet.se
-                    </a>
-                  </li>
-                  <li>
-                    <a href="mailto:annonsering@aimagasinet.se" className="text-fg-subtle hover:text-accent">
-                      annonsering@aimagasinet.se
+                    <a href="mailto:kontakt@aimagasinet.se" className="text-fg-subtle hover:text-accent">
+                      kontakt@aimagasinet.se
                     </a>
                   </li>
                 </ul>

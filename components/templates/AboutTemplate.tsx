@@ -203,10 +203,10 @@ function ContactCta() {
             Kontakta oss <span aria-hidden>›</span>
           </Link>
           <a
-            href="mailto:redaktionen@aimagasinet.se"
+            href="mailto:kontakt@aimagasinet.se"
             className="inline-flex items-center gap-2 rounded-md border border-line bg-card px-6 py-3 text-sm font-bold uppercase tracking-wider text-fg hover:border-indigo-300 hover:text-indigo-700"
           >
-            redaktionen@aimagasinet.se
+            kontakt@aimagasinet.se
           </a>
         </div>
       </div>
@@ -218,7 +218,14 @@ function EditorialBody({ html }: { html: string | null }) {
   if (!html) return null;
   const clean = html
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    // /om-oss should be ren text — the WP import shipped a large lamp
+    // illustration mid-page that fights the team-grid for attention.
+    // Strip standalone <img> (including self-closing) and <figure>/<picture>
+    // blocks so the AboutTemplate sections own the visual hierarchy.
+    .replace(/<figure\b[^>]*>[\s\S]*?<\/figure>/gi, '')
+    .replace(/<picture\b[^>]*>[\s\S]*?<\/picture>/gi, '')
+    .replace(/<img\b[^>]*\/?>/gi, '');
   return (
     <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
       <div className="magazine-prose">
