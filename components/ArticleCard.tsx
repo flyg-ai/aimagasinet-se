@@ -25,7 +25,7 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
             src={a.featured_image}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           // Styled cover for articles without featured_image: indigo gradient
@@ -106,7 +106,7 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
             src={a.featured_image}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <CardCover title={a.title} small />
