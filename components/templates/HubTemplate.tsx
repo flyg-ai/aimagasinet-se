@@ -9,6 +9,9 @@ export type HubChild = ArticleCardData & {
   /** Set on virtual children (no DB article yet) — replaces "Läs recension"
    *  link with a "Recension snart" badge in RankRow. */
   isUpcoming?: boolean;
+  /** Full article body — used by ReviewsSection to extract an analysis
+   *  snippet. Always present for DB-backed children; null for virtuals. */
+  content_mdx?: string | null;
 };
 
 const SE_MONTHS = [
@@ -895,6 +898,13 @@ export function HubTemplate({
       {ranked.length > 0 && <ComparisonTable ranked={ranked} />}
 
       <EditorialSection article={a} ranked={ranked} />
+
+      {/* Long-form review cards — one per real child, mirrors the layout of
+          ai-text-verktyg's bottom section but rendered programmatically so
+          every hub (yrke included) gets the same treatment. */}
+      {ranked.some((c) => !c.isUpcoming) && (
+        <ReviewsSection ranked={ranked} />
+      )}
     </article>
   );
 }
@@ -1341,12 +1351,12 @@ function EditorialSection({
   article: Article;
   ranked: HubChild[];
 }) {
-  // Yrke-tree hubs (depth 4-5) embed legacy "ai-tool-box" review-cards in
-  // their content_mdx — we already render the same tools in RankingSection
-  // with proper CTAs, so strip the duplicate.
-  const isYrkeHub = a.path.startsWith('/ai-verktyg/foretag/yrke/');
+  // Strip legacy WP "ai-tool-box" review-cards from content_mdx on every hub:
+  // the new ReviewsSection at the bottom renders them programmatically with
+  // proper CTAs, curated pros/cons and consistent typography, so the WP cards
+  // would just be a worse-looking duplicate.
   const html = a.content_mdx
-    ? sanitizeWpHtml(a.content_mdx, { stripAiToolBox: isYrkeHub })
+    ? sanitizeWpHtml(a.content_mdx, { stripAiToolBox: true })
     : '';
   if (process.env.NODE_ENV !== 'production') {
     const orphanAiCompare =
@@ -1418,6 +1428,182 @@ function EditorialSection({
   );
 }
 
+/* ─── ReviewsSection — long-form cards, one per real child ─────
+   Renders below EditorialSection. Each card surfaces the curated
+   profile data (logo, rating, label, pros/cons) plus an analysis
+   paragraph pulled from child.content_mdx, and links out to the
+   full review page. Skips virtual (isUpcoming) children. */
+
+function ReviewsSection({ ranked }: { ranked: HubChild[] }) {
+  const reviews = ranked.filter((c) => !c.isUpcoming);
+  if (reviews.length === 0) return null;
+  const year = new Date().getFullYear();
+
+  return (
+    <section
+      aria-labelledby="reviews"
+      className="border-t border-line bg-muted"
+    >
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="mb-3 flex items-center gap-3">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-600" />
+          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
+            Recensioner · {year}
+          </span>
+        </div>
+        <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
+          <h2
+            id="reviews"
+            className="text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
+          >
+            Verktyg för verktyg
+          </h2>
+          <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-faint sm:inline">
+            {reviews.length} testade
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-8">
+          {reviews.map((c, i) => (
+            <ReviewCard key={c.slug} child={c} rank={i + 1} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
+  const name = toolNameFromTitle(child.title);
+  const p = buildProfile(child);
+  const r = getRating(child);
+  const stars = starsFromScore(r.score);
+  const analysis = extractAnalysis(child);
+  const isTop = rank === 1;
+
+  return (
+    <article
+      className={
+        'rounded-2xl border bg-card p-6 sm:p-8 ' +
+        (isTop ? 'border-indigo-300 ring-1 ring-indigo-200' : 'border-line')
+      }
+    >
+      <div className="flex flex-wrap items-start gap-5 border-b border-line-subtle pb-5">
+        <Logo color={p.logo} initial={p.initial} image={p.imageUrl} size="lg" />
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
+              #{String(rank).padStart(2, '0')}
+            </span>
+            <span
+              className={
+                'rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ' +
+                (isTop
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'bg-soft text-fg-subtle')
+              }
+            >
+              {isTop ? '🏆 Redaktionens val' : p.label}
+            </span>
+          </div>
+          <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+            {name}
+          </h3>
+          {p.tagline && (
+            <p className="mt-2 max-w-2xl text-fg-subtle">{p.tagline}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col items-center gap-1 sm:items-end">
+          <RatingCircle score={r.score} />
+          <span className="text-sm leading-none tracking-widest text-indigo-600">
+            {'★'.repeat(stars)}
+            <span className="text-line-strong">{'★'.repeat(5 - stars)}</span>
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
+          <div className="mb-3 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+            <span aria-hidden className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">✓</span>
+            Styrkor
+          </div>
+          <ul className="space-y-2 text-sm leading-snug text-fg">
+            {p.pros.map((pro) => (
+              <li key={pro} className="flex gap-2">
+                <span aria-hidden className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
+                <span>{pro}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-5">
+          <div className="mb-3 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-rose-700">
+            <span aria-hidden className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-rose-100">✗</span>
+            Svagheter
+          </div>
+          <ul className="space-y-2 text-sm leading-snug text-fg">
+            {p.cons.map((con) => (
+              <li key={con} className="flex gap-2">
+                <span aria-hidden className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-rose-500" />
+                <span>{con}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {analysis && (
+        <div className="mt-6">
+          <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
+            Vår analys
+          </div>
+          <p className="max-w-3xl text-[15px] leading-[1.75] text-fg-muted">
+            {analysis}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line-subtle pt-5">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-faint">
+          ⓘ Sammanvägt betyg · {r.score.toFixed(1)} / 10
+        </span>
+        <Link
+          href={child.path}
+          className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700"
+        >
+          Läs full recension <span aria-hidden>›</span>
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+/** Pick the first meaningful prose paragraph from content_mdx; fall back
+ *  to excerpt. Strips tags, collapses whitespace, caps at ~280 chars. */
+function extractAnalysis(child: HubChild): string | null {
+  const raw = child.content_mdx ?? '';
+  // Find paragraphs; take the first one that's long enough to be substantive.
+  const paragraphs = raw
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .match(/<p\b[^>]*>([\s\S]*?)<\/p>/gi) ?? [];
+  for (const block of paragraphs) {
+    const text = block
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (text.length >= 80) {
+      return text.length > 280 ? text.slice(0, 277).trimEnd() + '…' : text;
+    }
+  }
+  // No suitable paragraph — fall back to the excerpt.
+  const ex = (child.excerpt ?? '').trim();
+  if (!ex) return null;
+  return ex.length > 280 ? ex.slice(0, 277).trimEnd() + '…' : ex;
+}
 
 function Snabbval({ ranked }: { ranked: HubChild[] }) {
   const picks = ranked.slice(0, SNABBVAL_LABELS.length).map((c, i) => ({

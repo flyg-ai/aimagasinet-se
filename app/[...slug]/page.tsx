@@ -83,12 +83,14 @@ async function getChildren(parentSlug: string): Promise<ArticleCardData[]> {
 }
 
 async function getHubChildren(parentSlug: string): Promise<HubChild[]> {
-  // Fetches content_mdx solely to parse the rating — the body is then dropped.
-  // HubTemplate's editorial section uses the hub article's own content_mdx,
-  // not the children's, so we don't need to ship per-child bodies to the page.
+  // Fetches content_mdx for two reasons:
+  //   1. rating parser scans the body for "X/10" markers
+  //   2. ReviewsSection (HubTemplate, bottom of page) extracts an analysis
+  //      snippet per child for the review-card grid
   const rows = await selectCards({ parentSlug, withContent: true });
   return rows.map(({ content_mdx, ...rest }) => ({
     ...rest,
+    content_mdx: content_mdx ?? null,
     rating: parseRating(content_mdx ?? null),
   }));
 }

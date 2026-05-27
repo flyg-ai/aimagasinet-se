@@ -1028,23 +1028,50 @@ export function toReviewProfile(t: YrkeTool) {
   };
 }
 
-/** Generated body for the DB row's content_mdx column. */
+/** Generated body for the DB row's content_mdx column.
+ *
+ *  Layout mirrors what WP-imported tool reviews carry, so HubTemplate's
+ *  ReviewsSection can extract the same kind of "Vår analys"-paragraph
+ *  regardless of whether the body was seeded by us or imported from WP. */
 export function toContentMdx(t: YrkeTool): string {
   const features = t.features.map((f) => `  <li>${f}</li>`).join('\n');
+  const pros = t.pros.map((p) => `  <li>${p}</li>`).join('\n');
+  const cons = t.cons.map((c) => `  <li>${c}</li>`).join('\n');
+  const useCases = t.useCases.map((u) => `  <li>${u}</li>`).join('\n');
+
   return `
-<h2>Vad är ${t.brand}?</h2>
-<p>${t.oneliner} ${t.brand} grundades ${t.founded} och har sitt huvudkontor i ${t.hq}.</p>
+<h2>Vår analys av ${t.brand}</h2>
+<p>${t.oneliner} ${t.brand} är ett av de verktyg vi rekommenderar inom ${t.parent.replace(/-/g, ' ')} — särskilt för team som värdesätter ${t.bestFor.toLowerCase()}. Vår sammanvägda bedömning landar på ${t.score.toFixed(1)} av 10 efter test mot ${t.brand}s direkta konkurrenter.</p>
+<p>${t.brand} grundades ${t.founded} och har sitt huvudkontor i ${t.hq}. Företaget ligger bakom <strong>${t.label}</strong> i vår topplista och utmärker sig framför allt på ${t.tags.slice(0, 2).join(' och ').toLowerCase()}.</p>
 
 <h2>Funktioner som spelar roll</h2>
 <ul>
 ${features}
 </ul>
 
+<h2>Användningsområden</h2>
+<ul>
+${useCases}
+</ul>
+
+<h2>Styrkor</h2>
+<ul>
+${pros}
+</ul>
+
+<h2>Svagheter</h2>
+<ul>
+${cons}
+</ul>
+
 <h2>Vem passar ${t.brand} för?</h2>
-<p>${t.bestFor}.</p>
+<p>${t.bestFor}. Om du istället letar efter ett verktyg som passar ett annat användningsfall är det värt att jämföra med övriga verktyg i topplistan ovan innan du tecknar abonnemang.</p>
 
 <h2>Prismodell</h2>
 <p>${t.pricing}</p>
+
+<h2>Slutsats</h2>
+<p>Sammantaget ger ${t.brand} ett <strong>${t.score >= 9 ? 'mycket starkt' : t.score >= 8 ? 'starkt' : 'solid'}</strong> intryck i 2026 års test. ${t.brand} placerar sig som <strong>${t.label}</strong> och passar bäst för ${t.bestFor.toLowerCase()}.</p>
 `.trim();
 }
 
