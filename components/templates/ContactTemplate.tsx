@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
-import { ContactForm } from '@/components/ContactForm';
 
 /** Renders /kontakt. Hero + visual form mock (no submit logic) + contact
  *  info cards + FAQ. */
@@ -8,12 +7,7 @@ export function ContactTemplate({ article: a }: { article: Article }) {
   return (
     <article className="bg-page text-fg">
       <Hero article={a} />
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-        <div className="grid gap-10 lg:grid-cols-[1fr,360px] lg:gap-14">
-          <FormMock />
-          <ContactInfo />
-        </div>
-      </div>
+      <EmailBlock />
       <Faq />
     </article>
   );
@@ -49,80 +43,39 @@ function Hero({ article: a }: { article: Article }) {
   );
 }
 
-function FormMock() {
+function EmailBlock() {
   return (
-    <section aria-labelledby="form">
-      <div className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
-        Skicka ett meddelande
-      </div>
-      <h2 id="form" className="mb-6 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
-        Hör av dig
-      </h2>
-      <ContactForm />
-    </section>
-  );
-}
-
-function ContactInfo() {
-  const items: { label: string; value: string; href: string; note: string; icon: string }[] = [
-    {
-      label: 'E-post',
-      value: 'kontakt@aimagasinet.se',
-      href: 'mailto:kontakt@aimagasinet.se',
-      note: 'Tips på verktyg, frågor om innehållet, annonsering och samarbeten — vi svarar inom en arbetsdag.',
-      icon: '✉',
-    },
-  ];
-
-  return (
-    <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
-      <div className="rounded-xl border border-line bg-card p-6">
-        <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
+    <section aria-labelledby="email" className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
+      <div className="rounded-2xl border border-line bg-card p-8 text-center sm:p-12">
+        <div className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-indigo-600">
           E-post
         </div>
-        <h3 className="mb-4 text-lg font-black uppercase tracking-tight text-fg">
+        <h2 id="email" className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
           Hör av dig direkt
-        </h3>
-        <ul className="flex flex-col divide-y divide-line-subtle">
-          {items.map((i) => (
-            <li key={i.label} className="py-4 first:pt-0 last:pb-0">
-              <div className="flex items-start gap-3">
-                <span
-                  aria-hidden
-                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700"
-                >
-                  {i.icon}
-                </span>
-                <div className="min-w-0">
-                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">{i.label}</div>
-                  <a
-                    href={i.href}
-                    className="mt-0.5 block break-all text-sm font-bold text-fg hover:text-indigo-600"
-                  >
-                    {i.value}
-                  </a>
-                  <p className="mt-1 text-xs leading-relaxed text-fg-subtle">{i.note}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-5">
-        <h3 className="font-black uppercase tracking-tight text-fg">Annonsering?</h3>
-        <p className="mt-2 text-sm leading-relaxed text-fg-subtle">
-          Vi tar emot mediakit-förfrågningar och sponsrade tester men placerar
-          aldrig i topplistor mot betalning.
+        </h2>
+        <p className="mt-4 text-fg-muted">
+          Tips på verktyg, frågor om innehållet, annonsering, samarbeten eller
+          rättelser — skicka ett mejl så svarar vi inom en arbetsdag.
         </p>
-        <Link
-          href="/om-oss"
-          className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600"
+
+        <a
+          href="mailto:kontakt@aimagasinet.se"
+          className="mt-8 inline-flex items-center gap-3 rounded-md bg-indigo-600 px-6 py-4 text-base font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700 sm:text-lg"
         >
-          Läs mer om oss <span aria-hidden>›</span>
-        </Link>
+          <span aria-hidden className="text-xl">✉</span>
+          kontakt@aimagasinet.se
+        </a>
+
+        <p className="mt-6 font-mono text-[10px] uppercase tracking-wider text-fg-faint">
+          ⓘ Svarstid: en arbetsdag · Mån–Fre
+        </p>
+
+        <div className="mt-10 border-t border-line-subtle pt-6 text-sm text-fg-subtle">
+          Funderar du på annonsering eller samarbeten? Skriv det i ämnesraden så
+          går mejlet rätt direkt. <Link href="/om-oss" className="font-semibold text-indigo-600 hover:underline">Läs mer om oss</Link>.
+        </div>
       </div>
-    </aside>
+    </section>
   );
 }
 
