@@ -1,32 +1,41 @@
 /**
- * Manually publish a new article to the articles table.
+ * Manually publish a new article — or attach cover art to an existing one.
  *
- * Reusable CLI for one-off publishing. Used by humans or by future
- * generation scripts that delegate the upload/insert step here.
+ * Two modes:
  *
- *   npx tsx scripts/publish-article.ts \
- *     --topic="Bästa AI-prompter för ChatGPT 2026" \
- *     --slug=basta-ai-prompter-chatgpt-2026 \
- *     --category=ai-nyheter \
- *     --content=./tmp/prompts.html \
- *     --image=./tmp/cover.png
+ *   1. FULL PUBLISH — provide --topic, --slug, --category, --content (HTML
+ *      file) and optionally --image. The row is upserted on path.
+ *
+ *      npx tsx scripts/publish-article.ts \
+ *        --topic="Bästa AI-prompter för ChatGPT 2026" \
+ *        --slug=basta-ai-prompter-chatgpt-2026 \
+ *        --category=ai-nyheter \
+ *        --content=./tmp/prompts.html \
+ *        --image=./tmp/cover.png
+ *
+ *   2. IMAGE-ONLY PATCH — provide --slug and --image only. The image is
+ *      uploaded to Supabase Storage and featured_image on the existing row
+ *      is patched in place. Body and metadata are left untouched.
+ *
+ *      npx tsx scripts/publish-article.ts \
+ *        --slug=basta-ai-prompter-chatgpt-2026 \
+ *        --image=./tmp/cover.png
  *
  * Flags:
- *   --topic     Required.  Used as article title.
- *   --slug      Required.  Becomes the URL path: /<slug>.
- *   --category  Required.  Must match a categories.slug row.
- *   --content   Required.  Path to HTML file (becomes content_mdx).
- *   --image     Optional.  Local image path → uploaded to Supabase
- *               Storage bucket "featured-images" under year/month/.
- *               If omitted, featured_image is left null.
- *   --excerpt   Optional.  Otherwise derived from first <p> of content.
- *   --tags      Optional.  Comma-separated.
- *   --seo-title Optional.  Defaults to topic + " | AI-Magasinet".
- *   --seo-desc  Optional.  Defaults to excerpt.
+ *   --topic     Required for full publish. Used as article title.
+ *   --slug      Always required. URL path: /<slug>.
+ *   --category  Required for full publish. Must match a categories.slug row.
+ *   --content   Required for full publish. Path to HTML file → content_mdx.
+ *               If omitted, the script does an image-only patch instead.
+ *   --image     Optional in full publish, required in image-only mode.
+ *               Uploaded to bucket "featured-images" under <year>/<month>/.
+ *   --excerpt   Optional. Otherwise derived from first <p> of content.
+ *   --tags      Optional. Comma-separated.
+ *   --seo-title Optional. Defaults to topic + " | AI-Magasinet".
+ *   --seo-desc  Optional. Defaults to excerpt.
  *
- * The script is idempotent — re-running with the same slug upserts
- * (onConflict=path), letting you regenerate content_mdx without
- * polluting the table.
+ * Idempotent — full publishes upsert on path; image-only patches always
+ * overwrite the same storage key under <year>/<month>/<filename>.
  */
 import { config as loadEnv } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
@@ -98,8 +107,47 @@ async function main() {
   const seoTitle = arg('seo-title');
   const seoDesc  = arg('seo-desc');
 
-  if (!topic || !slug || !category || !content) {
-    console.error('Usage: --topic=... --slug=... --category=... --content=path/to.html [--image=path] [--excerpt=...] [--tags=a,b] [--seo-title=...] [--seo-desc=...]');
+  if (!slug) {
+    console.error('Usage:\n' +
+      '  Full publish:   --topic=... --slug=... --category=... --content=path/to.html [--image=path] [...]\n' +
+      '  Image-only:     --slug=... --image=path/to.png');
+    process.exit(1);
+  }
+
+  // ── Image-only / partial update path ────────────────────────────
+  // If --content isn't given we only patch the existing row, instead of
+  // doing a full upsert. Useful when you just want to add cover art to an
+  // already-published article without re-shipping the body.
+  if (!content) {
+    if (!image) {
+      console.error('Provide either --content (full publish) or --image (image-only update).');
+      process.exit(1);
+    }
+    if (!statSync(image, { throwIfNoEntry: false })) {
+      console.error(`Image file not found: ${image}`);
+      process.exit(1);
+    }
+    console.log(`Uploading ${image} to Supabase Storage…`);
+    const featuredImage = await uploadImage(image);
+    console.log(`  → ${featuredImage}`);
+
+    const { data, error } = await db
+      .from('articles')
+      .update({ featured_image: featuredImage })
+      .eq('slug', slug)
+      .select('id,slug,path,featured_image');
+    if (error) { console.error('update failed:', error.message); process.exit(1); }
+    if (!data || data.length === 0) {
+      console.error(`No article found with slug=${slug}.`);
+      process.exit(1);
+    }
+    console.log(`OK → ${data[0].path} (id=${data[0].id}) featured_image set.`);
+    return;
+  }
+
+  // ── Full publish path ───────────────────────────────────────────
+  if (!topic || !category) {
+    console.error('Full publish requires --topic and --category in addition to --slug and --content.');
     process.exit(1);
   }
 
