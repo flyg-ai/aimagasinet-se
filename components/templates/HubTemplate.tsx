@@ -1295,11 +1295,43 @@ function ComparisonTable({ ranked }: { ranked: HubChild[] }) {
 /** Strip WP-injected <style>/<script> blocks before rendering hub HTML.
  *  CSS (.magazine-prose, scoped in globals.css) handles the visual
  *  neutralisation of WP container backgrounds; this just keeps stray
- *  globals and arbitrary scripts out of the page. */
-function sanitizeWpHtml(html: string): string {
-  return html
+ *  globals and arbitrary scripts out of the page.
+ *
+ *  With { stripAiToolBox: true } also removes WP-injected "ai-tool-box"
+ *  cards — these are the legacy review-cards with plain text links that
+ *  RankingSection already replaces with proper CTA buttons. Used on
+ *  yrke-tree hubs to avoid showing the same recension twice. */
+function sanitizeWpHtml(html: string, opts?: { stripAiToolBox?: boolean }): string {
+  let out = html
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  if (opts?.stripAiToolBox) out = stripAiToolBoxes(out);
+  return out;
+}
+
+/** Remove every <div class="… ai-tool-box …">…</div> (with nested-div
+ *  awareness — regex alone can't balance, so we walk forward counting
+ *  div opens/closes from each match). */
+function stripAiToolBoxes(html: string): string {
+  const openRe = /<div\b[^>]*\bclass\s*=\s*["'][^"']*\bai-tool-box\b[^"']*["'][^>]*>/i;
+  while (true) {
+    const m = openRe.exec(html);
+    if (!m) break;
+    const start = m.index;
+    let depth = 1;
+    let pos = start + m[0].length;
+    const tagRe = /<(\/?)div\b[^>]*>/gi;
+    tagRe.lastIndex = pos;
+    while (depth > 0) {
+      const t = tagRe.exec(html);
+      if (!t) break;
+      depth += t[1] === '/' ? -1 : 1;
+      pos = t.index + t[0].length;
+    }
+    if (depth !== 0) break; // unbalanced — bail so we don't loop forever
+    html = html.slice(0, start) + html.slice(pos);
+  }
+  return html;
 }
 
 function EditorialSection({
@@ -1309,7 +1341,13 @@ function EditorialSection({
   article: Article;
   ranked: HubChild[];
 }) {
-  const html = a.content_mdx ? sanitizeWpHtml(a.content_mdx) : '';
+  // Yrke-tree hubs (depth 4-5) embed legacy "ai-tool-box" review-cards in
+  // their content_mdx — we already render the same tools in RankingSection
+  // with proper CTAs, so strip the duplicate.
+  const isYrkeHub = a.path.startsWith('/ai-verktyg/foretag/yrke/');
+  const html = a.content_mdx
+    ? sanitizeWpHtml(a.content_mdx, { stripAiToolBox: isYrkeHub })
+    : '';
   if (process.env.NODE_ENV !== 'production') {
     const orphanAiCompare =
       (html.match(/<div[^>]*class="[^"]*ai-compare[^"]*"/g) ?? []).length;
