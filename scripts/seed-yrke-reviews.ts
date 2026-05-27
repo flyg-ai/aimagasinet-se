@@ -25,6 +25,18 @@ const PARENT_PATH: Record<string, string> = {
   'sociala-medier': 'marknadsforing/sociala-medier',
   bokforing: 'ekonomi-redovisning/bokforing',
   redovisning: 'ekonomi-redovisning/redovisning',
+  // Juridik
+  avtalsgranskning: 'juridik/avtalsgranskning',
+  'due-diligence': 'juridik/due-diligence',
+  rattsutredningar: 'juridik/rattsutredningar',
+  // Kundservice
+  chatbot: 'kundservice/chatbot',
+  'epost-svar': 'kundservice/epost-svar',
+  'rost-ai': 'kundservice/rost-ai',
+  // Rekrytering
+  'cv-screening': 'rekrytering/cv-screening',
+  jobbannonser: 'rekrytering/jobbannonser',
+  kandidatmatchning: 'rekrytering/kandidatmatchning',
 };
 
 async function main() {

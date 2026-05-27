@@ -10,13 +10,24 @@
  * Single source of truth → editing a tool here updates all three layers.
  */
 
+import { EXTENDED_TOOLS } from './yrke-tools-extended';
+
 export type YrkeParent =
   | 'seo'
   | 'content-copywriting'
   | 'annonser'
   | 'sociala-medier'
   | 'bokforing'
-  | 'redovisning';
+  | 'redovisning'
+  | 'avtalsgranskning'
+  | 'due-diligence'
+  | 'rattsutredningar'
+  | 'chatbot'
+  | 'epost-svar'
+  | 'rost-ai'
+  | 'cv-screening'
+  | 'jobbannonser'
+  | 'kandidatmatchning';
 
 export type YrkeTool = {
   slug: string;
@@ -59,6 +70,18 @@ const CRITERIA_BY_PARENT: Record<YrkeParent, string[]> = {
   'sociala-medier': ['Schemaläggning', 'AI-innehåll', 'Plattformsstöd', 'Insights', 'Pris / prestanda', 'Användarvänlighet'],
   bokforing: ['Funktionalitet', 'Användarvänlighet', 'Integrationer', 'Svensk anpassning', 'AI-stöd', 'Pris / prestanda'],
   redovisning: ['Funktionalitet', 'AI-stöd', 'Compliance', 'Skalbarhet', 'Integrationer', 'Pris / prestanda'],
+  // Juridik
+  avtalsgranskning: ['Granskningskvalitet', 'Playbook-anpassning', 'Risk-flagging', 'Pris / prestanda', 'Integrationer', 'Svensk juridik'],
+  'due-diligence': ['Dokumentförståelse', 'Extraktion', 'Skalbarhet', 'Audit trail', 'Pris / prestanda', 'Säkerhet'],
+  rattsutredningar: ['Källtäckning', 'Citatkvalitet', 'Svensk rätt', 'Hastighet', 'Pris / prestanda', 'Hallucination-skydd'],
+  // Kundservice
+  chatbot: ['NLU-kvalitet', 'Integrationer', 'Eskaleringslogik', 'Svenska', 'Pris / prestanda', 'Analytik'],
+  'epost-svar': ['Svarsförslag', 'Brand voice', 'Inbox-integration', 'Knowledge-base', 'Pris / prestanda', 'Svenska'],
+  'rost-ai': ['Röstkvalitet', 'Transkribering', 'Svenska', 'Telefoni-integration', 'Pris / prestanda', 'Realtid'],
+  // Rekrytering
+  'cv-screening': ['Matchningskvalitet', 'Bias-skydd', 'ATS-integration', 'Skalbarhet', 'Pris / prestanda', 'Svensk arbetsrätt'],
+  jobbannonser: ['Textkvalitet', 'Inkluderingsanalys', 'Bias-detection', 'A/B-test', 'Pris / prestanda', 'Brand voice'],
+  kandidatmatchning: ['Skills-mapping', 'ATS-integration', 'Pipeline-täckning', 'Diversitet', 'Pris / prestanda', 'Förklarbarhet'],
 };
 
 /** Deterministic 6-criterion matrix around `score` ± 0.4. */
@@ -987,6 +1010,7 @@ export const YRKE_TOOLS: YrkeTool[] = [
     useCases: ['Byråflöden', 'Dokumenthantering', 'Klient-portal', 'E-signatur', 'Multi-klient'],
     label: 'Bäst byrå-plattform', logo: 'bg-fuchsia-600',
   },
+  ...EXTENDED_TOOLS,
 ];
 
 /* ── Helpers — single source of truth → templates + DB ───────── */
