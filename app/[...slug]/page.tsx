@@ -15,6 +15,9 @@ import {
   STANDALONE_RELATED_PARENT,
   isStandaloneSlug,
 } from '@/components/templates/StandalonePageTemplate';
+import { MasterHubTemplate } from '@/components/templates/MasterHubTemplate';
+import { ForetagHubTemplate } from '@/components/templates/ForetagHubTemplate';
+import { DeepArticleTemplate } from '@/components/templates/DeepArticleTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
 
 export const revalidate = 300;
@@ -102,7 +105,15 @@ async function getSiblings(parentSlug: string | null, excludeSlug: string) {
    Specific-path handlers run first, then section rules, then a depth
    fallback. Each branch eagerly returns to keep the flow flat. */
 
-type Kind = 'yrkesHub' | 'hub' | 'review' | 'standalone' | 'article';
+type Kind =
+  | 'masterHub'
+  | 'foretagHub'
+  | 'yrkesHub'
+  | 'hub'
+  | 'review'
+  | 'standalone'
+  | 'deepArticle'
+  | 'article';
 
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): {
   kind: Kind;
@@ -111,12 +122,24 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   // Posts always go to ArticleTemplate
   if (articleType === 'post') return { kind: 'article', reason: 'type=post' };
 
-  // Specific path: yrkes-hub
+  // /ai-verktyg — master index page with curated category grid
+  if (path === '/ai-verktyg') return { kind: 'masterHub', reason: '/ai-verktyg master hub' };
+
+  // /ai-verktyg/foretag — B2B hub with yrke grid
+  if (path === '/ai-verktyg/foretag') return { kind: 'foretagHub', reason: '/foretag B2B hub' };
+
+  // /ai-verktyg/foretag/yrke — yrkes-hub (existing template)
   if (path === '/ai-verktyg/foretag/yrke') return { kind: 'yrkesHub', reason: 'yrkes-hub path' };
 
-  // /ai-verktyg/foretag/* — företag-trädet renderas som artikel tills vidare
-  if (path === '/ai-verktyg/foretag' || path.startsWith('/ai-verktyg/foretag/')) {
-    return { kind: 'article', reason: '/ai-verktyg/foretag tree → ArticleTemplate' };
+  // /ai-verktyg/foretag/yrke/[yrke] (depth 4) and [yrke]/[topic] (depth 5)
+  // → DeepArticleTemplate with sidebar + sibling navigation
+  if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) {
+    return { kind: 'deepArticle', reason: '/foretag/yrke/* deep article' };
+  }
+
+  // Remaining /ai-verktyg/foretag/* (depth 2 already handled above) → article
+  if (path.startsWith('/ai-verktyg/foretag/')) {
+    return { kind: 'article', reason: '/ai-verktyg/foretag fallback' };
   }
 
   // /ai-verktyg/gratis/* — gratis-trädet renderas som artikel tills vidare
@@ -201,8 +224,45 @@ export default async function CatchAllPage({ params }: Props) {
 
   console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
+  if (decision.kind === 'masterHub') {
+    return <MasterHubTemplate article={a} />;
+  }
+
+  if (decision.kind === 'foretagHub') {
+    // Pull yrken (children of /foretag/yrke) + their subtopic children
+    // in parallel for the yrke-grid.
+    const yrkes = await getChildren('yrke');
+    const subtopicsByYrke: Record<string, ArticleCardData[]> = {};
+    await Promise.all(
+      yrkes.map(async (y) => {
+        subtopicsByYrke[y.slug] = await getChildren(y.slug);
+      })
+    );
+    return (
+      <ForetagHubTemplate
+        article={a}
+        yrkes={yrkes}
+        subtopicsByYrke={subtopicsByYrke}
+      />
+    );
+  }
+
   if (decision.kind === 'yrkesHub') {
     return <YrkesHubTemplate article={a} />;
+  }
+
+  if (decision.kind === 'deepArticle') {
+    const [childItems, siblings] = await Promise.all([
+      getChildren(a.slug),
+      getSiblings(a.parent_slug, a.slug),
+    ]);
+    return (
+      <DeepArticleTemplate
+        article={a}
+        items={childItems}
+        siblings={siblings}
+      />
+    );
   }
 
   if (decision.kind === 'hub') {
