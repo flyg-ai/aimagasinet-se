@@ -13,28 +13,21 @@ type NavItem = {
 const NAV: NavItem[] = [
   { href: '/', label: 'AI-Nyheter' },
   {
-    href: '/ai-video',
-    label: 'AI Video',
-    children: [
-      { href: '/ai-video/kling-ai', label: 'Kling AI' },
-      { href: '/ai-video/sora-2', label: 'Sora 2' },
-      { href: '/ai-video/pika-labs', label: 'Pika Labs' },
-      { href: '/ai-video/runway-gen-3', label: 'Runway Gen-3' },
-    ],
-  },
-  {
     href: '/ai-verktyg',
-    label: 'AI-VERKTYG',
+    label: 'AI-Verktyg',
     children: [
-      { href: '/bygga-mobilapp-med-ai', label: 'Bygga Mobilapp med AI' },
-      { href: '/bygga-app-med-ai', label: 'Bygga Appar & Hemsidor med AI' },
-      { href: '/skapa-faceless-content-med-ai', label: 'Faceless Content med AI' },
-      { href: '/ai-verktyg/gratis', label: 'Gratis AI-verktyg' },
-      { href: '/ai-verktyg/ai-text-verktyg', label: 'AI-text' },
-      { href: '/ai-verktyg/ai-bild-verktyg', label: 'AI-bilder' },
-      { href: '/ai-verktyg/ai-ljud-och-musik', label: 'AI ljud & musik' },
-      { href: '/ai-verktyg/ai-kod-verktyg', label: 'AI för kod' },
-      { href: '/ai-verktyg/ai-automation', label: 'AI Automation' },
+      // Kategorier överst, i kanonisk ordning
+      { href: '/ai-video',                       label: 'AI-Video' },
+      { href: '/ai-verktyg/ai-bild-verktyg',     label: 'AI-Bild' },
+      { href: '/ai-verktyg/ai-text-verktyg',     label: 'AI-Text' },
+      { href: '/ai-verktyg/ai-ljud-och-musik',   label: 'AI-Ljud & Musik' },
+      { href: '/ai-verktyg/ai-kod-verktyg',      label: 'AI för kod' },
+      { href: '/ai-verktyg/ai-automation',       label: 'AI-Automation' },
+      { href: '/ai-verktyg/gratis',              label: 'Gratis AI-verktyg' },
+      // Singel-guider längst ner
+      { href: '/bygga-mobilapp-med-ai',          label: 'Bygga Mobilapp med AI' },
+      { href: '/bygga-app-med-ai',               label: 'Bygga Appar & Hemsidor med AI' },
+      { href: '/skapa-faceless-content-med-ai',  label: 'Faceless Content med AI' },
     ],
   },
   {
@@ -51,8 +44,6 @@ const NAV: NavItem[] = [
       { href: '/ai-guiden/vad-ar-ai', label: 'Vad är AI?' },
     ],
   },
-  { href: '/om-oss', label: 'Om Oss' },
-  { href: '/kontakt', label: 'Kontakt' },
 ];
 
 export function SiteNav() {
@@ -72,7 +63,7 @@ export function SiteNav() {
           <div key={item.href} className="group relative">
             <Link
               href={item.href}
-              className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-fg-subtle transition-colors hover:text-accent group-hover:text-accent"
+              className="inline-flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium text-fg-subtle transition-colors hover:text-accent group-hover:text-accent"
             >
               {item.label}
               {item.children && (
