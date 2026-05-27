@@ -61,7 +61,7 @@ export default async function RootLayout({
               <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                 AI
               </span>
-              <span className="hidden font-black uppercase tracking-tight text-zinc-900 sm:inline">
+              <span className="font-black uppercase tracking-tight text-zinc-900">
                 Magasinet
               </span>
             </Link>
