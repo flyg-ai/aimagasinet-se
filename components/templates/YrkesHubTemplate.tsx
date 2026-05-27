@@ -1,59 +1,48 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
 
-/** Hardcoded profession deeplinks. Add more here as sub-pages get published. */
-const YRKEN: { slug: string; title: string; icon: string; description: string }[] = [
+/** Top-level yrkesroller. Each links to its yrkesroll-landing (depth 4);
+ *  the landing pages then expose their subcategories. Use explicit href so
+ *  legacy a.path/{slug}-derivation can't 404 when slug structure shifts. */
+const YRKEN: {
+  slug: string;
+  title: string;
+  href: string;
+  icon: string;
+  description: string;
+}[] = [
   {
     slug: 'marknadsforing',
     title: 'Marknadsföring',
+    href: '/ai-verktyg/foretag/yrke/marknadsforing',
     icon: '📣',
-    description: 'AI för kampanjplanering, copy och kanalstrategi — verktygen som ger marknadsteam mest hävstång.',
+    description: 'AI för SEO, content, annonser och sociala medier — verktygen som ger marknadsteam mest hävstång.',
   },
   {
-    slug: 'seo',
-    title: 'SEO',
-    icon: '🔍',
-    description: 'Sökordsanalys, contentbriefs, on-page-optimering och länkbyggande automatiserat med AI.',
-  },
-  {
-    slug: 'content-copywriting',
-    title: 'Content & Copywriting',
-    icon: '✍️',
-    description: 'Bloggar, landningssidor, sociala medier och e-post — bäst-i-test för svensk text.',
-  },
-  {
-    slug: 'annonser',
-    title: 'Annonser',
-    icon: '🎯',
-    description: 'Google Ads, Meta, LinkedIn — AI som skriver rubriker, brödtext och tester variationer.',
-  },
-  {
-    slug: 'bokforing',
-    title: 'Bokföring',
+    slug: 'ekonomi-redovisning',
+    title: 'Ekonomi & Redovisning',
+    href: '/ai-verktyg/foretag/yrke/ekonomi-redovisning',
     icon: '📊',
-    description: 'AI-assisterad bokföring, kvittohantering och rapportering för småföretagare och soloentreprenörer.',
-  },
-  {
-    slug: 'redovisning',
-    title: 'Redovisning',
-    icon: '🧾',
-    description: 'Verktyg för redovisningskonsulter — automatisk klassificering, avstämning och årsbokslut.',
+    description: 'AI för bokföring, redovisning och bokslut — för småföretagare, byråer och controllers.',
   },
   {
     slug: 'kundservice',
     title: 'Kundservice',
+    href: '/ai-verktyg/foretag/yrke/kundservice',
     icon: '💬',
     description: 'Chatbottar, e-postsvar och röst-AI som tar undan repetitiva ärenden från supportteamet.',
   },
   {
     slug: 'rekrytering',
     title: 'Rekrytering & HR',
+    href: '/ai-verktyg/foretag/yrke/rekrytering',
     icon: '👥',
-    description: 'CV-screening, jobbannonser och kandidat-matching — verktyg för moderna talent-team.',
+    description: 'CV-screening, jobbannonser och kandidatmatchning — verktyg för moderna talent-team.',
   },
   {
     slug: 'juridik',
     title: 'Juridik',
+    href: '/ai-verktyg/foretag/yrke/juridik',
     icon: '⚖️',
     description: 'Avtalsgranskning, due diligence och rättsutredningar med AI som klarar svensk juridisk text.',
   },
@@ -130,6 +119,38 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
         </div>
       </header>
 
+      {/* ── SEO-intro ───────────────────────────────────────────── */}
+      <section className="border-b border-line bg-card">
+        <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-14">
+          <div className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
+            Så hjälper AI ditt yrke
+          </div>
+          <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+            AI som faktiskt effektiviserar jobbet
+          </h2>
+          <div className="space-y-4 text-[17px] leading-[1.75] text-fg-muted">
+            <p>
+              AI förändrar hur svenska företag arbetar — från marknadsföring och
+              ekonomi till kundservice, rekrytering och juridik. Genom att
+              automatisera repetitiva uppgifter, accelerera analysarbete och
+              förbättra beslutsunderlag ger AI-verktygen tillbaka tiotals timmar
+              varje vecka per medarbetare.
+            </p>
+            <p>
+              Det svåra är inte att hitta ett AI-verktyg — det är att hitta
+              <em> rätt</em> verktyg för just din roll. En SEO-specialist behöver
+              en annan stack än en redovisningskonsult, och en kundservice-chef
+              har andra krav än en jurist på AI-tester.
+            </p>
+            <p>
+              Vi har testat och rankat AI-verktygen som faktiskt gör skillnad i
+              svenska arbetsflöden. Välj ditt yrke nedan så får du våra topplistor,
+              recensioner och praktiska guider för att komma igång snabbt.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── Yrkes-grid ──────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
@@ -143,7 +164,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
           {YRKEN.map((y) => (
             <Link
               key={y.slug}
-              href={`${a.path.replace(/\/$/, '')}/${y.slug}`}
+              href={y.href}
               className="group flex flex-col gap-3 rounded-2xl border border-line bg-card p-6 transition-colors hover:border-indigo-300 hover:bg-indigo-50/40"
             >
               <span

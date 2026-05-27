@@ -108,6 +108,102 @@ const SPEC_BY_SLUG: Record<string, YrkesRollSpec> = {
       { label: 'Bäst för audit & Big4',      brand: 'KPMG Clara',        href: '/ai-verktyg/foretag/yrke/ekonomi-redovisning/redovisning' },
     ],
   },
+  kundservice: {
+    subcategories: [
+      {
+        title: 'Chatbot',
+        description: 'AI-bottar för webbchatt, Slack och Messenger — svarar på vanliga frågor 24/7.',
+        href: '/ai-verktyg/foretag/yrke/kundservice/chatbot',
+        icon: '◉',
+        accent: 'bg-indigo-100 text-indigo-700',
+      },
+      {
+        title: 'E-postsvar',
+        description: 'AI som föreslår och skriver svar på support-mejl — minskar väntetider markant.',
+        href: '/ai-verktyg/foretag/yrke/kundservice/epost-svar',
+        icon: '✉',
+        accent: 'bg-amber-100 text-amber-700',
+      },
+      {
+        title: 'Röst-AI',
+        description: 'Voicebottar och samtals-AI för telefonkanaler — transkribering, sammanfattning och röstsvar.',
+        href: '/ai-verktyg/foretag/yrke/kundservice/rost-ai',
+        icon: '♪',
+        accent: 'bg-rose-100 text-rose-700',
+      },
+    ],
+    topPicks: [
+      { label: 'Bäst för chatbot',          brand: 'Intercom Fin',   href: '/ai-verktyg/foretag/yrke/kundservice/chatbot' },
+      { label: 'Bäst för e-postsvar',       brand: 'Front AI',       href: '/ai-verktyg/foretag/yrke/kundservice/epost-svar' },
+      { label: 'Bäst för voicebot',         brand: 'Voiceflow',      href: '/ai-verktyg/foretag/yrke/kundservice/rost-ai' },
+      { label: 'Bäst för helpdesk',         brand: 'Zendesk AI',     href: '/ai-verktyg/foretag/yrke/kundservice/chatbot' },
+      { label: 'Bäst för ticketing',        brand: 'Freshdesk AI',   href: '/ai-verktyg/foretag/yrke/kundservice/epost-svar' },
+    ],
+  },
+  rekrytering: {
+    subcategories: [
+      {
+        title: 'CV-screening',
+        description: 'AI som rangordnar och filtrerar kandidater mot rollbeskrivningen automatiskt.',
+        href: '/ai-verktyg/foretag/yrke/rekrytering/cv-screening',
+        icon: '⎙',
+        accent: 'bg-emerald-100 text-emerald-700',
+      },
+      {
+        title: 'Jobbannonser',
+        description: 'AI som skriver inkluderande och slagkraftiga annonser för rätt målgrupp.',
+        href: '/ai-verktyg/foretag/yrke/rekrytering/jobbannonser',
+        icon: '✎',
+        accent: 'bg-violet-100 text-violet-700',
+      },
+      {
+        title: 'Kandidatmatchning',
+        description: 'Matchning av kandidater mot lediga tjänster baserat på skill, erfarenhet och kultur.',
+        href: '/ai-verktyg/foretag/yrke/rekrytering/kandidatmatchning',
+        icon: '⇄',
+        accent: 'bg-sky-100 text-sky-700',
+      },
+    ],
+    topPicks: [
+      { label: 'Bäst för CV-screening',     brand: 'HireVue',     href: '/ai-verktyg/foretag/yrke/rekrytering/cv-screening' },
+      { label: 'Bäst för jobbannonser',     brand: 'Textio',      href: '/ai-verktyg/foretag/yrke/rekrytering/jobbannonser' },
+      { label: 'Bäst för matchning',        brand: 'Eightfold',   href: '/ai-verktyg/foretag/yrke/rekrytering/kandidatmatchning' },
+      { label: 'Bäst för ATS-integration',  brand: 'Greenhouse AI', href: '/ai-verktyg/foretag/yrke/rekrytering/cv-screening' },
+      { label: 'Bäst för intervjuanalys',   brand: 'Metaview',    href: '/ai-verktyg/foretag/yrke/rekrytering/kandidatmatchning' },
+    ],
+  },
+  juridik: {
+    subcategories: [
+      {
+        title: 'Avtalsgranskning',
+        description: 'AI som granskar och flaggar risker i avtal — kommersiella, anställning och M&A.',
+        href: '/ai-verktyg/foretag/yrke/juridik/avtalsgranskning',
+        icon: '§',
+        accent: 'bg-indigo-100 text-indigo-700',
+      },
+      {
+        title: 'Due diligence',
+        description: 'AI för dokumentanalys vid förvärv och investeringar — extraherar nyckelinformation snabbt.',
+        href: '/ai-verktyg/foretag/yrke/juridik/due-diligence',
+        icon: '⌕',
+        accent: 'bg-amber-100 text-amber-700',
+      },
+      {
+        title: 'Rättsutredningar',
+        description: 'AI som söker, sammanfattar och citerar relevant praxis och svensk rätt.',
+        href: '/ai-verktyg/foretag/yrke/juridik/rattsutredningar',
+        icon: '⚖',
+        accent: 'bg-sky-100 text-sky-700',
+      },
+    ],
+    topPicks: [
+      { label: 'Bäst för avtalsgranskning', brand: 'Harvey AI',     href: '/ai-verktyg/foretag/yrke/juridik/avtalsgranskning' },
+      { label: 'Bäst för due diligence',    brand: 'Kira Systems',  href: '/ai-verktyg/foretag/yrke/juridik/due-diligence' },
+      { label: 'Bäst för rättsutredningar', brand: 'Lexis+ AI',     href: '/ai-verktyg/foretag/yrke/juridik/rattsutredningar' },
+      { label: 'Bäst för contract automation', brand: 'Lawgeex',    href: '/ai-verktyg/foretag/yrke/juridik/avtalsgranskning' },
+      { label: 'Bäst för svensk juridik',   brand: 'Codex Karnov',  href: '/ai-verktyg/foretag/yrke/juridik/rattsutredningar' },
+    ],
+  },
 };
 
 /** Returns the spec for the given hub slug, if any. Use this from the route
@@ -230,11 +326,11 @@ function TopPicks({ picks }: { picks: YrkesRollTopPick[] }) {
                 href={p.href}
                 className="group flex items-center justify-between gap-4 px-5 py-5 transition-colors hover:bg-soft sm:px-6"
               >
-                <div className="flex min-w-0 items-center gap-4 sm:gap-6">
-                  <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-fg-subtle sm:min-w-[12rem]">
+                <div className="flex min-w-0 flex-1 items-center gap-4 sm:gap-6">
+                  <span className="shrink-0 text-sm font-medium text-fg-subtle sm:min-w-[16rem]">
                     {p.label}
                   </span>
-                  <span className="truncate text-lg font-black uppercase tracking-tight text-fg group-hover:text-indigo-600 sm:text-xl">
+                  <span className="truncate text-sm font-bold text-fg group-hover:text-indigo-600">
                     {p.brand}
                   </span>
                 </div>
