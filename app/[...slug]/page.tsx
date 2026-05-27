@@ -21,6 +21,9 @@ import {
   getYrkesRollSpec,
   isYrkesRollSlug,
 } from '@/components/templates/YrkesRollTemplate';
+import { AboutTemplate } from '@/components/templates/AboutTemplate';
+import { ContactTemplate } from '@/components/templates/ContactTemplate';
+import { GuideHubTemplate } from '@/components/templates/GuideHubTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
 
 export const revalidate = 300;
@@ -118,6 +121,9 @@ type Kind =
   | 'hub'
   | 'review'
   | 'standalone'
+  | 'about'
+  | 'contact'
+  | 'guideHub'
   | 'article';
 
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): {
@@ -126,6 +132,16 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
 } {
   // Posts always go to ArticleTemplate
   if (articleType === 'post') return { kind: 'article', reason: 'type=post' };
+
+  // Static section landings — about, contact, and AI-Guiden hub
+  if (path === '/om-oss') return { kind: 'about', reason: '/om-oss about page' };
+  if (path === '/kontakt') return { kind: 'contact', reason: '/kontakt contact page' };
+  if (path === '/ai-guiden') return { kind: 'guideHub', reason: '/ai-guiden guide hub' };
+
+  // /ai-guiden/[slug] → StandalonePageTemplate with siblings as related
+  if (path.startsWith('/ai-guiden/') && depth === 2) {
+    return { kind: 'standalone', reason: '/ai-guiden/[slug] longread' };
+  }
 
   // /ai-verktyg — master index page with curated category grid
   if (path === '/ai-verktyg') return { kind: 'masterHub', reason: '/ai-verktyg master hub' };
@@ -242,6 +258,31 @@ export default async function CatchAllPage({ params }: Props) {
 
   console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
+  if (decision.kind === 'about') {
+    return <AboutTemplate article={a} />;
+  }
+
+  if (decision.kind === 'contact') {
+    return <ContactTemplate article={a} />;
+  }
+
+  if (decision.kind === 'guideHub') {
+    // Children of /ai-guiden fill the featured + grid; latest posts in
+    // the ai-guiden category fill the bottom row.
+    const [guides, latestRes] = await Promise.all([
+      getChildren('ai-guiden'),
+      supabase
+        .from('articles')
+        .select(CARD_COLS)
+        .eq('category', 'ai-guiden')
+        .eq('type', 'post')
+        .order('published_at', { ascending: false })
+        .limit(6),
+    ]);
+    const latest = (latestRes.data ?? []) as unknown as ArticleCardData[];
+    return <GuideHubTemplate article={a} guides={guides} latest={latest} />;
+  }
+
   if (decision.kind === 'masterHub') {
     return <MasterHubTemplate article={a} />;
   }
@@ -290,8 +331,15 @@ export default async function CatchAllPage({ params }: Props) {
   }
 
   if (decision.kind === 'standalone') {
+    // Two ways to populate the sidebar's "Relaterade verktyg":
+    //  1. STANDALONE_RELATED_PARENT maps the slug to a parent_slug whose
+    //     children fill the list (used by depth-1 longreads).
+    //  2. Otherwise, fall back to the article's own siblings. Lets us add
+    //     new standalone trees (/ai-guiden/*) without expanding the map.
     const relatedParent = STANDALONE_RELATED_PARENT[a.slug];
-    const related = relatedParent ? await getChildren(relatedParent) : [];
+    const related = relatedParent
+      ? await getChildren(relatedParent)
+      : await getSiblings(a.parent_slug, a.slug);
     return <StandalonePageTemplate article={a} related={related} />;
   }
 

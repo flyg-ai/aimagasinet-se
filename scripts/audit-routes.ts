@@ -24,9 +24,13 @@ type Row = { slug: string; title: string; type: 'post' | 'page'; path: string; p
 // Mirror app/[...slug]/page.tsx::classify
 type Kind =
   | 'masterHub' | 'foretagHub' | 'yrkesHub' | 'yrkesRoll' | 'hub' | 'review'
-  | 'standalone' | 'article';
+  | 'standalone' | 'about' | 'contact' | 'guideHub' | 'article';
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): Kind {
   if (articleType === 'post') return 'article';
+  if (path === '/om-oss') return 'about';
+  if (path === '/kontakt') return 'contact';
+  if (path === '/ai-guiden') return 'guideHub';
+  if (path.startsWith('/ai-guiden/') && depth === 2) return 'standalone';
   if (path === '/ai-verktyg') return 'masterHub';
   if (path === '/ai-verktyg/foretag') return 'foretagHub';
   if (path === '/ai-verktyg/foretag/yrke') return 'yrkesHub';
