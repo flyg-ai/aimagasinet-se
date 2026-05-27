@@ -59,7 +59,11 @@ export default async function RootLayout({
               <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                 AI
               </span>
-              <span className="hidden font-black uppercase tracking-tight text-fg sm:inline">
+              {/* Hardcoded zinc-900 (not text-fg) for the same reason the AI
+                  badge is hardcoded — the CSS-var-based token was rendering
+                  white-on-white in production. Still hidden on mobile by
+                  hidden/sm:inline since space is tight there. */}
+              <span className="hidden font-black uppercase tracking-tight text-zinc-900 sm:inline">
                 Magasinet
               </span>
             </Link>
@@ -78,7 +82,7 @@ export default async function RootLayout({
                   <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                     AI
                   </span>
-                  <span className="font-black uppercase tracking-tight text-fg">
+                  <span className="font-black uppercase tracking-tight text-zinc-900">
                     Magasinet
                   </span>
                 </div>
