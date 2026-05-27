@@ -46,23 +46,21 @@ export default async function RootLayout({
         {/* 1. Breaking-news ticker */}
         <BreakingTicker items={tickerItems} />
 
-        {/* 2. Sticky header */}
-        <header className="sticky top-0 z-40 border-b border-line bg-overlay backdrop-blur">
+        {/* 2. Sticky header — explicit bg-white (not bg-overlay) and
+             hardcoded zinc-900 wordmark so the wordmark doesn't disappear
+             into a translucent background or fail on a CSS-var regression. */}
+        <header className="sticky top-0 z-40 border-b border-line bg-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3.5 sm:px-6">
             <Link
               href="/"
               className="group flex shrink-0 items-center gap-2 text-xl font-black tracking-tight"
             >
-              {/* Hardcoded indigo (not bg-accent / text-accent-fg) so the
-                  badge survives any token / dark-mode regression — earlier
-                  it was rendering white-on-white in production. */}
-              <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
+              {/* Cyan-600 matches the original accent token (--accent: #0891b2)
+                  before we hardcoded it to indigo. Keeping it hardcoded to
+                  survive token regressions. */}
+              <span className="rounded bg-cyan-600 px-1.5 py-0.5 text-sm font-black text-white">
                 AI
               </span>
-              {/* Hardcoded zinc-900 (not text-fg) for the same reason the AI
-                  badge is hardcoded — the CSS-var-based token was rendering
-                  white-on-white in production. Still hidden on mobile by
-                  hidden/sm:inline since space is tight there. */}
               <span className="hidden font-black uppercase tracking-tight text-zinc-900 sm:inline">
                 Magasinet
               </span>
@@ -79,7 +77,7 @@ export default async function RootLayout({
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <div className="mb-4 flex items-center gap-2">
-                  <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
+                  <span className="rounded bg-cyan-600 px-1.5 py-0.5 text-sm font-black text-white">
                     AI
                   </span>
                   <span className="font-black uppercase tracking-tight text-zinc-900">
