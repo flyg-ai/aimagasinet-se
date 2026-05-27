@@ -23,13 +23,13 @@ type Row = { slug: string; title: string; type: 'post' | 'page'; path: string; p
 // Mirror app/[...slug]/page.tsx::classify
 type Kind =
   | 'masterHub' | 'foretagHub' | 'yrkesHub' | 'hub' | 'review'
-  | 'standalone' | 'deepArticle' | 'article';
+  | 'standalone' | 'article';
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): Kind {
   if (articleType === 'post') return 'article';
   if (path === '/ai-verktyg') return 'masterHub';
   if (path === '/ai-verktyg/foretag') return 'foretagHub';
   if (path === '/ai-verktyg/foretag/yrke') return 'yrkesHub';
-  if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) return 'deepArticle';
+  if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) return 'hub';
   if (path.startsWith('/ai-verktyg/foretag/')) return 'article';
   if (path === '/ai-verktyg/gratis' || path.startsWith('/ai-verktyg/gratis/')) return 'article';
   if (path === '/ai-video') return 'hub';

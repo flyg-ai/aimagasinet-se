@@ -548,13 +548,6 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
   // profiles when fetching from the DB.
 };
 
-/** True if a hub slug has at least one virtual child defined here.
- *  Used by the route to allow Hub rendering when DB has no real children
- *  yet (e.g. early-stage automation hub). */
-export function hasVirtualHubChildren(slug: string): boolean {
-  return (VIRTUAL_HUB_CHILDREN[slug]?.length ?? 0) > 0;
-}
-
 // Extend KNOWN profiles with scores/labels/CTA-names for the virtual children
 // so they sort and render consistently with curated real tools.
 const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
@@ -941,10 +934,11 @@ function Hero({
 
         <div className="grid gap-10 lg:grid-cols-[1fr,auto] lg:items-end">
           <div>
-            {/* Badge */}
+            {/* Badge — hide "X verktyg testade" when the topplistan is empty */}
             <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
               <span aria-hidden>✦</span>
-              Uppdaterad {monthLabel} · {toolsCount} verktyg testade
+              Uppdaterad {monthLabel}
+              {toolsCount > 0 && <> · {toolsCount} verktyg testade</>}
             </span>
 
             <h1 className="mt-6 text-balance text-5xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-6xl lg:text-7xl">
@@ -958,9 +952,10 @@ function Hero({
             )}
           </div>
 
-          {/* Stats grid */}
-          <div className="grid grid-cols-3 gap-3 self-end lg:grid-cols-3 lg:gap-4">
-            <StatBox value={String(toolsCount)} label="Verktyg" />
+          {/* Stats grid — drop "Verktyg" box when topplistan is empty so the
+              card doesn't display "0 Verktyg" on yrke depth-5 pages */}
+          <div className={`grid gap-3 self-end lg:gap-4 ${toolsCount > 0 ? 'grid-cols-3 lg:grid-cols-3' : 'grid-cols-2 lg:grid-cols-2'}`}>
+            {toolsCount > 0 && <StatBox value={String(toolsCount)} label="Verktyg" />}
             <StatBox value={facts.hoursLabel} label="Timmar test" />
             <StatBox value={String(updatedYear)} label="Uppdaterad" />
           </div>
@@ -1340,10 +1335,10 @@ function EditorialSection({
           id="editorial"
           className="text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
         >
-          Recensioner
+          {ranked.length > 0 ? 'Recensioner' : 'Översikt'}
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-faint sm:inline">
-          Verktyg för verktyg
+          {ranked.length > 0 ? 'Verktyg för verktyg' : 'Djupgående guide'}
         </span>
       </div>
 
@@ -1372,9 +1367,9 @@ function EditorialSection({
           </div>
         </div>
 
-        {/* Sidebar — Snabbval + Newsletter */}
+        {/* Sidebar — Snabbval (only with a populated topplistan) + Newsletter */}
         <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
-          <Snabbval ranked={ranked} />
+          {ranked.length > 0 && <Snabbval ranked={ranked} />}
           <NewsletterBox />
         </aside>
       </div>

@@ -5,7 +5,6 @@ import type { ArticleCardData } from '@/components/ArticleCard';
 import { ArticleTemplate } from '@/components/templates/ArticleTemplate';
 import {
   HubTemplate,
-  hasVirtualHubChildren,
   type HubChild,
 } from '@/components/templates/HubTemplate';
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate';
@@ -17,7 +16,6 @@ import {
 } from '@/components/templates/StandalonePageTemplate';
 import { MasterHubTemplate } from '@/components/templates/MasterHubTemplate';
 import { ForetagHubTemplate } from '@/components/templates/ForetagHubTemplate';
-import { DeepArticleTemplate } from '@/components/templates/DeepArticleTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
 
 export const revalidate = 300;
@@ -112,7 +110,6 @@ type Kind =
   | 'hub'
   | 'review'
   | 'standalone'
-  | 'deepArticle'
   | 'article';
 
 function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): {
@@ -132,9 +129,12 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   if (path === '/ai-verktyg/foretag/yrke') return { kind: 'yrkesHub', reason: 'yrkes-hub path' };
 
   // /ai-verktyg/foretag/yrke/[yrke] (depth 4) and [yrke]/[topic] (depth 5)
-  // → DeepArticleTemplate with sidebar + sibling navigation
+  // → HubTemplate. Depth-4 pages have DB children that fill the topplistan;
+  // depth-5 pages have no children but ship a topplista baked into
+  // content_mdx, which HubTemplate's editorial section renders in
+  // magazine-prose with a sidebar.
   if (path.startsWith('/ai-verktyg/foretag/yrke/') && depth >= 4) {
-    return { kind: 'deepArticle', reason: '/foretag/yrke/* deep article' };
+    return { kind: 'hub', reason: '/foretag/yrke/* hub' };
   }
 
   // Remaining /ai-verktyg/foretag/* (depth 2 already handled above) → article
@@ -251,29 +251,14 @@ export default async function CatchAllPage({ params }: Props) {
     return <YrkesHubTemplate article={a} />;
   }
 
-  if (decision.kind === 'deepArticle') {
-    const [childItems, siblings] = await Promise.all([
-      getChildren(a.slug),
-      getSiblings(a.parent_slug, a.slug),
-    ]);
-    return (
-      <DeepArticleTemplate
-        article={a}
-        items={childItems}
-        siblings={siblings}
-      />
-    );
-  }
 
   if (decision.kind === 'hub') {
+    // Always render HubTemplate for hub-classified paths — the template
+    // gracefully skips the Ranking/BestInTest/Comparison sections when
+    // items + virtuals is empty (e.g. depth-5 yrke pages whose topplista
+    // is baked into content_mdx and rendered via the editorial body).
     const items = await getHubChildren(a.slug);
-    // Hub renders if it has either DB children OR virtual children defined
-    // in HubTemplate. Lets early-stage hubs (e.g. ai-automation) show the
-    // topplistan from virtuals alone instead of falling back to article.
-    if (items.length > 0 || hasVirtualHubChildren(a.slug)) {
-      return <HubTemplate article={a} items={items} />;
-    }
-    console.warn('[CatchAllPage] hub had no children → falling back to ArticleTemplate', { slug: a.slug });
+    return <HubTemplate article={a} items={items} />;
   }
 
   if (decision.kind === 'review') {
