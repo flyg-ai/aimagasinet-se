@@ -50,15 +50,15 @@ export default async function RootLayout({
              hardcoded zinc-900 wordmark so the wordmark doesn't disappear
              into a translucent background or fail on a CSS-var regression. */}
         <header className="sticky top-0 z-40 border-b border-line bg-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3.5 sm:px-6">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-6 sm:px-6 sm:py-8">
             <Link
               href="/"
-              className="group flex shrink-0 items-center gap-2 text-xl font-black tracking-tight"
+              className="group flex shrink-0 items-center gap-2.5 text-3xl font-black tracking-tight sm:gap-3 sm:text-4xl"
             >
               {/* indigo-600 matches the brand color the user wants on the
                   AI badge. Hardcoded so the badge doesn't depend on the
                   CSS-var-backed bg-accent token (which has regressed before). */}
-              <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
+              <span className="rounded-md bg-indigo-600 px-2.5 py-1 text-xl font-black text-white sm:text-2xl">
                 AI
               </span>
               <span className="font-black uppercase tracking-tight text-zinc-900">
