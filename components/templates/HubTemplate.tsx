@@ -555,6 +555,84 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
   // see scripts/create-reviews.ts. VIRTUAL_KNOWN entries kept under their
   // new (non-suffixed) slugs so the hub topplistan still gets curated
   // profiles when fetching from the DB.
+
+  // /ai-verktyg/gratis/ — gratis-tier AI tools, ranked. Tools with an
+  // existing review elsewhere link to it (path=full URL, isUpcoming=
+  // false); tools without a dedicated page are shown as "Recension
+  // snart" placeholders so visitors at least see what exists in the
+  // free-tier landscape.
+  'gratis': [
+    {
+      slug: 'chatgpt-gratis', title: 'ChatGPT',
+      path: '/ai-verktyg/ai-text-verktyg/chatgpt',
+      excerpt: 'OpenAIs flaggskepp — gratisversionen ger GPT-5 light, custom GPTs och bilduppladdning. Full access kräver Plus.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
+    },
+    {
+      slug: 'claude-gratis', title: 'Claude',
+      path: '/ai-verktyg/ai-text-verktyg/claude',
+      excerpt: 'Anthropics Claude med gratis tier — bästa skrivkvaliteten av de fria modellerna, generös kontext.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
+    },
+    {
+      slug: 'gemini-gratis', title: 'Gemini',
+      path: '/ai-verktyg/ai-text-verktyg/gemini',
+      excerpt: 'Googles Gemini med gratis access till 2.5 Flash + integration med Gmail, Docs och Drive.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
+    },
+    {
+      slug: 'deepseek-gratis', title: 'DeepSeek',
+      path: '#',
+      excerpt: 'Kinesisk open-weight-modell som matchar GPT-4 på många benchmarks — helt gratis i webbchatten.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'perplexity-gratis', title: 'Perplexity',
+      path: '#',
+      excerpt: 'Sök-assistent som citerar källor — gratisversionen täcker de flesta vardagsfrågorna.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'mistral-gratis', title: 'Mistral Le Chat',
+      path: '#',
+      excerpt: 'Europeisk modell med snabb svensk-kunskap — gratis chat med Mistral Large i webbinterfacet.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'copilot-gratis', title: 'Microsoft Copilot',
+      path: '#',
+      excerpt: 'Microsofts Bing-integrerade Copilot — gratis access till GPT-4-class + DALL-E 3 i webben.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+    {
+      slug: 'stable-diffusion-gratis', title: 'Stable Diffusion',
+      path: '/ai-verktyg/ai-bild-verktyg/stable-diffusion',
+      excerpt: 'Open-source-bildmodellen som du kör helt gratis lokalt — eller via gratis webb-UI som ComfyUI.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
+    },
+    {
+      slug: 'suno-gratis', title: 'Suno AI',
+      path: '/ai-verktyg/ai-ljud-och-musik/suno-ai',
+      excerpt: 'AI-musikgenerator med 10 gratis krediter per dag — fungerar för testning och experimentell musik.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
+    },
+    {
+      slug: 'leonardo-gratis', title: 'Leonardo AI',
+      path: '#',
+      excerpt: 'Stable Diffusion-baserad bildgenerator med 150 gratis tokens per dag — bra för småprojekt.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null, isUpcoming: true,
+    },
+  ],
 };
 
 // Extend KNOWN profiles with scores/labels/CTA-names for the virtual children
@@ -836,6 +914,98 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     cons: ['Mindre nybörjarvänligt', 'Kräver kodkunskap'],
     offer: { title: 'Gratis 10k credits/mån', price: 'Gratis · Basic 29 USD/mån', bestFor: 'Utvecklare som vill koda i flöden' },
     label: 'Bäst för utvecklare',
+  },
+
+  /* ── Gratis tier ─────────────────────────────────────── */
+  'chatgpt-gratis': {
+    logo: 'bg-emerald-700', ctaName: 'ChatGPT', score: 9.0,
+    fallbackUrl: 'https://chatgpt.com',
+    tags: ['Gratis tier', 'GPT-5 light', 'Multimodal', 'Mest använd'],
+    pros: ['Bredast gratis-AI-modell', 'Multimodal i gratisversionen', 'Custom GPTs'],
+    cons: ['Begränsade meddelanden per dag', 'Plus krävs för full GPT-5'],
+    offer: { title: 'Gratis utan kort', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Generella AI-uppgifter' },
+    label: 'Redaktionens val',
+  },
+  'claude-gratis': {
+    logo: 'bg-amber-600', ctaName: 'Claude', score: 9.4,
+    fallbackUrl: 'https://claude.ai',
+    tags: ['Gratis tier', 'Sonnet 4.6', 'Lång kontext', 'Skrivande'],
+    pros: ['Bäst skrivkvalitet i gratis-segmentet', 'Stor kontextfönster', 'Stark svensk grammatik'],
+    cons: ['Lägre dygnsgräns än ChatGPT', 'Ingen bildgenerering'],
+    offer: { title: 'Gratis utan kort', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Långa textuppgifter' },
+    label: 'Bäst för skrivande',
+  },
+  'gemini-gratis': {
+    logo: 'bg-blue-600', ctaName: 'Gemini', score: 8.7,
+    fallbackUrl: 'https://gemini.google.com',
+    tags: ['Gratis tier', 'Google-integration', '2.5 Flash', 'Multimodal'],
+    pros: ['Gratis Gmail/Docs/Drive-integration', 'Stor gratis-kvot', 'Snabb 2.5 Flash'],
+    cons: ['Ojämn kvalitet jämfört med Claude', 'Google-konto krävs'],
+    offer: { title: 'Gratis med Google-konto', price: 'Gratis · Advanced 22 USD/mån', bestFor: 'Google-användare' },
+    label: 'Bäst Google-integration',
+  },
+  'deepseek-gratis': {
+    logo: 'bg-indigo-600', ctaName: 'DeepSeek', score: 8.5,
+    fallbackUrl: 'https://chat.deepseek.com',
+    tags: ['Open weight', 'Matematik', 'Helt gratis', 'Kinesisk modell'],
+    pros: ['Konkurrerar med GPT-4 på benchmarks', 'Ingen meddelandegräns', 'Open weights tillgängliga'],
+    cons: ['Kinesisk hosting — datasekretess-frågor', 'Svenska sämre än engelska'],
+    offer: { title: 'Helt gratis', price: 'Gratis · API från 0.27 USD/M tokens', bestFor: 'Tekniska och matematiska frågor' },
+    label: 'Mest gratis-generös',
+  },
+  'perplexity-gratis': {
+    logo: 'bg-cyan-700', ctaName: 'Perplexity', score: 8.6,
+    fallbackUrl: 'https://www.perplexity.ai',
+    tags: ['Sök-AI', 'Citerar källor', 'Gratis tier', 'Realtidsdata'],
+    pros: ['Verifierbara källor på varje svar', 'Realtidssök inbakad', 'Solid gratis tier'],
+    cons: ['Pro krävs för avancerade modeller', 'Sökresultat ibland för tunna'],
+    offer: { title: '5 Pro-sökningar/dag gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Research med källor' },
+    label: 'Bäst för faktasök',
+  },
+  'mistral-gratis': {
+    logo: 'bg-orange-600', ctaName: 'Mistral', score: 8.3,
+    fallbackUrl: 'https://chat.mistral.ai',
+    tags: ['EU-hosted', 'Snabb', 'Open weight', 'GDPR-vänlig'],
+    pros: ['Europeisk hosting', 'Helt gratis chat', 'Open weights för flera modeller'],
+    cons: ['Svagare än de stora amerikanska för komplexa uppgifter', 'Mindre community'],
+    offer: { title: 'Le Chat helt gratis', price: 'Gratis · API från 0.40 EUR/M tokens', bestFor: 'EU-företag som vill ha GDPR-vänligt' },
+    label: 'Bäst EU-alternativ',
+  },
+  'copilot-gratis': {
+    logo: 'bg-sky-700', ctaName: 'Microsoft Copilot', score: 8.4,
+    fallbackUrl: 'https://copilot.microsoft.com',
+    tags: ['Bing-integration', 'DALL-E 3', 'Microsoft 365', 'Gratis tier'],
+    pros: ['Gratis DALL-E 3 bildgenerering', 'Bing-sök inbakat', 'Office-integration'],
+    cons: ['Mer låst till Microsoft-stacken', 'Mindre customizable än ChatGPT'],
+    offer: { title: 'Gratis med Microsoft-konto', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Office 365-användare' },
+    label: 'Bäst för Office-stack',
+  },
+  'stable-diffusion-gratis': {
+    logo: 'bg-violet-700', ctaName: 'Stable Diffusion', score: 8.7,
+    fallbackUrl: 'https://stability.ai',
+    tags: ['Open source', 'Lokal körning', 'ComfyUI', 'Helt gratis'],
+    pros: ['Helt gratis lokalt', 'Total kontroll över output', 'Stark community + LoRA'],
+    cons: ['Kräver GPU-hårdvara för rimligt tempo', 'Brant inlärningskurva'],
+    offer: { title: 'Open source — helt gratis', price: 'Gratis · DreamStudio från 10 USD', bestFor: 'Bildgenerering på egen dator' },
+    label: 'Bäst open source-bild',
+  },
+  'suno-gratis': {
+    logo: 'bg-rose-600', ctaName: 'Suno AI', score: 8.5,
+    fallbackUrl: 'https://www.suno.com',
+    tags: ['AI-musik', 'Gratis tier', 'Sångröst', 'Daglig kvot'],
+    pros: ['10 gratis krediter/dag', 'Genererar både röst och musik', 'Snabb output'],
+    cons: ['Pro krävs för kommersiell användning', 'Begränsade format på gratis'],
+    offer: { title: '10 låtar gratis/dag', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Experimentera med AI-musik' },
+    label: 'Bäst AI-musik',
+  },
+  'leonardo-gratis': {
+    logo: 'bg-fuchsia-700', ctaName: 'Leonardo AI', score: 8.1,
+    fallbackUrl: 'https://leonardo.ai',
+    tags: ['Bildgenerering', '150 tokens/dag', 'Game art', 'SD-baserad'],
+    pros: ['150 gratis tokens varje dag', 'Game asset-fokuserade modeller', 'Bra UI'],
+    cons: ['Mindre språkförståelse än Midjourney', 'Daglig kvot kan kännas tunn'],
+    offer: { title: '150 tokens gratis/dag', price: 'Gratis · Apprentice 12 USD/mån', bestFor: 'Game art och konceptdesign' },
+    label: 'Bäst för game art',
   },
 };
 

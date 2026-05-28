@@ -177,9 +177,14 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
     return { kind: 'article', reason: '/ai-verktyg/foretag fallback' };
   }
 
-  // /ai-verktyg/gratis/* — gratis-trädet renderas som artikel tills vidare
-  if (path === '/ai-verktyg/gratis' || path.startsWith('/ai-verktyg/gratis/')) {
-    return { kind: 'article', reason: '/ai-verktyg/gratis tree → ArticleTemplate' };
+  // /ai-verktyg/gratis — hub med topplista över gratis-tier AI-verktyg
+  // (virtual children definierade i HubTemplate.VIRTUAL_HUB_CHILDREN.gratis).
+  if (path === '/ai-verktyg/gratis') {
+    return { kind: 'hub', reason: '/ai-verktyg/gratis hub' };
+  }
+  // Eventuella sub-paths under /ai-verktyg/gratis/ behåller artikelmallen.
+  if (path.startsWith('/ai-verktyg/gratis/')) {
+    return { kind: 'article', reason: '/ai-verktyg/gratis/* sub-page → ArticleTemplate' };
   }
 
   // /ai-video som depth-1 hub (specialfall — andra hubbar är depth 2)
