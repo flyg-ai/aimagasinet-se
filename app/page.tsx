@@ -117,6 +117,15 @@ export default async function HomePage() {
                   </span>
                 </div>
               )}
+              {/* Full-card dark gradient sitting on top of the image
+                  — heavier at the bottom where the title lives,
+                  still tinting the top so meta-pill and image-burnt
+                  text never compete for legibility. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"
+              />
+
               {/* Meta pill — anchored top-left so the category badge
                   reads immediately without competing for space with
                   the title below. Decoupling it from the bottom
@@ -144,9 +153,11 @@ export default async function HomePage() {
                 )}
               </div>
 
-              {/* Bottom gradient + title + excerpt — capped to bottom
-                  60% on mobile so the title doesn't push it upward. */}
-              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden bg-gradient-to-t from-black/85 via-black/55 to-transparent p-4 pt-8 sm:max-h-none sm:p-8">
+              {/* Title + excerpt block — sits on top of the full-card
+                  gradient so no second gradient needed here. Capped
+                  to bottom 60% on mobile so the title doesn't grow
+                  upward past the image midpoint. */}
+              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden p-4 pt-8 sm:max-h-none sm:p-8">
                 <h1 className="line-clamp-2 text-balance text-xl font-black leading-[1.15] tracking-tight text-white sm:line-clamp-none sm:text-3xl lg:text-4xl">
                   {hero.title}
                 </h1>

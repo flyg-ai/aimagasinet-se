@@ -971,7 +971,7 @@ function Hero({
               {toolsCount > 0 && <> · {toolsCount} verktyg testade</>}
             </span>
 
-            <h1 className="mt-6 text-balance text-5xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-6xl lg:text-7xl">
+            <h1 className="mt-6 text-balance text-3xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-4xl md:text-5xl lg:text-7xl">
               {highlightTitle(a.title)}
             </h1>
 
