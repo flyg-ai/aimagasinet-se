@@ -11,6 +11,7 @@ import { PopularToolsSidebar } from '@/components/PopularToolsSidebar';
 import { CategoryRowsSection } from '@/components/CategoryRowsSection';
 import { ShortNewsCarousel } from '@/components/ShortNewsCarousel';
 import { MoreToReadSection } from '@/components/MoreToReadSection';
+import { ExploreCategoriesSection } from '@/components/ExploreCategoriesSection';
 import { readingTimeMinutes } from '@/lib/reading-time';
 import { fetchAuthorsMap, type Author } from '@/lib/authors';
 
@@ -160,8 +161,13 @@ export default async function HomePage() {
         </section>
       </div>
 
-      {/* ── Band 2: Trending — bg-slate-50 tint ─────────────── */}
-      <div className="bg-slate-50">
+      {/* ── Band 2: Utforska AI-verktyg — bg-white quick-jump cards ── */}
+      <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
+        <ExploreCategoriesSection />
+      </div>
+
+      {/* ── Band 3: Trending — bg-slate-50 tint ─────────────── */}
+      <div className="mt-8 bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
           <TrendingSection items={trending} />
         </div>

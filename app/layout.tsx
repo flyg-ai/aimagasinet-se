@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { BreakingTicker } from '@/components/BreakingTicker';
 import { SiteNav } from '@/components/SiteNav';
+import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationSchema, websiteSchema } from '@/lib/schemas';
 import './globals.css';
@@ -102,7 +103,10 @@ export default async function RootLayout({
           </div>
         </header>
 
-        <main>{children}</main>
+        {/* pb-[60px] on mobile reserves room for the fixed
+            MobileBottomNav so the footer/content doesn't sit under it. */}
+        <main className="pb-[60px] md:pb-0">{children}</main>
+        <MobileBottomNav />
 
         <footer className="mt-24 border-t border-zinc-800 bg-zinc-900 text-zinc-100">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
