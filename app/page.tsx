@@ -78,8 +78,10 @@ export default async function HomePage() {
             )}
             {/* Bottom gradient + overlay text */}
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6 sm:p-8">
-              <div className="mb-3 flex flex-wrap items-center gap-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/90">
+              {/* Meta-row wrapped in a subtle dark pill so the category
+                  badge and date stay readable on busy cover artwork. */}
+              <div className="mb-3 inline-flex flex-wrap items-center gap-3 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
                   ★ Utvalt
                 </span>
                 <CategoryBadge slug={hero.category} size="sm" />
