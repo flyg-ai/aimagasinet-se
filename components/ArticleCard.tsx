@@ -10,6 +10,8 @@ export type ArticleCardData = {
   published_at: string | null;
   path: string;
   affiliate_url?: string | null;
+  /** Pre-computed in the server fetch from content_mdx via readingTimeMinutes(). */
+  reading_time?: number | null;
 };
 
 export function ArticleCard({ a }: { a: ArticleCardData }) {
@@ -35,7 +37,7 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
         )}
       </div>
       <div className="p-5">
-        <div className="mb-3 flex items-center gap-3">
+        <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
           <CategoryBadge slug={a.category} size="sm" />
           {a.published_at && (
             <time className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
@@ -45,6 +47,11 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
                 year: 'numeric',
               })}
             </time>
+          )}
+          {a.reading_time != null && (
+            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
+              · {a.reading_time} min läsning
+            </span>
           )}
         </div>
         <h3 className="text-lg font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
@@ -117,14 +124,19 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
         <h4 className="mt-2 line-clamp-3 text-sm font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
           {a.title}
         </h4>
-        {a.published_at && (
-          <time className="mt-2 block font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
-            {new Date(a.published_at).toLocaleDateString('sv-SE', {
-              day: 'numeric',
-              month: 'short',
-            })}
-          </time>
-        )}
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
+          {a.published_at && (
+            <time>
+              {new Date(a.published_at).toLocaleDateString('sv-SE', {
+                day: 'numeric',
+                month: 'short',
+              })}
+            </time>
+          )}
+          {a.reading_time != null && (
+            <span className="text-fg-faint">· {a.reading_time} min</span>
+          )}
+        </div>
       </div>
     </Link>
   );
