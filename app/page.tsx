@@ -6,8 +6,15 @@ import {
   type ArticleCardData,
 } from '@/components/ArticleCard';
 import { CategoryBadge } from '@/components/CategoryBadge';
+import { LoadMoreArticles } from '@/components/LoadMoreArticles';
 
 export const revalidate = 300;
+
+// Layout: 1 hero + 3 sidebar + 20 grid = 24 articles loaded server-side.
+// "Ladda fler" then pulls another 20 at a time client-side.
+const INITIAL_TOTAL = 24;
+const GRID_SIZE = 20;
+const LOAD_MORE_PAGE = 20;
 
 export default async function HomePage() {
   const { data: articles } = await supabase
@@ -15,12 +22,12 @@ export default async function HomePage() {
     .select('slug,title,excerpt,featured_image,category,published_at,path')
     .eq('type', 'post')
     .order('published_at', { ascending: false })
-    .limit(13);
+    .limit(INITIAL_TOTAL);
 
   const list = (articles ?? []) as ArticleCardData[];
   const hero = list[0];
   const sidebar = list.slice(1, 4); // 3 in sidebar
-  const grid = list.slice(4, 13); // up to 9 in 3×3 grid
+  const grid = list.slice(4, 4 + GRID_SIZE); // up to 20 in grid
 
   if (!hero) {
     return (
@@ -105,12 +112,16 @@ export default async function HomePage() {
         <span className="text-xs text-fg-faint">{grid.length} st</span>
       </div>
 
-      {/* ── 3-col grid ──────────────────────────────────── */}
+      {/* ── 3-col grid + Ladda fler ─────────────────────── */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {grid.map((a) => (
           <ArticleCard key={a.slug} a={a} />
         ))}
       </div>
+
+      {grid.length === GRID_SIZE && (
+        <LoadMoreArticles startOffset={INITIAL_TOTAL} pageSize={LOAD_MORE_PAGE} />
+      )}
     </div>
   );
 }

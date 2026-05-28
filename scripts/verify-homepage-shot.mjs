@@ -30,6 +30,13 @@ try {
   });
   console.log(`  → ${join(outDir, 'homepage-full.png')}`);
 
+  // Whole-page shot to also see grid + Ladda fler-knapp + footer.
+  await page.screenshot({
+    path: join(outDir, 'homepage-fullpage.png'),
+    fullPage: true,
+  });
+  console.log(`  → ${join(outDir, 'homepage-fullpage.png')}`);
+
   // Tight hero shot — anchor on the .card link wrapping the hero image.
   const hero = await page.locator('section > a').first();
   await hero.screenshot({ path: join(outDir, 'hero.png') });

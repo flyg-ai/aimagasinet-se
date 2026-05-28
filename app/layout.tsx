@@ -72,7 +72,7 @@ export default async function RootLayout({
 
         <main>{children}</main>
 
-        <footer className="mt-24 border-t border-line bg-card">
+        <footer className="mt-24 border-t border-zinc-800 bg-zinc-900 text-zinc-100">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
               <div>
@@ -80,45 +80,45 @@ export default async function RootLayout({
                   <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
                     AI
                   </span>
-                  <span className="font-black uppercase tracking-tight text-zinc-900">
+                  <span className="font-black uppercase tracking-tight text-white">
                     Magasinet
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed text-fg-subtle">
+                <p className="text-sm leading-relaxed text-zinc-300">
                   Svenskt magasin om artificiell intelligens — nyheter, guider
                   och oberoende verktygsrecensioner.
                 </p>
               </div>
 
               <nav aria-label="Kategorier">
-                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
                   Kategorier
                 </h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/kategori/ai-nyheter" className="text-fg-subtle hover:text-accent">AI-Nyheter</Link></li>
-                  <li><Link href="/ai-verktyg" className="text-fg-subtle hover:text-accent">AI-Verktyg</Link></li>
-                  <li><Link href="/ai-video" className="text-fg-subtle hover:text-accent">AI-Video</Link></li>
-                  <li><Link href="/ai-guiden" className="text-fg-subtle hover:text-accent">AI-Guiden</Link></li>
+                  <li><Link href="/kategori/ai-nyheter" className="text-zinc-300 hover:text-white">AI-Nyheter</Link></li>
+                  <li><Link href="/ai-verktyg" className="text-zinc-300 hover:text-white">AI-Verktyg</Link></li>
+                  <li><Link href="/ai-video" className="text-zinc-300 hover:text-white">AI-Video</Link></li>
+                  <li><Link href="/ai-guiden" className="text-zinc-300 hover:text-white">AI-Guiden</Link></li>
                 </ul>
               </nav>
 
               <nav aria-label="Om oss">
-                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
                   Om
                 </h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/om-oss" className="text-fg-subtle hover:text-accent">Om Oss</Link></li>
-                  <li><Link href="/kontakt" className="text-fg-subtle hover:text-accent">Kontakt</Link></li>
+                  <li><Link href="/om-oss" className="text-zinc-300 hover:text-white">Om Oss</Link></li>
+                  <li><Link href="/kontakt" className="text-zinc-300 hover:text-white">Kontakt</Link></li>
                 </ul>
               </nav>
 
               <div>
-                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
                   Kontakt
                 </h3>
                 <ul className="space-y-2 text-sm">
                   <li>
-                    <a href="mailto:kontakt@aimagasinet.se" className="text-fg-subtle hover:text-accent">
+                    <a href="mailto:kontakt@aimagasinet.se" className="text-zinc-300 hover:text-white">
                       kontakt@aimagasinet.se
                     </a>
                   </li>
@@ -126,13 +126,13 @@ export default async function RootLayout({
               </div>
             </div>
 
-            <div className="mt-10 border-t border-line-subtle pt-6">
-              <p className="text-xs leading-relaxed text-fg-subtle">
-                <span className="font-bold text-fg-muted">Annonsörsinformation:</span>{' '}
+            <div className="mt-10 border-t border-zinc-800 pt-6">
+              <p className="text-xs leading-relaxed text-zinc-400">
+                <span className="font-bold text-zinc-200">Annonsörsinformation:</span>{' '}
                 AI-Magasinet kan få provision när du klickar på vissa länkar på
                 denna sida. Det påverkar inte vår rankning.
               </p>
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-wider text-fg-faint">
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-wider text-zinc-500">
                 © {new Date().getFullYear()} AI-Magasinet
               </p>
             </div>
