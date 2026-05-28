@@ -117,33 +117,36 @@ export default async function HomePage() {
                   </span>
                 </div>
               )}
-              {/* Overlay anchored to the bottom 60% of the hero on
-                  mobile via max-h, so the meta-pill and title never
-                  push above the image's mid-point. Without this cap
-                  the absolute-bottom block grows upward to fit the
-                  title and the cyan category badge ends up looking
-                  like a strip at the top of the image. */}
-              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden bg-gradient-to-t from-black/85 via-black/55 to-transparent p-4 pt-6 sm:max-h-none sm:p-8">
-                <div className="mb-2 inline-flex flex-wrap items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm sm:mb-3 sm:gap-3">
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
-                    ★ Utvalt
+              {/* Meta pill — anchored top-left so the category badge
+                  reads immediately without competing for space with
+                  the title below. Decoupling it from the bottom
+                  overlay also fixes the mobile bug where the
+                  bottom-aligned block grew upward to fit the title
+                  and pushed the cyan badge near the top of the image. */}
+              <div className="absolute left-4 top-4 inline-flex flex-wrap items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm sm:left-6 sm:top-6 sm:gap-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
+                  ★ Utvalt
+                </span>
+                <CategoryBadge slug={hero.category} size="sm" />
+                {hero.published_at && (
+                  <time className="hidden font-mono text-[10px] uppercase tracking-wider text-white/80 sm:inline">
+                    {new Date(hero.published_at).toLocaleDateString('sv-SE', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </time>
+                )}
+                {hero.reading_time != null && (
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-white/80">
+                    · {hero.reading_time} min
                   </span>
-                  <CategoryBadge slug={hero.category} size="sm" />
-                  {hero.published_at && (
-                    <time className="hidden font-mono text-[10px] uppercase tracking-wider text-white/80 sm:inline">
-                      {new Date(hero.published_at).toLocaleDateString('sv-SE', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </time>
-                  )}
-                  {hero.reading_time != null && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-white/80">
-                      · {hero.reading_time} min
-                    </span>
-                  )}
-                </div>
+                )}
+              </div>
+
+              {/* Bottom gradient + title + excerpt — capped to bottom
+                  60% on mobile so the title doesn't push it upward. */}
+              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden bg-gradient-to-t from-black/85 via-black/55 to-transparent p-4 pt-8 sm:max-h-none sm:p-8">
                 <h1 className="line-clamp-2 text-balance text-xl font-black leading-[1.15] tracking-tight text-white sm:line-clamp-none sm:text-3xl lg:text-4xl">
                   {hero.title}
                 </h1>
