@@ -14,70 +14,86 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
   );
 }
 
-/** Curated category list — order is editorial, not alphabetic. Keys are
- *  symbolic so we can render icons without coupling to DB slugs. */
+/** Curated category list — order is editorial, not alphabetic. Each card
+ *  gets a full gradient background using one of 4 base palettes
+ *  (indigo / cyan / amber / emerald) so the grid reads as a colorful
+ *  poster rather than a list of icons on white.
+ *
+ *  `gradient` is applied directly to the card; `chip` is the small icon
+ *  swatch on top of the gradient (slight contrast for legibility). */
 const CATEGORIES: {
   href: string;
   title: string;
   description: string;
   icon: string;
-  accent: string;
+  /** Tailwind gradient classes applied to the card itself. */
+  gradient: string;
+  /** Small chip behind the icon (must contrast with the gradient). */
+  chip: string;
 }[] = [
   {
     href: '/ai-verktyg/ai-text-verktyg',
     title: 'AI för text',
     description: 'ChatGPT, Claude, Gemini och resten — våra bästa text-AI:er testade.',
     icon: '✎',
-    accent: 'bg-emerald-100 text-emerald-700',
+    gradient: 'bg-gradient-to-br from-emerald-500 to-teal-700',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-video',
     title: 'AI för video',
     description: 'Kling, Runway, Pika, Sora — realistisk AI-video från text eller bild.',
     icon: '▶',
-    accent: 'bg-red-100 text-red-700',
+    gradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/ai-bild-verktyg',
     title: 'AI för bild',
     description: 'Midjourney, DALL·E, Firefly — bildgenerering för kreatörer.',
     icon: '◐',
-    accent: 'bg-violet-100 text-violet-700',
+    gradient: 'bg-gradient-to-br from-indigo-600 to-violet-800',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/ai-ljud-och-musik',
     title: 'AI för ljud & musik',
     description: 'Suno, ElevenLabs och andra verktyg för musik, röster och podcast.',
     icon: '♪',
-    accent: 'bg-amber-100 text-amber-700',
+    gradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/ai-kod-verktyg',
     title: 'AI för kod',
     description: 'Cursor, Copilot, Windsurf — AI som faktiskt kan utveckla.',
     icon: '⌥',
-    accent: 'bg-zinc-200 text-zinc-800',
+    gradient: 'bg-gradient-to-br from-zinc-700 to-zinc-900',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/ai-automation',
     title: 'AI-automation',
     description: 'Make, Zapier, n8n — koppla ihop allt med AI-driva flöden.',
     icon: '⇆',
-    accent: 'bg-indigo-100 text-indigo-700',
+    gradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/foretag',
     title: 'AI för företag',
     description: 'B2B-användning per yrke: marknadsföring, ekonomi, sälj.',
     icon: '◧',
-    accent: 'bg-sky-100 text-sky-700',
+    gradient: 'bg-gradient-to-br from-amber-600 to-rose-700',
+    chip: 'bg-white/15 text-white',
   },
   {
     href: '/ai-verktyg/gratis',
     title: 'Gratis AI-verktyg',
     description: 'De bästa AI-verktygen utan kostnad — testade och rankade.',
     icon: '✦',
-    accent: 'bg-teal-100 text-teal-700',
+    gradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
+    chip: 'bg-white/15 text-white',
   },
 ];
 
@@ -132,22 +148,22 @@ function CategoryGrid() {
           <Link
             key={c.href}
             href={c.href}
-            className="group flex flex-col gap-4 rounded-xl border border-line bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
+            className={`group relative flex flex-col gap-4 overflow-hidden rounded-xl p-6 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl ${c.gradient}`}
           >
             <div className="flex items-center gap-3">
               <span
                 aria-hidden
-                className={`inline-flex h-12 w-12 items-center justify-center rounded-lg text-2xl ${c.accent}`}
+                className={`inline-flex h-12 w-12 items-center justify-center rounded-lg text-2xl backdrop-blur-sm ${c.chip}`}
               >
                 {c.icon}
               </span>
-              <h3 className="text-xl font-black uppercase tracking-tight text-fg group-hover:text-indigo-600">
+              <h3 className="text-xl font-black uppercase tracking-tight text-white">
                 {c.title}
               </h3>
             </div>
-            <p className="text-sm leading-relaxed text-fg-subtle">{c.description}</p>
-            <span className="mt-auto inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600">
-              Se topplistan <span aria-hidden>›</span>
+            <p className="text-sm leading-relaxed text-white/85">{c.description}</p>
+            <span className="mt-auto inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white/95">
+              Se topplistan <span aria-hidden className="transition-transform group-hover:translate-x-1">›</span>
             </span>
           </Link>
         ))}
