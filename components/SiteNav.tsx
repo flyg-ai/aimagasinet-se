@@ -100,8 +100,12 @@ const NAV: NavItem[] = [
     href: '/ai-guiden',
     label: 'AI-Guiden',
     children: [
-      { href: '/ai-guiden/vad-ar-ai', label: 'Vad är AI?' },
+      { href: '/ai-guiden/vad-ar-ai',             label: 'Vad är AI?' },
+      { href: '/bygga-mobilapp-med-ai',           label: 'Bygga mobilapp med AI' },
+      { href: '/bygga-app-med-ai',                label: 'Bygga app med AI' },
+      { href: '/skapa-faceless-content-med-ai',   label: 'Skapa faceless content med AI' },
     ],
+    showAllLabel: 'Hela AI-Guiden',
   },
 ];
 
