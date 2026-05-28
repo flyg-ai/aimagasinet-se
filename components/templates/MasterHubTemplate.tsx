@@ -14,86 +14,85 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
   );
 }
 
+const KATEGORI_BG = 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/kategorier';
+
 /** Curated category list — order is editorial, not alphabetic. Each card
- *  gets a full gradient background using one of 4 base palettes
- *  (indigo / cyan / amber / emerald) so the grid reads as a colorful
- *  poster rather than a list of icons on white.
- *
- *  `gradient` is applied directly to the card; `chip` is the small icon
- *  swatch on top of the gradient (slight contrast for legibility). */
+ *  uses a real photo background from featured-images/kategorier/ + a
+ *  bg-black/50 dark overlay + white text, matching the homepage's
+ *  ExploreCategoriesSection. `fallbackGradient` is applied only when
+ *  bg is null (none of the current 8 are null but the field stays so
+ *  future entries can opt out of an image). */
 const CATEGORIES: {
   href: string;
   title: string;
   description: string;
   icon: string;
-  /** Tailwind gradient classes applied to the card itself. */
-  gradient: string;
-  /** Small chip behind the icon (must contrast with the gradient). */
-  chip: string;
+  bg: string | null;
+  fallbackGradient: string;
 }[] = [
   {
     href: '/ai-verktyg/ai-text-verktyg',
     title: 'AI för text',
     description: 'ChatGPT, Claude, Gemini och resten — våra bästa text-AI:er testade.',
     icon: '✎',
-    gradient: 'bg-gradient-to-br from-emerald-500 to-teal-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-text-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-teal-700',
   },
   {
     href: '/ai-video',
     title: 'AI för video',
     description: 'Kling, Runway, Pika, Sora — realistisk AI-video från text eller bild.',
     icon: '▶',
-    gradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-video-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
   },
   {
     href: '/ai-verktyg/ai-bild-verktyg',
     title: 'AI för bild',
     description: 'Midjourney, DALL·E, Firefly — bildgenerering för kreatörer.',
     icon: '◐',
-    gradient: 'bg-gradient-to-br from-indigo-600 to-violet-800',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-bild-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-indigo-600 to-violet-800',
   },
   {
     href: '/ai-verktyg/ai-ljud-och-musik',
     title: 'AI för ljud & musik',
     description: 'Suno, ElevenLabs och andra verktyg för musik, röster och podcast.',
     icon: '♪',
-    gradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-ljud-musik-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
   },
   {
     href: '/ai-verktyg/ai-kod-verktyg',
     title: 'AI för kod',
     description: 'Cursor, Copilot, Windsurf — AI som faktiskt kan utveckla.',
     icon: '⌥',
-    gradient: 'bg-gradient-to-br from-zinc-700 to-zinc-900',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-kod-programmering-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-zinc-700 to-zinc-900',
   },
   {
     href: '/ai-verktyg/ai-automation',
     title: 'AI-automation',
     description: 'Make, Zapier, n8n — koppla ihop allt med AI-driva flöden.',
     icon: '⇆',
-    gradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-automation-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
   },
   {
     href: '/ai-verktyg/foretag',
     title: 'AI för företag',
     description: 'B2B-användning per yrke: marknadsföring, ekonomi, sälj.',
     icon: '◧',
-    gradient: 'bg-gradient-to-br from-amber-600 to-rose-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/ai-for-foretag-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-amber-600 to-rose-700',
   },
   {
     href: '/ai-verktyg/gratis',
     title: 'Gratis AI-verktyg',
     description: 'De bästa AI-verktygen utan kostnad — testade och rankade.',
     icon: '✦',
-    gradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
-    chip: 'bg-white/15 text-white',
+    bg: `${KATEGORI_BG}/gratis-ai-verktyg-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
   },
 ];
 
@@ -148,12 +147,30 @@ function CategoryGrid() {
           <Link
             key={c.href}
             href={c.href}
-            className={`group relative flex flex-col gap-4 overflow-hidden rounded-xl p-6 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl ${c.gradient}`}
+            className={`group relative flex aspect-[16/10] flex-col justify-between overflow-hidden rounded-xl p-6 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl ${
+              c.bg ? '' : c.fallbackGradient
+            }`}
           >
-            <div className="flex items-center gap-3">
+            {c.bg && (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={c.bg}
+                  alt=""
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-black/50 transition-colors group-hover:bg-black/40"
+                />
+              </>
+            )}
+
+            <div className="relative flex items-center gap-3">
               <span
                 aria-hidden
-                className={`inline-flex h-12 w-12 items-center justify-center rounded-lg text-2xl backdrop-blur-sm ${c.chip}`}
+                className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 text-2xl backdrop-blur-sm"
               >
                 {c.icon}
               </span>
@@ -161,10 +178,13 @@ function CategoryGrid() {
                 {c.title}
               </h3>
             </div>
-            <p className="text-sm leading-relaxed text-white/85">{c.description}</p>
-            <span className="mt-auto inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white/95">
-              Se topplistan <span aria-hidden className="transition-transform group-hover:translate-x-1">›</span>
-            </span>
+
+            <div className="relative">
+              <p className="line-clamp-2 text-sm leading-relaxed text-white/90">{c.description}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+                Utforska <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
           </Link>
         ))}
       </div>

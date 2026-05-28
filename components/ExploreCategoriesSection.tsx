@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import {
-  Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, BookOpen,
+  Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -72,11 +72,11 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-blue-600 to-indigo-800',
   },
   {
-    href: '/ai-guiden',
-    title: 'AI-Guiden',
-    icon: BookOpen,
+    href: '/ai-verktyg/gratis',
+    title: 'Gratis AI-verktyg',
+    icon: Sparkles,
     bg: `${STORAGE}/gratis-ai-verktyg-kategori.webp`,
-    fallbackGradient: 'bg-gradient-to-br from-slate-700 to-zinc-900',
+    fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-teal-800',
   },
 ];
 
