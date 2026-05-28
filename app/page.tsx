@@ -72,7 +72,7 @@ export default async function HomePage() {
             ) : (
               <div className="flex h-full w-full items-center justify-center text-fg-faint">
                 <span className="font-mono text-xs uppercase tracking-wider">
-                  no image
+                  Ingen bild
                 </span>
               </div>
             )}

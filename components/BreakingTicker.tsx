@@ -13,7 +13,7 @@ export function BreakingTicker({ items }: { items: TickerItem[] }) {
         <div className="flex shrink-0 items-center gap-2 bg-accent px-4 py-2">
           <span className="live-dot h-2 w-2 rounded-full bg-accent-fg" />
           <span className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-accent-fg">
-            Live
+            Direkt
           </span>
         </div>
         {/* Scrolling track */}

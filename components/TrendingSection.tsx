@@ -12,7 +12,7 @@ export function TrendingSection({ items }: { items: ArticleCardData[] }) {
       <div className="mb-4 flex items-baseline justify-between border-b border-line pb-3">
         <h2 className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.25em] text-fg-muted">
           <span aria-hidden className="text-rose-600">▲</span>
-          Trending nu
+          Mest lästa nu
         </h2>
         <span className="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
           Senaste 7 dagarna

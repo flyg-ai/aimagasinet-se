@@ -20,7 +20,7 @@ export function NewsletterBanner() {
                 Hänger med i AI-utvecklingen — på 5 minuter i veckan
               </h3>
               <p className="mt-2 text-sm text-zinc-600">
-                Svenska AI-nyheter, nya verktyg och faktiska use cases.
+                Svenska AI-nyheter, nya verktyg och faktiska användningsfall.
                 Inga sponsrade utskick.
               </p>
             </div>
