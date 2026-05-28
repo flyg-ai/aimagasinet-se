@@ -40,6 +40,14 @@ const nextConfig = {
         destination: '/ai-video/runway-gen-3',
         statusCode: 301,
       },
+      // Older Dec 2025 short-form article superseded by the
+      // comprehensive Dec 12 "Topp 50 AI-låtar"-listan. 301 forwards
+      // link equity to the newer page.
+      {
+        source: '/ai-musik-tar-over-spotify-har-ar-fem-latar-som-redan-toppar-listorna',
+        destination: '/topp-50-ai-latar-pa-spotify-2026',
+        statusCode: 301,
+      },
     ];
   },
 };
