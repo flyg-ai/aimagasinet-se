@@ -240,6 +240,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // hreflang alternate point to the served URL, never the 308-source.
   const canonicalPath = a.path === '/' || a.path.endsWith('/') ? a.path : `${a.path}/`;
 
+  // Next.js *replaces* parent openGraph entirely (no deep merge), so we
+  // always emit an image — featured_image when set, brand icon otherwise.
+  const ogImage = a.featured_image ?? '/apple-icon.png';
+
   return {
     title,
     description,
@@ -253,13 +257,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       url: canonicalPath,
       publishedTime: a.published_at || undefined,
-      images: a.featured_image ? [{ url: a.featured_image }] : undefined,
+      images: [{ url: ogImage }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: a.featured_image ? [a.featured_image] : undefined,
+      images: [ogImage],
     },
   };
 }

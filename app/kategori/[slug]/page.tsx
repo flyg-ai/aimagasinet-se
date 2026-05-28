@@ -27,8 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical,
       languages: { 'sv-SE': canonical },
     },
-    openGraph: { title: c.name, url: canonical, type: 'website' },
-    twitter: { card: 'summary' },
+    openGraph: {
+      title: c.name,
+      url: canonical,
+      type: 'website',
+      images: [{ url: '/apple-icon.png' }],
+    },
+    twitter: { card: 'summary', images: ['/apple-icon.png'] },
   };
 }
 
