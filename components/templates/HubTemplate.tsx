@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { JsonLd } from '@/components/JsonLd';
+import { FaqAccordion } from '@/components/FaqAccordion';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import { YRKE_HUB_KNOWN } from '@/lib/yrke-tools';
-import { breadcrumbSchema } from '@/lib/schemas';
+import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -914,6 +915,13 @@ export function HubTemplate({
       )}
 
       <EditorialSection article={a} ranked={ranked} />
+
+      {Array.isArray(a.faq) && a.faq.length > 0 && (
+        <>
+          <FaqAccordion items={a.faq} />
+          <JsonLd data={faqPageSchema(a.faq)} />
+        </>
+      )}
     </article>
   );
 }

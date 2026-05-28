@@ -25,7 +25,7 @@ import { AboutTemplate } from '@/components/templates/AboutTemplate';
 import { ContactTemplate } from '@/components/templates/ContactTemplate';
 import { GuideHubTemplate } from '@/components/templates/GuideHubTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
-import { fetchAuthor } from '@/lib/authors';
+import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 
 export const revalidate = 300;
 
@@ -279,7 +279,14 @@ export default async function CatchAllPage({ params }: Props) {
   console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
   if (decision.kind === 'about') {
-    return <AboutTemplate article={a} />;
+    const authorsMap = await fetchAuthorsMap();
+    // Render the editorial team in the order they appear in the
+    // authors table — chefredaktör first by virtue of seed order.
+    const orderedSlugs = ['nicklas-hallberg', 'erik-lindgren', 'sara-nilsson'];
+    const authors = orderedSlugs
+      .map((s) => authorsMap.get(s))
+      .filter((x): x is NonNullable<typeof x> => x !== undefined);
+    return <AboutTemplate article={a} authors={authors} />;
   }
 
   if (decision.kind === 'contact') {

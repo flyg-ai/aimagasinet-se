@@ -119,6 +119,20 @@ export function breadcrumbSchema(crumbs: Crumb[]) {
   };
 }
 
+export type FaqItem = { question: string; answer: string };
+
+export function faqPageSchema(items: FaqItem[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((it) => ({
+      '@type': 'Question',
+      name: it.question,
+      acceptedAnswer: { '@type': 'Answer', text: it.answer },
+    })),
+  };
+}
+
 export function personSchema(a: AuthorRef) {
   return {
     '@context': 'https://schema.org',

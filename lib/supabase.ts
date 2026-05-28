@@ -38,6 +38,9 @@ export type Article = {
   /** FK to authors.slug — populated after migration 0008_authors.sql.
    *  Optional in TypeScript so pre-migration fetches still type-check. */
   author_slug?: string | null;
+  /** jsonb [{ question, answer }] — populated after migration
+   *  0009_faq.sql + scripts/generate-faqs.ts. */
+  faq?: { question: string; answer: string }[] | null;
 };
 
 export type Category = {

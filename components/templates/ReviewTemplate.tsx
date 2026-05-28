@@ -3,7 +3,8 @@ import { parseRating, toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
-import { breadcrumbSchema } from '@/lib/schemas';
+import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
+import { FaqAccordion } from '@/components/FaqAccordion';
 
 /* ─── Types ────────────────────────────────────────────────────── */
 
@@ -792,6 +793,20 @@ export function ReviewTemplate({
           </aside>
         </div>
       </div>
+
+      {Array.isArray(a.faq) && a.faq.length > 0 && (
+        <>
+          <FaqAccordion
+            items={a.faq}
+            heading={`Vanliga frågor om ${toolName}`}
+          />
+          <script
+            type="application/ld+json"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(a.faq)) }}
+          />
+        </>
+      )}
     </article>
   );
 }

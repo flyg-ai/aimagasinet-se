@@ -1,15 +1,27 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
+import type { Author } from '@/lib/authors';
+import { AuthorAvatar } from '@/components/AuthorAvatar';
 
 /** Renders /om-oss. Mission + redaktionen + varför + kontakt-CTA.
  *  Content stays in code (no DB editing surface for this page yet);
- *  article.content_mdx is rendered after the team section if present. */
-export function AboutTemplate({ article: a }: { article: Article }) {
+ *  article.content_mdx is rendered after the team section if present.
+ *
+ *  `authors` are fetched server-side in app/[...slug]/page.tsx and
+ *  passed in so the Team section renders the real editorial team
+ *  pulled from the authors table. */
+export function AboutTemplate({
+  article: a,
+  authors = [],
+}: {
+  article: Article;
+  authors?: Author[];
+}) {
   return (
     <article className="bg-page text-fg">
       <Hero article={a} />
       <Mission />
-      <Team />
+      <Team authors={authors} />
       <WhyWeExist />
       <ContactCta />
       {a.content_mdx && <EditorialBody html={a.content_mdx} />}
@@ -74,31 +86,7 @@ function Mission() {
   );
 }
 
-function Team() {
-  const members: { name: string; role: string; bio: string; initial: string; accent: string }[] = [
-    {
-      name: 'Redaktionen',
-      role: 'Chefredaktör & Tester',
-      bio: 'AI-Magasinets redaktion testar och rankar AI-verktyg i svenska arbetsflöden. Vi har bakgrund inom teknik, journalistik och digital marknadsföring.',
-      initial: 'R',
-      accent: 'bg-indigo-600',
-    },
-    {
-      name: 'Tekniska skribenter',
-      role: 'Skribenter & Analytiker',
-      bio: 'Utvecklare, dataanalytiker och AI-praktiker som skriver djupgående om hur AI-modellerna faktiskt fungerar och hur du bygger med dem.',
-      initial: 'T',
-      accent: 'bg-emerald-600',
-    },
-    {
-      name: 'Branschexperter',
-      role: 'Gästskribenter & Källor',
-      bio: 'Vi anlitar branschexperter för specialiserade områden — SEO, redovisning, juridik — så att rekommendationerna faktiskt håller i svensk kontext.',
-      initial: 'B',
-      accent: 'bg-amber-600',
-    },
-  ];
-
+function Team({ authors }: { authors: Author[] }) {
   return (
     <section className="border-y border-line bg-muted">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
@@ -108,22 +96,60 @@ function Team() {
         <h2 className="mb-10 border-b border-line pb-3 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
           Vilka är vi?
         </h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {members.map((m) => (
-            <article key={m.name} className="rounded-xl border border-line bg-card p-6">
-              <div className="flex items-center gap-4">
-                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-2xl font-black text-white ${m.accent}`}>
-                  {m.initial}
+        {authors.length === 0 ? (
+          <p className="text-fg-subtle">Redaktionen presenteras snart.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {authors.map((a) => (
+              <article key={a.slug} className="flex flex-col rounded-xl border border-line bg-card p-6">
+                <div className="flex items-center gap-4">
+                  <Link href={`/skribenter/${a.slug}/`} className="shrink-0">
+                    <AuthorAvatar
+                      slug={a.slug}
+                      name={a.name}
+                      avatarUrl={a.avatar_url}
+                      size="md"
+                    />
+                  </Link>
+                  <div className="min-w-0">
+                    <Link
+                      href={`/skribenter/${a.slug}/`}
+                      className="text-lg font-black uppercase tracking-tight text-fg hover:text-indigo-700"
+                    >
+                      {a.name}
+                    </Link>
+                    {a.role && (
+                      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
+                        {a.role}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="text-lg font-black uppercase tracking-tight text-fg">{m.name}</div>
-                  <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">{m.role}</div>
+                {a.bio && (
+                  <p className="mt-4 line-clamp-5 text-sm leading-relaxed text-fg-subtle">{a.bio}</p>
+                )}
+                <div className="mt-auto flex flex-wrap items-center gap-3 pt-4">
+                  <Link
+                    href={`/skribenter/${a.slug}/`}
+                    className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-indigo-700 hover:underline"
+                  >
+                    Hela profilen <span aria-hidden>→</span>
+                  </Link>
+                  {a.linkedin_url && (
+                    <a
+                      href={a.linkedin_url}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-700"
+                    >
+                      LinkedIn
+                    </a>
+                  )}
                 </div>
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-fg-subtle">{m.bio}</p>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

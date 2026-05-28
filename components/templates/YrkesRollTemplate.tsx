@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
+import { FaqAccordion } from '@/components/FaqAccordion';
+import { JsonLd } from '@/components/JsonLd';
+import { faqPageSchema, breadcrumbSchema } from '@/lib/schemas';
 
 /** Template for depth-4 yrkesroll-pages under /ai-verktyg/foretag/yrke/.
  *  This is the discovery layer above the topic hubs (depth 5) — gives
@@ -12,12 +15,31 @@ export function YrkesRollTemplate({
   article: Article;
   spec: YrkesRollSpec;
 }) {
+  // Path: /ai-verktyg/foretag/yrke/[yrke] → 4 hard-coded crumbs.
+  const segs = a.path.split('/').filter(Boolean);
+  const breadcrumbLd = segs.length > 1
+    ? breadcrumbSchema([
+        { label: 'AI-verktyg', href: '/ai-verktyg' },
+        { label: 'För företag', href: '/ai-verktyg/foretag' },
+        { label: 'Yrke', href: '/ai-verktyg/foretag/yrke' },
+        { label: a.title, href: a.path },
+      ])
+    : null;
+
   return (
     <article className="bg-page text-fg">
+      {breadcrumbLd && <JsonLd data={breadcrumbLd} />}
       <Hero article={a} subcategoryCount={spec.subcategories.length} />
       <SubcategoryGrid subcategories={spec.subcategories} />
       <TopPicks picks={spec.topPicks} />
       <EditorialBody html={a.content_mdx} />
+
+      {Array.isArray(a.faq) && a.faq.length > 0 && (
+        <>
+          <FaqAccordion items={a.faq} />
+          <JsonLd data={faqPageSchema(a.faq)} />
+        </>
+      )}
     </article>
   );
 }
