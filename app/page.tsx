@@ -117,14 +117,20 @@ export default async function HomePage() {
                   </span>
                 </div>
               )}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6 sm:p-8">
-                <div className="mb-3 inline-flex flex-wrap items-center gap-3 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+              {/* Overlay anchored to the bottom 60% of the hero on
+                  mobile via max-h, so the meta-pill and title never
+                  push above the image's mid-point. Without this cap
+                  the absolute-bottom block grows upward to fit the
+                  title and the cyan category badge ends up looking
+                  like a strip at the top of the image. */}
+              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden bg-gradient-to-t from-black/85 via-black/55 to-transparent p-4 pt-6 sm:max-h-none sm:p-8">
+                <div className="mb-2 inline-flex flex-wrap items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm sm:mb-3 sm:gap-3">
                   <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
                     ★ Utvalt
                   </span>
                   <CategoryBadge slug={hero.category} size="sm" />
                   {hero.published_at && (
-                    <time className="font-mono text-[10px] uppercase tracking-wider text-white/80">
+                    <time className="hidden font-mono text-[10px] uppercase tracking-wider text-white/80 sm:inline">
                       {new Date(hero.published_at).toLocaleDateString('sv-SE', {
                         day: 'numeric',
                         month: 'short',
@@ -134,15 +140,15 @@ export default async function HomePage() {
                   )}
                   {hero.reading_time != null && (
                     <span className="font-mono text-[10px] uppercase tracking-wider text-white/80">
-                      · {hero.reading_time} min läsning
+                      · {hero.reading_time} min
                     </span>
                   )}
                 </div>
-                <h1 className="text-balance text-2xl font-black leading-[1.1] tracking-tight text-white sm:text-3xl lg:text-4xl">
+                <h1 className="line-clamp-2 text-balance text-xl font-black leading-[1.15] tracking-tight text-white sm:line-clamp-none sm:text-3xl lg:text-4xl">
                   {hero.title}
                 </h1>
                 {hero.excerpt && (
-                  <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
+                  <p className="mt-3 line-clamp-2 hidden max-w-2xl text-sm leading-relaxed text-white/90 sm:block sm:text-base">
                     {hero.excerpt}
                   </p>
                 )}
