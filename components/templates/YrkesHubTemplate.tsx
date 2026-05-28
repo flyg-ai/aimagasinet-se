@@ -48,6 +48,20 @@ const YRKEN: {
     icon: '⚖️',
     description: 'Avtalsgranskning, due diligence och rättsutredningar med AI som klarar svensk juridisk text.',
   },
+  {
+    slug: 'designer',
+    title: 'Designer',
+    href: '/ai-verktyg/foretag/yrke/designer',
+    icon: '🎨',
+    description: 'Grafisk design, UI/UX, bildgenerering och kort-video — AI-verktyg som lyfter designers från idé till leverans.',
+  },
+  {
+    slug: 'fotograf-video',
+    title: 'Fotograf & Videoskapare',
+    href: '/ai-verktyg/foretag/yrke/fotograf-video',
+    icon: '📸',
+    description: 'Bildredigering, videoklippning, foto-AI och ljudsättning — för fotografer och creators som vill öka tempot.',
+  },
 ];
 
 function buildCrumbs(path: string): { label: string; href: string }[] {

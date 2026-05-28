@@ -194,6 +194,84 @@ const SPEC_BY_SLUG: Record<string, YrkesRollSpec> = {
       { label: 'Bäst för intervjuanalys',   brand: 'Metaview',    href: '/ai-verktyg/foretag/yrke/rekrytering/kandidatmatchning' },
     ],
   },
+  designer: {
+    subcategories: [
+      {
+        title: 'Grafisk design',
+        description: 'AI för logos, brand-grafik och marknadsföringsmaterial — Canva AI, Adobe Firefly, Looka.',
+        href: '/ai-verktyg/foretag/yrke/designer/grafisk-design',
+        icon: '◰',
+        accent: 'bg-violet-100 text-violet-700',
+      },
+      {
+        title: 'UI/UX',
+        description: 'Figma AI, Galileo AI och Uizard — AI som sänker tröskeln från idé till färdig UI-design.',
+        href: '/ai-verktyg/foretag/yrke/designer/ui-ux',
+        icon: '◫',
+        accent: 'bg-indigo-100 text-indigo-700',
+      },
+      {
+        title: 'Bildgenerering',
+        description: 'Midjourney och Khroma för moodboards, koncept-art och färgpaletter.',
+        href: '/ai-verktyg/foretag/yrke/designer/bildgenerering',
+        icon: '✿',
+        accent: 'bg-rose-100 text-rose-700',
+      },
+      {
+        title: 'Videoredigering',
+        description: 'Runway och AI-driven kort-video för designers som behöver rörelse i pitchen.',
+        href: '/ai-verktyg/foretag/yrke/designer/videoredigering',
+        icon: '▶',
+        accent: 'bg-cyan-100 text-cyan-700',
+      },
+    ],
+    topPicks: [
+      { label: 'Bäst för grafisk design', brand: 'Canva AI',     href: '/ai-verktyg/foretag/yrke/designer/grafisk-design' },
+      { label: 'Bäst för UI/UX',          brand: 'Figma AI',     href: '/ai-verktyg/foretag/yrke/designer/ui-ux' },
+      { label: 'Bäst för bildgenerering', brand: 'Midjourney',   href: '/ai-verktyg/foretag/yrke/designer/bildgenerering' },
+      { label: 'Bäst för videoredigering', brand: 'Runway',      href: '/ai-verktyg/foretag/yrke/designer/videoredigering' },
+      { label: 'Bäst för Adobe-stack',    brand: 'Adobe Firefly', href: '/ai-verktyg/foretag/yrke/designer/grafisk-design' },
+    ],
+  },
+  'fotograf-video': {
+    subcategories: [
+      {
+        title: 'Bildredigering',
+        description: 'Luminar Neo AI, Topaz Photo AI och Remove.bg — AI-driven retusch och upscale.',
+        href: '/ai-verktyg/foretag/yrke/fotograf-video/bildredigering',
+        icon: '◐',
+        accent: 'bg-indigo-100 text-indigo-700',
+      },
+      {
+        title: 'Videoklippning',
+        description: 'CapCut och Canva Video för shorts, Reels och TikTok — AI-redigering i en klippstation.',
+        href: '/ai-verktyg/foretag/yrke/fotograf-video/videoklippning',
+        icon: '▶',
+        accent: 'bg-amber-100 text-amber-700',
+      },
+      {
+        title: 'Bildgenerering',
+        description: 'Adobe Firefly, Runway Gen-3 och Pika Labs — för foto-utvidgning, cinemagraphs och kort AI-video.',
+        href: '/ai-verktyg/foretag/yrke/fotograf-video/bildgenerering',
+        icon: '✦',
+        accent: 'bg-emerald-100 text-emerald-700',
+      },
+      {
+        title: 'Ljudsättning',
+        description: 'Descript och Krisp för podcast-redigering, brusreducering och voice-over.',
+        href: '/ai-verktyg/foretag/yrke/fotograf-video/ljudsattning',
+        icon: '♪',
+        accent: 'bg-rose-100 text-rose-700',
+      },
+    ],
+    topPicks: [
+      { label: 'Bäst för bildredigering', brand: 'Luminar Neo AI', href: '/ai-verktyg/foretag/yrke/fotograf-video/bildredigering' },
+      { label: 'Bäst för upscale',         brand: 'Topaz Photo AI', href: '/ai-verktyg/foretag/yrke/fotograf-video/bildredigering' },
+      { label: 'Bäst för videoklippning',  brand: 'CapCut AI',      href: '/ai-verktyg/foretag/yrke/fotograf-video/videoklippning' },
+      { label: 'Bäst foto-till-video',     brand: 'Runway Gen-3',   href: '/ai-verktyg/foretag/yrke/fotograf-video/bildgenerering' },
+      { label: 'Bäst för podcast',         brand: 'Descript',       href: '/ai-verktyg/foretag/yrke/fotograf-video/ljudsattning' },
+    ],
+  },
   juridik: {
     subcategories: [
       {

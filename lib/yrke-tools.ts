@@ -11,6 +11,7 @@
  */
 
 import { EXTENDED_TOOLS } from './yrke-tools-extended';
+import { DESIGNER_FOTOGRAF_TOOLS } from './yrke-tools-designer-fotograf';
 
 export type YrkeParent =
   | 'seo'
@@ -27,7 +28,17 @@ export type YrkeParent =
   | 'rost-ai'
   | 'cv-screening'
   | 'jobbannonser'
-  | 'kandidatmatchning';
+  | 'kandidatmatchning'
+  // Designer
+  | 'grafisk-design'
+  | 'ui-ux'
+  | 'designer-bildgenerering'  // prefixed because bildgenerering exists in fotograf too
+  | 'videoredigering'
+  // Fotograf-video
+  | 'bildredigering'
+  | 'videoklippning'
+  | 'foto-bildgenerering'
+  | 'ljudsattning';
 
 export type YrkeTool = {
   slug: string;
@@ -82,6 +93,16 @@ const CRITERIA_BY_PARENT: Record<YrkeParent, string[]> = {
   'cv-screening': ['Matchningskvalitet', 'Bias-skydd', 'ATS-integration', 'Skalbarhet', 'Pris / prestanda', 'Svensk arbetsrätt'],
   jobbannonser: ['Textkvalitet', 'Inkluderingsanalys', 'Bias-detection', 'A/B-test', 'Pris / prestanda', 'Brand voice'],
   kandidatmatchning: ['Skills-mapping', 'ATS-integration', 'Pipeline-täckning', 'Diversitet', 'Pris / prestanda', 'Förklarbarhet'],
+  // Designer
+  'grafisk-design': ['Designkvalitet', 'Mallar', 'Brand control', 'Export-format', 'Pris / prestanda', 'Användarvänlighet'],
+  'ui-ux': ['Wireframe-kvalitet', 'AI-precision', 'Iteration', 'Code-export', 'Pris / prestanda', 'Designsystem'],
+  'designer-bildgenerering': ['Stilkontroll', 'Bildkvalitet', 'Brand-koherens', 'Iteration', 'Pris / prestanda', 'Kommersiell licens'],
+  videoredigering: ['Klippkvalitet', 'AI-effekter', 'Render-tid', 'Export-format', 'Pris / prestanda', 'Användarvänlighet'],
+  // Fotograf-video
+  bildredigering: ['Retuschkvalitet', 'AI-precision', 'Batch-stöd', 'Hastighet', 'Pris / prestanda', 'Native-app'],
+  videoklippning: ['Klippkvalitet', 'AI-stöd', 'Auto-redigering', 'Plattformsstöd', 'Pris / prestanda', 'Mobil app'],
+  'foto-bildgenerering': ['Fotorealism', 'Stil-kontroll', 'Konsistens', 'Iteration', 'Pris / prestanda', 'Kommersiell licens'],
+  ljudsattning: ['Ljudkvalitet', 'AI-stöd', 'Bibliotek', 'Sync med video', 'Pris / prestanda', 'Royaltyfri'],
 };
 
 /** Deterministic 6-criterion matrix around `score` ± 0.4. */
@@ -1011,6 +1032,7 @@ export const YRKE_TOOLS: YrkeTool[] = [
     label: 'Bäst byrå-plattform', logo: 'bg-fuchsia-600',
   },
   ...EXTENDED_TOOLS,
+  ...DESIGNER_FOTOGRAF_TOOLS,
 ];
 
 /* ── Helpers — single source of truth → templates + DB ───────── */

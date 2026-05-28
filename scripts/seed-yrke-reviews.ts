@@ -37,6 +37,16 @@ const PARENT_PATH: Record<string, string> = {
   'cv-screening': 'rekrytering/cv-screening',
   jobbannonser: 'rekrytering/jobbannonser',
   kandidatmatchning: 'rekrytering/kandidatmatchning',
+  // Designer
+  'grafisk-design': 'designer/grafisk-design',
+  'ui-ux': 'designer/ui-ux',
+  'designer-bildgenerering': 'designer/bildgenerering',
+  videoredigering: 'designer/videoredigering',
+  // Fotograf-video
+  bildredigering: 'fotograf-video/bildredigering',
+  videoklippning: 'fotograf-video/videoklippning',
+  'foto-bildgenerering': 'fotograf-video/bildgenerering',
+  ljudsattning: 'fotograf-video/ljudsattning',
 };
 
 async function main() {
