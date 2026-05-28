@@ -42,13 +42,13 @@ export default async function HomePage() {
           href={hero.path}
           className="card group relative block overflow-hidden rounded-xl border border-line bg-card hover:border-line-strong"
         >
-          <div className="relative aspect-[16/10] overflow-hidden bg-soft">
+          <div className="relative aspect-[16/9] overflow-hidden bg-soft">
             {hero.featured_image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={hero.featured_image}
                 alt=""
-                className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-fg-faint">

@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# transient screenshot outputs (from scripts/verify-homepage-shot.mjs)
+/tmp-shots/
