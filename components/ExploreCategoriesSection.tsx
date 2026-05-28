@@ -75,8 +75,7 @@ const CARDS: Card[] = [
     href: '/ai-guiden',
     title: 'AI-Guiden',
     icon: BookOpen,
-    // No matching upload — falls back to the slate gradient.
-    bg: null,
+    bg: `${STORAGE}/gratis-ai-verktyg-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-slate-700 to-zinc-900',
   },
 ];
