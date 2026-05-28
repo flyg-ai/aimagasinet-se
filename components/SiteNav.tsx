@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { SubscribeForm } from '@/components/SubscribeForm';
 
 type NavChild = { href: string; label: string };
 type NavItem = {
@@ -111,12 +112,7 @@ export function SiteNav() {
             <path d="m21 21-4.3-4.3" />
           </svg>
         </button>
-        <Link
-          href="#prenumerera"
-          className="hidden rounded-md bg-accent px-3.5 py-2 text-sm font-bold uppercase tracking-wider text-accent-fg transition-colors hover:bg-accent-hover sm:inline-block"
-        >
-          Prenumerera
-        </Link>
+        <SubscribeForm variant="compact" />
         <button
           type="button"
           aria-label={mobileOpen ? 'Stäng meny' : 'Öppna meny'}

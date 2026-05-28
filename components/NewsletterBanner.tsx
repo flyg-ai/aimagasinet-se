@@ -1,10 +1,9 @@
-import Link from 'next/link';
+import { SubscribeForm } from '@/components/SubscribeForm';
 
 /** Inline newsletter signup. Used as a grid-row interruption inside the
  *  filterable post grid — column-span full so it cuts cleanly across all
- *  3 columns at desktop. Form posts to a /prenumerera anchor; no
- *  backend is wired up yet, the user enters their email on the landing
- *  page. */
+ *  3 columns at desktop. The actual signup happens in <SubscribeForm>,
+ *  which POSTs to /api/subscribe and shows inline status feedback. */
 export function NewsletterBanner() {
   return (
     <div className="col-span-full">
@@ -24,12 +23,7 @@ export function NewsletterBanner() {
                 Inga sponsrade utskick.
               </p>
             </div>
-            <Link
-              href="#prenumerera"
-              className="inline-flex shrink-0 items-center gap-2 rounded-md bg-indigo-600 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-indigo-700"
-            >
-              Prenumerera <span aria-hidden>→</span>
-            </Link>
+            <SubscribeForm variant="banner" />
           </div>
         </div>
       </div>
