@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 
-type Variant = 'banner' | 'compact';
+type Variant = 'banner' | 'banner-dark' | 'compact';
 
 type Props = {
-  /** "banner" = full inline form for the homepage NewsletterBanner.
-   *  "compact" = small floating button + popover used by the header CTA. */
+  /** "banner"      = full inline form on a light background.
+   *  "banner-dark" = same shape but tuned for dark-gradient surfaces
+   *                  (white-on-translucent input, white CTA on indigo).
+   *  "compact"     = small floating button + popover used by the header. */
   variant?: Variant;
   /** Optional CTA label override. */
   ctaLabel?: string;
@@ -113,7 +115,9 @@ export function SubscribeForm({ variant = 'banner', ctaLabel = 'Prenumerera' }: 
     );
   }
 
-  // Banner variant — inline form for homepage.
+  // Banner variants — inline form for homepage. "banner-dark" is the
+  // same shape but with classes that work on a dark gradient surface.
+  const dark = variant === 'banner-dark';
   return (
     <div className="flex w-full max-w-md flex-col gap-2 sm:max-w-lg">
       <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row">
@@ -124,12 +128,22 @@ export function SubscribeForm({ variant = 'banner', ctaLabel = 'Prenumerera' }: 
           onChange={(e) => setEmail(e.target.value)}
           placeholder="din@epost.se"
           disabled={isBusy}
-          className="flex-1 rounded-md border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+          className={
+            'flex-1 rounded-md px-4 py-3 text-sm transition-colors focus:outline-none focus:ring-2 ' +
+            (dark
+              ? 'border border-white/20 bg-white/10 text-white placeholder:text-indigo-200/70 backdrop-blur-sm focus:border-white focus:ring-white/30'
+              : 'border border-zinc-200 bg-white text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-indigo-100')
+          }
         />
         <button
           type="submit"
           disabled={isBusy}
-          className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className={
+            'inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] transition-colors disabled:cursor-not-allowed disabled:opacity-60 ' +
+            (dark
+              ? 'bg-white text-indigo-700 hover:bg-indigo-50'
+              : 'bg-indigo-600 text-white hover:bg-indigo-700')
+          }
         >
           {isBusy ? (
             <>
@@ -143,19 +157,24 @@ export function SubscribeForm({ variant = 'banner', ctaLabel = 'Prenumerera' }: 
           )}
         </button>
       </form>
-      {message && <StatusLine status={status} message={message} />}
+      {message && <StatusLine status={status} message={message} dark={dark} />}
     </div>
   );
 }
 
-function StatusLine({ status, message }: { status: Status; message: string }) {
-  const tone =
-    status === 'ok'      ? 'text-emerald-700'
+function StatusLine({ status, message, dark = false }: { status: Status; message: string; dark?: boolean }) {
+  const lightTone =
+    status === 'ok'        ? 'text-emerald-700'
     : status === 'already' ? 'text-zinc-700'
     : status === 'error'   ? 'text-rose-700'
     : 'text-zinc-500';
+  const darkTone =
+    status === 'ok'        ? 'text-emerald-300'
+    : status === 'already' ? 'text-indigo-100'
+    : status === 'error'   ? 'text-rose-200'
+    : 'text-indigo-200';
   return (
-    <p role="status" aria-live="polite" className={`text-xs font-medium ${tone}`}>
+    <p role="status" aria-live="polite" className={`text-xs font-medium ${dark ? darkTone : lightTone}`}>
       {message}
     </p>
   );
