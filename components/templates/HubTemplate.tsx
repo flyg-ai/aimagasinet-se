@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import type { ArticleCardData } from '@/components/ArticleCard';
+import { JsonLd } from '@/components/JsonLd';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import { YRKE_HUB_KNOWN } from '@/lib/yrke-tools';
+import { breadcrumbSchema } from '@/lib/schemas';
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -878,8 +880,13 @@ export function HubTemplate({
   const updatedYear = new Date().getFullYear();
   const facts = getHubFacts(a.slug);
 
+  const breadcrumbLd = crumbs.length > 0
+    ? breadcrumbSchema([...crumbs, { label: a.title, href: a.path }])
+    : null;
+
   return (
     <article className="bg-muted text-fg">
+      {breadcrumbLd && <JsonLd data={breadcrumbLd} />}
       <Hero
         article={a}
         crumbs={crumbs}

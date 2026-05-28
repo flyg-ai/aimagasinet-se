@@ -2,8 +2,10 @@ import Link from 'next/link';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 import { AuthorAvatar } from '@/components/AuthorAvatar';
+import { JsonLd } from '@/components/JsonLd';
 import type { Article } from '@/lib/supabase';
 import type { Author } from '@/lib/authors';
+import { articleSchema, breadcrumbSchema } from '@/lib/schemas';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
 
@@ -22,8 +24,30 @@ export function ArticleTemplate({
   const crumbs = buildCrumbs(a.path);
   const children = items;
 
+  // Schema.org Article (+ breadcrumbs if depth > 1). The breadcrumb
+  // includes the current page as the final item per Google's spec —
+  // the visual Breadcrumb component drops it because the title repeats
+  // it visually.
+  const articleLd = articleSchema(
+    {
+      title: a.title,
+      excerpt: a.excerpt,
+      path: a.path,
+      featured_image: a.featured_image,
+      published_at: a.published_at,
+      // Article type doesn't carry updated_at currently — fall back to
+      // published_at in the schema helper.
+      category: a.category,
+    },
+    author ?? null,
+  );
+  const breadcrumbLd = crumbs.length > 0
+    ? breadcrumbSchema([...crumbs, { label: a.title, href: a.path }])
+    : null;
+
   return (
     <article>
+      <JsonLd data={breadcrumbLd ? [articleLd, breadcrumbLd] : articleLd} />
       <header className="border-b border-line">
         <div className="mx-auto max-w-3xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12">
           <Breadcrumb crumbs={crumbs} />

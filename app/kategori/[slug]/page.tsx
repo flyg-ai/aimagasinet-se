@@ -19,10 +19,16 @@ async function getCategory(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = await getCategory(params.slug);
   if (!c) return {};
+  const canonical = `/kategori/${c.slug}/`;
   return {
     title: c.name,
     description: c.description || `Alla artiklar i kategorin ${c.name}.`,
-    alternates: { canonical: `/kategori/${c.slug}` },
+    alternates: {
+      canonical,
+      languages: { 'sv-SE': canonical },
+    },
+    openGraph: { title: c.name, url: canonical, type: 'website' },
+    twitter: { card: 'summary' },
   };
 }
 

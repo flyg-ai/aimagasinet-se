@@ -235,16 +235,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title = a.title;
   }
 
+  // Canonical / hreflang carry the trailing-slash form (next.config.mjs
+  // has trailingSlash: true) so both the canonical link and the
+  // hreflang alternate point to the served URL, never the 308-source.
+  const canonicalPath = a.path === '/' || a.path.endsWith('/') ? a.path : `${a.path}/`;
+
   return {
     title,
     description,
-    alternates: { canonical: a.path },
+    alternates: {
+      canonical: canonicalPath,
+      languages: { 'sv-SE': canonicalPath },
+    },
     openGraph: {
       title,
       description,
       type: 'article',
+      url: canonicalPath,
       publishedTime: a.published_at || undefined,
       images: a.featured_image ? [{ url: a.featured_image }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: a.featured_image ? [a.featured_image] : undefined,
     },
   };
 }

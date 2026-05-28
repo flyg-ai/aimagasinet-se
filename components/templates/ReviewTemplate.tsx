@@ -3,6 +3,7 @@ import { parseRating, toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
+import { breadcrumbSchema } from '@/lib/schemas';
 
 /* ─── Types ────────────────────────────────────────────────────── */
 
@@ -729,7 +730,7 @@ export function ReviewTemplate({
   const monthLabel = currentMonthLabel();
   const stars = starsFromScore(rating.score);
 
-  const jsonLd = {
+  const reviewLd = {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -744,12 +745,18 @@ export function ReviewTemplate({
     ...(a.excerpt ? { reviewBody: a.excerpt } : {}),
   };
 
+  // Add BreadcrumbList alongside the Review schema for any depth > 1.
+  const breadcrumbLd = crumbs.length > 0
+    ? breadcrumbSchema([...crumbs, { label: a.title, href: a.path }])
+    : null;
+  const allLd = breadcrumbLd ? [reviewLd, breadcrumbLd] : reviewLd;
+
   return (
     <article className="bg-muted text-fg">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(allLd) }}
       />
 
       <Hero

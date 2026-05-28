@@ -4,15 +4,37 @@ import { supabase } from '@/lib/supabase';
 import { fetchAuthor } from '@/lib/authors';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 import { AuthorAvatar } from '@/components/AuthorAvatar';
+import { JsonLd } from '@/components/JsonLd';
+import { personSchema, breadcrumbSchema } from '@/lib/schemas';
 
 export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const author = await fetchAuthor(params.slug);
   if (!author) return { title: 'Skribent hittas inte' };
+  const canonical = `/skribenter/${author.slug}/`;
+  const title = `${author.name}${author.role ? ' — ' + author.role : ''}`;
+  const description = author.bio ?? `Artiklar av ${author.name} på AI-Magasinet.`;
   return {
-    title: `${author.name}${author.role ? ' — ' + author.role : ''} | AI-Magasinet`,
-    description: author.bio ?? `Artiklar av ${author.name} på AI-Magasinet.`,
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: { 'sv-SE': canonical },
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'profile',
+      url: canonical,
+      images: author.avatar_url ? [{ url: author.avatar_url }] : undefined,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: author.avatar_url ? [author.avatar_url] : undefined,
+    },
   };
 }
 
@@ -36,8 +58,17 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
     author_name: author.name,
   }));
 
+  const ld = [
+    personSchema(author),
+    breadcrumbSchema([
+      { label: 'Skribenter', href: '/skribenter' },
+      { label: author.name, href: `/skribenter/${author.slug}` },
+    ]),
+  ];
+
   return (
     <article>
+      <JsonLd data={ld} />
       {/* ── Hero band: avatar + bio ─────────────────────── */}
       <div className="bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
+import { JsonLd } from '@/components/JsonLd';
+import { breadcrumbSchema } from '@/lib/schemas';
 
 /** Top-level yrkesroller. Each links to its yrkesroll-landing (depth 4);
  *  the landing pages then expose their subcategories. Use explicit href so
@@ -61,9 +63,13 @@ function buildCrumbs(path: string): { label: string; href: string }[] {
 
 export function YrkesHubTemplate({ article: a }: { article: Article }) {
   const crumbs = buildCrumbs(a.path);
+  const breadcrumbLd = crumbs.length > 0
+    ? breadcrumbSchema([...crumbs, { label: a.title, href: a.path }])
+    : null;
 
   return (
     <article className="bg-muted text-fg">
+      {breadcrumbLd && <JsonLd data={breadcrumbLd} />}
       {/* ── Hero ────────────────────────────────────────────────── */}
       <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-muted">
         <div className="mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-6 sm:pt-12">

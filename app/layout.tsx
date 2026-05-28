@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { BreakingTicker } from '@/components/BreakingTicker';
 import { SiteNav } from '@/components/SiteNav';
+import { JsonLd } from '@/components/JsonLd';
+import { organizationSchema, websiteSchema } from '@/lib/schemas';
 import './globals.css';
 
 const geistSans = localFont({
@@ -25,7 +27,32 @@ export const metadata: Metadata = {
   },
   description:
     'AI-Magasinet är ditt svenska magasin om AI: nyheter, djupgående guider och recensioner av AI-verktyg.',
-  openGraph: { siteName: 'AI-Magasinet', locale: 'sv_SE', type: 'website' },
+  // Self-referencing hreflang — the site is Swedish-only, so we just
+  // declare sv-SE for every URL by default. Per-page metadata overrides
+  // alternates when needed (currently only on article pages, which
+  // re-emit canonical + languages.sv for their own slug).
+  alternates: {
+    canonical: '/',
+    languages: { 'sv-SE': '/' },
+  },
+  openGraph: {
+    siteName: 'AI-Magasinet',
+    locale: 'sv_SE',
+    type: 'website',
+    images: [{ url: '/apple-icon.png', width: 180, height: 180 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@aimagasinet',
+    creator: '@aimagasinet',
+  },
+  // Tell crawlers it's OK to follow + index by default. Individual
+  // route segments can override via their own metadata.
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
 };
 
 export default async function RootLayout({
@@ -43,6 +70,11 @@ export default async function RootLayout({
   return (
     <html lang="sv" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen bg-page font-sans text-fg">
+        {/* Global JSON-LD — Organization + WebSite (with SearchAction).
+            Article / Review / Breadcrumb schemas are emitted by the
+            individual templates that own each entity type. */}
+        <JsonLd data={[organizationSchema(), websiteSchema()]} />
+
         {/* 1. Breaking-news ticker */}
         <BreakingTicker items={tickerItems} />
 
