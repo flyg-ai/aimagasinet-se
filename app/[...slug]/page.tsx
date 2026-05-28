@@ -25,6 +25,7 @@ import { AboutTemplate } from '@/components/templates/AboutTemplate';
 import { ContactTemplate } from '@/components/templates/ContactTemplate';
 import { GuideHubTemplate } from '@/components/templates/GuideHubTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
+import { fetchAuthor } from '@/lib/authors';
 
 export const revalidate = 300;
 
@@ -343,6 +344,9 @@ export default async function CatchAllPage({ params }: Props) {
     return <StandalonePageTemplate article={a} related={related} />;
   }
 
-  const children = await getChildren(a.slug);
-  return <ArticleTemplate article={a} items={children} />;
+  const [children, author] = await Promise.all([
+    getChildren(a.slug),
+    a.author_slug ? fetchAuthor(a.author_slug) : Promise.resolve(null),
+  ]);
+  return <ArticleTemplate article={a} items={children} author={author} />;
 }

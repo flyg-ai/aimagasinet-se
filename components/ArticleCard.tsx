@@ -12,6 +12,12 @@ export type ArticleCardData = {
   affiliate_url?: string | null;
   /** Pre-computed in the server fetch from content_mdx via readingTimeMinutes(). */
   reading_time?: number | null;
+  /** Author slug from the FK column. Optional so pre-migration fetches
+   *  that don't select this column still type-check. */
+  author_slug?: string | null;
+  /** Resolved at the page level by joining articles → authors. The card
+   *  renders the byline only when this is set. */
+  author_name?: string | null;
 };
 
 export function ArticleCard({ a }: { a: ArticleCardData }) {
@@ -57,6 +63,11 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
         <h3 className="text-lg font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
           {a.title}
         </h3>
+        {a.author_name && (
+          <p className="mt-2 text-xs text-fg-subtle">
+            Av <span className="font-semibold text-fg-muted">{a.author_name}</span>
+          </p>
+        )}
         {a.excerpt && (
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-fg-subtle">
             {a.excerpt}

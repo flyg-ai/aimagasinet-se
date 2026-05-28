@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
+import { AuthorAvatar } from '@/components/AuthorAvatar';
 import type { Article } from '@/lib/supabase';
+import type { Author } from '@/lib/authors';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
 
@@ -8,9 +11,13 @@ import { ArticleProse } from './ArticleProse';
 export function ArticleTemplate({
   article: a,
   items,
+  author,
 }: {
   article: Article;
   items: ArticleCardData[];
+  /** Joined from articles.author_slug → authors. Optional so the page
+   *  still renders if the migration hasn't been applied yet. */
+  author?: Author | null;
 }) {
   const crumbs = buildCrumbs(a.path);
   const children = items;
@@ -39,6 +46,32 @@ export function ArticleTemplate({
             <p className="mt-5 text-balance text-lg leading-relaxed text-fg-muted">
               {a.excerpt}
             </p>
+          )}
+          {author && (
+            <div className="mt-6 flex items-center gap-3 border-t border-line pt-5">
+              <Link href={`/skribenter/${author.slug}/`} className="shrink-0">
+                <AuthorAvatar
+                  slug={author.slug}
+                  name={author.name}
+                  avatarUrl={author.avatar_url}
+                  size="md"
+                />
+              </Link>
+              <div className="min-w-0">
+                <div className="text-xs text-fg-subtle">Av</div>
+                <Link
+                  href={`/skribenter/${author.slug}/`}
+                  className="text-sm font-bold text-fg hover:text-accent"
+                >
+                  {author.name}
+                </Link>
+                {author.role && (
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
+                    {author.role}
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
         {a.featured_image && (

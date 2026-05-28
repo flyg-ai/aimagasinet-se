@@ -12,6 +12,7 @@ import { CategoryRowsSection } from '@/components/CategoryRowsSection';
 import { ShortNewsCarousel } from '@/components/ShortNewsCarousel';
 import { MoreToReadSection } from '@/components/MoreToReadSection';
 import { readingTimeMinutes } from '@/lib/reading-time';
+import { fetchAuthorsMap, type Author } from '@/lib/authors';
 
 export const revalidate = 300;
 
@@ -26,31 +27,50 @@ const LOAD_MORE_PAGE = 20;
 
 type RawArticle = ArticleCardData & { content_mdx: string | null };
 
+/** Attach author_name from the in-memory authors map. Idempotent — runs
+ *  on every article-card data set we display on the homepage. */
+function withByline<T extends { author_slug?: string | null }>(
+  rows: T[],
+  authors: Map<string, Author>,
+): (T & { author_name: string | null })[] {
+  return rows.map((r) => ({
+    ...r,
+    author_name: r.author_slug ? authors.get(r.author_slug)?.name ?? null : null,
+  }));
+}
+
 export default async function HomePage() {
-  const [primaryRes, poolRes] = await Promise.all([
+  const [primaryRes, poolRes, authorsMap] = await Promise.all([
     supabase
       .from('articles')
-      .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx')
+      .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
       .eq('type', 'post')
       .order('published_at', { ascending: false })
       .limit(INITIAL_TOTAL),
     supabase
       .from('articles')
-      .select('slug,title,excerpt,featured_image,category,published_at,path')
+      .select('slug,title,excerpt,featured_image,category,published_at,path,author_slug')
       .eq('type', 'post')
       .order('published_at', { ascending: false })
       .limit(POOL_SIZE),
+    fetchAuthorsMap(),
   ]);
 
   // Strip content_mdx after computing reading_time — keeps client payload small.
-  const list: ArticleCardData[] = ((primaryRes.data ?? []) as RawArticle[]).map((a) => {
-    const { content_mdx, ...rest } = a;
-    return { ...rest, reading_time: readingTimeMinutes(content_mdx) };
-  });
+  const list: ArticleCardData[] = withByline(
+    ((primaryRes.data ?? []) as RawArticle[]).map((a) => {
+      const { content_mdx, ...rest } = a;
+      return { ...rest, reading_time: readingTimeMinutes(content_mdx) };
+    }),
+    authorsMap,
+  );
 
   // Pool is used in CategoryRowsSection + ShortNewsCarousel — no
   // reading_time on those cards, so content_mdx isn't needed.
-  const pool: ArticleCardData[] = (poolRes.data ?? []) as ArticleCardData[];
+  const pool: ArticleCardData[] = withByline(
+    (poolRes.data ?? []) as ArticleCardData[],
+    authorsMap,
+  );
 
   const hero = list[0];
   const sidebar = list.slice(1, 4);
