@@ -99,7 +99,7 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
       href={a.path}
       className="card group flex gap-4 rounded-lg border border-line-subtle bg-card p-3 hover:border-line-strong"
     >
-      <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-md bg-soft">
+      <div className="relative aspect-[16/9] w-32 shrink-0 overflow-hidden rounded-md bg-soft">
         {a.featured_image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
