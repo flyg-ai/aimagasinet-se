@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Match the trailing-slash form Google already has indexed from the
+  // old WordPress install (e.g. /ai-verktyg/gratis/). Without this Next
+  // 308-redirects /foo/ → /foo, which drops link equity on the old URLs.
+  trailingSlash: true,
   images: {
     remotePatterns: [
       // Legacy WP origin — kept for any leftover content_mdx inline images.
