@@ -1,17 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 import { NewsletterBanner } from '@/components/NewsletterBanner';
 
 type FilterKey = 'all' | 'ai-nyheter' | 'teknik-modeller' | 'foretag-aktorer' | 'ai-sakerhet-etik';
 
-const FILTERS: Array<{ key: FilterKey; label: string; activeBg: string; activeText: string }> = [
-  { key: 'all',              label: 'Alla',                activeBg: 'bg-zinc-900',  activeText: 'text-white' },
-  { key: 'ai-nyheter',       label: 'AI-Nyheter',          activeBg: 'bg-indigo-600', activeText: 'text-white' },
-  { key: 'teknik-modeller',  label: 'Teknik & Modeller',   activeBg: 'bg-cyan-700',   activeText: 'text-white' },
-  { key: 'foretag-aktorer',  label: 'Företag & Aktörer',   activeBg: 'bg-amber-600',  activeText: 'text-white' },
-  { key: 'ai-sakerhet-etik', label: 'AI-Säkerhet',         activeBg: 'bg-rose-600',   activeText: 'text-white' },
+const FILTERS: Array<{ key: FilterKey; label: string }> = [
+  { key: 'all',              label: 'Alla' },
+  { key: 'ai-nyheter',       label: 'AI-Nyheter' },
+  { key: 'teknik-modeller',  label: 'Teknik & Modeller' },
+  { key: 'foretag-aktorer',  label: 'Företag & Aktörer' },
+  { key: 'ai-sakerhet-etik', label: 'AI-Säkerhet' },
 ];
 
 type Props = {
@@ -60,6 +60,19 @@ export function FilterableGrid({ initial, startOffset, pageSize }: Props) {
     setDone(false);
     setErr(null);
   }
+
+  // When the user switches to a category filter, the SSR-rendered grid
+  // often won't contain matches (hero + sidebar consume the most recent
+  // articles from those categories before they reach the grid). So we
+  // auto-fetch the category from the server right after the state reset.
+  useEffect(() => {
+    if (filter === 'all') return;
+    // Only fire when we've genuinely reset (extras emptied, filterOffset=0).
+    if (extra.length === 0 && filterOffset === 0 && !loading && !done) {
+      void loadMore();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   async function loadMore() {
     if (loading || done) return;
@@ -121,7 +134,7 @@ export function FilterableGrid({ initial, startOffset, pageSize }: Props) {
               className={
                 'rounded-full border px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-colors ' +
                 (active
-                  ? `${f.activeBg} ${f.activeText} border-transparent`
+                  ? 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700'
                   : 'border-line bg-card text-fg-muted hover:border-line-strong hover:text-fg')
               }
             >
