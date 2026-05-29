@@ -73,7 +73,7 @@ function articleRowHtml(a: WelcomeArticle): string {
                   </td>
                   <td valign="top">
                     <span style="${CATEGORY_BADGE}">${categoryLabel(a.category)}</span>
-                    <a href="${url}" style="display:block;margin:9px 0 8px;font-size:17px;line-height:1.35;font-weight:800;color:#18181b;text-decoration:none;letter-spacing:-0.2px;">${a.title}</a>
+                    <a href="${url}" style="display:block;margin:9px 0 8px;font-size:18px !important;line-height:1.35;font-weight:800;color:#18181b;text-decoration:none;letter-spacing:-0.2px;">${a.title}</a>
                     <a href="${url}" style="font-size:14px;font-weight:700;color:#4f46e5;text-decoration:none;">Läs mer &rarr;</a>
                   </td>
                 </tr>
@@ -94,7 +94,7 @@ function fallbackCtaHtml(): string {
 /** Shared section heading — larger uppercase indigo label with an indigo
  *  left border accent. */
 const SECTION_HEADING =
-  'margin:0 0 14px;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#4f46e5;border-left:4px solid #4f46e5;padding-left:12px;line-height:1.3;';
+  'margin:0 0 14px;font-size:16px !important;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#4f46e5;border-left:4px solid #4f46e5;padding-left:12px;line-height:1.3;';
 
 // Same Supabase Storage backgrounds the site uses on the /ai-verktyg hub.
 const KATEGORI_BG =
@@ -171,8 +171,8 @@ export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): str
 
         <!-- Welcome -->
         <tr><td style="padding:40px 36px 12px;">
-          <h1 style="margin:0 0 14px;font-size:28px;line-height:1.25;color:#18181b;letter-spacing:-0.5px;">Välkommen till AI-Magasinet! 🎉</h1>
-          <p style="margin:0;font-size:16px;line-height:1.65;color:#3f3f46;">
+          <h1 style="margin:0 0 14px;font-size:32px !important;line-height:1.25 !important;color:#18181b;letter-spacing:-0.5px;">Välkommen till AI-Magasinet! 🎉</h1>
+          <p style="margin:0;font-size:18px !important;line-height:1.8 !important;color:#3f3f46;">
             Du är nu med i Sveriges mest lästa AI-community. Vi mejlar dig de
             viktigaste AI-nyheterna, nya verktyg och konkreta användningsfall —
             på svenska, utan hype.
@@ -191,7 +191,7 @@ ${articlesBlock}
 ${toolSectionHtml()}
 
         <tr><td style="padding:28px 36px 36px;">
-          <p style="margin:0;font-size:16px;line-height:1.6;color:#71717a;">
+          <p style="margin:0;font-size:18px !important;line-height:1.8 !important;color:#71717a;">
             Tips: spara den här adressen i dina kontakter så hamnar våra utskick
             i inkorgen — inte i skräpposten.
           </p>
