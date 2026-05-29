@@ -25,7 +25,9 @@ type NavItem = {
   showAllLabel?: string;
   /** Optional highlighted footer link rendered full-width below a mega-menu
    *  (used for "Jämför verktyg →" under AI-Verktyg). */
-  footer?: NavLink;
+  /** Highlighted link rendered at the TOP of a mega-menu (before the column
+   *  groups) — used for "⚔ Jämför verktyg →" under AI-Verktyg. */
+  topLink?: NavLink;
 };
 
 const NAV: NavItem[] = [
@@ -78,20 +80,19 @@ const NAV: NavItem[] = [
           { href: '/ai-verktyg/ai-ljud-och-musik/aiva',       label: 'AIVA' },
         ],
       },
+      {
+        label: 'AI-video',
+        href: '/ai-video',
+        links: [
+          { href: '/ai-video/kling-ai',     label: 'Kling AI' },
+          { href: '/ai-video/runway-gen-3', label: 'Runway' },
+          { href: '/ai-video/pika-labs',    label: 'Pika Labs' },
+          { href: '/ai-video/sora-2',       label: 'Sora 2' },
+          { href: '/ai-video/heygen',       label: 'HeyGen' },
+        ],
+      },
     ],
-    footer: { href: '/ai-verktyg/jamfor', label: 'Jämför verktyg' },
-  },
-  {
-    href: '/ai-video',
-    label: 'AI Video',
-    children: [
-      { href: '/ai-video/kling-ai',     label: 'Kling AI' },
-      { href: '/ai-video/runway-gen-3', label: 'Runway Gen-3' },
-      { href: '/ai-video/pika-labs',    label: 'Pika Labs' },
-      { href: '/ai-video/sora-2',       label: 'Sora 2' },
-      { href: '/ai-video/heygen',       label: 'HeyGen' },
-    ],
-    showAllLabel: 'Visa alla',
+    topLink: { href: '/ai-verktyg/jamfor', label: 'Jämför verktyg' },
   },
   {
     href: '/ai-verktyg/foretag',
@@ -160,7 +161,7 @@ export function SiteNav() {
                   }
                 >
                   {item.groups ? (
-                    <MegaPanel groups={item.groups} mainHref={item.href} footer={item.footer} />
+                    <MegaPanel groups={item.groups} mainHref={item.href} topLink={item.topLink} />
                   ) : (
                     <SimpleDropdown
                       links={item.children ?? []}
@@ -259,6 +260,15 @@ export function SiteNav() {
                       </div>
                       {isOpen && (
                         <div className="ml-3 border-l border-line pb-3 pl-3">
+                          {item.topLink && item.groups && (
+                            <Link
+                              href={item.topLink.href}
+                              onClick={closeMobile}
+                              className="mb-2 mt-2 flex items-center gap-1.5 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700"
+                            >
+                              <span aria-hidden>⚔</span> {item.topLink.label} <span aria-hidden>→</span>
+                            </Link>
+                          )}
                           {item.groups
                             ? item.groups.map((g) => (
                                 <div key={g.href} className="mt-3 first:mt-1">
@@ -298,15 +308,6 @@ export function SiteNav() {
                                   {child.label}
                                 </Link>
                               ))}
-                          {item.footer && item.groups && (
-                            <Link
-                              href={item.footer.href}
-                              onClick={closeMobile}
-                              className="mt-2 flex items-center gap-1.5 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700"
-                            >
-                              <span aria-hidden>⚔</span> {item.footer.label} <span aria-hidden>→</span>
-                            </Link>
-                          )}
                           {item.showAllLabel && !item.groups && (
                             <Link
                               href={item.href}
@@ -368,11 +369,19 @@ function SimpleDropdown({
   );
 }
 
-function MegaPanel({ groups, mainHref, footer }: { groups: NavGroup[]; mainHref: string; footer?: NavLink }) {
+function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref: string; topLink?: NavLink }) {
   void mainHref;
   return (
     <div className="overflow-hidden rounded-md border border-line bg-card p-6 shadow-xl shadow-black/10 backdrop-blur">
-      <div className="grid grid-cols-4 gap-6" style={{ minWidth: '52rem' }}>
+      {topLink && (
+        <Link
+          href={topLink.href}
+          className="mb-5 flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700 transition-colors hover:bg-indigo-100"
+        >
+          <span aria-hidden>⚔</span> {topLink.label} <span aria-hidden>→</span>
+        </Link>
+      )}
+      <div className="grid grid-cols-5 gap-6" style={{ minWidth: '60rem' }}>
         {groups.map((g) => (
           <div key={g.href} className="flex flex-col">
             <Link
@@ -402,14 +411,6 @@ function MegaPanel({ groups, mainHref, footer }: { groups: NavGroup[]; mainHref:
           </div>
         ))}
       </div>
-      {footer && (
-        <Link
-          href={footer.href}
-          className="mt-5 flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700 transition-colors hover:bg-indigo-100"
-        >
-          <span aria-hidden>⚔</span> {footer.label} <span aria-hidden>→</span>
-        </Link>
-      )}
     </div>
   );
 }

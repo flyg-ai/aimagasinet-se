@@ -14,15 +14,16 @@ import {
 } from '@/lib/compare';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { ComparisonWizard, type CatalogTool } from '@/components/ComparisonWizard';
+import { JAMFOR_SEO_HTML } from '@/lib/jamfor-seo';
 
 export const revalidate = 300;
 
 const YEAR = new Date().getFullYear();
 
 export const metadata: Metadata = {
-  title: `Jämför AI-verktyg — välj och jämför steg för steg (${YEAR})`,
+  title: 'Jämför AI-verktyg 2026 — Välj rätt för dig',
   description:
-    'Välj upp till 4 AI-verktyg, berätta vad du ska göra och din budget — så ger vi dig en skräddarsydd rekommendation med tydlig vinnare.',
+    'Jämför AI-verktyg sida vid sida — betyg, pris och styrkor. Välj upp till fyra verktyg och få en tydlig vinnare för just ditt syfte och din budget.',
   alternates: {
     canonical: '/ai-verktyg/jamfor/',
     languages: { 'sv-SE': '/ai-verktyg/jamfor/' },
@@ -111,12 +112,13 @@ export default async function JamforHub() {
           </span>
 
           <h1 className="mt-6 max-w-3xl text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
-            Hitta rätt AI-verktyg
+            Jämför AI-verktyg 2026
           </h1>
 
           <p className="mt-6 max-w-2xl text-balance text-lg leading-relaxed text-fg-subtle sm:text-xl">
-            Välj upp till fyra verktyg, berätta vad du ska göra och din budget —
-            så ger vi dig en skräddarsydd rekommendation med en tydlig vinnare.
+            Jämför betyg, pris och styrkor sida vid sida. Välj upp till fyra
+            verktyg, berätta vad du ska göra och din budget — så får du en tydlig
+            vinnare för just ditt behov.
           </p>
         </div>
       </header>
@@ -149,6 +151,13 @@ export default async function JamforHub() {
               </Link>
             ))}
           </div>
+
+          {/* SEO-text (genererad via Claude Sonnet) */}
+          <div
+            className="mt-12 max-w-3xl text-base leading-relaxed text-fg-subtle [&_a:hover]:underline [&_a]:font-semibold [&_a]:text-indigo-600 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-black [&_h2]:tracking-tight [&_h2]:text-fg [&_p]:mb-4"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: JAMFOR_SEO_HTML }}
+          />
         </div>
       </section>
     </article>
