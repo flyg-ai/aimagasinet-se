@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { supabase } from '@/lib/supabase';
 import {
   resolveToolProfile,
   toolOverallScore,
@@ -7,29 +9,45 @@ import {
 import {
   COMPARE_TOOLS,
   FEATURED_COMPARISONS,
-  TOOL_CATEGORIES,
   comparisonSlug,
-  comparisonCategory,
   resolveToken,
 } from '@/lib/compare';
 import { breadcrumbSchema } from '@/lib/schemas';
-import { ComparisonExplorer, type ToolOpt, type CompCard } from '@/components/ComparisonExplorer';
+import { ComparisonWizard, type CatalogTool } from '@/components/ComparisonWizard';
 
 export const revalidate = 300;
 
 const YEAR = new Date().getFullYear();
 
 export const metadata: Metadata = {
-  title: `Jämför AI-verktyg sida vid sida (${YEAR})`,
+  title: `Jämför AI-verktyg — välj och jämför steg för steg (${YEAR})`,
   description:
-    'Välj två AI-verktyg och jämför dem sida vid sida — betyg, för- och nackdelar, pris och en tydlig vinnare. ChatGPT vs Claude, Cursor vs Copilot, Midjourney vs DALL·E och fler.',
+    'Välj upp till 4 AI-verktyg, berätta vad du ska göra och din budget — så ger vi dig en skräddarsydd rekommendation med tydlig vinnare.',
   alternates: {
     canonical: '/ai-verktyg/jamfor/',
     languages: { 'sv-SE': '/ai-verktyg/jamfor/' },
   },
 };
 
-/** Resolve a token to display bits (name + logo + score) for cards. */
+/** featured_image per tool, keyed by REVIEW_KNOWN key (= article slug for
+ *  most tools). Best-effort — missing images fall back to a category
+ *  gradient in the wizard. */
+async function fetchImages(keys: string[]): Promise<Record<string, string | null>> {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('slug,featured_image')
+    .in('slug', keys);
+  if (error || !data) {
+    if (error) console.error('[jamfor] fetchImages error:', error.message);
+    return {};
+  }
+  const map: Record<string, string | null> = {};
+  for (const row of data as { slug: string; featured_image: string | null }[]) {
+    map[row.slug] = row.featured_image;
+  }
+  return map;
+}
+
 function display(token: string) {
   const ref = resolveToken(token);
   if (!ref) throw new Error(`Unknown compare token: ${token}`);
@@ -37,32 +55,26 @@ function display(token: string) {
   return { name: ref.name, logo: profile.logo, score: toolOverallScore(profile) };
 }
 
-export default function JamforHub() {
-  // Tool options for the dropdowns (one per canonical tool, with logo).
-  const tools: ToolOpt[] = COMPARE_TOOLS.map((t) => ({
-    token: t.token,
-    name: t.name,
-    category: t.category,
-    logo: resolveToolProfile(t.key, t.name).logo,
-  }));
+export default async function JamforHub() {
+  const images = await fetchImages(COMPARE_TOOLS.map((t) => t.key));
 
-  // Curated comparison cards.
-  const comparisons: CompCard[] = FEATURED_COMPARISONS.map(([x, y]) => {
-    const a = display(x);
-    const b = display(y);
+  const catalog: CatalogTool[] = COMPARE_TOOLS.map((t) => {
+    const profile = resolveToolProfile(t.key, t.name);
     return {
-      slug: comparisonSlug(x, y),
-      aName: a.name, bName: b.name,
-      aLogo: a.logo, bLogo: b.logo,
-      aScore: a.score, bScore: b.score,
-      category: comparisonCategory(x, y) ?? 'AI-text',
+      token: t.token,
+      name: t.name,
+      category: t.category,
+      score: toolOverallScore(profile),
+      image: images[t.key] ?? null,
+      logo: profile.logo,
     };
   });
 
-  // Only show filter chips for categories that actually have comparisons.
-  const usedCategories = TOOL_CATEGORIES.filter((c) =>
-    comparisons.some((cmp) => cmp.category === c),
-  );
+  const popular = FEATURED_COMPARISONS.map(([x, y]) => ({
+    slug: comparisonSlug(x, y),
+    a: display(x),
+    b: display(y),
+  }));
 
   const breadcrumbLd = breadcrumbSchema([
     { label: 'Hem', href: '/' },
@@ -89,22 +101,49 @@ export default function JamforHub() {
           </nav>
 
           <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
-            <span aria-hidden>⚔</span> {comparisons.length} jämförelser · {YEAR}
+            <span aria-hidden>⚔</span> Jämför steg för steg · {YEAR}
           </span>
 
           <h1 className="mt-6 max-w-3xl text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
-            Jämför AI-verktyg sida vid sida
+            Hitta rätt AI-verktyg
           </h1>
 
           <p className="mt-6 max-w-2xl text-balance text-lg leading-relaxed text-fg-subtle sm:text-xl">
-            Välj två verktyg nedan så ställer vi dem mot varandra — betyg per
-            kriterium, för- och nackdelar, pris och en tydlig vinnare.
+            Välj upp till fyra verktyg, berätta vad du ska göra och din budget —
+            så ger vi dig en skräddarsydd rekommendation med en tydlig vinnare.
           </p>
         </div>
       </header>
 
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-        <ComparisonExplorer tools={tools} comparisons={comparisons} categories={usedCategories} />
+        <Suspense fallback={<div className="py-20 text-center text-fg-subtle">Laddar…</div>}>
+          <ComparisonWizard catalog={catalog} />
+        </Suspense>
+      </section>
+
+      {/* Curated pairwise comparisons — kept for SEO + internal linking */}
+      <section className="border-t border-line bg-card">
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+          <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
+            Populära jämförelser
+          </div>
+          <h2 className="mb-8 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+            Färdiga dueller
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {popular.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/ai-verktyg/jamfor/${c.slug}`}
+                className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+              >
+                <span className="text-indigo-600">{c.a.name}</span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">vs</span>
+                <span className="text-cyan-600">{c.b.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
     </article>
   );
