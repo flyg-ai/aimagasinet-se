@@ -260,6 +260,22 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: 'Ingår i ChatGPT Plus', price: 'Plus 20 USD/mån (ChatGPT)', bestFor: 'Bloggare och allmän användning' },
     label: 'Bäst för nybörjare',
   },
+  'adobe-firefly': {
+    logo: 'bg-rose-600',
+    ctaName: 'Firefly', fallbackUrl: 'https://www.adobe.com/products/firefly.html',
+    company: 'Adobe', model: 'Firefly Image 3', founded: 1982, hq: 'San José, USA',
+    useCases: ['Kommersiellt säker bildgenerering', 'Photoshop-integration', 'Generative Fill', 'Marknadsföringsmaterial', 'Texteffekter'],
+    ratingCriteria: [
+      { label: 'Visuell kvalitet', score: 8.7 }, { label: 'Promptföljsamhet', score: 8.6 },
+      { label: 'Stilbredd', score: 8.3 }, { label: 'Text-i-bild', score: 8.8 },
+      { label: 'Pris / bild', score: 8.7 }, { label: 'Användarvänlighet', score: 9.0 },
+    ],
+    tags: ['Firefly Image 3', 'Photoshop', 'Generative Fill', 'Kommersiellt säker'],
+    pros: ['Kommersiellt trygg (tränad på licensierat material)', 'Djup Adobe-integration', 'Bra på text i bilden'],
+    cons: ['Smalare estetik än Midjourney', 'Kräver Adobe-konto för full nytta'],
+    offer: { title: 'Gratis med Adobe-konto', price: 'Gratis · Firefly 9 USD/mån', bestFor: 'Designers i Adobe-ekosystemet' },
+    label: 'Bäst för kommersiell trygghet',
+  },
 
   /* ── Ljud / musik ─────────────────────────────────────── */
   'suno-ai': {

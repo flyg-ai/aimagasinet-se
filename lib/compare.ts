@@ -11,29 +11,81 @@
 import type { ReviewProfile } from '@/components/templates/ReviewTemplate';
 import type { FaqItem } from '@/lib/schemas';
 
+export type ToolCategory =
+  | 'AI-text'
+  | 'AI-video'
+  | 'AI-bilder'
+  | 'AI-kod'
+  | 'AI-ljud'
+  | 'AI-automation';
+
+/** Category display order — drives dropdown groups + filter chips. */
+export const TOOL_CATEGORIES: ToolCategory[] = [
+  'AI-text', 'AI-video', 'AI-bilder', 'AI-kod', 'AI-ljud', 'AI-automation',
+];
+
 /** A tool as referenced from a comparison URL. `token` is the URL segment,
  *  `key` is the REVIEW_KNOWN lookup key (they differ for a few tools). */
-export type CompareToolRef = { token: string; key: string; name: string };
+export type CompareToolRef = { token: string; key: string; name: string; category: ToolCategory };
 
-/** Every tool that may appear in a comparison URL. Keep `key` in sync with
- *  REVIEW_KNOWN in components/templates/ReviewTemplate.tsx. */
+/** Every tool that may appear in a comparison URL / dropdown. One canonical
+ *  entry per tool. Keep `key` in sync with REVIEW_KNOWN in
+ *  components/templates/ReviewTemplate.tsx. */
 export const COMPARE_TOOLS: CompareToolRef[] = [
-  { token: 'chatgpt',        key: 'chatgpt',        name: 'ChatGPT' },
-  { token: 'claude',         key: 'claude',         name: 'Claude' },
-  { token: 'gemini',         key: 'gemini',         name: 'Gemini' },
-  { token: 'cursor',         key: 'cursor-ai',      name: 'Cursor AI' },
-  { token: 'github-copilot', key: 'github-copilot', name: 'GitHub Copilot' },
-  { token: 'midjourney',     key: 'midjourney',     name: 'Midjourney' },
-  { token: 'dall-e-3',       key: 'dalle-3',        name: 'DALL·E 3' },
-  { token: 'suno',           key: 'suno-ai',        name: 'Suno AI' },
-  { token: 'udio',           key: 'udio',           name: 'Udio' },
-  { token: 'kling',          key: 'kling-ai',       name: 'Kling AI' },
-  { token: 'pika-labs',      key: 'pika-labs',      name: 'Pika Labs' },
+  // AI-text
+  { token: 'chatgpt',        key: 'chatgpt',        name: 'ChatGPT',        category: 'AI-text' },
+  { token: 'claude',         key: 'claude',         name: 'Claude',         category: 'AI-text' },
+  { token: 'gemini',         key: 'gemini',         name: 'Gemini',         category: 'AI-text' },
+  { token: 'jasper-ai',      key: 'jasper-ai',      name: 'Jasper AI',      category: 'AI-text' },
+  { token: 'writesonic',     key: 'writesonic',     name: 'Writesonic',     category: 'AI-text' },
+  { token: 'copy-ai',        key: 'copy-ai',        name: 'Copy.ai',        category: 'AI-text' },
+  // AI-video
+  { token: 'kling',          key: 'kling-ai',       name: 'Kling AI',       category: 'AI-video' },
+  { token: 'runway-gen-3',   key: 'runway-gen-3',   name: 'Runway Gen-3',   category: 'AI-video' },
+  { token: 'pika-labs',      key: 'pika-labs',      name: 'Pika Labs',      category: 'AI-video' },
+  { token: 'sora-2',         key: 'sora-2',         name: 'Sora 2',         category: 'AI-video' },
+  // AI-bilder
+  { token: 'midjourney',     key: 'midjourney',     name: 'Midjourney',     category: 'AI-bilder' },
+  { token: 'dall-e-3',       key: 'dalle-3',        name: 'DALL·E 3',       category: 'AI-bilder' },
+  { token: 'adobe-firefly',  key: 'adobe-firefly',  name: 'Adobe Firefly',  category: 'AI-bilder' },
+  // AI-kod
+  { token: 'cursor',         key: 'cursor-ai',      name: 'Cursor AI',      category: 'AI-kod' },
+  { token: 'github-copilot', key: 'github-copilot', name: 'GitHub Copilot', category: 'AI-kod' },
+  { token: 'windsurf',       key: 'windsurf',       name: 'Windsurf',       category: 'AI-kod' },
+  { token: 'tabnine',        key: 'tabnine',        name: 'Tabnine',        category: 'AI-kod' },
+  { token: 'codeium',        key: 'codeium',        name: 'Codeium',        category: 'AI-kod' },
+  // AI-ljud
+  { token: 'suno',           key: 'suno-ai',        name: 'Suno AI',        category: 'AI-ljud' },
+  { token: 'udio',           key: 'udio',           name: 'Udio',           category: 'AI-ljud' },
+  { token: 'elevenlabs',     key: 'elevenlabs',     name: 'ElevenLabs',     category: 'AI-ljud' },
+  // AI-automation
+  { token: 'make',           key: 'make',           name: 'Make',           category: 'AI-automation' },
+  { token: 'zapier-ai',      key: 'zapier-ai',      name: 'Zapier',         category: 'AI-automation' },
+  { token: 'n8n',            key: 'n8n',            name: 'n8n',            category: 'AI-automation' },
 ];
 
 const TOKEN_INDEX: Record<string, CompareToolRef> = Object.fromEntries(
   COMPARE_TOOLS.map((t) => [t.token, t]),
 );
+
+/** Extra URL tokens that resolve to a canonical tool (e.g. the featured slug
+ *  uses `suno-ai` while the canonical dropdown token is `suno`). */
+const TOKEN_ALIASES: Record<string, string> = {
+  'suno-ai': 'suno',
+};
+
+/** Resolve a URL token (canonical or alias) to its tool ref, or null. */
+export function resolveToken(token: string): CompareToolRef | null {
+  return TOKEN_INDEX[token] ?? TOKEN_INDEX[TOKEN_ALIASES[token]] ?? null;
+}
+
+/** Tools grouped by category in display order — for the dropdowns. */
+export function toolsByCategory(): { category: ToolCategory; tools: CompareToolRef[] }[] {
+  return TOOL_CATEGORIES.map((category) => ({
+    category,
+    tools: COMPARE_TOOLS.filter((t) => t.category === category),
+  }));
+}
 
 /** The curated set of comparisons that get static pages + hub cards.
  *  Each entry is [tokenA, tokenB]; the slug is `${a}-eller-${b}`. */
@@ -45,6 +97,11 @@ export const FEATURED_COMPARISONS: [string, string][] = [
   ['kling', 'pika-labs'],
   ['chatgpt', 'gemini'],
   ['claude', 'gemini'],
+  ['chatgpt', 'cursor'],
+  ['midjourney', 'adobe-firefly'],
+  ['elevenlabs', 'suno-ai'],
+  ['make', 'zapier-ai'],
+  ['cursor', 'windsurf'],
 ];
 
 export const SEPARATOR = '-eller-';
@@ -57,6 +114,13 @@ export function featuredSlugs(): string[] {
   return FEATURED_COMPARISONS.map(([a, b]) => comparisonSlug(a, b));
 }
 
+/** Category a comparison is filed under for the hub filter — tool A's
+ *  category (cross-category duels like ChatGPT vs Cursor file under A). */
+export function comparisonCategory(aToken: string, bToken: string): ToolCategory | null {
+  void bToken;
+  return resolveToken(aToken)?.category ?? null;
+}
+
 /** Parse a comparison slug into its two tool refs. Returns null for malformed
  *  slugs or unknown tokens (→ the route should 404), so we never render junk
  *  pages for arbitrary token soup. */
@@ -66,10 +130,8 @@ export function parseComparisonSlug(
   const decoded = decodeURIComponent(slug);
   const idx = decoded.indexOf(SEPARATOR);
   if (idx < 0) return null;
-  const aToken = decoded.slice(0, idx);
-  const bToken = decoded.slice(idx + SEPARATOR.length);
-  const a = TOKEN_INDEX[aToken];
-  const b = TOKEN_INDEX[bToken];
+  const a = resolveToken(decoded.slice(0, idx));
+  const b = resolveToken(decoded.slice(idx + SEPARATOR.length));
   if (!a || !b || a.token === b.token) return null;
   return { a, b };
 }

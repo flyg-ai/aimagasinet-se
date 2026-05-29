@@ -38,6 +38,11 @@ const PAIRS: Pair[] = [
   { slug: 'kling-eller-pika-labs',         aName: 'Kling AI',     bName: 'Pika Labs',     winner: 'Kling AI' },
   { slug: 'chatgpt-eller-gemini',          aName: 'ChatGPT',      bName: 'Gemini',        winner: 'ChatGPT' },
   { slug: 'claude-eller-gemini',           aName: 'Claude',       bName: 'Gemini',        winner: 'Claude' },
+  { slug: 'chatgpt-eller-cursor',          aName: 'ChatGPT',      bName: 'Cursor AI',     winner: 'Cursor AI' },
+  { slug: 'midjourney-eller-adobe-firefly', aName: 'Midjourney',  bName: 'Adobe Firefly', winner: 'Midjourney' },
+  { slug: 'elevenlabs-eller-suno-ai',      aName: 'ElevenLabs',   bName: 'Suno AI',       winner: 'ElevenLabs' },
+  { slug: 'make-eller-zapier-ai',          aName: 'Make',         bName: 'Zapier',        winner: 'Make' },
+  { slug: 'cursor-eller-windsurf',         aName: 'Cursor AI',    bName: 'Windsurf',      winner: 'Cursor AI' },
 ];
 
 const SYSTEM = `Du är senior redaktör på AI-Magasinet och skriver en jämförelse mellan två AI-verktyg.
