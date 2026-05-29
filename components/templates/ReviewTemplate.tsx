@@ -10,7 +10,7 @@ import { FaqAccordion } from '@/components/FaqAccordion';
 
 type Criterion = { label: string; score: number };
 
-type ReviewProfile = {
+export type ReviewProfile = {
   logo: string;
   company: string;
   model: string;
@@ -58,7 +58,7 @@ const GENERIC_USE_CASES = [
   'Kodförklaring', 'Kreativ ideation', 'Research', 'E-postsvar',
 ];
 
-const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
+export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* Yrke-topic tools (SEO/copy/ads/social/bokföring/redovisning) — merged
    * in from lib/yrke-tools.ts so the data lives in a single source. */
   ...YRKE_REVIEW_KNOWN,
@@ -277,6 +277,22 @@ const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     cons: ['Mindre nyans än Udio', 'Kommersiella rättigheter kräver Pro'],
     offer: { title: '50 spår gratis varje månad', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Musiker och content-skapare' },
     label: 'Redaktionens val',
+  },
+  udio: {
+    logo: 'bg-cyan-600',
+    ctaName: 'Udio', fallbackUrl: 'https://www.udio.com',
+    company: 'Udio', model: 'Udio v1.5', founded: 2023, hq: 'New York, USA',
+    useCases: ['Studiokvalitativa låtar', 'Detaljerad genrekontroll', 'Vokala covers', 'Soundtracks', 'Remixer'],
+    ratingCriteria: [
+      { label: 'Ljudkvalitet', score: 9.4 }, { label: 'Stilbredd', score: 8.9 },
+      { label: 'Lyrik-AI', score: 8.8 }, { label: 'Hastighet', score: 8.7 },
+      { label: 'Pris / spår', score: 8.5 }, { label: 'Användarvänlighet', score: 9.0 },
+    ],
+    tags: ['Udio v1.5', 'Hög ljudkvalitet', 'Stems', 'Inpainting'],
+    pros: ['Marknadens skarpaste ljudkvalitet', 'Fin genrekontroll', 'Stark på vokaler'],
+    cons: ['Långsammare än Suno', 'Snålare gratisnivå'],
+    offer: { title: '10 låtar gratis per dag', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Musiker som prioriterar ljudkvalitet' },
+    label: 'Bäst ljudkvalitet',
   },
   elevenlabs: {
     logo: 'bg-zinc-900',
@@ -635,10 +651,13 @@ function lookupKnown(slug: string, name: string): Partial<ReviewProfile> | null 
   return null;
 }
 
-function buildReviewProfile(article: Article): ReviewProfile {
-  const name = toolNameFromTitle(article.title);
-  const h = seed(article.slug);
-  const known = lookupKnown(article.slug, name) ?? {};
+/** Resolve a full ReviewProfile from a slug (+ optional display name),
+ *  filling defaults for anything not in REVIEW_KNOWN. Shared by the review
+ *  page (via buildReviewProfile) and the jämför-feature (lib/compare.ts). */
+export function resolveToolProfile(slug: string, displayName?: string): ReviewProfile {
+  const name = displayName ?? slug;
+  const h = seed(slug);
+  const known = lookupKnown(slug, name) ?? {};
 
   const mockCriteria: Criterion[] = DEFAULT_CRITERIA.map((label, i) => ({
     label,
@@ -662,6 +681,21 @@ function buildReviewProfile(article: Article): ReviewProfile {
     score: known.score,
     fallbackUrl: known.fallbackUrl,
   };
+}
+
+function buildReviewProfile(article: Article): ReviewProfile {
+  return resolveToolProfile(article.slug, toolNameFromTitle(article.title));
+}
+
+/** Overall 0-10 score for a profile: a curated `score` wins, otherwise the
+ *  mean of its six rating criteria. Deterministic — used to pick the winner
+ *  in head-to-head comparisons. */
+export function toolOverallScore(p: ReviewProfile): number {
+  if (p.score != null) return p.score;
+  const xs = p.ratingCriteria;
+  if (!xs.length) return 0;
+  const mean = xs.reduce((sum, c) => sum + c.score, 0) / xs.length;
+  return Math.round(mean * 10) / 10;
 }
 
 function getRating(article: Article): Rating {

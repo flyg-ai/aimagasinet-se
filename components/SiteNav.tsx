@@ -23,6 +23,9 @@ type NavItem = {
   /** When `children` is set, this label gets rendered as a "Visa alla →"
    *  footer link pointing back at `href`. */
   showAllLabel?: string;
+  /** Optional highlighted footer link rendered full-width below a mega-menu
+   *  (used for "Jämför verktyg →" under AI-Verktyg). */
+  footer?: NavLink;
 };
 
 const NAV: NavItem[] = [
@@ -76,6 +79,7 @@ const NAV: NavItem[] = [
         ],
       },
     ],
+    footer: { href: '/ai-verktyg/jamfor', label: 'Jämför verktyg' },
   },
   {
     href: '/ai-video',
@@ -156,7 +160,7 @@ export function SiteNav() {
                   }
                 >
                   {item.groups ? (
-                    <MegaPanel groups={item.groups} mainHref={item.href} />
+                    <MegaPanel groups={item.groups} mainHref={item.href} footer={item.footer} />
                   ) : (
                     <SimpleDropdown
                       links={item.children ?? []}
@@ -294,6 +298,15 @@ export function SiteNav() {
                                   {child.label}
                                 </Link>
                               ))}
+                          {item.footer && item.groups && (
+                            <Link
+                              href={item.footer.href}
+                              onClick={closeMobile}
+                              className="mt-2 flex items-center gap-1.5 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700"
+                            >
+                              <span aria-hidden>⚔</span> {item.footer.label} <span aria-hidden>→</span>
+                            </Link>
+                          )}
                           {item.showAllLabel && !item.groups && (
                             <Link
                               href={item.href}
@@ -355,7 +368,7 @@ function SimpleDropdown({
   );
 }
 
-function MegaPanel({ groups, mainHref }: { groups: NavGroup[]; mainHref: string }) {
+function MegaPanel({ groups, mainHref, footer }: { groups: NavGroup[]; mainHref: string; footer?: NavLink }) {
   void mainHref;
   return (
     <div className="overflow-hidden rounded-md border border-line bg-card p-6 shadow-xl shadow-black/10 backdrop-blur">
@@ -389,6 +402,14 @@ function MegaPanel({ groups, mainHref }: { groups: NavGroup[]; mainHref: string 
           </div>
         ))}
       </div>
+      {footer && (
+        <Link
+          href={footer.href}
+          className="mt-5 flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700 transition-colors hover:bg-indigo-100"
+        >
+          <span aria-hidden>⚔</span> {footer.label} <span aria-hidden>→</span>
+        </Link>
+      )}
     </div>
   );
 }

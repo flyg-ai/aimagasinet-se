@@ -13,7 +13,8 @@
     "remove-intro": "tsx scripts/remove-intro.ts",
     "fix-claude-name": "tsx scripts/fix-claude-name.ts",
     "populate-logos": "tsx scripts/populate-logos.ts",
-    "fix-video-parent": "tsx scripts/fix-video-parent.ts"
+    "fix-video-parent": "tsx scripts/fix-video-parent.ts",
+    "generate-comparisons": "tsx scripts/generate-comparisons.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.99.0",
