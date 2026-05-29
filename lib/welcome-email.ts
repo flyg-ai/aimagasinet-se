@@ -154,10 +154,14 @@ export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): str
   return `
 <!doctype html>
 <html lang="sv">
-<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#18181b;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f4f4f5;padding:32px 16px;">
+<body lang="sv" style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#18181b;">
+  <!-- Dold preheader på svenska — nudgar Gmails språkdetektor mot svenska. -->
+  <div lang="sv" style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#f4f4f5;">
+    Tack för att du anmälde dig till AI-Magasinet — här är dina första lästips på svenska.
+  </div>
+  <table role="presentation" lang="sv" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f4f4f5;padding:32px 16px;">
     <tr><td align="center">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e4e4e7;">
+      <table role="presentation" lang="sv" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e4e4e7;">
 
         <!-- Header — indigo gradient (indigo-700 → indigo-500), white wordmark -->
         <tr><td style="background:#4f46e5;background:linear-gradient(135deg,#4338ca 0%,#6366f1 100%);padding:32px 36px;">
@@ -197,19 +201,8 @@ ${toolSectionHtml()}
           </p>
         </td></tr>
 
-        <!-- Footer — grey background, social + unsubscribe -->
+        <!-- Footer — grey background, unsubscribe -->
         <tr><td style="padding:28px 36px;border-top:1px solid #e4e4e7;background:#f4f4f5;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;">
-            <tr>
-              <td>
-                <a href="https://www.linkedin.com/company/ai-magasinet" style="text-decoration:none;">
-                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                    <tr><td align="center" valign="middle" width="34" height="34" style="width:34px;height:34px;background:#4f46e5;border-radius:8px;color:#ffffff;font-weight:800;font-size:13px;letter-spacing:0.5px;">in</td></tr>
-                  </table>
-                </a>
-              </td>
-            </tr>
-          </table>
           <p style="margin:0 0 16px;font-size:12px;line-height:1.6;color:#71717a;">
             AI-Magasinet — svenskt magasin om artificiell intelligens.<br />
             <a href="mailto:kontakt@aimagasinet.se" style="color:#4f46e5;text-decoration:none;">kontakt@aimagasinet.se</a>
