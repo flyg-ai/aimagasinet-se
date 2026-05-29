@@ -73,8 +73,8 @@ function articleRowHtml(a: WelcomeArticle): string {
                   </td>
                   <td valign="top">
                     <span style="${CATEGORY_BADGE}">${categoryLabel(a.category)}</span>
-                    <a href="${url}" style="display:block;margin:9px 0 8px;font-size:16px;line-height:1.35;font-weight:800;color:#18181b;text-decoration:none;letter-spacing:-0.2px;">${a.title}</a>
-                    <a href="${url}" style="font-size:13px;font-weight:700;color:#4f46e5;text-decoration:none;">Läs mer &rarr;</a>
+                    <a href="${url}" style="display:block;margin:9px 0 8px;font-size:17px;line-height:1.35;font-weight:800;color:#18181b;text-decoration:none;letter-spacing:-0.2px;">${a.title}</a>
+                    <a href="${url}" style="font-size:14px;font-weight:700;color:#4f46e5;text-decoration:none;">Läs mer &rarr;</a>
                   </td>
                 </tr>
               </table>
@@ -87,8 +87,59 @@ function articleRowHtml(a: WelcomeArticle): string {
 function fallbackCtaHtml(): string {
   return `
           <tr><td style="padding:8px 0 4px;">
-            <a href="${SITE}/ai-verktyg/" style="display:inline-block;background:#4f46e5;color:#ffffff;font-weight:700;text-decoration:none;padding:13px 22px;border-radius:8px;font-size:14px;">Utforska AI-Magasinet &rarr;</a>
+            <a href="${SITE}/ai-verktyg/" style="display:inline-block;background:#4f46e5;color:#ffffff;font-weight:700;text-decoration:none;padding:13px 22px;border-radius:8px;font-size:16px;">Utforska AI-Magasinet &rarr;</a>
           </td></tr>`;
+}
+
+/** Shared section heading — larger uppercase indigo label with an indigo
+ *  left border accent. */
+const SECTION_HEADING =
+  'margin:0 0 14px;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#4f46e5;border-left:4px solid #4f46e5;padding-left:12px;line-height:1.3;';
+
+// Same Supabase Storage backgrounds the site uses on the /ai-verktyg hub.
+const KATEGORI_BG =
+  'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/kategorier';
+
+const TOOL_CATEGORIES: { title: string; href: string; bg: string }[] = [
+  { title: 'AI-text',   href: `${SITE}/ai-verktyg/ai-text-verktyg/`, bg: `${KATEGORI_BG}/ai-text-kategori.webp` },
+  { title: 'AI-video',  href: `${SITE}/ai-video/`,                   bg: `${KATEGORI_BG}/ai-video-kategori.webp` },
+  { title: 'AI-bilder', href: `${SITE}/ai-verktyg/ai-bild-verktyg/`, bg: `${KATEGORI_BG}/ai-bild-kategori.webp` },
+  { title: 'AI-kod',    href: `${SITE}/ai-verktyg/ai-kod-verktyg/`,  bg: `${KATEGORI_BG}/ai-kod-programmering-kategori.webp` },
+];
+
+/** A single category tile: background photo + dark indigo overlay + white
+ *  text. Falls back to the solid indigo bg-color when a client blocks
+ *  background-image (e.g. Outlook), so the text stays readable. */
+function categoryCardHtml(c: { title: string; href: string; bg: string }): string {
+  return `
+                  <td width="50%" valign="top" style="width:50%;padding:6px;">
+                    <a href="${c.href}" style="display:block;text-decoration:none;">
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-radius:10px;overflow:hidden;background-color:#1e1b4b;background-image:url('${c.bg}');background-size:cover;background-position:center;background-repeat:no-repeat;">
+                        <tr><td height="96" valign="bottom" style="height:96px;background-color:rgba(30,27,75,0.45);padding:16px;">
+                          <span style="display:block;color:#ffffff;font-size:17px;font-weight:800;letter-spacing:0.2px;">${c.title}</span>
+                          <span style="display:block;margin-top:3px;color:#c7d2fe;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Utforska &rarr;</span>
+                        </td></tr>
+                      </table>
+                    </a>
+                  </td>`;
+}
+
+/** "UTFORSKA AI-VERKTYG" — 2×2 category grid + a large CTA button. */
+function toolSectionHtml(): string {
+  const [c0, c1, c2, c3] = TOOL_CATEGORIES;
+  return `
+        <tr><td style="padding:32px 36px 8px;">
+          <p style="${SECTION_HEADING}">Utforska AI-verktyg</p>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>${categoryCardHtml(c0)}${categoryCardHtml(c1)}</tr>
+            <tr>${categoryCardHtml(c2)}${categoryCardHtml(c3)}</tr>
+          </table>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:18px;">
+            <tr><td align="center">
+              <a href="${SITE}/ai-verktyg/" style="display:inline-block;background:#4f46e5;color:#ffffff;font-weight:800;font-size:16px;text-decoration:none;padding:15px 30px;border-radius:10px;letter-spacing:0.3px;">Visa alla AI-verktyg &rarr;</a>
+            </td></tr>
+          </table>
+        </td></tr>`;
 }
 
 export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): string {
@@ -120,7 +171,7 @@ export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): str
 
         <!-- Welcome -->
         <tr><td style="padding:40px 36px 12px;">
-          <h1 style="margin:0 0 14px;font-size:25px;line-height:1.25;color:#18181b;letter-spacing:-0.5px;">Välkommen till AI-Magasinet! 🎉</h1>
+          <h1 style="margin:0 0 14px;font-size:28px;line-height:1.25;color:#18181b;letter-spacing:-0.5px;">Välkommen till AI-Magasinet! 🎉</h1>
           <p style="margin:0;font-size:16px;line-height:1.65;color:#3f3f46;">
             Du är nu med i Sveriges mest lästa AI-community. Vi mejlar dig de
             viktigaste AI-nyheterna, nya verktyg och konkreta användningsfall —
@@ -129,15 +180,18 @@ export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): str
         </td></tr>
 
         <!-- Senaste artiklar -->
-        <tr><td style="padding:28px 36px 8px;">
-          <p style="margin:0 0 4px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#4f46e5;">Senaste från magasinet</p>
+        <tr><td style="padding:32px 36px 8px;">
+          <p style="${SECTION_HEADING}">Senaste från magasinet</p>
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
 ${articlesBlock}
           </table>
         </td></tr>
 
-        <tr><td style="padding:24px 36px 36px;">
-          <p style="margin:0;font-size:13px;line-height:1.6;color:#71717a;">
+        <!-- Utforska AI-verktyg -->
+${toolSectionHtml()}
+
+        <tr><td style="padding:28px 36px 36px;">
+          <p style="margin:0;font-size:16px;line-height:1.6;color:#71717a;">
             Tips: spara den här adressen i dina kontakter så hamnar våra utskick
             i inkorgen — inte i skräpposten.
           </p>
