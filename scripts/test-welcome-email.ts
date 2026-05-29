@@ -1,15 +1,16 @@
 /**
  * Send the welcome email to one address using the local RESEND_API_KEY —
- * bypasses /api/subscribe entirely (no DB, no alreadySubscribed guard) so it
- * works regardless of the production env. Verifies the key + verified
- * from-domain can actually deliver.
+ * bypasses /api/subscribe entirely (no DB write, no alreadySubscribed guard)
+ * so it works regardless of the production env. Fetches the latest 3 articles
+ * from Supabase so the preview matches the real email.
  *
  *   npx tsx scripts/test-welcome-email.ts                 # → default address
  *   npx tsx scripts/test-welcome-email.ts foo@bar.com     # → custom address
  */
 import { config as loadEnv } from 'dotenv';
 import { Resend } from 'resend';
-import { welcomeHtml } from '../lib/welcome-email';
+import { createClient } from '@supabase/supabase-js';
+import { welcomeHtml, fetchLatestArticles } from '../lib/welcome-email';
 
 loadEnv({ path: '.env.local' });
 
@@ -25,12 +26,20 @@ async function main() {
     process.exit(1);
   }
 
+  const db = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false } },
+  );
+  const articles = await fetchLatestArticles(db);
+  console.log('latest articles:', articles.length, articles.map((a) => a.title));
+
   const resend = new Resend(key);
   const result = await resend.emails.send({
     from,
     to,
     subject: 'Välkommen till AI-Magasinet',
-    html: welcomeHtml(to),
+    html: welcomeHtml(to, articles),
   });
 
   console.log('result:', JSON.stringify(result, null, 2));

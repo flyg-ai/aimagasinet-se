@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
-import { welcomeHtml } from '@/lib/welcome-email';
+import { welcomeHtml, fetchLatestArticles, type WelcomeArticle } from '@/lib/welcome-email';
 
 /** Newsletter subscribe endpoint.
  *
@@ -24,7 +24,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // RESEND_FROM om du vill byta avsändare.
 const FROM = process.env.RESEND_FROM ?? 'AI-Magasinet <kontakt@aimagasinet.se>';
 
-async function sendWelcome(email: string): Promise<{ sent: boolean; reason?: string }> {
+async function sendWelcome(email: string, articles: WelcomeArticle[]): Promise<{ sent: boolean; reason?: string }> {
   const key = process.env.RESEND_API_KEY;
 
   // 2. Är RESEND_API_KEY satt i miljön (Vercel → Project → Settings →
@@ -46,7 +46,7 @@ async function sendWelcome(email: string): Promise<{ sent: boolean; reason?: str
       from: FROM,
       to: email,
       subject: 'Välkommen till AI-Magasinet',
-      html: welcomeHtml(email),
+      html: welcomeHtml(email, articles),
     });
 
     // Logga hela svaret — { data, error }. data?.id = lyckat utskick.
@@ -111,7 +111,15 @@ export async function POST(req: Request) {
   // Only send welcome email on first-time signups — re-subscribe doesn't
   // need a fresh welcome.
   console.log('[subscribe] signup', normalized, '· alreadySubscribed:', alreadySubscribed, '· created_at:', data?.[0]?.created_at);
-  const emailResult = alreadySubscribed ? { sent: false, reason: 'already_subscribed' } : await sendWelcome(normalized);
+  let emailResult: { sent: boolean; reason?: string };
+  if (alreadySubscribed) {
+    emailResult = { sent: false, reason: 'already_subscribed' };
+  } else {
+    // Latest 3 published posts for the magazine-style news boxes.
+    const articles = await fetchLatestArticles(supabase);
+    console.log('[subscribe] latest articles:', articles.length);
+    emailResult = await sendWelcome(normalized, articles);
+  }
   console.log('[subscribe] emailResult:', JSON.stringify(emailResult));
 
   return NextResponse.json({
