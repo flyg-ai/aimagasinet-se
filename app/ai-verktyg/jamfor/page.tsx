@@ -67,6 +67,12 @@ export default async function JamforHub() {
       score: toolOverallScore(profile),
       image: images[t.key] ?? null,
       logo: profile.logo,
+      price: profile.offer.price,
+      bestFor: profile.offer.bestFor,
+      criteria: profile.ratingCriteria,
+      useCases: profile.useCases,
+      ctaUrl: profile.fallbackUrl ?? null,
+      ctaName: profile.ctaName ?? t.name,
     };
   });
 
