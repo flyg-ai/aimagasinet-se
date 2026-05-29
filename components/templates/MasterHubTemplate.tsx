@@ -113,7 +113,7 @@ function Hero({ article: a }: { article: Article }) {
           <span aria-hidden>✦</span> {CATEGORIES.length} kategorier · {new Date().getFullYear()}
         </span>
 
-        <h1 className="mt-6 max-w-4xl text-balance text-5xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-6xl lg:text-7xl">
+        <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
           {a.title}
         </h1>
 

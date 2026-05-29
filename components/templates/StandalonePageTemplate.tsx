@@ -88,7 +88,7 @@ function Hero({ article: a }: { article: Article }) {
           <span aria-hidden>✦</span> Guide · Longread
         </span>
 
-        <h1 className="mt-6 max-w-4xl text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-6xl">
+        <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
           {a.title}
         </h1>
 

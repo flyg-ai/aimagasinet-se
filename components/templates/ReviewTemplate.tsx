@@ -865,7 +865,7 @@ function Hero({
                 Recension · Uppdaterad {monthLabel}
               </span>
 
-              <h1 className="mt-4 text-balance text-3xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-6xl">
+              <h1 className="mt-4 text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
                 {toolName}{' '}
                 <span className="text-indigo-600">Recension</span>
               </h1>
