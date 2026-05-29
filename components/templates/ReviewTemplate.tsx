@@ -3,6 +3,7 @@ import { parseRating, toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
+import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 
@@ -62,6 +63,11 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* Yrke-topic tools (SEO/copy/ads/social/bokföring/redovisning) — merged
    * in from lib/yrke-tools.ts so the data lives in a single source. */
   ...YRKE_REVIEW_KNOWN,
+
+  /* 8 kategori-hubbar (hemsidebyggare, presentationer, mötesverktyg, sociala
+   * medier, projektledning, e-handel, översättning, dokumenthantering) —
+   * 80 verktygsprofiler genererade i lib/category-hub-tools.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
