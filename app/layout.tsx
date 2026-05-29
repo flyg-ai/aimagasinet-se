@@ -76,8 +76,18 @@ export default async function RootLayout({
             individual templates that own each entity type. */}
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
 
-        {/* 1. Breaking-news ticker */}
-        <BreakingTicker items={tickerItems} />
+        {/* 0. Brand accent line — 3px gradient hairline at the very top.
+            Purely decorative (aria-hidden); sits above the ticker. */}
+        <div
+          aria-hidden
+          className="h-[3px] w-full bg-gradient-to-r from-indigo-600 via-cyan-500 to-indigo-600"
+        />
+
+        {/* 1. Breaking-news ticker — desktop keeps it at the very top.
+            On mobile it's hidden here and re-rendered under the header. */}
+        <div className="hidden md:block">
+          <BreakingTicker items={tickerItems} />
+        </div>
 
         {/* 2. Sticky header — explicit bg-white (not bg-overlay) and
              hardcoded zinc-900 wordmark so the wordmark doesn't disappear
@@ -102,6 +112,12 @@ export default async function RootLayout({
             <SiteNav />
           </div>
         </header>
+
+        {/* Breaking-news ticker — mobile position, between header and hero.
+            Hidden on desktop (rendered at the top there instead). */}
+        <div className="md:hidden">
+          <BreakingTicker items={tickerItems} />
+        </div>
 
         {/* pb-[60px] on mobile reserves room for the fixed
             MobileBottomNav so the footer/content doesn't sit under it. */}
