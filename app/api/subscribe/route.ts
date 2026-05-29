@@ -18,7 +18,10 @@ import { Resend } from 'resend';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const FROM = process.env.RESEND_FROM ?? 'AI-Magasinet <noreply@aimagasinet.se>';
+// From-adressen MÅSTE använda en domän som är verifierad i Resend.
+// aimagasinet.se är verifierad → kontakt@aimagasinet.se. Override via
+// RESEND_FROM om du vill byta avsändare.
+const FROM = process.env.RESEND_FROM ?? 'AI-Magasinet <kontakt@aimagasinet.se>';
 
 /** "Kom igång"-kort — ikon + titel + länk. Email-safe emojis as icons. */
 const STARTER_CARDS: { icon: string; title: string; href: string }[] = [
@@ -112,22 +115,47 @@ ${STARTER_CARDS.map(starterCardHtml).join('')}
 
 async function sendWelcome(email: string): Promise<{ sent: boolean; reason?: string }> {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return { sent: false, reason: 'no_api_key' };
+
+  // 2. Är RESEND_API_KEY satt i miljön (Vercel → Project → Settings →
+  //    Environment Variables)? Logga närvaro + längd, ALDRIG värdet.
+  console.log('[subscribe] RESEND_API_KEY present:', !!key, '· length:', key?.length ?? 0);
+  console.log('[subscribe] from:', FROM, '· to:', email);
+
+  if (!key) {
+    console.error('[subscribe] aborting — RESEND_API_KEY saknas i miljön');
+    return { sent: false, reason: 'no_api_key' };
+  }
+
   try {
     const resend = new Resend(key);
-    const { error } = await resend.emails.send({
+    // 1. Bekräfta att vi faktiskt når Resend-anropet.
+    console.log('[subscribe] calling resend.emails.send()…');
+
+    const result = await resend.emails.send({
       from: FROM,
       to: email,
       subject: 'Välkommen till AI-Magasinet',
       html: welcomeHtml(email),
     });
-    if (error) {
-      console.error('resend.emails.send error:', error);
-      return { sent: false, reason: typeof error === 'object' && error && 'message' in error ? String((error as { message: unknown }).message) : 'resend_error' };
+
+    // Logga hela svaret — { data, error }. data?.id = lyckat utskick.
+    console.log('[subscribe] resend result:', JSON.stringify(result));
+
+    // 4. Logga eventuella fel från resend.emails.send().
+    if (result.error) {
+      console.error('[subscribe] resend.emails.send error:', JSON.stringify(result.error));
+      const msg =
+        typeof result.error === 'object' && result.error && 'message' in result.error
+          ? String((result.error as { message: unknown }).message)
+          : 'resend_error';
+      return { sent: false, reason: msg };
     }
+
+    console.log('[subscribe] email sent OK · id:', result.data?.id);
     return { sent: true };
   } catch (e) {
-    console.error('resend exception:', e);
+    // Nätverks-/SDK-fel som kastar exception (skiljt från result.error).
+    console.error('[subscribe] resend exception:', e);
     return { sent: false, reason: e instanceof Error ? e.message : 'unknown' };
   }
 }
@@ -171,7 +199,9 @@ export async function POST(req: Request) {
 
   // Only send welcome email on first-time signups — re-subscribe doesn't
   // need a fresh welcome.
+  console.log('[subscribe] signup', normalized, '· alreadySubscribed:', alreadySubscribed, '· created_at:', data?.[0]?.created_at);
   const emailResult = alreadySubscribed ? { sent: false, reason: 'already_subscribed' } : await sendWelcome(normalized);
+  console.log('[subscribe] emailResult:', JSON.stringify(emailResult));
 
   return NextResponse.json({
     ok: true,
