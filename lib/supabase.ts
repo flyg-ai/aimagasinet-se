@@ -35,6 +35,9 @@ export type Article = {
   published_at: string | null;
   seo_title: string | null;
   seo_description: string | null;
+  /** Last content update — drives "Senast uppdaterad" + JSON-LD dateModified.
+   *  Optional so pre-migration fetches still type-check. */
+  updated_at?: string | null;
   /** FK to authors.slug — populated after migration 0008_authors.sql.
    *  Optional in TypeScript so pre-migration fetches still type-check. */
   author_slug?: string | null;

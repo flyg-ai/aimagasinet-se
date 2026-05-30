@@ -9,6 +9,15 @@ import { articleSchema, breadcrumbSchema } from '@/lib/schemas';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
 
+function fmtDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+/** True when two ISO timestamps fall on the same calendar day — used to hide a
+ *  redundant "Senast uppdaterad" when it equals the publish date. */
+function sameDay(a: string, b: string): boolean {
+  return new Date(a).toDateString() === new Date(b).toDateString();
+}
+
 /** Default template for posts and standalone pages (depth 1 or unknown). */
 export function ArticleTemplate({
   article: a,
@@ -35,8 +44,8 @@ export function ArticleTemplate({
       path: a.path,
       featured_image: a.featured_image,
       published_at: a.published_at,
-      // Article type doesn't carry updated_at currently — fall back to
-      // published_at in the schema helper.
+      // dateModified in the schema → updated_at when set, else published_at.
+      updated_at: a.updated_at ?? null,
       category: a.category,
     },
     author ?? null,
@@ -51,15 +60,16 @@ export function ArticleTemplate({
       <header className="border-b border-line">
         <div className="mx-auto max-w-3xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12">
           <Breadcrumb crumbs={crumbs} />
-          <div className="mb-5 flex items-center gap-3">
+          <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-1">
             <CategoryBadge slug={a.category} />
             {a.published_at && (
-              <time className="font-mono text-xs uppercase tracking-wider text-fg-subtle">
-                {new Date(a.published_at).toLocaleDateString('sv-SE', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}
+              <time dateTime={a.published_at} className="font-mono text-xs uppercase tracking-wider text-fg-subtle">
+                Publicerad: {fmtDate(a.published_at)}
+              </time>
+            )}
+            {a.updated_at && a.published_at && !sameDay(a.updated_at, a.published_at) && (
+              <time dateTime={a.updated_at} className="font-mono text-xs font-semibold uppercase tracking-wider text-accent">
+                Senast uppdaterad: {fmtDate(a.updated_at)}
               </time>
             )}
           </div>
