@@ -465,95 +465,12 @@ function currentMonthLabel(): string {
    tool from here and let it flow through getHubChildren() normally. */
 
 const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
-  'ai-video': [
-    {
-      slug: 'heygen-virtual', title: 'HeyGen', path: '#',
-      excerpt: 'Företagsledande AI-avatarer för utbildningar, säljvideor och kundkommunikation.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'synthesia-virtual', title: 'Synthesia', path: '#',
-      excerpt: 'AI-avatarer på 140+ språk — branschstandard för intern utbildning och L&D.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'luma-virtual', title: 'Luma Dream Machine', path: '#',
-      excerpt: 'Realistisk text-till-video med imponerande fysik och naturlig kamerarörelse.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'invideo-virtual', title: 'InVideo', path: '#',
-      excerpt: 'Social media-video direkt från text-prompt — färdiga mallar för TikTok, Reels, Shorts.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'firefly-video-virtual', title: 'Adobe Firefly Video', path: '#',
-      excerpt: 'Adobes AI-video integrerad i Premiere Pro och Creative Cloud — kommersiellt säker.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'kaiber-virtual', title: 'Kaiber', path: '#',
-      excerpt: 'Musikvideor och artistinnehåll — synkad rörelse till takten, optimerat för konstnärer.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-  ],
-
-  'ai-ljud-och-musik': [
-    {
-      slug: 'udio-virtual', title: 'Udio', path: '#',
-      excerpt: 'Suno-konkurrent med fokus på musikalisk nyans och realistisk produktionskvalitet.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'mubert-virtual', title: 'Mubert', path: '#',
-      excerpt: 'Royaltyfri AI-musik streamad i realtid — perfekt för streamers, podcasts och bakgrundsmusik.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'aiva-virtual', title: 'AIVA', path: '#',
-      excerpt: 'AI-kompositör för filmmusik, spel och klassiska arrangemang — exporterar noter och MIDI.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'soundraw-virtual', title: 'Soundraw', path: '#',
-      excerpt: 'Royaltyfri AI-musik för creators — anpassa längd, energi och instrument per spår.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'boomy-virtual', title: 'Boomy', path: '#',
-      excerpt: 'Skapa låtar på sekunder och publicera direkt till Spotify, Apple Music och TikTok.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'splice-virtual', title: 'Splice', path: '#',
-      excerpt: 'AI-sökning bland miljontals samples och AI-stems-separation för producenter.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'lalal-ai-virtual', title: 'Lalal.ai', path: '#',
-      excerpt: 'Branschledande AI för stems-separation — isolera sång, trummor, bas och andra spår.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-    {
-      slug: 'adobe-podcast-virtual', title: 'Adobe Podcast', path: '#',
-      excerpt: 'Studio-kvalitet på röstinspelningar via AI-förbättring — gratis i webbläsaren.',
-      featured_image: null, category: null, published_at: null,
-      affiliate_url: null, rating: null, isUpcoming: true,
-    },
-  ],
+  // ai-video + ai-ljud-och-musik virtuals promoted to real DB articles —
+  // see scripts/seed-video-audio-reviews.ts. Their curated topplista profiles
+  // live in VIRTUAL_KNOWN under the non-suffixed slugs (heygen, synthesia,
+  // luma-dream-machine, invideo, adobe-firefly-video, kaiber, udio, mubert,
+  // aiva, soundraw, boomy, splice, lalal-ai, adobe-podcast) so the ranking
+  // keeps editorial scores when fetching from the DB.
 
   // ai-kod-verktyg + ai-automation virtuals promoted to real DB articles —
   // see scripts/create-reviews.ts. VIRTUAL_KNOWN entries kept under their
@@ -642,7 +559,7 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
 // Extend KNOWN profiles with scores/labels/CTA-names for the virtual children
 // so they sort and render consistently with curated real tools.
 const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
-  'heygen-virtual': {
+  heygen: {
     logo: 'bg-purple-600', ctaName: 'HeyGen', score: 8.7,
     fallbackUrl: 'https://www.heygen.com',
     tags: ['Avatarer', 'Företag', '40+ språk', 'Talking heads'],
@@ -651,7 +568,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis 3 min/månad', price: 'Gratis · Creator 29 USD/mån', bestFor: 'AI-avatarer för företag' },
     label: 'Bäst för avatarer',
   },
-  'synthesia-virtual': {
+  synthesia: {
     logo: 'bg-blue-600', ctaName: 'Synthesia', score: 8.5,
     fallbackUrl: 'https://www.synthesia.io',
     tags: ['230+ avatarer', '140 språk', 'L&D', 'Enterprise'],
@@ -660,7 +577,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '36 min gratis', price: 'Gratis · Starter 22 USD/mån', bestFor: 'AI-avatarer för utbildning' },
     label: 'Bäst för L&D',
   },
-  'luma-virtual': {
+  'luma-dream-machine': {
     logo: 'bg-cyan-600', ctaName: 'Luma', score: 8.4,
     fallbackUrl: 'https://lumalabs.ai',
     tags: ['Dream Machine', 'Realism', 'Image-to-video', 'Genesis'],
@@ -669,7 +586,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '30 generationer gratis', price: 'Gratis · Standard 30 USD/mån', bestFor: 'Realistisk text-till-video' },
     label: 'Bäst för naturlig rörelse',
   },
-  'invideo-virtual': {
+  invideo: {
     logo: 'bg-orange-600', ctaName: 'InVideo', score: 8.0,
     fallbackUrl: 'https://invideo.io',
     tags: ['Sociala medier', 'TikTok/Reels', 'Mallar', 'AI-röster'],
@@ -678,7 +595,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '4h video/månad gratis', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Social media-video i volym' },
     label: 'Bäst för social media',
   },
-  'firefly-video-virtual': {
+  'adobe-firefly-video': {
     logo: 'bg-rose-600', ctaName: 'Firefly Video', score: 7.8,
     fallbackUrl: 'https://firefly.adobe.com',
     tags: ['Adobe', 'Premiere Pro', 'Generative Extend', 'Kommersiellt säker'],
@@ -687,7 +604,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Ingår i Creative Cloud', price: 'CC 60 USD/mån', bestFor: 'Adobe-användare och pro-team' },
     label: 'Bäst för Creative Cloud',
   },
-  'kaiber-virtual': {
+  kaiber: {
     logo: 'bg-amber-600', ctaName: 'Kaiber', score: 7.5,
     fallbackUrl: 'https://kaiber.ai',
     tags: ['Musikvideo', 'Beat sync', 'Animation', 'Artister'],
@@ -698,7 +615,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   },
 
   /* ── Ljud & musik ─────────────────────────────────────── */
-  'udio-virtual': {
+  udio: {
     logo: 'bg-rose-600', ctaName: 'Udio', score: 9.0,
     fallbackUrl: 'https://www.udio.com',
     tags: ['Musikalisk nyans', 'Lyrik-AI', 'Stems', 'Remix'],
@@ -707,7 +624,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '10 spår gratis/dag', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Musikproduktion med AI' },
     label: 'Bäst för musikalisk nyans',
   },
-  'mubert-virtual': {
+  mubert: {
     logo: 'bg-teal-600', ctaName: 'Mubert', score: 8.2,
     fallbackUrl: 'https://mubert.com',
     tags: ['Streaming', 'Royaltyfri', 'Realtid', 'API'],
@@ -716,7 +633,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis för personligt bruk', price: 'Gratis · Creator 14 USD/mån', bestFor: 'Streamers och content-creators' },
     label: 'Bäst för bakgrundsmusik',
   },
-  'aiva-virtual': {
+  aiva: {
     logo: 'bg-indigo-600', ctaName: 'AIVA', score: 8.5,
     fallbackUrl: 'https://www.aiva.ai',
     tags: ['Filmmusik', 'MIDI-export', 'Klassiskt', 'Spel'],
@@ -725,7 +642,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Standard 15 EUR/mån', bestFor: 'Film-, spel- och klassisk musik' },
     label: 'Bäst för kompositörer',
   },
-  'soundraw-virtual': {
+  soundraw: {
     logo: 'bg-emerald-600', ctaName: 'Soundraw', score: 8.0,
     fallbackUrl: 'https://soundraw.io',
     tags: ['Royaltyfri', 'Anpassningsbar', 'Stems', 'Mood-baserad'],
@@ -734,7 +651,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Gratis preview', price: 'Creator 17 USD/mån', bestFor: 'YouTube-creators och reklam' },
     label: 'Bäst för YouTubers',
   },
-  'boomy-virtual': {
+  boomy: {
     logo: 'bg-fuchsia-600', ctaName: 'Boomy', score: 7.4,
     fallbackUrl: 'https://boomy.com',
     tags: ['1-klick', 'Spotify-release', 'Royaltyandel', 'Enkelt'],
@@ -743,7 +660,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '25 låtar gratis', price: 'Gratis · Creator 10 USD/mån', bestFor: 'Snabb publicering till streaming' },
     label: 'Bäst för nybörjare',
   },
-  'splice-virtual': {
+  splice: {
     logo: 'bg-orange-600', ctaName: 'Splice', score: 8.3,
     fallbackUrl: 'https://splice.com',
     tags: ['Samples', 'AI-sökning', 'Stems-separation', 'Producenter'],
@@ -752,7 +669,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: 'Sample-bibliotek från 8 USD/mån', price: 'Creator 8 USD/mån', bestFor: 'Musikproducenter' },
     label: 'Bäst för producenter',
   },
-  'lalal-ai-virtual': {
+  'lalal-ai': {
     logo: 'bg-sky-600', ctaName: 'Lalal.ai', score: 8.7,
     fallbackUrl: 'https://www.lalal.ai',
     tags: ['Stems-separation', 'Vocal isolation', 'Karaoke', 'API'],
@@ -761,7 +678,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     offer: { title: '10 min gratis/månad', price: 'Gratis · Lite 9 USD/mån', bestFor: 'Karaoke, remix och stems' },
     label: 'Bäst för stems-separation',
   },
-  'adobe-podcast-virtual': {
+  'adobe-podcast': {
     logo: 'bg-rose-700', ctaName: 'Adobe Podcast', score: 8.6,
     fallbackUrl: 'https://podcast.adobe.com',
     tags: ['AI Enhance', 'Brusreducering', 'Gratis', 'Webb'],

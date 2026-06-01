@@ -6,6 +6,7 @@ import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { YRKES_HUB_REVIEW_KNOWN } from '@/lib/yrkes-hub-tools';
 import { YRKES_HUB_REVIEW_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
+import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 
@@ -77,6 +78,12 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
    * marknadsföring) — mergade dubbletter, genererade i lib/yrkes-hub-tools.ts. */
   ...YRKES_HUB_REVIEW_KNOWN,
   ...YRKES_HUB_REVIEW_KNOWN_EXTRA,
+
+  /* AI-video + AI-ljud/musik recensioner (HeyGen, Synthesia, InVideo, Luma,
+   * Firefly Video, Kaiber, Mubert, AIVA, Soundraw, Boomy, Splice, Lalal.ai,
+   * Adobe Podcast) — genererade i lib/video-audio-tools.ts. Udio har en egen
+   * handskriven profil längre ned som vinner över spreaden. */
+  ...VIDEO_AUDIO_REVIEW_KNOWN,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {

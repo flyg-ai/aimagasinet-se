@@ -16,6 +16,44 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // ── Gamla WordPress-URL:er som Google Search Console rapporterar
+      //    som 404. 301 forwards link equity / rensar crawl-felen. ──
+      {
+        // WP-standardinlägget som följde med installationen.
+        source: '/hello-world',
+        destination: '/',
+        statusCode: 301,
+      },
+      {
+        // Gammalt kombinerat nyhetsinlägg → kanonisk nyhetskategori.
+        source: '/ai-nyheter/ai-konst-marknadsforing-juridik',
+        destination: '/kategori/ai-nyheter',
+        statusCode: 301,
+      },
+      {
+        // Kod-hubben bytte slug ai-kod → ai-kod-verktyg.
+        source: '/ai-verktyg/ai-kod/github-copilot',
+        destination: '/ai-verktyg/ai-kod-verktyg/github-copilot',
+        statusCode: 301,
+      },
+      {
+        // Ljud-hubben bytte slug ai-ljud-musik → ai-ljud-och-musik.
+        source: '/ai-verktyg/ai-ljud-musik',
+        destination: '/ai-verktyg/ai-ljud-och-musik',
+        statusCode: 301,
+      },
+      {
+        // WP-mediabibliotekets uppladdningar finns inte längre.
+        source: '/wp-content/uploads/:path*',
+        destination: '/',
+        statusCode: 301,
+      },
+      {
+        // Övriga WP-systemfiler (wp-login, wp-admin, wp-json m.fl.).
+        source: '/wp-:file*',
+        destination: '/',
+        statusCode: 301,
+      },
       {
         source: '/ai-verktyg/ai-text-verktyg/claude-3-5-sonnet',
         destination: '/ai-verktyg/ai-text-verktyg/claude',
