@@ -1,3 +1,5 @@
+import { yrkesRedirects } from './redirects.generated.mjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Match the trailing-slash form Google already has indexed from the
@@ -48,6 +50,10 @@ const nextConfig = {
         destination: '/topp-50-ai-latar-pa-spotify-2026',
         statusCode: 301,
       },
+      // Yrkes-omstrukturering: gamla /ai-verktyg/foretag/yrke/* → kanoniska
+      // /ai-verktyg/{juridik|kundservice|rekrytering|ekonomi|marknadsforing}/*
+      // (auto-genererad lista, se scripts/build-redirects-config.ts).
+      ...yrkesRedirects,
     ];
   },
 };

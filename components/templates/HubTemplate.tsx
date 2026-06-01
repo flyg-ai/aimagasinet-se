@@ -5,6 +5,8 @@ import { FaqAccordion } from '@/components/FaqAccordion';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import { YRKE_HUB_KNOWN } from '@/lib/yrke-tools';
+import { YRKES_HUB_KNOWN } from '@/lib/yrkes-hub-tools';
+import { YRKES_HUB_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 
 export type HubChild = ArticleCardData & {
@@ -88,6 +90,8 @@ const RANK_LABELS = [
  *  Yrke-topic tools are merged in from lib/yrke-tools.ts at module load. */
 const KNOWN: Record<string, Partial<ToolProfile>> = {
   ...YRKE_HUB_KNOWN,
+  ...YRKES_HUB_KNOWN,
+  ...YRKES_HUB_KNOWN_EXTRA,
   chatgpt: {
     logo: 'bg-emerald-500',
     ctaName: 'ChatGPT',

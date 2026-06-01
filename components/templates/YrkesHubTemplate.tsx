@@ -2,51 +2,51 @@ import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
 import { JsonLd } from '@/components/JsonLd';
 import { breadcrumbSchema } from '@/lib/schemas';
+import { YrkesNavSearch, type YrkeNavItem } from '@/components/YrkesNavSearch';
 
-/** Top-level yrkesroller. Each links to its yrkesroll-landing (depth 4);
- *  the landing pages then expose their subcategories. Use explicit href so
- *  legacy a.path/{slug}-derivation can't 404 when slug structure shifts. */
-const YRKEN: {
-  slug: string;
-  title: string;
-  href: string;
-  icon: string;
-  description: string;
-}[] = [
+/** Top-level yrkesroller. De fem migrerade yrkena pekar på sina kanoniska
+ *  hubbar /ai-verktyg/{hub}; designer och fotograf-video ligger kvar under
+ *  /ai-verktyg/foretag/yrke/* tills de migreras. */
+const YRKEN: YrkeNavItem[] = [
   {
     slug: 'marknadsforing',
     title: 'Marknadsföring',
-    href: '/ai-verktyg/foretag/yrke/marknadsforing',
+    href: '/ai-verktyg/marknadsforing',
     icon: '📣',
     description: 'AI för SEO, content, annonser och sociala medier — verktygen som ger marknadsteam mest hävstång.',
+    keywords: 'seo content copywriting annonser sociala medier reklam',
   },
   {
     slug: 'ekonomi-redovisning',
     title: 'Ekonomi & Redovisning',
-    href: '/ai-verktyg/foretag/yrke/ekonomi-redovisning',
+    href: '/ai-verktyg/ekonomi',
     icon: '📊',
     description: 'AI för bokföring, redovisning och bokslut — för småföretagare, byråer och controllers.',
+    keywords: 'bokföring redovisning bokslut fortnox visma ekonomi controller',
   },
   {
     slug: 'kundservice',
     title: 'Kundservice',
-    href: '/ai-verktyg/foretag/yrke/kundservice',
+    href: '/ai-verktyg/kundservice',
     icon: '💬',
     description: 'Chatbottar, e-postsvar och röst-AI som tar undan repetitiva ärenden från supportteamet.',
+    keywords: 'chatbot support e-post röst voicebot kundtjänst',
   },
   {
     slug: 'rekrytering',
     title: 'Rekrytering & HR',
-    href: '/ai-verktyg/foretag/yrke/rekrytering',
+    href: '/ai-verktyg/rekrytering',
     icon: '👥',
     description: 'CV-screening, jobbannonser och kandidatmatchning — verktyg för moderna talent-team.',
+    keywords: 'cv screening jobbannonser kandidatmatchning hr talent recruiting',
   },
   {
     slug: 'juridik',
     title: 'Juridik',
-    href: '/ai-verktyg/foretag/yrke/juridik',
+    href: '/ai-verktyg/juridik',
     icon: '⚖️',
     description: 'Avtalsgranskning, due diligence och rättsutredningar med AI som klarar svensk juridisk text.',
+    keywords: 'avtal due diligence rättsutredning jurist advokat legal',
   },
   {
     slug: 'designer',
@@ -54,6 +54,7 @@ const YRKEN: {
     href: '/ai-verktyg/foretag/yrke/designer',
     icon: '🎨',
     description: 'Grafisk design, UI/UX, bildgenerering och kort-video — AI-verktyg som lyfter designers från idé till leverans.',
+    keywords: 'grafisk design ui ux bildgenerering logotyp',
   },
   {
     slug: 'fotograf-video',
@@ -61,6 +62,7 @@ const YRKEN: {
     href: '/ai-verktyg/foretag/yrke/fotograf-video',
     icon: '📸',
     description: 'Bildredigering, videoklippning, foto-AI och ljudsättning — för fotografer och creators som vill öka tempot.',
+    keywords: 'foto bildredigering videoklippning ljudsättning retusch',
   },
 ];
 
@@ -115,27 +117,6 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
               {a.excerpt}
             </p>
           )}
-
-          {/* Search field (visual, ingen submit-logik ännu) */}
-          <div className="mt-8 max-w-2xl">
-            <label className="relative block">
-              <span className="sr-only">Sök efter yrke</span>
-              <span aria-hidden className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-fg-faint">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </span>
-              <input
-                type="search"
-                placeholder="Sök efter ditt yrke eller område..."
-                className="w-full rounded-full border border-line bg-card py-3.5 pl-12 pr-4 text-base text-fg placeholder:text-fg-faint focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              />
-            </label>
-            <p className="mt-2 px-4 font-mono text-[10px] uppercase tracking-wider text-fg-faint">
-              {YRKEN.length} yrken · fler tillkommer löpande
-            </p>
-          </div>
         </div>
       </header>
 
@@ -180,29 +161,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
           Välj yrke eller område
         </h2>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {YRKEN.map((y) => (
-            <Link
-              key={y.slug}
-              href={y.href}
-              className="group flex flex-col gap-3 rounded-2xl border border-line bg-card p-6 transition-colors hover:border-indigo-300 hover:bg-indigo-50/40"
-            >
-              <span
-                aria-hidden
-                className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl text-indigo-700"
-              >
-                {y.icon}
-              </span>
-              <h3 className="text-xl font-black uppercase tracking-tight text-fg group-hover:text-indigo-600">
-                {y.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-fg-subtle">{y.description}</p>
-              <span className="mt-auto pt-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
-                Utforska →
-              </span>
-            </Link>
-          ))}
-        </div>
+        <YrkesNavSearch items={YRKEN} />
       </section>
 
       {/* ── Coming soon footer ──────────────────────────────────── */}

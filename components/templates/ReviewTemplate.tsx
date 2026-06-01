@@ -4,6 +4,8 @@ import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { YRKE_REVIEW_KNOWN } from '@/lib/yrke-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
+import { YRKES_HUB_REVIEW_KNOWN } from '@/lib/yrkes-hub-tools';
+import { YRKES_HUB_REVIEW_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 
@@ -33,6 +35,8 @@ export type ReviewProfile = {
   /** Direct external URL used when articles.affiliate_url is NULL. Rendered
    *  with rel="nofollow noopener" instead of "sponsored". */
   fallbackUrl?: string;
+  /** One-line positioning statement, shown under the H1 in the hero. */
+  tagline?: string;
 };
 
 /* ─── Mock data ─────────────────────────────────────────────────── */
@@ -68,6 +72,11 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
    * medier, projektledning, e-handel, översättning, dokumenthantering) —
    * 80 verktygsprofiler genererade i lib/category-hub-tools.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN,
+
+  /* Kanoniska yrkes-hub-recensioner (juridik/kundservice/rekrytering/ekonomi/
+   * marknadsföring) — mergade dubbletter, genererade i lib/yrkes-hub-tools.ts. */
+  ...YRKES_HUB_REVIEW_KNOWN,
+  ...YRKES_HUB_REVIEW_KNOWN_EXTRA,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
@@ -702,6 +711,7 @@ export function resolveToolProfile(slug: string, displayName?: string): ReviewPr
     ctaName: known.ctaName,
     score: known.score,
     fallbackUrl: known.fallbackUrl,
+    tagline: known.tagline,
   };
 }
 
@@ -925,6 +935,12 @@ function Hero({
                 {toolName}{' '}
                 <span className="text-indigo-600">Recension</span>
               </h1>
+
+              {profile.tagline && (
+                <p className="mt-3 text-base font-semibold text-indigo-600 sm:text-lg">
+                  {profile.tagline}
+                </p>
+              )}
 
               {a.excerpt && (
                 <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-subtle sm:text-lg">
