@@ -42,16 +42,26 @@ function pathFromParams(segs: string[]): string {
   return '/' + segs.map(decodeURIComponent).join('/');
 }
 
-/* ── Curated subcategory hubs ───────────────────────────────────
-   Dedicated landing pages for the marknadsföring/ekonomi subtopics that
-   carried Google traffic under the old /foretag/yrke/* taxonomy. They live
-   at depth 3 (e.g. /ai-verktyg/marknadsforing/seo) — where classify() would
-   otherwise treat them as a tool review — so they're listed here explicitly
-   and rendered with HubTemplate. The topplistan is a hand-picked subset of
-   the real tool reviews under the parent hub, fetched by slug; the tools
-   keep their own URLs and parent_slug (no reparenting). The 301s from the
-   old /foretag/yrke/* paths point here instead of the parent hub. */
-const SUBHUB_TOOL_SLUGS: Record<string, string[]> = {
+/* ── Curated hub topplistor ─────────────────────────────────────
+   Hub paths whose topplista is a hand-picked subset of the real tool
+   reviews (fetched by slug) instead of every parent_slug child. Two uses:
+
+   1. Depth-3 subcategory hubs (e.g. /ai-verktyg/marknadsforing/seo) — the
+      dedicated landing pages for subtopics that carried Google traffic under
+      the old /foretag/yrke/* taxonomy. classify() would otherwise treat a
+      depth-3 path as a tool review, so they're also listed in SUBHUB_PATHS
+      below to force the 'hub' kind. The old /foretag/yrke/* 301s point here.
+
+   2. The two parent nav-hubs (/ai-verktyg/marknadsforing, /ai-verktyg/ekonomi)
+      — already 'hub' via the depth-2 rule, but curated to a BROAD, cross-
+      functional selection so they point down to the subcategories rather than
+      competing with them (the marknadsföring list deliberately omits the
+      SEO-specific crawler/keyword tools, which live on the SEO subpage).
+
+   In every case the tools keep their own URLs and parent_slug — no
+   reparenting. HubTemplate re-sorts each list by score. */
+const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
+  // ── Depth-3 subcategory hubs ──
   '/ai-verktyg/marknadsforing/seo': [
     'semrush-ai', 'surfer-seo', 'ahrefs-ai', 'clearscope', 'frase-io',
     'neuronwriter', 'marketmuse', 'rankmath-ai', 'screaming-frog-ai',
@@ -76,7 +86,26 @@ const SUBHUB_TOOL_SLUGS: Record<string, string[]> = {
     'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
     'xero-ai', 'quickbooks-ai', 'accountingai-pro', 'reconcile-ai', 'taxdome-ai',
   ],
+
+  // ── Parent nav-hubs: broad cross-section, not subcategory-specific ──
+  '/ai-verktyg/marknadsforing': [
+    'chatgpt-marknadsforing', 'claude-content', 'jasper-content',
+    'copy-ai-content', 'anyword', 'adcreative-ai', 'madgicx',
+    'hootsuite-ai', 'buffer-ai', 'ocoya',
+  ],
+  '/ai-verktyg/ekonomi': [
+    'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'pleo-ai',
+    'billogram-ai', 'wint-ai', 'fortnox-redovisning', 'xero-ai', 'quickbooks-ai',
+  ],
 };
+
+/* Depth-3 subcategory hubs that classify() must treat as 'hub' rather than
+   the depth-3 'review' fallback. Parent hubs (depth 2) are already 'hub'. */
+const SUBHUB_PATHS = new Set(
+  Object.keys(CURATED_HUB_TOOL_SLUGS).filter(
+    (p) => p.split('/').filter(Boolean).length === 3
+  )
+);
 
 async function getArticle(path: string) {
   const { data, error } = await supabase
@@ -199,7 +228,7 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
 
   // Curated subcategory hubs (depth-3 under marknadsforing/ekonomi) — listed
   // explicitly so they win over the depth-3 "review" fallback below.
-  if (SUBHUB_TOOL_SLUGS[path]) {
+  if (SUBHUB_PATHS.has(path)) {
     return { kind: 'hub', reason: 'curated subcategory hub' };
   }
 
@@ -422,9 +451,10 @@ export default async function CatchAllPage({ params }: Props) {
     // gracefully skips the Ranking/BestInTest/Comparison sections when
     // items + virtuals is empty (e.g. depth-5 yrke pages whose topplista
     // is baked into content_mdx and rendered via the editorial body).
-    // Curated subcategory hubs pull a hand-picked tool subset by slug;
-    // every other hub pulls its DB children by parent_slug.
-    const curated = SUBHUB_TOOL_SLUGS[a.path];
+    // Curated hubs (subcategory hubs + the two parent nav-hubs) pull a
+    // hand-picked tool subset by slug; every other hub pulls its DB children
+    // by parent_slug.
+    const curated = CURATED_HUB_TOOL_SLUGS[a.path];
     const items = curated
       ? await getCuratedChildren(curated)
       : await getHubChildren(a.slug);

@@ -949,6 +949,26 @@ function getHubFacts(slug: string): HubFacts {
   return HUB_KNOWN[slug] ?? HUB_DEFAULTS;
 }
 
+/* ─── Subcategory navigation grid ──────────────────────────────────
+   For the two parent nav-hubs: a grid of cards linking down to the
+   dedicated subcategory hubs, rendered high on the page so the parent
+   points downward instead of competing with the subcategories. Keyed by
+   the hub's own path. */
+type SubcategoryCard = { title: string; href: string; desc: string; icon: string };
+
+const HUB_SUBCATEGORIES: Record<string, SubcategoryCard[]> = {
+  '/ai-verktyg/marknadsforing': [
+    { title: 'AI för SEO', href: '/ai-verktyg/marknadsforing/seo', icon: '🔍', desc: 'Keyword-research, SERP-analys och content-optimering.' },
+    { title: 'AI för content & copywriting', href: '/ai-verktyg/marknadsforing/content-copywriting', icon: '✍️', desc: 'Long-form, annonstext och konsekvent brand voice.' },
+    { title: 'AI för annonser', href: '/ai-verktyg/marknadsforing/annonser', icon: '🎯', desc: 'Kreativ-generering och performance för paid media.' },
+    { title: 'AI för sociala medier', href: '/ai-verktyg/marknadsforing/sociala-medier', icon: '📱', desc: 'Content, schemaläggning och plattformsspecifik AI.' },
+  ],
+  '/ai-verktyg/ekonomi': [
+    { title: 'AI för bokföring', href: '/ai-verktyg/ekonomi/bokforing', icon: '📒', desc: 'Automatisk kontering, kvittotolkning och avstämning.' },
+    { title: 'AI för redovisning', href: '/ai-verktyg/ekonomi/redovisning', icon: '📊', desc: 'Månadsbokslut, revision och practice management.' },
+  ],
+};
+
 /* ─── Main template ────────────────────────────────────────────── */
 
 export function HubTemplate({
@@ -988,6 +1008,10 @@ export function HubTemplate({
         facts={facts}
       />
 
+      {HUB_SUBCATEGORIES[a.path] && (
+        <SubcategoryGrid subs={HUB_SUBCATEGORIES[a.path]} />
+      )}
+
       {ranked.length > 0 && (
         <RankingSection ranked={ranked} year={updatedYear} />
       )}
@@ -1018,6 +1042,45 @@ export function HubTemplate({
 }
 
 /* ─── Sections ─────────────────────────────────────────────────── */
+
+function SubcategoryGrid({ subs }: { subs: SubcategoryCard[] }) {
+  return (
+    <section className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-16">
+      <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
+        Utforska kategorier
+      </div>
+      <h2 className="mb-8 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+        Hitta rätt verktyg för din uppgift
+      </h2>
+      <div className="grid gap-5 sm:grid-cols-2">
+        {subs.map((c) => (
+          <Link
+            key={c.href}
+            href={c.href}
+            className="group flex items-start gap-4 rounded-xl border border-line bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl"
+          >
+            <span
+              aria-hidden
+              className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl"
+            >
+              {c.icon}
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-lg font-black uppercase tracking-tight text-fg group-hover:text-indigo-700">
+                {c.title}
+              </h3>
+              <p className="mt-1 text-sm leading-relaxed text-fg-subtle">{c.desc}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600">
+                Utforska
+                <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function Hero({
   article: a,
