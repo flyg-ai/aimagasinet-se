@@ -7,6 +7,7 @@ import type { Article } from '@/lib/supabase';
 import { YRKE_HUB_KNOWN } from '@/lib/yrke-tools';
 import { YRKES_HUB_KNOWN } from '@/lib/yrkes-hub-tools';
 import { YRKES_HUB_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
+import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 
 export type HubChild = ArticleCardData & {
@@ -89,6 +90,14 @@ const RANK_LABELS = [
 /** Curated profiles for well-known tools. Falls back to deterministic mock.
  *  Yrke-topic tools are merged in from lib/yrke-tools.ts at module load. */
 const KNOWN: Record<string, Partial<ToolProfile>> = {
+  // Category-hub tools (hemsidebyggare, presentationer, mötesverktyg, …) only
+  // have a *review* profile — without this, their hub topplista cards fall
+  // through to the generic mock and, crucially, get no fallbackUrl, so the
+  // "Prova X"-CTA renders as a dead <span> (see CtaButton). ReviewProfile and
+  // ToolProfile share the fields buildProfile reads (logo/tags/pros/cons/offer/
+  // label/ctaName/score/fallbackUrl/tagline); the rest is ignored. Listed
+  // first so any hub-specific profile below wins on a slug collision.
+  ...(CATEGORY_HUB_REVIEW_KNOWN as Record<string, Partial<ToolProfile>>),
   ...YRKE_HUB_KNOWN,
   ...YRKES_HUB_KNOWN,
   ...YRKES_HUB_KNOWN_EXTRA,
