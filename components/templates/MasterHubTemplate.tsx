@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
+import { resolveToolProfile, toolOverallScore } from '@/components/templates/ReviewTemplate';
 
 /** Master hub for /ai-verktyg — lands users at a curated category grid that
  *  fans out to all sub-hubs. The article's content_mdx still renders below
@@ -8,9 +9,81 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
   return (
     <article className="bg-page text-fg">
       <Hero article={a} />
+      <EditorsPicks />
       <CategoryGrid />
       <EditorialBody html={a.content_mdx} />
     </article>
+  );
+}
+
+/** "Redaktionens val per kategori" — one editorial top-pick per main
+ *  category, shown as a horizontal row directly under the hero. Scrollable
+ *  on mobile, a 5-up row on desktop. Scores come from REVIEW_KNOWN so they
+ *  stay in sync with the review pages. */
+type Pick = { category: string; name: string; key: string; tagline: string; href: string };
+
+const EDITORS_PICKS: Pick[] = [
+  { category: 'AI-text',   name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',  href: '/ai-verktyg/ai-text-verktyg/claude/' },
+  { category: 'AI-bilder', name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',         href: '/ai-verktyg/ai-bild-verktyg/midjourney/' },
+  { category: 'AI-video',  name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',     href: '/ai-video/kling-ai/' },
+  { category: 'AI-ljud',   name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',       href: '/ai-verktyg/ai-ljud-och-musik/suno-ai/' },
+  { category: 'AI-kod',    name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',       href: '/ai-verktyg/ai-kod-verktyg/cursor-ai/' },
+];
+
+function EditorsPicks() {
+  return (
+    <section className="border-b border-line bg-card">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+        <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
+          Redaktionens val per kategori
+        </div>
+        <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+          Våra toppval
+        </h2>
+
+        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-5 lg:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {EDITORS_PICKS.map((p) => {
+            const profile = resolveToolProfile(p.key, p.name);
+            const score = toolOverallScore(profile);
+            return (
+              <Link
+                key={p.key}
+                href={p.href}
+                className="group flex min-w-[240px] snap-start flex-col gap-3 rounded-xl border border-line bg-page p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl lg:min-w-0"
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    aria-hidden
+                    className={`inline-flex h-10 w-10 items-center justify-center rounded-lg text-base font-black uppercase text-white ring-2 ring-white/40 ${profile.logo}`}
+                  >
+                    {p.name.charAt(0)}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-sm font-black text-amber-600">
+                    {score.toFixed(1)}
+                    <span aria-hidden>★</span>
+                  </span>
+                </div>
+
+                <div>
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">
+                    {p.category}
+                  </div>
+                  <div className="mt-0.5 text-lg font-black tracking-tight text-fg group-hover:text-indigo-600">
+                    {p.name}
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed text-fg-muted">{p.tagline}</p>
+
+                <span className="mt-auto inline-flex w-fit items-center gap-1.5 rounded-full bg-indigo-100 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-indigo-700">
+                  ✦ Redaktionens val
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
