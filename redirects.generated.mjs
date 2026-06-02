@@ -559,12 +559,12 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/ekonomi-redovisning/bokforing",
-    "destination": "/ai-verktyg/ekonomi",
+    "destination": "/ai-verktyg/ekonomi/bokforing",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/ekonomi-redovisning/redovisning",
-    "destination": "/ai-verktyg/ekonomi",
+    "destination": "/ai-verktyg/ekonomi/redovisning",
     "statusCode": 301
   },
   {
@@ -774,22 +774,22 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/seo",
-    "destination": "/ai-verktyg/marknadsforing",
+    "destination": "/ai-verktyg/marknadsforing/seo",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting",
-    "destination": "/ai-verktyg/marknadsforing",
+    "destination": "/ai-verktyg/marknadsforing/content-copywriting",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/annonser",
-    "destination": "/ai-verktyg/marknadsforing",
+    "destination": "/ai-verktyg/marknadsforing/annonser",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/sociala-medier",
-    "destination": "/ai-verktyg/marknadsforing",
+    "destination": "/ai-verktyg/marknadsforing/sociala-medier",
     "statusCode": 301
   },
   {

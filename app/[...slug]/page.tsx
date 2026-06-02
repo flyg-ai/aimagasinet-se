@@ -42,6 +42,42 @@ function pathFromParams(segs: string[]): string {
   return '/' + segs.map(decodeURIComponent).join('/');
 }
 
+/* ── Curated subcategory hubs ───────────────────────────────────
+   Dedicated landing pages for the marknadsföring/ekonomi subtopics that
+   carried Google traffic under the old /foretag/yrke/* taxonomy. They live
+   at depth 3 (e.g. /ai-verktyg/marknadsforing/seo) — where classify() would
+   otherwise treat them as a tool review — so they're listed here explicitly
+   and rendered with HubTemplate. The topplistan is a hand-picked subset of
+   the real tool reviews under the parent hub, fetched by slug; the tools
+   keep their own URLs and parent_slug (no reparenting). The 301s from the
+   old /foretag/yrke/* paths point here instead of the parent hub. */
+const SUBHUB_TOOL_SLUGS: Record<string, string[]> = {
+  '/ai-verktyg/marknadsforing/seo': [
+    'semrush-ai', 'surfer-seo', 'ahrefs-ai', 'clearscope', 'frase-io',
+    'neuronwriter', 'marketmuse', 'rankmath-ai', 'screaming-frog-ai',
+  ],
+  '/ai-verktyg/marknadsforing/content-copywriting': [
+    'claude-content', 'jasper-content', 'copy-ai-content', 'writesonic-content',
+    'koala-writer', 'rytr-content', 'hypotenuse-ai', 'anyword', 'contentatscale',
+  ],
+  '/ai-verktyg/marknadsforing/annonser': [
+    'adcreative-ai', 'pencil-ai', 'persado', 'smartly-io', 'albert-ai',
+    'pattern89', 'motionapp', 'madgicx', 'revealbot',
+  ],
+  '/ai-verktyg/marknadsforing/sociala-medier': [
+    'hootsuite-ai', 'buffer-ai', 'predis-ai', 'flick-ai', 'lately-ai',
+    'ocoya', 'postwise', 'taplio', 'fedica',
+  ],
+  '/ai-verktyg/ekonomi/bokforing': [
+    'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'speedledger-ai',
+    'klara-ai', 'accountingai', 'billogram-ai', 'wint-ai', 'pleo-ai',
+  ],
+  '/ai-verktyg/ekonomi/redovisning': [
+    'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
+    'xero-ai', 'quickbooks-ai', 'accountingai-pro', 'reconcile-ai', 'taxdome-ai',
+  ],
+};
+
 async function getArticle(path: string) {
   const { data, error } = await supabase
     .from('articles')
@@ -104,6 +140,33 @@ async function getHubChildren(parentSlug: string): Promise<HubChild[]> {
   }));
 }
 
+/** Fetch a hand-picked set of tool reviews by slug for a curated subcategory
+ *  hub (SUBHUB_TOOL_SLUGS). Same shape as getHubChildren — content_mdx drives
+ *  rating + ReviewsSection snippet. Order is irrelevant: HubTemplate re-sorts
+ *  the topplistan by score. */
+async function getCuratedChildren(slugs: string[]): Promise<HubChild[]> {
+  const tryQuery = async (withAffiliate: boolean) => {
+    const cols = CARD_COLS + (withAffiliate ? ',affiliate_url' : '') + ',content_mdx';
+    return supabase.from('articles').select(cols).in('slug', slugs);
+  };
+  let { data, error } = await tryQuery(true);
+  if (error && /affiliate_url/.test(error.message)) {
+    ({ data, error } = await tryQuery(false));
+  }
+  if (error) {
+    console.error('[getCuratedChildren] supabase error:', error.message);
+    return [];
+  }
+  const rows = (data ?? []) as unknown as (ArticleCardData & {
+    content_mdx?: string | null;
+  })[];
+  return rows.map(({ content_mdx, ...rest }) => ({
+    ...rest,
+    content_mdx: content_mdx ?? null,
+    rating: parseRating(content_mdx ?? null),
+  }));
+}
+
 async function getSiblings(parentSlug: string | null, excludeSlug: string) {
   if (!parentSlug) return [];
   return await selectCards({ parentSlug, excludeSlug });
@@ -133,6 +196,12 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
 } {
   // Posts always go to ArticleTemplate
   if (articleType === 'post') return { kind: 'article', reason: 'type=post' };
+
+  // Curated subcategory hubs (depth-3 under marknadsforing/ekonomi) — listed
+  // explicitly so they win over the depth-3 "review" fallback below.
+  if (SUBHUB_TOOL_SLUGS[path]) {
+    return { kind: 'hub', reason: 'curated subcategory hub' };
+  }
 
   // Static section landings — about, contact, and AI-Guiden hub
   if (path === '/om-oss') return { kind: 'about', reason: '/om-oss about page' };
@@ -353,7 +422,12 @@ export default async function CatchAllPage({ params }: Props) {
     // gracefully skips the Ranking/BestInTest/Comparison sections when
     // items + virtuals is empty (e.g. depth-5 yrke pages whose topplista
     // is baked into content_mdx and rendered via the editorial body).
-    const items = await getHubChildren(a.slug);
+    // Curated subcategory hubs pull a hand-picked tool subset by slug;
+    // every other hub pulls its DB children by parent_slug.
+    const curated = SUBHUB_TOOL_SLUGS[a.path];
+    const items = curated
+      ? await getCuratedChildren(curated)
+      : await getHubChildren(a.slug);
     return <HubTemplate article={a} items={items} />;
   }
 
