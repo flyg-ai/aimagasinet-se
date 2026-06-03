@@ -1,4 +1,5 @@
 import { yrkesRedirects } from './redirects.generated.mjs';
+import { designerFotografRedirects } from './redirects-designer-fotograf.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -92,6 +93,9 @@ const nextConfig = {
       // /ai-verktyg/{juridik|kundservice|rekrytering|ekonomi|marknadsforing}/*
       // (auto-genererad lista, se scripts/build-redirects-config.ts).
       ...yrkesRedirects,
+      // Designer/fotograf-video-uppstädning: dubbletter → kanonisk, orphans
+      // flyttade till kategori-hub, tomma topplista-hubbar → kategori-hub.
+      ...designerFotografRedirects,
     ];
   },
 };
