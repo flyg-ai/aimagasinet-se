@@ -1197,7 +1197,7 @@ function RankingSection({ ranked, year }: { ranked: HubChild[]; year: number }) 
         Live-rankning
       </div>
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
-        <h2 id="topplistan" className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
+        <h2 id="topplistan" className="min-w-0 max-w-full text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
           Topplistan {year}
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-subtle sm:inline">
@@ -1420,7 +1420,7 @@ function ComparisonTable({ ranked }: { ranked: HubChild[] }) {
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
         <h2
           id="comparison"
-          className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
+          className="min-w-0 max-w-full text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
         >
           Verktyg sida vid sida
         </h2>
@@ -1566,7 +1566,7 @@ function EditorialSection({
       <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
         <h2
           id="editorial"
-          className="text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
+          className="min-w-0 max-w-full text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
         >
           {ranked.length > 0 ? 'Recensioner' : 'Översikt'}
         </h2>
@@ -1630,7 +1630,7 @@ function ReviewsSection({ ranked }: { ranked: HubChild[] }) {
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
           <h2
             id="reviews"
-            className="text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
+            className="min-w-0 max-w-full text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
           >
             Verktyg för verktyg
           </h2>

@@ -143,7 +143,7 @@ function EditorialBody({ html }: { html: string | null }) {
         <div
           className="
             prose prose-lg max-w-none
-            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
+            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-2xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-sky-500 prose-h2:pl-4
             prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-xl prose-h3:font-bold
             prose-p:text-fg-muted prose-p:leading-[1.85] prose-p:text-[17px]
