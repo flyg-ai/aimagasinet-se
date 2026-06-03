@@ -89,6 +89,13 @@ const nextConfig = {
         destination: '/topp-50-ai-latar-pa-spotify-2026',
         statusCode: 301,
       },
+      {
+        // Yrkes-indexsidan ersatt av den nya /ai-verktyg/foretag-ingångssidan
+        // (kategori- + yrkes-grid). Barnsidorna /foretag/yrke/* lever kvar.
+        source: '/ai-verktyg/foretag/yrke',
+        destination: '/ai-verktyg/foretag',
+        statusCode: 301,
+      },
       // Yrkes-omstrukturering: gamla /ai-verktyg/foretag/yrke/* → kanoniska
       // /ai-verktyg/{juridik|kundservice|rekrytering|ekonomi|marknadsforing}/*
       // (auto-genererad lista, se scripts/build-redirects-config.ts).

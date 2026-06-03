@@ -418,22 +418,8 @@ export default async function CatchAllPage({ params }: Props) {
   }
 
   if (decision.kind === 'foretagHub') {
-    // Pull yrken (children of /foretag/yrke) + their subtopic children
-    // in parallel for the yrke-grid.
-    const yrkes = await getChildren('yrke');
-    const subtopicsByYrke: Record<string, ArticleCardData[]> = {};
-    await Promise.all(
-      yrkes.map(async (y) => {
-        subtopicsByYrke[y.slug] = await getChildren(y.slug);
-      })
-    );
-    return (
-      <ForetagHubTemplate
-        article={a}
-        yrkes={yrkes}
-        subtopicsByYrke={subtopicsByYrke}
-      />
-    );
+    // Static category + yrke grids live in the template now; no DB fetch.
+    return <ForetagHubTemplate article={a} />;
   }
 
   if (decision.kind === 'yrkesHub') {

@@ -7,6 +7,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { YRKES_HUB_REVIEW_KNOWN } from '@/lib/yrkes-hub-tools';
 import { YRKES_HUB_REVIEW_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
 import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
+import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 
@@ -84,6 +85,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
    * Adobe Podcast) — genererade i lib/video-audio-tools.ts. Udio har en egen
    * handskriven profil längre ned som vinner över spreaden. */
   ...VIDEO_AUDIO_REVIEW_KNOWN,
+
+  /* CRM-hubbens 10 verktyg (Salesforce Einstein, HubSpot, Pipedrive, …) —
+   * genererade i lib/crm-tools.ts av scripts/seed-crm-hub.ts. */
+  ...CRM_REVIEW_KNOWN,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
