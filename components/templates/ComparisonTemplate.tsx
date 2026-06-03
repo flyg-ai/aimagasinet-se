@@ -144,7 +144,7 @@ function BigToolCard({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
   return (
     <div className={`flex flex-col items-center rounded-2xl border-2 bg-card p-6 text-center shadow-sm ${kit.ring}`}>
       <ToolLogo name={tool.ref.name} color={p.logo} size="xl" />
-      <h2 className="mt-4 text-xl font-black tracking-tight text-fg">{tool.ref.name}</h2>
+      <h2 className="mt-4 text-xl font-black tracking-tight text-fg break-words">{tool.ref.name}</h2>
       <p className="mt-1 text-xs text-fg-subtle">{p.company} · {p.model}</p>
       <div className="mt-4 flex items-baseline gap-1">
         <span className={`text-4xl font-black leading-none tracking-tight ${kit.text}`}>{tool.score.toFixed(1)}</span>
@@ -203,7 +203,7 @@ function WinnerSection({ winner, loser, verdict, tie }: { winner: ComparedTool; 
           <div className="flex items-center gap-4">
             <ToolLogo name={winner.ref.name} color={winner.profile.logo} size="lg" />
             <div>
-              <h3 className="text-2xl font-black tracking-tight text-fg sm:text-3xl">{winner.ref.name}</h3>
+              <h3 className="text-2xl font-black tracking-tight text-fg break-words sm:text-3xl">{winner.ref.name}</h3>
               <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600">
                 {winner.score.toFixed(1)} mot {loser.score.toFixed(1)}
               </span>
@@ -295,7 +295,7 @@ function ProsConsCard({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
     <div className={`rounded-2xl border-2 bg-card p-6 ${kit.ring}`}>
       <div className="mb-4 flex items-center gap-3">
         <ToolLogo name={tool.ref.name} color={p.logo} />
-        <h3 className="text-lg font-black tracking-tight text-fg">{tool.ref.name}</h3>
+        <h3 className="text-lg font-black tracking-tight text-fg break-words">{tool.ref.name}</h3>
       </div>
       <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-600">Fördelar</p>
       <div className="mb-4 flex flex-wrap gap-2">
@@ -374,7 +374,7 @@ function RelatedComparisons({ currentSlug }: { currentSlug: string }) {
             <Link
               key={c.slug}
               href={`/ai-verktyg/jamfor/${c.slug}`}
-              className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+              className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg break-words transition-colors hover:border-indigo-300 hover:bg-indigo-50"
             >
               <span className="text-indigo-600">{c.aName}</span>
               <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">vs</span>
@@ -393,7 +393,7 @@ function SectionHeader({ kicker, title }: { kicker: string; title: string }) {
   return (
     <>
       <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">{kicker}</div>
-      <h2 className="mb-6 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">{title}</h2>
+      <h2 className="mb-6 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">{title}</h2>
     </>
   );
 }

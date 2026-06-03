@@ -37,7 +37,7 @@ function EditorsPicks() {
         <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
           Redaktionens val per kategori
         </div>
-        <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+        <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
           Våra toppval
         </h2>
 
@@ -68,7 +68,7 @@ function EditorsPicks() {
                   <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">
                     {p.category}
                   </div>
-                  <div className="mt-0.5 text-lg font-black tracking-tight text-fg group-hover:text-indigo-600">
+                  <div className="mt-0.5 text-lg font-black tracking-tight text-fg break-words group-hover:text-indigo-600">
                     {p.name}
                   </div>
                 </div>
@@ -271,7 +271,7 @@ function CategoryGrid() {
         Välj kategori
       </div>
       <div className="mb-8 flex items-baseline justify-between gap-4 border-b border-line pb-3">
-        <h2 className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+        <h2 className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
           Alla AI-verktyg
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-subtle sm:inline">
@@ -311,7 +311,7 @@ function CategoryGrid() {
               >
                 {c.icon}
               </span>
-              <h3 className="text-xl font-black uppercase tracking-tight text-white">
+              <h3 className="text-xl font-black uppercase tracking-tight text-white break-words">
                 {c.title}
               </h3>
             </div>
@@ -344,7 +344,7 @@ function EditorialBody({ html }: { html: string | null }) {
       </div>
       <h2
         id="editorial"
-        className="mb-8 border-b border-line pb-3 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl"
+        className="mb-8 border-b border-line pb-3 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
       >
         Så väljer du rätt AI-verktyg
       </h2>

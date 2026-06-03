@@ -108,7 +108,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
             AI för företag · efter yrke
           </span>
 
-          <h1 className="mt-5 text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl lg:text-6xl">
+          <h1 className="mt-5 text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg break-words sm:text-5xl lg:text-6xl">
             {a.title || 'AI-verktyg efter yrke'}
           </h1>
 
@@ -126,7 +126,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
           <div className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
             Så hjälper AI ditt yrke
           </div>
-          <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+          <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
             AI som faktiskt effektiviserar jobbet
           </h2>
           <div className="space-y-4 text-[17px] leading-[1.75] text-fg-muted">
@@ -157,7 +157,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
         <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-indigo-600">
           Bläddra
         </div>
-        <h2 className="mb-8 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+        <h2 className="mb-8 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
           Välj yrke eller område
         </h2>
 
@@ -170,7 +170,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
           <div className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-fg-subtle">
             Snart fler
           </div>
-          <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg">
+          <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words">
             Fler yrken på väg
           </h3>
           <p className="mx-auto mt-3 max-w-xl text-sm text-fg-subtle">

@@ -377,7 +377,7 @@ function SubcategoryGrid({ subcategories }: { subcategories: YrkesRollSubcategor
         Snabbval
       </div>
       <div className="mb-8 flex items-baseline justify-between gap-4 border-b border-line pb-3">
-        <h2 className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+        <h2 className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
           Vad vill du göra?
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-subtle sm:inline">
@@ -398,7 +398,7 @@ function SubcategoryGrid({ subcategories }: { subcategories: YrkesRollSubcategor
             >
               {s.icon}
             </span>
-            <h3 className="text-xl font-black uppercase tracking-tight text-fg group-hover:text-indigo-600">
+            <h3 className="text-xl font-black uppercase tracking-tight text-fg break-words group-hover:text-indigo-600">
               {s.title}
             </h3>
             <p className="text-sm leading-relaxed text-fg-subtle">{s.description}</p>
@@ -425,7 +425,7 @@ function TopPicks({ picks }: { picks: YrkesRollTopPick[] }) {
         <div className="mb-8 flex items-baseline justify-between gap-4 border-b border-line pb-3">
           <h2
             id="top-picks"
-            className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl"
+            className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
           >
             Topp {picks.length} verktyg som täcker bredden
           </h2>
@@ -479,7 +479,7 @@ function EditorialBody({ html }: { html: string | null }) {
       </div>
       <h2
         id="editorial"
-        className="mb-8 border-b border-line pb-3 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl"
+        className="mb-8 border-b border-line pb-3 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
       >
         Så använder du AI i din vardag
       </h2>
@@ -487,7 +487,7 @@ function EditorialBody({ html }: { html: string | null }) {
         <div
           className="
             prose prose-lg max-w-none
-            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
+            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-2xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-4
             prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-xl prose-h3:font-bold
             prose-p:text-fg-muted prose-p:leading-[1.85] prose-p:text-[17px]

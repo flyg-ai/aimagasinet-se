@@ -1060,7 +1060,7 @@ function SubcategoryGrid({ subs }: { subs: SubcategoryCard[] }) {
       <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
         Utforska kategorier
       </div>
-      <h2 className="mb-8 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+      <h2 className="mb-8 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         Hitta rätt verktyg för din uppgift
       </h2>
       <div className="grid gap-5 sm:grid-cols-2">
@@ -1077,7 +1077,7 @@ function SubcategoryGrid({ subs }: { subs: SubcategoryCard[] }) {
               {c.icon}
             </span>
             <div className="min-w-0">
-              <h3 className="text-lg font-black uppercase tracking-tight text-fg group-hover:text-indigo-700">
+              <h3 className="text-lg font-black uppercase tracking-tight text-fg break-words group-hover:text-indigo-700">
                 {c.title}
               </h3>
               <p className="mt-1 text-sm leading-relaxed text-fg-subtle">{c.desc}</p>
@@ -1197,7 +1197,7 @@ function RankingSection({ ranked, year }: { ranked: HubChild[]; year: number }) 
         Live-rankning
       </div>
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
-        <h2 id="topplistan" className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+        <h2 id="topplistan" className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
           Topplistan {year}
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-subtle sm:inline">
@@ -1269,7 +1269,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={child.path}
-              className="text-xl font-black uppercase tracking-tight text-fg hover:text-indigo-600"
+              className="text-xl font-black uppercase tracking-tight text-fg break-words hover:text-indigo-600"
             >
               {name}
             </Link>
@@ -1376,7 +1376,7 @@ function BestInTest({ child }: { child: HubChild }) {
             <div className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
               🏆 Bäst i test {year}
             </div>
-            <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+            <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
               {name}
             </h3>
             {description && (
@@ -1420,7 +1420,7 @@ function ComparisonTable({ ranked }: { ranked: HubChild[] }) {
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
         <h2
           id="comparison"
-          className="text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl"
+          className="text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl"
         >
           Verktyg sida vid sida
         </h2>
@@ -1566,7 +1566,7 @@ function EditorialSection({
       <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
         <h2
           id="editorial"
-          className="text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
+          className="text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
         >
           {ranked.length > 0 ? 'Recensioner' : 'Översikt'}
         </h2>
@@ -1582,7 +1582,7 @@ function EditorialSection({
             <div
               className="
                 prose prose-lg max-w-none
-                prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
+                prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
                 prose-h2:mt-14 prose-h2:mb-5 prose-h2:text-2xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-4 sm:prose-h2:text-3xl
                 prose-h3:mt-10 prose-h3:mb-3 prose-h3:text-xl prose-h3:font-bold prose-h3:text-fg
                 prose-p:text-fg-muted prose-p:leading-[1.85] prose-p:text-[17px]
@@ -1630,7 +1630,7 @@ function ReviewsSection({ ranked }: { ranked: HubChild[] }) {
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-line pb-4">
           <h2
             id="reviews"
-            className="text-balance text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
+            className="text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
           >
             Verktyg för verktyg
           </h2>
@@ -1683,7 +1683,7 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
               {isTop ? '🏆 Redaktionens val' : p.label}
             </span>
           </div>
-          <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+          <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
             {name}
           </h3>
           {p.tagline && (
@@ -1794,7 +1794,7 @@ function Snabbval({ ranked }: { ranked: HubChild[] }) {
         <span aria-hidden>↗</span>
         Snabbval
       </div>
-      <h3 className="mb-4 text-xl font-black uppercase tracking-tight text-fg">
+      <h3 className="mb-4 text-xl font-black uppercase tracking-tight text-fg break-words">
         Hitta rätt direkt
       </h3>
       <ul className="divide-y divide-line">
@@ -1822,7 +1822,7 @@ function NewsletterBox() {
       <div className="mb-3 inline-flex items-center gap-2 text-indigo-600">
         <span aria-hidden className="text-lg">✦</span>
       </div>
-      <h3 className="text-xl font-black uppercase tracking-tight text-fg">
+      <h3 className="text-xl font-black uppercase tracking-tight text-fg break-words">
         Få vårt AI-nyhetsbrev
       </h3>
       <p className="mt-2 text-sm leading-relaxed text-fg-subtle">

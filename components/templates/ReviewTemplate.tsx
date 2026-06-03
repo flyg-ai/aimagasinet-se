@@ -1046,7 +1046,7 @@ function Verdict({
   return (
     <section className="mt-10">
       <Eyebrow>Redaktionens dom</Eyebrow>
-      <h2 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+      <h2 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
         Vårt omdöme om {toolName}
       </h2>
       <p className="mt-4 max-w-prose text-[17px] leading-[1.75] text-fg-muted">
@@ -1065,7 +1065,7 @@ function RatingMatrixSection({ profile }: { profile: ReviewProfile }) {
   return (
     <section className="mt-10 rounded-2xl border border-line bg-card p-6 sm:p-8">
       <Eyebrow>Så testade vi</Eyebrow>
-      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg">
+      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words">
         Betyg per kriterium
       </h3>
 
@@ -1100,7 +1100,7 @@ function ProsCons({ profile }: { profile: ReviewProfile }) {
   return (
     <section className="mt-10">
       <Eyebrow>För- & nackdelar</Eyebrow>
-      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         Vad vi gillar — och inte
       </h3>
 
@@ -1144,7 +1144,7 @@ function UseCases({ toolName, profile }: { toolName: string; profile: ReviewProf
   return (
     <section className="mt-10">
       <Eyebrow>Användningsområden</Eyebrow>
-      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         {toolName} är bäst för
       </h3>
 
@@ -1176,14 +1176,14 @@ function Djupanalys({ toolName, content }: { toolName: string; content: string |
   return (
     <section className="mt-12">
       <Eyebrow>Djupanalys</Eyebrow>
-      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         Allt om {toolName}
       </h3>
       <div className="magazine-prose mt-6">
         <div
           className="
             prose prose-lg max-w-none
-            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
+            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-3 sm:prose-h2:text-2xl
             prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-lg
             prose-p:text-fg-muted prose-p:leading-[1.85]
@@ -1215,7 +1215,7 @@ function Alternatives({
   return (
     <section className="mt-14">
       <Eyebrow>Alternativ</Eyebrow>
-      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         Andra att överväga
       </h3>
 
@@ -1242,7 +1242,7 @@ function Alternatives({
               <div className="flex items-start gap-3">
                 <ToolLogo profile={sp} image={s.featured_image} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-black uppercase tracking-tight text-fg group-hover:text-indigo-600">
+                  <div className="text-sm font-black uppercase tracking-tight text-fg break-words group-hover:text-indigo-600">
                     {toolNameFromTitle(s.title)}
                   </div>
                   <div className="mt-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">
@@ -1293,7 +1293,7 @@ function BottomCta({
             🏆
           </span>
           <div>
-            <h3 className="text-2xl font-black uppercase tracking-tight text-fg">
+            <h3 className="text-2xl font-black uppercase tracking-tight text-fg break-words">
               Redo att testa {toolName}?
             </h3>
             <p className="mt-1 text-sm text-fg-subtle">
@@ -1321,7 +1321,7 @@ function NextPrev({ siblings }: { siblings: ArticleCardData[] }) {
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-fg-subtle">
           Nästa →
         </span>
-        <span className="mt-1 text-sm font-black uppercase tracking-tight text-fg group-hover:text-indigo-600">
+        <span className="mt-1 text-sm font-black uppercase tracking-tight text-fg break-words group-hover:text-indigo-600">
           {toolNameFromTitle(next.title)}
         </span>
       </Link>
@@ -1390,7 +1390,7 @@ function SidebarOffer({
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-indigo-700">
         🎁 Erbjudande
       </div>
-      <div className="mt-2 text-base font-black uppercase tracking-tight text-fg">
+      <div className="mt-2 text-base font-black uppercase tracking-tight text-fg break-words">
         {profile.offer.title}
       </div>
       <div className="mt-3">
@@ -1412,7 +1412,7 @@ function BackToTopplistan({ parentPath }: { parentPath: string }) {
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
         ← Tillbaka
       </div>
-      <div className="mt-1 text-sm font-black uppercase tracking-tight text-fg">
+      <div className="mt-1 text-sm font-black uppercase tracking-tight text-fg break-words">
         Hela topplistan
       </div>
     </Link>
