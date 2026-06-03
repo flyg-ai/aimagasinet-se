@@ -126,7 +126,7 @@ export default async function RootLayout({
 
         <footer className="mt-24 border-t border-zinc-800 bg-zinc-900 text-zinc-100">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
               <div>
                 <div className="mb-4 flex items-center gap-2">
                   <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-sm font-black text-white">
@@ -151,6 +151,19 @@ export default async function RootLayout({
                   <li><Link href="/ai-verktyg" className="text-zinc-300 hover:text-white">AI-Verktyg</Link></li>
                   <li><Link href="/ai-video" className="text-zinc-300 hover:text-white">AI-Video</Link></li>
                   <li><Link href="/ai-guiden" className="text-zinc-300 hover:text-white">AI-Guiden</Link></li>
+                </ul>
+              </nav>
+
+              <nav aria-label="Gratis AI">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                  Gratis
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/ai-verktyg/gratis" className="text-zinc-300 hover:text-white">Gratis AI-verktyg</Link></li>
+                  <li><Link href="/ai-verktyg/gratis/ai-bilder" className="text-zinc-300 hover:text-white">Gratis AI-bilder</Link></li>
+                  <li><Link href="/ai-verktyg/gratis/ai-text" className="text-zinc-300 hover:text-white">Gratis AI-text</Link></li>
+                  <li><Link href="/ai-verktyg/gratis/ai-video" className="text-zinc-300 hover:text-white">Gratis AI-video</Link></li>
+                  <li><Link href="/ai-verktyg/gratis/ai-kod" className="text-zinc-300 hover:text-white">Gratis AI-kod</Link></li>
                 </ul>
               </nav>
 

@@ -91,6 +91,17 @@ const NAV: NavItem[] = [
           { href: '/ai-video/heygen',       label: 'HeyGen' },
         ],
       },
+      {
+        label: 'Gratis',
+        href: '/ai-verktyg/gratis',
+        links: [
+          { href: '/ai-verktyg/gratis',           label: 'Gratis AI-verktyg' },
+          { href: '/ai-verktyg/gratis/ai-bilder', label: 'Gratis AI-bilder' },
+          { href: '/ai-verktyg/gratis/ai-text',   label: 'Gratis AI-text' },
+          { href: '/ai-verktyg/gratis/ai-video',  label: 'Gratis AI-video' },
+          { href: '/ai-verktyg/gratis/ai-kod',    label: 'Gratis AI-kod' },
+        ],
+      },
     ],
     topLink: { href: '/ai-verktyg/jamfor', label: 'Jämför verktyg' },
   },
@@ -378,7 +389,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
           <span aria-hidden>⚔</span> {topLink.label} <span aria-hidden>→</span>
         </Link>
       )}
-      <div className="grid grid-cols-5 gap-6" style={{ minWidth: '60rem' }}>
+      <div className="grid grid-cols-6 gap-6" style={{ minWidth: '60rem' }}>
         {groups.map((g) => (
           <div key={g.href} className="flex flex-col">
             <Link
