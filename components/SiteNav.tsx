@@ -97,9 +97,6 @@ const NAV: NavItem[] = [
   {
     href: '/ai-verktyg/foretag',
     label: 'AI för företag',
-    children: [
-      { href: '/ai-verktyg/foretag/yrke', label: 'AI-Verktyg Efter Yrke' },
-    ],
   },
   {
     href: '/ai-guiden',
@@ -180,7 +177,7 @@ export function SiteNav() {
         <button
           type="button"
           aria-label="Sök"
-          className="rounded-md border border-line p-2 text-fg-subtle transition-colors hover:border-line-strong hover:bg-soft hover:text-accent"
+          className="hidden min-[360px]:inline-flex rounded-md border border-line p-2 text-fg-subtle transition-colors hover:border-line-strong hover:bg-soft hover:text-accent"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="7" />
