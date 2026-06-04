@@ -46,6 +46,7 @@ export default async function CategoryPage({ params }: Props) {
     .select('slug,title,excerpt,featured_image,category,published_at,path')
     .eq('category', params.slug)
     .eq('type', 'post')
+    .not('published_at', 'is', null)
     .order('published_at', { ascending: false });
 
   const list = (articles ?? []) as ArticleCardData[];

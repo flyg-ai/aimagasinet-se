@@ -18,6 +18,7 @@ export async function GET(req: Request) {
     .from('articles')
     .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
     .eq('type', 'post')
+    .not('published_at', 'is', null)
     .order('published_at', { ascending: false })
     .range(offset, offset + limit - 1);
 

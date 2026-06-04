@@ -46,12 +46,14 @@ export default async function HomePage() {
       .from('articles')
       .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
       .eq('type', 'post')
+      .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(INITIAL_TOTAL),
     supabase
       .from('articles')
       .select('slug,title,excerpt,featured_image,category,published_at,path,author_slug')
       .eq('type', 'post')
+      .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(POOL_SIZE),
     fetchAuthorsMap(),

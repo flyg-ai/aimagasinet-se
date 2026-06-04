@@ -50,6 +50,7 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
     .select('slug,title,excerpt,featured_image,category,published_at,path')
     .eq('type', 'post')
     .eq('author_slug', params.slug)
+    .not('published_at', 'is', null)
     .order('published_at', { ascending: false });
 
   const posts: ArticleCardData[] = ((postsRaw ?? []) as ArticleCardData[]).map((a) => ({

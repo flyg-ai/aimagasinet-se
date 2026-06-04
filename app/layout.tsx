@@ -63,6 +63,7 @@ export default async function RootLayout({
     .from('articles')
     .select('slug,title,path')
     .eq('type', 'post')
+    .not('published_at', 'is', null)
     .order('published_at', { ascending: false })
     .limit(8);
 
