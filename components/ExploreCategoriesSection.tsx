@@ -99,9 +99,14 @@ const CARDS: Card[] = [
   { href: '/ai-verktyg/utbildning', title: 'AI för utbildning', icon: GraduationCap, bg: null, fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-800' },
 ];
 
-/** 8 quick-jump cards under the hero. Mobile shows the first 4 with
- *  a "Visa fler kategorier" button that reveals the rest; desktop
- *  (lg+) always shows all 8 in a 4×2 grid. */
+/** Quick-jump category cards under the hero. Desktop (lg+) shows the first
+ *  8 in a 4×2 grid; mobile shows the first 4 in a 2×2 grid. The rest are
+ *  revealed by the "Visa fler kategorier" button.
+ *
+ *  SEO: every card is always rendered in the DOM (server-rendered) — the
+ *  collapsed ones are hidden with the `hidden` CSS class, never unmounted —
+ *  so Google can crawl and index all category links regardless of the toggle
+ *  state. The button only flips a CSS class (no conditional render). */
 export function ExploreCategoriesSection() {
   const [showAll, setShowAll] = useState(false);
 
@@ -115,7 +120,13 @@ export function ExploreCategoriesSection() {
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {CARDS.map((c, i) => {
           const Icon = c.icon;
-          const inHiddenRow = i >= 4;
+          // Visibility buckets — cards always stay in the DOM (good for SEO);
+          // only the display class changes:
+          //   0-3 → always visible (mobile 2×2, part of desktop 4×2)
+          //   4-7 → hidden on mobile until expanded, always visible on lg+
+          //   8+  → hidden on both mobile and desktop until expanded
+          const collapsed =
+            i < 4 ? '' : i < 8 ? (showAll ? '' : 'hidden lg:flex') : showAll ? '' : 'hidden';
           return (
             <Link
               key={c.href}
@@ -123,9 +134,7 @@ export function ExploreCategoriesSection() {
               className={
                 `group relative flex aspect-[4/3] flex-col justify-between overflow-hidden rounded-xl p-5 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl sm:p-6 ${
                   c.bg ? '' : c.fallbackGradient
-                } ` +
-                // Hide rows 5-8 on mobile until expanded; always visible on lg+.
-                (inHiddenRow && !showAll ? 'hidden lg:flex' : 'flex')
+                } ${collapsed}`
               }
             >
               {c.bg && (
@@ -166,10 +175,11 @@ export function ExploreCategoriesSection() {
         })}
       </div>
 
-      {/* Mobile-only expand toggle — lg+ never sees this. */}
-      <div className="mt-5 flex justify-center lg:hidden">
+      {/* Expand toggle — collapses to 8 cards on desktop / 4 on mobile. */}
+      <div className="mt-5 flex justify-center">
         <button
           type="button"
+          aria-expanded={showAll}
           onClick={() => setShowAll((v) => !v)}
           className="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-fg-muted shadow-sm transition-colors hover:border-indigo-300 hover:text-indigo-700"
         >
