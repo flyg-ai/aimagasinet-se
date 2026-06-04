@@ -236,7 +236,7 @@ const CATEGORIES: {
     title: 'AI-assistenter',
     description: 'ChatGPT, Claude, Gemini, Perplexity — bästa AI-chatbotarna jämförda.',
     icon: '💬',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-assistenter-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
   },
   {
@@ -244,7 +244,7 @@ const CATEGORIES: {
     title: 'AI-röst & tal',
     description: 'ElevenLabs, Murf, Speechify — text till tal och röstsyntes på svenska.',
     icon: '🗣️',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-rost-tal-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-rose-500 to-pink-700',
   },
   {
@@ -252,7 +252,7 @@ const CATEGORIES: {
     title: 'Podcast & ljudredigering',
     description: 'Descript, Adobe Podcast, Riverside — spela in och redigera med AI.',
     icon: '🎧',
-    bg: null,
+    bg: `${KATEGORI_BG}/podcast-ljudredigering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-violet-600 to-purple-800',
   },
   {
@@ -260,7 +260,7 @@ const CATEGORIES: {
     title: 'AI-produktivitet',
     description: 'Notion, Reclaim, Motion — tidsplanering, anteckningar och fokus.',
     icon: '⚡',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-produktivitet-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
   },
   {
@@ -268,7 +268,7 @@ const CATEGORIES: {
     title: 'AI e-postmarknadsföring',
     description: 'Mailchimp, Klaviyo, Instantly — skriv och optimera kampanjer med AI.',
     icon: '✉️',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-epostmarknadsforing-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-700',
   },
   {
@@ -276,7 +276,7 @@ const CATEGORIES: {
     title: 'AI-CRM',
     description: 'Salesforce, HubSpot, Pipedrive — AI för leads och kundrelationer.',
     icon: '🤝',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-crm-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-700',
   },
   {
@@ -284,7 +284,7 @@ const CATEGORIES: {
     title: 'AI-dataanalys',
     description: 'Power BI, Tableau, Julius — analysera data och bygg rapporter med AI.',
     icon: '📊',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-dataanalys-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
   },
   {
@@ -292,7 +292,7 @@ const CATEGORIES: {
     title: 'AI för utbildning',
     description: 'Khan Academy, Duolingo, Quizlet — AI för lärare och elever.',
     icon: '🎓',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-utbildning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-700',
   },
 ];
