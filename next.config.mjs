@@ -21,6 +21,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      {
+        // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
+        // startup-artikeln.
+        source: '/svenska-ai-foretag-2026',
+        destination: '/svenska-ai-startups-2026',
+        statusCode: 301,
+      },
       // ── Gamla WordPress-URL:er som Google Search Console rapporterar
       //    som 404. 301 forwards link equity / rensar crawl-felen. ──
       {
