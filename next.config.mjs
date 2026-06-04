@@ -1,6 +1,7 @@
 import { yrkesRedirects } from './redirects.generated.mjs';
 import { designerFotografRedirects } from './redirects-designer-fotograf.mjs';
 import { flattenRedirects } from './redirects.flatten.generated.mjs';
+import { dedupRedirects } from './redirects.dedup.generated.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -107,6 +108,9 @@ const nextConfig = {
       // Review-flattening: gamla /ai-verktyg/<kategori>/<slug> → flata
       // /ai-verktyg/<slug> (auto-genererad, se scripts/flatten-reviews.ts).
       ...flattenRedirects,
+      // Dubblett-sammanslagning: raderade varianter → kanonisk /ai-verktyg/<slug>
+      // (auto-genererad, se scripts/merge-duplicates.ts).
+      ...dedupRedirects,
     ];
   },
 };

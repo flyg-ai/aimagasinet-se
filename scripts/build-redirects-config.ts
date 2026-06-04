@@ -7,6 +7,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { flattenRedirects } from '../redirects.flatten.generated.mjs';
+import { dedupRedirects } from '../redirects.dedup.generated.mjs';
 
 type R = { from: string; to: string };
 
@@ -39,10 +40,18 @@ for (const r of all) {
 }
 
 // Kollapsa 301-kedjor: destinationer som pekar på en flatten-källa (gammal
-// nästlad review-path) byts mot det flata målet, så vi får ett hopp inte två.
-// Se scripts/flatten-reviews.ts / collapse-redirect-chains.ts.
-const flat = new Map(flattenRedirects.map((r) => [r.source, r.destination]));
-for (const r of out) { const d = flat.get(r.destination); if (d) r.destination = d; }
+// nästlad review-path) eller en raderad dubblett-variant resolvas transitivt
+// till sitt slutliga mål, så vi får ett hopp inte flera.
+// Se scripts/flatten-reviews.ts / merge-duplicates.ts / collapse-redirect-chains.ts.
+const map = new Map([
+  ...flattenRedirects.map((r) => [r.source, r.destination]),
+  ...dedupRedirects.map((r) => [r.source, r.destination]),
+]);
+for (const r of out) {
+  let cur = r.destination;
+  for (let i = 0; i < 10; i++) { const n = map.get(cur); if (!n || n === cur) break; cur = n; }
+  r.destination = cur;
+}
 
 writeFileSync(resolve('redirects.generated.mjs'),
   `// AUTO-GENERERAD av scripts/build-redirects-config.ts — redigera inte för hand.\n` +

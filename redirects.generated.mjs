@@ -259,17 +259,17 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/kundservice/chatbot/tidio-chatbot",
-    "destination": "/ai-verktyg/tidio-2",
+    "destination": "/ai-verktyg/tidio",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/kundservice/epost-svar/tidio-epost",
-    "destination": "/ai-verktyg/tidio-2",
+    "destination": "/ai-verktyg/tidio",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/kundservice/rost-ai/tidio-rost",
-    "destination": "/ai-verktyg/tidio-2",
+    "destination": "/ai-verktyg/tidio",
     "statusCode": 301
   },
   {
@@ -614,7 +614,7 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting/claude-content",
-    "destination": "/ai-verktyg/claude-content",
+    "destination": "/ai-verktyg/claude",
     "statusCode": 301
   },
   {
@@ -624,12 +624,12 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting/copy-ai-content",
-    "destination": "/ai-verktyg/copy-ai-content",
+    "destination": "/ai-verktyg/copy-ai",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting/writesonic-content",
-    "destination": "/ai-verktyg/writesonic-content",
+    "destination": "/ai-verktyg/writesonic",
     "statusCode": 301
   },
   {
@@ -749,22 +749,22 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/seo/chatgpt-seo",
-    "destination": "/ai-verktyg/chatgpt-marknadsforing",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting/chatgpt-content",
-    "destination": "/ai-verktyg/chatgpt-marknadsforing",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/annonser/chatgpt-ads",
-    "destination": "/ai-verktyg/chatgpt-marknadsforing",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/sociala-medier/chatgpt-social",
-    "destination": "/ai-verktyg/chatgpt-marknadsforing",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {

@@ -159,7 +159,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/kundservice/tidio-2",
-    "destination": "/ai-verktyg/tidio-2",
+    "destination": "/ai-verktyg/tidio",
     "statusCode": 301
   },
   {
@@ -379,7 +379,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/crm/salesforce-einstein-crm",
-    "destination": "/ai-verktyg/salesforce-einstein-crm",
+    "destination": "/ai-verktyg/salesforce-einstein",
     "statusCode": 301
   },
   {
@@ -394,7 +394,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/crm/hubspot-ai-crm",
-    "destination": "/ai-verktyg/hubspot-ai-crm",
+    "destination": "/ai-verktyg/hubspot-ai",
     "statusCode": 301
   },
   {
@@ -409,7 +409,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/marknadsforing/copy-ai-content",
-    "destination": "/ai-verktyg/copy-ai-content",
+    "destination": "/ai-verktyg/copy-ai",
     "statusCode": 301
   },
   {
@@ -494,12 +494,12 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/hootsuite-ai-sociala-medier",
-    "destination": "/ai-verktyg/hootsuite-ai-sociala-medier",
+    "destination": "/ai-verktyg/hootsuite-ai",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/sociala-medier/taplio-sociala-medier",
-    "destination": "/ai-verktyg/taplio-sociala-medier",
+    "destination": "/ai-verktyg/taplio",
     "statusCode": 301
   },
   {
@@ -514,7 +514,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/ocoya-sociala-medier",
-    "destination": "/ai-verktyg/ocoya-sociala-medier",
+    "destination": "/ai-verktyg/ocoya",
     "statusCode": 301
   },
   {
@@ -524,7 +524,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/postwise-sociala-medier",
-    "destination": "/ai-verktyg/postwise-sociala-medier",
+    "destination": "/ai-verktyg/postwise",
     "statusCode": 301
   },
   {
@@ -534,7 +534,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/projektledning/notion-ai-projektledning",
-    "destination": "/ai-verktyg/notion-ai-projektledning",
+    "destination": "/ai-verktyg/notion-ai",
     "statusCode": 301
   },
   {
@@ -554,7 +554,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/marknadsforing/chatgpt-marknadsforing",
-    "destination": "/ai-verktyg/chatgpt-marknadsforing",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {
@@ -619,7 +619,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/dokumenthantering/notion-ai-dokumenthantering",
-    "destination": "/ai-verktyg/notion-ai-dokumenthantering",
+    "destination": "/ai-verktyg/notion-ai",
     "statusCode": 301
   },
   {
@@ -709,7 +709,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/presentationer/canva-ai-presentationer",
-    "destination": "/ai-verktyg/canva-ai-presentationer",
+    "destination": "/ai-verktyg/canva-ai",
     "statusCode": 301
   },
   {
@@ -724,7 +724,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/marknadsforing/writesonic-content",
-    "destination": "/ai-verktyg/writesonic-content",
+    "destination": "/ai-verktyg/writesonic",
     "statusCode": 301
   },
   {
@@ -769,7 +769,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/buffer-ai-sociala-medier",
-    "destination": "/ai-verktyg/buffer-ai-sociala-medier",
+    "destination": "/ai-verktyg/buffer-ai",
     "statusCode": 301
   },
   {
@@ -784,7 +784,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/marknadsforing/claude-content",
-    "destination": "/ai-verktyg/claude-content",
+    "destination": "/ai-verktyg/claude",
     "statusCode": 301
   },
   {
@@ -799,7 +799,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/presentationer/gamma-presentationer",
-    "destination": "/ai-verktyg/gamma-presentationer",
+    "destination": "/ai-verktyg/gamma",
     "statusCode": 301
   },
   {
@@ -889,7 +889,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/predis-ai-sociala-medier",
-    "destination": "/ai-verktyg/predis-ai-sociala-medier",
+    "destination": "/ai-verktyg/predis-ai",
     "statusCode": 301
   },
   {
@@ -1024,7 +1024,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/oversattning/chatgpt-oversattning",
-    "destination": "/ai-verktyg/chatgpt-oversattning",
+    "destination": "/ai-verktyg/chatgpt",
     "statusCode": 301
   },
   {
@@ -1069,7 +1069,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/oversattning/claude-oversattning",
-    "destination": "/ai-verktyg/claude-oversattning",
+    "destination": "/ai-verktyg/claude",
     "statusCode": 301
   },
   {
