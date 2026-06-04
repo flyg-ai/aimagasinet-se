@@ -3,8 +3,8 @@
  * featured-images/kategorier/. HubTemplate renderar då bakgrundsbild-heron
  * (se generaliseringen i components/templates/HubTemplate.tsx).
  *
- * Hubbar utan matchande bild (t.ex. ai-assistenter, dataanalys …) lämnas med
- * null → gradient-hero, tills en bild finns.
+ * Hubbar utan matchande bild lämnas med null → gradient-hero, tills en bild
+ * finns (t.ex. marknadsforing, ekonomi, juridik som saknar kategoribild).
  *
  *   npx tsx scripts/set-hub-hero-images.ts
  *
@@ -36,6 +36,15 @@ const MAP: Record<string, string> = {
   '/ai-verktyg/e-handel': 'ai-ehandel-kategori.webp',
   '/ai-verktyg/oversattning': 'ai-oversattning-kategori.webp',
   '/ai-verktyg/dokumenthantering': 'ai-dokumenthantering-kategori.webp',
+  // Batch-3-hubbar (uppladdade av scripts/upload-kategori-images-3.ts).
+  '/ai-verktyg/ai-assistenter': 'ai-assistenter-kategori.webp',
+  '/ai-verktyg/rost-och-tal': 'ai-rost-tal-kategori.webp',
+  '/ai-verktyg/podcast-ljudredigering': 'podcast-ljudredigering-kategori.webp',
+  '/ai-verktyg/produktivitet': 'ai-produktivitet-kategori.webp',
+  '/ai-verktyg/e-postmarknadsforing': 'ai-epostmarknadsforing-kategori.webp',
+  '/ai-verktyg/crm': 'ai-crm-kategori.webp',
+  '/ai-verktyg/dataanalys': 'ai-dataanalys-kategori.webp',
+  '/ai-verktyg/utbildning': 'ai-utbildning-kategori.webp',
 };
 
 async function main() {
