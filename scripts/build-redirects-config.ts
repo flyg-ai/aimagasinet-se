@@ -43,9 +43,9 @@ for (const r of all) {
 // nästlad review-path) eller en raderad dubblett-variant resolvas transitivt
 // till sitt slutliga mål, så vi får ett hopp inte flera.
 // Se scripts/flatten-reviews.ts / merge-duplicates.ts / collapse-redirect-chains.ts.
-const map = new Map([
-  ...flattenRedirects.map((r) => [r.source, r.destination]),
-  ...dedupRedirects.map((r) => [r.source, r.destination]),
+const map = new Map<string, string>([
+  ...flattenRedirects.map((r) => [r.source, r.destination] as [string, string]),
+  ...dedupRedirects.map((r) => [r.source, r.destination] as [string, string]),
 ]);
 for (const r of out) {
   let cur = r.destination;
