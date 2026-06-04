@@ -10,6 +10,8 @@ import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
+import { buildToc, type TocItem } from '@/lib/toc';
+import { Toc } from '@/components/Toc';
 
 /* ─── Types ────────────────────────────────────────────────────── */
 
@@ -830,6 +832,12 @@ export function ReviewTemplate({
     : null;
   const allLd = breadcrumbLd ? [reviewLd, breadcrumbLd] : reviewLd;
 
+  // Table of contents: inject anchor ids into the body H2/H3 and collect items
+  // for the sticky desktop sidebar + the mobile collapsible TOC.
+  const toc = a.content_mdx
+    ? buildToc(sanitizeWpHtml(a.content_mdx))
+    : { html: '', items: [] as TocItem[] };
+
   return (
     <article className="bg-muted text-fg">
       <script
@@ -858,13 +866,14 @@ export function ReviewTemplate({
             <RatingMatrixSection profile={profile} />
             <ProsCons profile={profile} />
             <UseCases toolName={toolName} profile={profile} />
-            <Djupanalys toolName={toolName} content={a.content_mdx} />
+            <Djupanalys toolName={toolName} html={toc.html} items={toc.items} />
             <Alternatives siblings={siblings} parentPath={parentPathOf(a.path)} />
             <BottomCta toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
             <NextPrev siblings={siblings} />
           </main>
 
           <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
+            <Toc items={toc.items} variant="sidebar" />
             <Snabbfakta profile={profile} />
             <SidebarOffer toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
             <BackToTopplistan parentPath={parentPathOf(a.path)} />
@@ -1170,8 +1179,7 @@ function UseCases({ toolName, profile }: { toolName: string; profile: ReviewProf
 
 /* ─── Djupanalys (content_mdx) ────────────────────────────────── */
 
-function Djupanalys({ toolName, content }: { toolName: string; content: string | null }) {
-  const html = content ? sanitizeWpHtml(content) : '';
+function Djupanalys({ toolName, html, items }: { toolName: string; html: string; items: TocItem[] }) {
   if (!html.trim()) return null;
   return (
     <section className="mt-12">
@@ -1179,10 +1187,15 @@ function Djupanalys({ toolName, content }: { toolName: string; content: string |
       <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
         Allt om {toolName}
       </h3>
+      {/* Mobile collapsible TOC (the sticky desktop one lives in the aside). */}
+      <div className="mt-6">
+        <Toc items={items} variant="mobile" />
+      </div>
       <div className="magazine-prose mt-6">
         <div
           className="
             prose prose-lg max-w-none
+            prose-headings:scroll-mt-24
             prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-3 sm:prose-h2:text-2xl
             prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-lg

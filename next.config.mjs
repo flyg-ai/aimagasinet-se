@@ -15,6 +15,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'aimagasinet.se' },
       // Supabase Storage — destination for migrated/new images.
       { protocol: 'https', hostname: '**.supabase.co' },
+      // Unsplash — omslagsbilder från den nattliga artikel-genereringen.
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
   async redirects() {
