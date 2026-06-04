@@ -35,7 +35,7 @@ const nextConfig = {
       {
         // Kod-hubben bytte slug ai-kod → ai-kod-verktyg.
         source: '/ai-verktyg/ai-kod/github-copilot',
-        destination: '/ai-verktyg/ai-kod-verktyg/github-copilot',
+        destination: '/ai-verktyg/github-copilot',
         statusCode: 301,
       },
       {
@@ -58,7 +58,7 @@ const nextConfig = {
       },
       {
         source: '/ai-verktyg/ai-text-verktyg/claude-3-5-sonnet',
-        destination: '/ai-verktyg/ai-text-verktyg/claude',
+        destination: '/ai-verktyg/claude',
         statusCode: 301,
       },
       // Video tools moved from /ai-verktyg/ai-video-verktyg/* to /ai-video/*

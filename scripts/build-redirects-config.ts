@@ -6,6 +6,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { flattenRedirects } from '../redirects.flatten.generated.mjs';
 
 type R = { from: string; to: string };
 
@@ -36,6 +37,12 @@ for (const r of all) {
   seen.add(r.from);
   out.push({ source: r.from, destination: r.to, statusCode: 301 });
 }
+
+// Kollapsa 301-kedjor: destinationer som pekar på en flatten-källa (gammal
+// nästlad review-path) byts mot det flata målet, så vi får ett hopp inte två.
+// Se scripts/flatten-reviews.ts / collapse-redirect-chains.ts.
+const flat = new Map(flattenRedirects.map((r) => [r.source, r.destination]));
+for (const r of out) { const d = flat.get(r.destination); if (d) r.destination = d; }
 
 writeFileSync(resolve('redirects.generated.mjs'),
   `// AUTO-GENERERAD av scripts/build-redirects-config.ts — redigera inte för hand.\n` +
