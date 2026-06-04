@@ -21,6 +21,7 @@ import {
   getYrkesRollSpec,
   isYrkesRollSlug,
 } from '@/components/templates/YrkesRollTemplate';
+import { GratisHubTemplate } from '@/components/templates/GratisHubTemplate';
 import { AboutTemplate } from '@/components/templates/AboutTemplate';
 import { ContactTemplate } from '@/components/templates/ContactTemplate';
 import { GuideHubTemplate } from '@/components/templates/GuideHubTemplate';
@@ -211,6 +212,7 @@ type Kind =
   | 'foretagHub'
   | 'yrkesHub'
   | 'yrkesRoll'
+  | 'gratisHub'
   | 'hub'
   | 'review'
   | 'standalone'
@@ -275,10 +277,10 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
     return { kind: 'article', reason: '/ai-verktyg/foretag fallback' };
   }
 
-  // /ai-verktyg/gratis — hub med topplista över gratis-tier AI-verktyg
-  // (virtual children definierade i HubTemplate.VIRTUAL_HUB_CHILDREN.gratis).
+  // /ai-verktyg/gratis — navigeringshub (subkategori-grid + top-5 + guide),
+  // egen template GratisHubTemplate.
   if (path === '/ai-verktyg/gratis') {
-    return { kind: 'hub', reason: '/ai-verktyg/gratis hub' };
+    return { kind: 'gratisHub', reason: '/ai-verktyg/gratis nav-hub' };
   }
   // Eventuella sub-paths under /ai-verktyg/gratis/ behåller artikelmallen.
   if (path.startsWith('/ai-verktyg/gratis/')) {
@@ -436,6 +438,10 @@ export default async function CatchAllPage({ params }: Props) {
   if (decision.kind === 'yrkesRoll') {
     const spec = getYrkesRollSpec(a.slug)!;
     return <YrkesRollTemplate article={a} spec={spec} />;
+  }
+
+  if (decision.kind === 'gratisHub') {
+    return <GratisHubTemplate article={a} />;
   }
 
 
