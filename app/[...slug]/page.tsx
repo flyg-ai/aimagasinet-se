@@ -98,6 +98,37 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'pleo-ai',
     'billogram-ai', 'wint-ai', 'fortnox-redovisning', 'xero-ai', 'quickbooks-ai',
   ],
+
+  // ── Kategori-hubbar (batch 3): blandar nya recensioner med befintliga
+  //    flata reviews (ChatGPT, Claude … skapas inte om). Se seed-category-hubs-3.ts.
+  '/ai-verktyg/ai-assistenter': [
+    'chatgpt', 'claude', 'gemini', 'perplexity', 'microsoft-copilot',
+    'meta-ai', 'mistral-le-chat', 'deepseek', 'grok', 'pi-ai',
+  ],
+  '/ai-verktyg/rost-och-tal': [
+    'elevenlabs', 'murf-ai', 'speechify', 'play-ht', 'resemble-ai',
+    'wellsaid-labs', 'lovo-ai', 'voicemaker', 'replica-studios', 'amazon-polly',
+  ],
+  '/ai-verktyg/podcast-ljudredigering': [
+    'descript', 'adobe-podcast', 'riverside-fm', 'cleanvoice-ai', 'auphonic',
+    'podcastle', 'alitu', 'headliner', 'buzzsprout-ai', 'otter-ai',
+  ],
+  '/ai-verktyg/produktivitet': [
+    'notion-ai', 'obsidian-ai', 'mem-ai', 'reclaim-ai', 'todoist-ai',
+    'sunsama', 'motion', 'akiflow', 'cron', 'reflect',
+  ],
+  '/ai-verktyg/e-postmarknadsforing': [
+    'mailchimp-ai', 'klaviyo-ai', 'activecampaign-ai', 'brevo-ai', 'hubspot-email',
+    'instantly-ai', 'lemlist', 'smartlead', 'lavender', 'warmer-ai',
+  ],
+  '/ai-verktyg/dataanalys': [
+    'tableau-ai', 'power-bi-copilot', 'looker-ai', 'julius-ai', 'obviously-ai',
+    'datarobot', 'h2o-ai', 'akkio', 'polymer', 'rows-ai',
+  ],
+  '/ai-verktyg/utbildning': [
+    'khan-academy-ai', 'duolingo-ai', 'coursera-ai', 'synthesis-ai', 'khanmigo',
+    'quizlet-ai', 'socratic', 'photomath-ai', 'grammarly', 'turnitin-ai',
+  ],
 };
 
 /* Depth-3 subcategory hubs that classify() must treat as 'hub' rather than

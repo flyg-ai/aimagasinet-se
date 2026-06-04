@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
 import { resolveToolProfile, toolOverallScore } from '@/components/templates/ReviewTemplate';
+import { MasterHubCategorySearch } from '@/components/MasterHubCategorySearch';
 
 /** Master hub for /ai-verktyg — lands users at a curated category grid that
  *  fans out to all sub-hubs. The article's content_mdx still renders below
@@ -343,52 +344,9 @@ function CategoryGrid() {
         </span>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className={`group relative flex aspect-[16/10] flex-col justify-between overflow-hidden rounded-xl p-6 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl ${
-              c.bg ? '' : c.fallbackGradient
-            }`}
-          >
-            {c.bg && (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={c.bg}
-                  alt=""
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-black/50 transition-colors group-hover:bg-black/40"
-                />
-              </>
-            )}
-
-            <div className="relative flex items-center gap-3">
-              <span
-                aria-hidden
-                className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 text-2xl backdrop-blur-sm"
-              >
-                {c.icon}
-              </span>
-              <h3 className="text-xl font-black uppercase tracking-tight text-white break-words">
-                {c.title}
-              </h3>
-            </div>
-
-            <div className="relative">
-              <p className="line-clamp-2 text-sm leading-relaxed text-white/90">{c.description}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
-                Utforska <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* Sökfält + live-filtrerade kort (klient-side; alla kort stannar i DOM
+          för SEO, icke-träffar döljs bara med CSS). */}
+      <MasterHubCategorySearch categories={CATEGORIES} />
     </section>
   );
 }

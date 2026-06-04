@@ -8,6 +8,7 @@ import { YRKES_HUB_REVIEW_KNOWN } from '@/lib/yrkes-hub-tools';
 import { YRKES_HUB_REVIEW_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
 import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
+import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { buildToc, type TocItem } from '@/lib/toc';
@@ -91,6 +92,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* CRM-hubbens 10 verktyg (Salesforce Einstein, HubSpot, Pipedrive, …) —
    * genererade i lib/crm-tools.ts av scripts/seed-crm-hub.ts. */
   ...CRM_REVIEW_KNOWN,
+
+  /* Kategori-hubbar batch 3 (assistenter, röst & tal, podcast, produktivitet,
+   * e-post, dataanalys, utbildning) — genererade i lib/category-hub-tools-3.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_3,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
