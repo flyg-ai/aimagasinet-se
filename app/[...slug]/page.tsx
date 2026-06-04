@@ -26,6 +26,7 @@ import { AboutTemplate } from '@/components/templates/AboutTemplate';
 import { ContactTemplate } from '@/components/templates/ContactTemplate';
 import { GuideHubTemplate } from '@/components/templates/GuideHubTemplate';
 import { parseRating, toolNameFromTitle } from '@/lib/rating';
+import { categoryLabel } from '@/components/CategoryBadge';
 import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 
 export const revalidate = 300;
@@ -233,6 +234,23 @@ async function getSiblings(parentSlug: string | null, excludeSlug: string) {
   return await selectCards({ parentSlug, excludeSlug });
 }
 
+/** Same-category published posts for the ArticleTemplate sidebar
+ *  ("Relaterade artiklar"). Excludes the current article. */
+async function getRelated(category: string | null, excludeSlug: string): Promise<ArticleCardData[]> {
+  if (!category) return [];
+  const { data, error } = await supabase
+    .from('articles')
+    .select(CARD_COLS)
+    .eq('category', category)
+    .eq('type', 'post')
+    .neq('slug', excludeSlug)
+    .not('published_at', 'is', null)
+    .order('published_at', { ascending: false })
+    .limit(6);
+  if (error) { console.error('[getRelated] supabase error:', error.message); return []; }
+  return (data ?? []) as unknown as ArticleCardData[];
+}
+
 /* ── Route classification ──────────────────────────────────────
    Pages are mapped to templates by URL section + depth + children.
    Specific-path handlers run first, then section rules, then a depth
@@ -387,6 +405,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // always emit an image — featured_image when set, brand icon otherwise.
   const ogImage = a.featured_image ?? '/apple-icon.png';
 
+  // Google News: news_keywords = kategori + taggar (endast för nyhetsinlägg).
+  const newsKeywords =
+    a.type === 'post'
+      ? [a.category ? categoryLabel(a.category) : null, ...(a.tags ?? [])]
+          .filter(Boolean)
+          .join(', ')
+      : '';
+
   return {
     title,
     description,
@@ -399,7 +425,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: 'article',
       url: canonicalPath,
+      siteName: 'AI-Magasinet',
+      locale: 'sv_SE',
       publishedTime: a.published_at || undefined,
+      modifiedTime: a.updated_at || a.published_at || undefined,
+      section: a.category ? categoryLabel(a.category) : undefined,
+      tags: a.tags ?? undefined,
       images: [{ url: ogImage }],
     },
     twitter: {
@@ -408,6 +439,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: [ogImage],
     },
+    ...(newsKeywords ? { other: { news_keywords: newsKeywords } } : {}),
   };
 }
 
@@ -509,9 +541,10 @@ export default async function CatchAllPage({ params }: Props) {
     return <StandalonePageTemplate article={a} related={related} />;
   }
 
-  const [children, author] = await Promise.all([
+  const [children, author, related] = await Promise.all([
     getChildren(a.slug),
     a.author_slug ? fetchAuthor(a.author_slug) : Promise.resolve(null),
+    getRelated(a.category, a.slug),
   ]);
-  return <ArticleTemplate article={a} items={children} author={author} />;
+  return <ArticleTemplate article={a} items={children} author={author} related={related} />;
 }

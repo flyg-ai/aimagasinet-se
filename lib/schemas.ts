@@ -66,11 +66,20 @@ type Article = {
   published_at: string | null;
   updated_at?: string | null;
   category?: string | null;
+  /** Optional extra keywords (e.g. tags) for keywords/news_keywords. */
+  keywords?: string[];
 };
 
 type AuthorRef = { slug: string; name: string; bio: string | null; avatar_url: string | null };
 
-export function articleSchema(a: Article, author?: AuthorRef | null) {
+/** Shared Article/NewsArticle node. `type` switches @type; `speakable` adds a
+ *  SpeakableSpecification for voice/AI assistants (targets the H1 + lead). */
+function articleNode(
+  type: 'Article' | 'NewsArticle',
+  a: Article,
+  author?: AuthorRef | null,
+  opts?: { speakable?: boolean },
+) {
   const url = absolute(a.path);
   const authorNode = author
     ? {
@@ -82,17 +91,19 @@ export function articleSchema(a: Article, author?: AuthorRef | null) {
         ...(author.bio ? { description: author.bio } : {}),
       }
     : { '@type': 'Organization', name: SITE_NAME, url: `${SITE_URL}/` };
+  const keywords = (a.keywords ?? []).filter(Boolean);
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': type,
     headline: a.title,
     description: a.excerpt ?? undefined,
+    articleBody: a.excerpt ?? undefined,
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
     inLanguage: 'sv-SE',
     datePublished: a.published_at ?? undefined,
     dateModified: a.updated_at ?? a.published_at ?? undefined,
-    image: a.featured_image ?? undefined,
+    image: a.featured_image ? [a.featured_image] : undefined,
     author: authorNode,
     publisher: {
       '@type': 'Organization',
@@ -101,7 +112,27 @@ export function articleSchema(a: Article, author?: AuthorRef | null) {
       logo: { '@type': 'ImageObject', url: LOGO_URL },
     },
     ...(a.category ? { articleSection: a.category } : {}),
+    ...(keywords.length ? { keywords: keywords.join(', ') } : {}),
+    ...(opts?.speakable
+      ? {
+          speakable: {
+            '@type': 'SpeakableSpecification',
+            cssSelector: ['h1', '.article-lead'],
+          },
+        }
+      : {}),
   };
+}
+
+/** schema.org Article. */
+export function articleSchema(a: Article, author?: AuthorRef | null) {
+  return articleNode('Article', a, author);
+}
+
+/** schema.org NewsArticle (Google News-kompatibel) med Speakable för
+ *  röst-/AI-assistenter. */
+export function newsArticleSchema(a: Article, author?: AuthorRef | null) {
+  return articleNode('NewsArticle', a, author, { speakable: true });
 }
 
 type Crumb = { label: string; href?: string };
