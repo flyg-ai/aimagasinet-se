@@ -1108,6 +1108,63 @@ function Hero({
   updatedYear: number;
   facts: HubFacts;
 }) {
+  // ── Designexperiment: bakgrundsbild-hjälte ENDAST för ai-kod-verktyg
+  //    (kräver featured_image). Alla andra hubbar = oförändrad hero nedan. ──
+  if (a.slug === 'ai-kod-verktyg' && a.featured_image) {
+    return (
+      <header className="relative overflow-hidden border-b border-line bg-slate-900">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={a.featured_image}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.35]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, rgba(15,23,42,0.95) 40%, rgba(15,23,42,0.3) 100%)' }}
+        />
+        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
+          {/* Breadcrumb */}
+          <nav aria-label="Brödsmulor" className="mb-8 font-mono text-[11px] font-semibold uppercase tracking-wider text-white/55">
+            {crumbs.map((c, i) => (
+              <span key={c.href}>
+                {i > 0 && <span className="mx-2 text-white/30">›</span>}
+                {i === crumbs.length - 1 ? (
+                  <span className="text-white/80">{c.label}</span>
+                ) : (
+                  <Link href={c.href} className="hover:text-white">{c.label}</Link>
+                )}
+              </span>
+            ))}
+          </nav>
+
+          {/* Indigo badge med kategorinamn ovan H1 */}
+          <span className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+            <span aria-hidden>✦</span> AI-kod
+          </span>
+
+          <h1 className="mt-6 max-w-3xl text-balance break-words text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-4xl md:text-5xl">
+            {a.title}
+          </h1>
+
+          {a.excerpt && (
+            <p className="mt-6 max-w-2xl text-balance text-lg leading-relaxed text-white/85">
+              {a.excerpt}
+            </p>
+          )}
+
+          {toolsCount > 0 && (
+            <div className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-wider text-white/55">
+              {toolsCount} verktyg testade
+            </div>
+          )}
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-muted">
       <div className="mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-12">
