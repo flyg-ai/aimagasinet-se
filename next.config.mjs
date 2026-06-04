@@ -1,5 +1,6 @@
 import { yrkesRedirects } from './redirects.generated.mjs';
 import { designerFotografRedirects } from './redirects-designer-fotograf.mjs';
+import { flattenRedirects } from './redirects.flatten.generated.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -103,6 +104,9 @@ const nextConfig = {
       // Designer/fotograf-video-uppstädning: dubbletter → kanonisk, orphans
       // flyttade till kategori-hub, tomma topplista-hubbar → kategori-hub.
       ...designerFotografRedirects,
+      // Review-flattening: gamla /ai-verktyg/<kategori>/<slug> → flata
+      // /ai-verktyg/<slug> (auto-genererad, se scripts/flatten-reviews.ts).
+      ...flattenRedirects,
     ];
   },
 };

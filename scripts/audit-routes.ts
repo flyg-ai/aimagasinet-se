@@ -25,7 +25,7 @@ type Row = { slug: string; title: string; type: 'post' | 'page'; path: string; p
 type Kind =
   | 'masterHub' | 'foretagHub' | 'yrkesHub' | 'yrkesRoll' | 'hub' | 'review'
   | 'standalone' | 'about' | 'contact' | 'guideHub' | 'article';
-function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): Kind {
+function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string, parentSlug: string | null): Kind {
   if (articleType === 'post') return 'article';
   if (path === '/om-oss') return 'about';
   if (path === '/kontakt') return 'contact';
@@ -43,7 +43,10 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
   if (path === '/ai-verktyg/gratis' || path.startsWith('/ai-verktyg/gratis/')) return 'article';
   if (path === '/ai-video') return 'hub';
   if (path.startsWith('/ai-video/') && depth === 2) return 'review';
-  if (path.startsWith('/ai-verktyg/') && depth === 2) return 'hub';
+  if (path.startsWith('/ai-verktyg/') && depth === 2) {
+    // Flattened reviews keep their category parent_slug; hubs are parented to 'ai-verktyg'.
+    return parentSlug && parentSlug !== 'ai-verktyg' ? 'review' : 'hub';
+  }
   if (path.startsWith('/ai-verktyg/') && depth >= 3) return 'review';
   if (depth === 1 && isStandaloneSlug(slug)) return 'standalone';
   return 'article';
@@ -99,7 +102,7 @@ async function main() {
 
   for (const r of rows) {
     const depth = r.path.split('/').filter(Boolean).length;
-    const kind = classify(r.path, depth, r.type, r.slug);
+    const kind = classify(r.path, depth, r.type, r.slug, r.parent_slug);
     const code = status[r.path];
     const key = `${kind}:${code}`;
     (buckets[key] ??= []).push(r);
@@ -124,7 +127,7 @@ async function main() {
   // Detail: depth-1 pages that classify as article (these are the "fell to ArticleTemplate" candidates)
   const depth1Articles = rows.filter((r) => {
     const depth = r.path.split('/').filter(Boolean).length;
-    return depth === 1 && r.type === 'page' && classify(r.path, depth, r.type, r.slug) === 'article';
+    return depth === 1 && r.type === 'page' && classify(r.path, depth, r.type, r.slug, r.parent_slug) === 'article';
   });
   console.log(`\n=== depth-1 page-articles → ArticleTemplate (${depth1Articles.length}) ===`);
   depth1Articles.forEach((r) => console.log(`  ${r.path}`));
@@ -134,7 +137,7 @@ async function main() {
   console.log(`\n=== depth >= 4 pages (${deep.length}) ===`);
   deep.forEach((r) => {
     const depth = r.path.split('/').filter(Boolean).length;
-    const kind = classify(r.path, depth, r.type, r.slug);
+    const kind = classify(r.path, depth, r.type, r.slug, r.parent_slug);
     console.log(`  d=${depth} ${kind.padEnd(10)} ${status[r.path]} ${r.path}`);
   });
 }

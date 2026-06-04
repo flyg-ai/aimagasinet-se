@@ -219,7 +219,7 @@ type Kind =
   | 'guideHub'
   | 'article';
 
-function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string): {
+function classify(path: string, depth: number, articleType: 'post' | 'page', slug: string, parentSlug: string | null): {
   kind: Kind;
   reason: string;
 } {
@@ -295,6 +295,13 @@ function classify(path: string, depth: number, articleType: 'post' | 'page', slu
 
   // /ai-verktyg/[kategori] depth 2 → hub
   if (path.startsWith('/ai-verktyg/') && depth === 2) {
+    // After review-flattening, depth-2 under /ai-verktyg holds BOTH the category
+    // hubs (parent_slug='ai-verktyg') and the flattened tool reviews (which keep
+    // their category hub as parent_slug). Discriminate on parent_slug — no DB
+    // children-count needed.
+    if (parentSlug && parentSlug !== 'ai-verktyg') {
+      return { kind: 'review', reason: '/ai-verktyg/[slug] flattened review (parent_slug≠ai-verktyg)' };
+    }
     return { kind: 'hub', reason: '/ai-verktyg/[kategori] depth-2 hub' };
   }
 
@@ -317,7 +324,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const a = await getArticle(path);
   if (!a) return {};
   const depth = path.split('/').filter(Boolean).length;
-  const kind = classify(path, depth, a.type, a.slug).kind;
+  const kind = classify(path, depth, a.type, a.slug, a.parent_slug).kind;
 
   // Per-template title formatting. Description defaults to excerpt across the
   // board — seo_description wins if explicitly set in the DB.
@@ -377,7 +384,7 @@ export default async function CatchAllPage({ params }: Props) {
   if (!a) notFound();
 
   const depth = path.split('/').filter(Boolean).length;
-  const decision = classify(path, depth, a.type, a.slug);
+  const decision = classify(path, depth, a.type, a.slug, a.parent_slug);
 
   console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
