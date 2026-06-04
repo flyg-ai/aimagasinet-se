@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
+  MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -80,14 +81,22 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-teal-800',
   },
   // Nya kategori-hubbar (gradient-fallback — saknar foto ännu).
-  { href: '/ai-verktyg/hemsidebyggare', title: 'AI-hemsidebyggare', icon: Globe, bg: null, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
-  { href: '/ai-verktyg/presentationer', title: 'AI-presentationer', icon: Presentation, bg: null, fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700' },
-  { href: '/ai-verktyg/motesverktyg', title: 'AI-mötesverktyg', icon: Mic, bg: null, fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
-  { href: '/ai-verktyg/sociala-medier', title: 'AI sociala medier', icon: Share2, bg: null, fallbackGradient: 'bg-gradient-to-br from-pink-500 to-rose-800' },
-  { href: '/ai-verktyg/projektledning', title: 'AI-projektledning', icon: ListChecks, bg: null, fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-violet-800' },
-  { href: '/ai-verktyg/e-handel', title: 'AI för e-handel', icon: ShoppingCart, bg: null, fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-800' },
-  { href: '/ai-verktyg/oversattning', title: 'AI-översättning', icon: Languages, bg: null, fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-800' },
-  { href: '/ai-verktyg/dokumenthantering', title: 'AI-dokument', icon: FileText, bg: null, fallbackGradient: 'bg-gradient-to-br from-zinc-600 to-zinc-900' },
+  { href: '/ai-verktyg/hemsidebyggare', title: 'AI-hemsidebyggare', icon: Globe, bg: `${STORAGE}/ai-hemsidebyggare-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
+  { href: '/ai-verktyg/presentationer', title: 'AI-presentationer', icon: Presentation, bg: `${STORAGE}/ai-presentationer-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700' },
+  { href: '/ai-verktyg/motesverktyg', title: 'AI-mötesverktyg', icon: Mic, bg: `${STORAGE}/ai-motesverktyg-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
+  { href: '/ai-verktyg/sociala-medier', title: 'AI sociala medier', icon: Share2, bg: `${STORAGE}/ai-sociala-medier-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-pink-500 to-rose-800' },
+  { href: '/ai-verktyg/projektledning', title: 'AI-projektledning', icon: ListChecks, bg: `${STORAGE}/ai-projektledning-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-violet-800' },
+  { href: '/ai-verktyg/e-handel', title: 'AI för e-handel', icon: ShoppingCart, bg: `${STORAGE}/ai-ehandel-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-800' },
+  { href: '/ai-verktyg/oversattning', title: 'AI-översättning', icon: Languages, bg: `${STORAGE}/ai-oversattning-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-800' },
+  { href: '/ai-verktyg/dokumenthantering', title: 'AI-dokument', icon: FileText, bg: `${STORAGE}/ai-dokumenthantering-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-zinc-600 to-zinc-900' },
+  { href: '/ai-verktyg/ai-assistenter', title: 'AI-assistenter', icon: MessageSquare, bg: null, fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-800' },
+  { href: '/ai-verktyg/rost-och-tal', title: 'AI-röst & tal', icon: Speech, bg: null, fallbackGradient: 'bg-gradient-to-br from-rose-500 to-pink-800' },
+  { href: '/ai-verktyg/podcast-ljudredigering', title: 'Podcast & ljud', icon: Headphones, bg: null, fallbackGradient: 'bg-gradient-to-br from-violet-600 to-purple-800' },
+  { href: '/ai-verktyg/produktivitet', title: 'AI-produktivitet', icon: Zap, bg: null, fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-800' },
+  { href: '/ai-verktyg/e-postmarknadsforing', title: 'AI e-post', icon: Mail, bg: null, fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
+  { href: '/ai-verktyg/crm', title: 'AI-CRM', icon: Handshake, bg: null, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
+  { href: '/ai-verktyg/dataanalys', title: 'AI-dataanalys', icon: BarChart3, bg: null, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-800' },
+  { href: '/ai-verktyg/utbildning', title: 'AI för utbildning', icon: GraduationCap, bg: null, fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-800' },
 ];
 
 /** 8 quick-jump cards under the hero. Mobile shows the first 4 with

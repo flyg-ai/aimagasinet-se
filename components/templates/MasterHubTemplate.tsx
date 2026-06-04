@@ -172,7 +172,7 @@ const CATEGORIES: {
     title: 'AI-hemsidebyggare',
     description: 'Framer, Wix, Webflow och fler — bygg hemsidan med AI utan kod.',
     icon: '🌐',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-hemsidebyggare-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-700',
   },
   {
@@ -180,7 +180,7 @@ const CATEGORIES: {
     title: 'AI-presentationer',
     description: 'Gamma, Beautiful.ai, Tome — proffsiga slides på minuter.',
     icon: '🖥️',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-presentationer-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700',
   },
   {
@@ -188,7 +188,7 @@ const CATEGORIES: {
     title: 'AI-mötesverktyg',
     description: 'Otter, Fireflies, Fathom — transkribering och action points.',
     icon: '🎙️',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-motesverktyg-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-700',
   },
   {
@@ -196,7 +196,7 @@ const CATEGORIES: {
     title: 'AI för sociala medier',
     description: 'Skapa och schemalägg innehåll med AI — Buffer, Hootsuite m.fl.',
     icon: '📱',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-sociala-medier-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-pink-500 to-rose-700',
   },
   {
@@ -204,7 +204,7 @@ const CATEGORIES: {
     title: 'AI-projektledning',
     description: 'Asana, ClickUp, Monday — planering och prioritering med AI.',
     icon: '📋',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-projektledning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-violet-700',
   },
   {
@@ -212,7 +212,7 @@ const CATEGORIES: {
     title: 'AI för e-handel',
     description: 'Shopify, Klaviyo, Tidio — konvertering och personalisering.',
     icon: '🛒',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-ehandel-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
   },
   {
@@ -220,7 +220,7 @@ const CATEGORIES: {
     title: 'AI-översättning',
     description: 'DeepL, Phrase, Lokalise — översättning för företag och webb.',
     icon: '🌍',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-oversattning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
   },
   {
@@ -228,8 +228,72 @@ const CATEGORIES: {
     title: 'AI-dokumenthantering',
     description: 'ChatPDF, Humata, Acrobat AI — läs och sammanfatta dokument.',
     icon: '📄',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-dokumenthantering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-zinc-600 to-zinc-800',
+  },
+  {
+    href: '/ai-verktyg/ai-assistenter',
+    title: 'AI-assistenter',
+    description: 'ChatGPT, Claude, Gemini, Perplexity — bästa AI-chatbotarna jämförda.',
+    icon: '💬',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
+  },
+  {
+    href: '/ai-verktyg/rost-och-tal',
+    title: 'AI-röst & tal',
+    description: 'ElevenLabs, Murf, Speechify — text till tal och röstsyntes på svenska.',
+    icon: '🗣️',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-rose-500 to-pink-700',
+  },
+  {
+    href: '/ai-verktyg/podcast-ljudredigering',
+    title: 'Podcast & ljudredigering',
+    description: 'Descript, Adobe Podcast, Riverside — spela in och redigera med AI.',
+    icon: '🎧',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-violet-600 to-purple-800',
+  },
+  {
+    href: '/ai-verktyg/produktivitet',
+    title: 'AI-produktivitet',
+    description: 'Notion, Reclaim, Motion — tidsplanering, anteckningar och fokus.',
+    icon: '⚡',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
+  },
+  {
+    href: '/ai-verktyg/e-postmarknadsforing',
+    title: 'AI e-postmarknadsföring',
+    description: 'Mailchimp, Klaviyo, Instantly — skriv och optimera kampanjer med AI.',
+    icon: '✉️',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-700',
+  },
+  {
+    href: '/ai-verktyg/crm',
+    title: 'AI-CRM',
+    description: 'Salesforce, HubSpot, Pipedrive — AI för leads och kundrelationer.',
+    icon: '🤝',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-700',
+  },
+  {
+    href: '/ai-verktyg/dataanalys',
+    title: 'AI-dataanalys',
+    description: 'Power BI, Tableau, Julius — analysera data och bygg rapporter med AI.',
+    icon: '📊',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
+  },
+  {
+    href: '/ai-verktyg/utbildning',
+    title: 'AI för utbildning',
+    description: 'Khan Academy, Duolingo, Quizlet — AI för lärare och elever.',
+    icon: '🎓',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-700',
   },
 ];
 
@@ -352,7 +416,7 @@ function EditorialBody({ html }: { html: string | null }) {
         <div
           className="
             prose prose-lg max-w-none
-            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
+            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg prose-headings:break-words prose-headings:[overflow-wrap:anywhere]
             prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-2xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-4
             prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-xl prose-h3:font-bold
             prose-p:text-fg-muted prose-p:leading-[1.85] prose-p:text-[17px]
