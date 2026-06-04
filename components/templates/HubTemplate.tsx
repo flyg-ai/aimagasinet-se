@@ -1110,9 +1110,9 @@ function Hero({
   updatedYear: number;
   facts: HubFacts;
 }) {
-  // ── Designexperiment: bakgrundsbild-hjälte ENDAST för ai-kod-verktyg
-  //    (kräver featured_image). Alla andra hubbar = oförändrad hero nedan. ──
-  if (a.slug === 'ai-kod-verktyg' && a.featured_image) {
+  // ── Bakgrundsbild-hjälte för alla hubbar som har en featured_image satt.
+  //    Hubbar utan bild faller igenom till gradient-heron nedan. ──
+  if (a.featured_image) {
     return (
       <header className="relative overflow-hidden border-b border-line bg-slate-900">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1144,7 +1144,7 @@ function Hero({
 
           {/* Indigo badge med kategorinamn ovan H1 */}
           <span className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
-            <span aria-hidden>✦</span> AI-kod
+            <span aria-hidden>✦</span> Uppdaterad {monthLabel}
           </span>
 
           <h1 className="mt-6 max-w-3xl text-balance break-words text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-4xl md:text-5xl">
@@ -1328,7 +1328,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={child.path}
-              className="text-xl font-black uppercase tracking-tight text-fg break-words hover:text-indigo-600"
+              className="min-w-0 truncate text-left text-xl font-black uppercase tracking-tight text-fg hover:text-indigo-600"
             >
               {name}
             </Link>
@@ -1435,7 +1435,7 @@ function BestInTest({ child }: { child: HubChild }) {
             <div className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
               🏆 Bäst i test {year}
             </div>
-            <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
+            <h3 className="mt-2 truncate text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
               {name}
             </h3>
             {description && (
@@ -1742,7 +1742,7 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
               {isTop ? '🏆 Redaktionens val' : p.label}
             </span>
           </div>
-          <h3 className="mt-2 text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
+          <h3 className="mt-2 truncate text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
             {name}
           </h3>
           {p.tagline && (
