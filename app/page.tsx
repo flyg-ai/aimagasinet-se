@@ -45,14 +45,20 @@ export default async function HomePage() {
     supabase
       .from('articles')
       .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
-      .eq('type', 'post')
+      // Endast riktiga artiklar/nyheter (+ ev. framtida type='guide'). Hubbar/
+      // recensioner är type='page'; yrkes-guiderna är type='post' men ligger
+      // under /ai-verktyg/ — uteslut dem så de inte flödar nyhetssektionerna.
+      .in('type', ['post', 'guide'])
+      .not('path', 'like', '/ai-verktyg/%')
       .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(INITIAL_TOTAL),
     supabase
       .from('articles')
       .select('slug,title,excerpt,featured_image,category,published_at,path,author_slug')
+      // Korta nyheter = bara riktiga posts (inte hubbar/recensioner/yrkes-guider).
       .eq('type', 'post')
+      .not('path', 'like', '/ai-verktyg/%')
       .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(POOL_SIZE),

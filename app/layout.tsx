@@ -62,7 +62,10 @@ export default async function RootLayout({
   const tickerRes = await supabase
     .from('articles')
     .select('slug,title,path')
+    // Bara riktiga nyheter/artiklar i tickern — inte hubbar/recensioner eller
+    // yrkes-guiderna (type='post' men under /ai-verktyg/).
     .eq('type', 'post')
+    .not('path', 'like', '/ai-verktyg/%')
     .not('published_at', 'is', null)
     .order('published_at', { ascending: false })
     .limit(8);

@@ -116,7 +116,7 @@ export function FilterableGrid({ initial, startOffset, pageSize }: Props) {
       {/* Header row: title + filter pills */}
       <div className="mb-6 flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
         <h2 className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-fg-muted">
-          ▍ Senaste artiklarna
+          ▍ Senaste
         </h2>
         <span className="text-xs text-fg-faint">
           {visible.length} {filter !== 'all' && `i ${filterLabel(filter)}`}

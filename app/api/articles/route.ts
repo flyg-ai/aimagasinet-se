@@ -17,7 +17,10 @@ export async function GET(req: Request) {
   let query = supabase
     .from('articles')
     .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
-    .eq('type', 'post')
+    // Matchar startsidans "Senaste"-flöde: artiklar/guider, inte hubbar/
+    // recensioner/yrkes-guider (type='page' eller path under /ai-verktyg/).
+    .in('type', ['post', 'guide'])
+    .not('path', 'like', '/ai-verktyg/%')
     .not('published_at', 'is', null)
     .order('published_at', { ascending: false })
     .range(offset, offset + limit - 1);
