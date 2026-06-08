@@ -3,8 +3,9 @@
  * featured AI-tool duel via Claude Haiku 4.5 and cache it in the `comparisons`
  * table as a JSON string in `content`.
  *
- *   npx tsx scripts/generate-comparisons.ts          # only missing rows
- *   FORCE=1 npx tsx scripts/generate-comparisons.ts  # regenerate all
+ *   npx tsx scripts/generate-comparisons.ts                       # only missing rows
+ *   FORCE=1 npx tsx scripts/generate-comparisons.ts               # regenerate all
+ *   ONLY=chatgpt-eller-claude FORCE=1 npx tsx scripts/…           # one pair, forced
  *
  * Requires that supabase/migrations/0010_comparisons.sql has been applied
  * (anon-read + service-role-write). Self-contained — the pair list mirrors
@@ -26,6 +27,8 @@ const db = createClient(
 
 const MODEL = 'claude-haiku-4-5';
 const FORCE = process.env.FORCE === '1';
+/** Restrict generation to a single slug (still honours FORCE for that slug). */
+const ONLY = process.env.ONLY?.trim() || null;
 
 type Pair = { slug: string; aName: string; bName: string; winner: string };
 
@@ -132,7 +135,13 @@ async function existingSlugs(): Promise<Set<string>> {
 
 async function main() {
   const have = await existingSlugs();
-  const targets = PAIRS.filter((p) => FORCE || !have.has(p.slug));
+  if (ONLY && !PAIRS.some((p) => p.slug === ONLY)) {
+    console.error(`ONLY=${ONLY} matches no known pair. Valid slugs:\n  ${PAIRS.map((p) => p.slug).join('\n  ')}`);
+    process.exit(1);
+  }
+  const targets = PAIRS
+    .filter((p) => !ONLY || p.slug === ONLY)
+    .filter((p) => FORCE || !have.has(p.slug));
   console.log(`Generating comparisons for ${targets.length}/${PAIRS.length} pairs via ${MODEL}…\n`);
 
   let ok = 0, failed = 0;
