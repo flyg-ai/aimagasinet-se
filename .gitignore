@@ -37,3 +37,8 @@ next-env.d.ts
 
 # transient screenshot outputs (from scripts/verify-homepage-shot.mjs)
 /tmp-shots/
+
+# transient script output (audits etc.)
+/tmp/
+
+.vercel
