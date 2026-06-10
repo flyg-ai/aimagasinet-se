@@ -39,6 +39,12 @@ const nextConfig = {
         destination: '/svenska-ai-startups-2026',
         statusCode: 301,
       },
+      {
+        // Fable 5-nyheten bytte slug recension → lansering.
+        source: '/claude-fable-5-recension',
+        destination: '/claude-fable-5-lansering',
+        statusCode: 301,
+      },
       // ── Gamla WordPress-URL:er som Google Search Console rapporterar
       //    som 404. 301 forwards link equity / rensar crawl-felen. ──
       {
