@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { usePathname } from 'next/navigation';
 
 export type FilterCategory = { slug: string; name: string };
@@ -23,7 +24,7 @@ export function CategoryFilterBar({ categories }: { categories: FilterCategory[]
         {items.map((it) => (
           <Link
             key={it.href}
-            href={it.href}
+            href={to(it.href)}
             className={
               'shrink-0 rounded-full border px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider transition-colors ' +
               (it.active

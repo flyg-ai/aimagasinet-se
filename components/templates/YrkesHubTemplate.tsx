@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { JsonLd } from '@/components/JsonLd';
 import { breadcrumbSchema } from '@/lib/schemas';
@@ -97,7 +98,7 @@ export function YrkesHubTemplate({ article: a }: { article: Article }) {
                 {i === crumbs.length - 1 ? (
                   <span className="text-fg-muted">{c.label}</span>
                 ) : (
-                  <Link href={c.href} className="hover:text-indigo-600">{c.label}</Link>
+                  <Link href={to(c.href)} className="hover:text-indigo-600">{c.label}</Link>
                 )}
               </span>
             ))}

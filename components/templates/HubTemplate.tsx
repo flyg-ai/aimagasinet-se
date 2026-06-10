@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
@@ -1069,7 +1070,7 @@ function SubcategoryGrid({ subs }: { subs: SubcategoryCard[] }) {
         {subs.map((c) => (
           <Link
             key={c.href}
-            href={c.href}
+            href={to(c.href)}
             className="group flex items-start gap-4 rounded-xl border border-line bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl"
           >
             <span
@@ -1136,7 +1137,7 @@ function Hero({
                 {i === crumbs.length - 1 ? (
                   <span className="text-white/80">{c.label}</span>
                 ) : (
-                  <Link href={c.href} className="hover:text-white">{c.label}</Link>
+                  <Link href={to(c.href)} className="hover:text-white">{c.label}</Link>
                 )}
               </span>
             ))}
@@ -1178,7 +1179,7 @@ function Hero({
               {i === crumbs.length - 1 ? (
                 <span className="text-fg-muted">{c.label}</span>
               ) : (
-                <Link href={c.href} className="hover:text-indigo-600">
+                <Link href={to(c.href)} className="hover:text-indigo-600">
                   {c.label}
                 </Link>
               )}
@@ -1327,7 +1328,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <Link
-              href={child.path}
+              href={to(child.path)}
               className="min-w-0 truncate text-left text-xl font-black uppercase tracking-tight text-fg hover:text-indigo-600"
             >
               {name}
@@ -1400,7 +1401,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
           </span>
         ) : (
           <Link
-            href={child.path}
+            href={to(child.path)}
             className="inline-flex items-center justify-center gap-1.5 rounded-md border border-line bg-card px-4 py-2 text-xs font-bold uppercase tracking-wider text-fg-muted transition-colors hover:border-indigo-300 hover:text-indigo-700"
           >
             Läs recension <span aria-hidden>›</span>
@@ -1523,7 +1524,7 @@ function ComparisonTable({ ranked }: { ranked: HubChild[] }) {
                     scope="row"
                     className="whitespace-nowrap px-4 py-3 text-left font-bold text-fg"
                   >
-                    <Link href={child.path} className="hover:text-indigo-600">
+                    <Link href={to(child.path)} className="hover:text-indigo-600">
                       {name}
                     </Link>
                   </th>
@@ -1806,7 +1807,7 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
           ⓘ Sammanvägt betyg · {r.score.toFixed(1)} / 10
         </span>
         <Link
-          href={child.path}
+          href={to(child.path)}
           className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700"
         >
           Läs full recension <span aria-hidden>›</span>
@@ -1863,7 +1864,7 @@ function Snabbval({ ranked }: { ranked: HubChild[] }) {
               {p.label}
             </span>
             <Link
-              href={p.path}
+              href={to(p.path)}
               className="text-sm font-bold text-fg hover:text-indigo-600"
             >
               {p.name}
@@ -1984,7 +1985,7 @@ function AffiliateButton({
     );
   }
   return (
-    <a href={url} target="_blank" rel={rel} className={cls}>
+    <a href={to(url)} target="_blank" rel={rel} className={cls}>
       <span>{label}</span>
       <span aria-hidden>↗</span>
     </a>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 
 export type TickerItem = { slug: string; title: string; path: string };
 
@@ -22,7 +23,7 @@ export function BreakingTicker({ items }: { items: TickerItem[] }) {
             {loop.map((it, i) => (
               <Link
                 key={`${it.slug}-${i}`}
-                href={it.path}
+                href={to(it.path)}
                 className="group inline-flex items-center gap-3 text-fg-muted hover:text-accent"
               >
                 <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-accent">

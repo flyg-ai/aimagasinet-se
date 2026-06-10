@@ -92,7 +92,7 @@ type Gen = { title: string; description: string };
 /** Normalisera separator till " – " och tvinga stor bokstav efter den. */
 function normalizeTitle(t: string): string {
   let s = t.trim().replace(/\s*[—–-]\s+/g, ' – ');
-  s = s.replace(/ – (\p{Ll})/u, (_m, c: string) => ` – ${c.toUpperCase()}`);
+  s = s.replace(/ – ([a-zà-ÿ])/, (_m, c: string) => ` – ${c.toUpperCase()}`);
   return s;
 }
 const upper1 = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);

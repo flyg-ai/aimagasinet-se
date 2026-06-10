@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { supabase } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 
@@ -56,7 +57,7 @@ export async function MoreToReadSection({
           {POPULAR_TOOLS.map((t) => (
             <Link
               key={t.slug}
-              href={t.path}
+              href={to(t.path)}
               className="group flex items-center justify-between border-t border-line-subtle px-1 py-2.5 first:border-t-0"
             >
               <span className="text-sm font-bold text-fg group-hover:text-indigo-700">
@@ -81,7 +82,7 @@ export async function MoreToReadSection({
             guideList.slice(0, 5).map((g) => (
               <Link
                 key={g.slug}
-                href={g.path}
+                href={to(g.path)}
                 className="group flex items-center justify-between border-t border-line-subtle px-1 py-2.5 first:border-t-0"
               >
                 <span className="line-clamp-2 text-sm font-bold text-fg group-hover:text-cyan-700">
@@ -104,7 +105,7 @@ export async function MoreToReadSection({
           {trending.slice(0, 5).map((a, i) => (
             <Link
               key={a.slug}
-              href={a.path}
+              href={to(a.path)}
               className="group flex items-start gap-3 border-t border-line-subtle px-1 py-2.5 first:border-t-0"
             >
               <span
@@ -152,7 +153,7 @@ function Column({
       <p className="mb-4 text-xs text-fg-subtle">{subtitle}</p>
       <div className="flex flex-col">{children}</div>
       <Link
-        href={href}
+        href={to(href)}
         className={`mt-4 inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider ${headerAccent} hover:underline`}
       >
         {ctaLabel} <span aria-hidden>→</span>

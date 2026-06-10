@@ -37,7 +37,7 @@ function stripSuffix(s: string): string {
 }
 function normalizeTitle(t: string): string {
   let s = t.trim().replace(/\s*[—–]\s+/g, ' – ');
-  s = s.replace(/ – (\p{Ll})/u, (_m, c: string) => ` – ${c.toUpperCase()}`);
+  s = s.replace(/ – ([a-zà-ÿ])/, (_m, c: string) => ` – ${c.toUpperCase()}`);
   return s;
 }
 const upper1 = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
@@ -54,7 +54,7 @@ function hardTrim(s: string, max: number): string {
   let cut = s.slice(0, max);
   const sp = cut.lastIndexOf(' ');
   if (sp > max * 0.6) cut = cut.slice(0, sp);
-  return cut.replace(/[\s,–—-]+$/u, '').trim();
+  return cut.replace(/[\s,–—-]+$/, '').trim();
 }
 
 async function callHaiku(prompt: string, maxTokens: number): Promise<string> {
@@ -176,7 +176,7 @@ async function main() {
   }
 
   // ── APPLICERA ───────────────────────────────────────────
-  const paths = new Set([...Object.keys(titleUpdates), ...Object.keys(descUpdates)]);
+  const paths = Array.from(new Set([...Object.keys(titleUpdates), ...Object.keys(descUpdates)]));
   let ok = 0, warn = 0;
   for (const path of paths) {
     const patch: Record<string, string> = {};

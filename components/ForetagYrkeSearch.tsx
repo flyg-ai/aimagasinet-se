@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { useMemo, useState } from 'react';
 
 export type YrkeLink = {
@@ -76,7 +77,7 @@ export function ForetagYrkeSearch({ yrken }: { yrken: YrkeLink[] }) {
           {visible.map((y) => (
             <li key={y.href}>
               <Link
-                href={y.href}
+                href={to(y.href)}
                 className="group flex items-center justify-between gap-3 rounded-lg border border-line bg-card px-5 py-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md"
               >
                 <span className="font-bold tracking-tight text-fg group-hover:text-sky-700">

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { SubscribeForm } from '@/components/SubscribeForm';
+import { to } from '@/lib/links';
 
 type NavLink = { href: string; label: string };
 
@@ -40,44 +41,44 @@ const NAV: NavItem[] = [
         label: 'AI-text',
         href: '/ai-verktyg/ai-text-verktyg',
         links: [
-          { href: '/ai-verktyg/ai-text-verktyg/chatgpt',    label: 'ChatGPT' },
-          { href: '/ai-verktyg/ai-text-verktyg/claude',     label: 'Claude' },
-          { href: '/ai-verktyg/ai-text-verktyg/gemini',     label: 'Gemini' },
-          { href: '/ai-verktyg/ai-text-verktyg/jasper-ai',  label: 'Jasper AI' },
-          { href: '/ai-verktyg/ai-text-verktyg/writesonic', label: 'Writesonic' },
+          { href: '/ai-verktyg/chatgpt',    label: 'ChatGPT' },
+          { href: '/ai-verktyg/claude',     label: 'Claude' },
+          { href: '/ai-verktyg/gemini',     label: 'Gemini' },
+          { href: '/ai-verktyg/jasper-ai',  label: 'Jasper AI' },
+          { href: '/ai-verktyg/writesonic', label: 'Writesonic' },
         ],
       },
       {
         label: 'AI-bilder',
         href: '/ai-verktyg/ai-bild-verktyg',
         links: [
-          { href: '/ai-verktyg/ai-bild-verktyg/midjourney',        label: 'Midjourney' },
-          { href: '/ai-verktyg/ai-bild-verktyg/dalle-3',           label: 'DALL-E 3' },
-          { href: '/ai-verktyg/ai-bild-verktyg/adobe-firefly',     label: 'Adobe Firefly' },
-          { href: '/ai-verktyg/ai-bild-verktyg/stable-diffusion',  label: 'Stable Diffusion' },
-          { href: '/ai-verktyg/ai-bild-verktyg/leonardo-ai',       label: 'Leonardo AI' },
+          { href: '/ai-verktyg/midjourney',        label: 'Midjourney' },
+          { href: '/ai-verktyg/dalle-3',           label: 'DALL-E 3' },
+          { href: '/ai-verktyg/adobe-firefly',     label: 'Adobe Firefly' },
+          { href: '/ai-verktyg/stable-diffusion',  label: 'Stable Diffusion' },
+          { href: '/ai-verktyg/leonardo-ai',       label: 'Leonardo AI' },
         ],
       },
       {
         label: 'AI-kod',
         href: '/ai-verktyg/ai-kod-verktyg',
         links: [
-          { href: '/ai-verktyg/ai-kod-verktyg/cursor-ai',      label: 'Cursor AI' },
-          { href: '/ai-verktyg/ai-kod-verktyg/github-copilot', label: 'GitHub Copilot' },
-          { href: '/ai-verktyg/ai-kod-verktyg/windsurf',       label: 'Windsurf' },
-          { href: '/ai-verktyg/ai-kod-verktyg/tabnine',        label: 'Tabnine' },
-          { href: '/ai-verktyg/ai-kod-verktyg/codeium',        label: 'Codeium' },
+          { href: '/ai-verktyg/cursor-ai',      label: 'Cursor AI' },
+          { href: '/ai-verktyg/github-copilot', label: 'GitHub Copilot' },
+          { href: '/ai-verktyg/windsurf',       label: 'Windsurf' },
+          { href: '/ai-verktyg/tabnine',        label: 'Tabnine' },
+          { href: '/ai-verktyg/codeium',        label: 'Codeium' },
         ],
       },
       {
         label: 'AI-ljud',
         href: '/ai-verktyg/ai-ljud-och-musik',
         links: [
-          { href: '/ai-verktyg/ai-ljud-och-musik/suno-ai',    label: 'Suno AI' },
-          { href: '/ai-verktyg/ai-ljud-och-musik/elevenlabs', label: 'ElevenLabs' },
-          { href: '/ai-verktyg/ai-ljud-och-musik/udio',       label: 'Udio' },
-          { href: '/ai-verktyg/ai-ljud-och-musik/mubert',     label: 'Mubert' },
-          { href: '/ai-verktyg/ai-ljud-och-musik/aiva',       label: 'AIVA' },
+          { href: '/ai-verktyg/suno-ai',    label: 'Suno AI' },
+          { href: '/ai-verktyg/elevenlabs', label: 'ElevenLabs' },
+          { href: '/ai-verktyg/udio',       label: 'Udio' },
+          { href: '/ai-verktyg/mubert',     label: 'Mubert' },
+          { href: '/ai-verktyg/aiva',       label: 'AIVA' },
         ],
       },
       {
@@ -140,7 +141,7 @@ export function SiteNav() {
           return (
             <div key={item.href} className="group relative">
               <Link
-                href={item.href}
+                href={to(item.href)}
                 className="inline-flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium text-fg-subtle transition-colors hover:text-accent group-hover:text-accent"
               >
                 {item.label}
@@ -240,7 +241,7 @@ export function SiteNav() {
                     <>
                       <div className="flex items-center justify-between">
                         <Link
-                          href={item.href}
+                          href={to(item.href)}
                           onClick={closeMobile}
                           className="flex-1 py-3 text-sm font-semibold text-fg transition-colors hover:text-accent"
                         >
@@ -270,7 +271,7 @@ export function SiteNav() {
                         <div className="ml-3 border-l border-line pb-3 pl-3">
                           {item.topLink && item.groups && (
                             <Link
-                              href={item.topLink.href}
+                              href={to(item.topLink.href)}
                               onClick={closeMobile}
                               className="mb-2 mt-2 flex items-center gap-1.5 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700"
                             >
@@ -281,7 +282,7 @@ export function SiteNav() {
                             ? item.groups.map((g) => (
                                 <div key={g.href} className="mt-3 first:mt-1">
                                   <Link
-                                    href={g.href}
+                                    href={to(g.href)}
                                     onClick={closeMobile}
                                     className="block py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-700 hover:underline"
                                   >
@@ -290,7 +291,7 @@ export function SiteNav() {
                                   {g.links.map((child) => (
                                     <Link
                                       key={child.href}
-                                      href={child.href}
+                                      href={to(child.href)}
                                       onClick={closeMobile}
                                       className="block py-2 text-sm text-fg-subtle transition-colors hover:text-accent"
                                     >
@@ -298,7 +299,7 @@ export function SiteNav() {
                                     </Link>
                                   ))}
                                   <Link
-                                    href={g.href}
+                                    href={to(g.href)}
                                     onClick={closeMobile}
                                     className="block py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent hover:underline"
                                   >
@@ -309,7 +310,7 @@ export function SiteNav() {
                             : (item.children ?? []).map((child) => (
                                 <Link
                                   key={child.href}
-                                  href={child.href}
+                                  href={to(child.href)}
                                   onClick={closeMobile}
                                   className="block py-2 text-sm text-fg-subtle transition-colors hover:text-accent"
                                 >
@@ -318,7 +319,7 @@ export function SiteNav() {
                               ))}
                           {item.showAllLabel && !item.groups && (
                             <Link
-                              href={item.href}
+                              href={to(item.href)}
                               onClick={closeMobile}
                               className="block py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent hover:underline"
                             >
@@ -330,7 +331,7 @@ export function SiteNav() {
                     </>
                   ) : (
                     <Link
-                      href={item.href}
+                      href={to(item.href)}
                       onClick={closeMobile}
                       className="block py-3 text-sm font-semibold text-fg transition-colors hover:text-accent"
                     >
@@ -359,7 +360,7 @@ function SimpleDropdown({
       {links.map((child) => (
         <Link
           key={child.href}
-          href={child.href}
+          href={to(child.href)}
           className="block px-4 py-2 text-sm text-fg-muted transition-colors hover:bg-soft hover:text-accent"
         >
           {child.label}
@@ -367,7 +368,7 @@ function SimpleDropdown({
       ))}
       {showAll && (
         <Link
-          href={showAll.href}
+          href={to(showAll.href)}
           className="block border-t border-line-subtle px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent transition-colors hover:bg-soft hover:underline"
         >
           {showAll.label} <span aria-hidden>→</span>
@@ -383,7 +384,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
     <div className="overflow-hidden rounded-md border border-line bg-card p-6 shadow-xl shadow-black/10 backdrop-blur">
       {topLink && (
         <Link
-          href={topLink.href}
+          href={to(topLink.href)}
           className="mb-5 flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700 transition-colors hover:bg-indigo-100"
         >
           <span aria-hidden>⚔</span> {topLink.label} <span aria-hidden>→</span>
@@ -393,7 +394,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
         {groups.map((g) => (
           <div key={g.href} className="flex flex-col">
             <Link
-              href={g.href}
+              href={to(g.href)}
               className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-indigo-700 hover:underline"
             >
               {g.label}
@@ -402,7 +403,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
               {g.links.map((l) => (
                 <li key={l.href}>
                   <Link
-                    href={l.href}
+                    href={to(l.href)}
                     className="block rounded-sm px-2 py-1.5 text-sm text-fg-muted transition-colors hover:bg-soft hover:text-accent"
                   >
                     {l.label}
@@ -411,7 +412,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
               ))}
             </ul>
             <Link
-              href={g.href}
+              href={to(g.href)}
               className="mt-3 inline-flex items-center gap-1 px-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent hover:underline"
             >
               Visa alla <span aria-hidden>→</span>

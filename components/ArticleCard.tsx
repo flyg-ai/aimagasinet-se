@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { CategoryBadge } from './CategoryBadge';
 
 export type ArticleCardData = {
@@ -23,7 +24,7 @@ export type ArticleCardData = {
 export function ArticleCard({ a }: { a: ArticleCardData }) {
   return (
     <Link
-      href={a.path}
+      href={to(a.path)}
       className="card group block overflow-hidden rounded-lg border border-line bg-card hover:border-line-strong"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-soft">
@@ -114,7 +115,7 @@ function CardCover({ title, small = false }: { title: string; small?: boolean })
 export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
   return (
     <Link
-      href={a.path}
+      href={to(a.path)}
       className="card group flex gap-4 rounded-lg border border-line-subtle bg-card p-3 hover:border-line-strong"
     >
       <div className="relative aspect-[16/9] w-32 shrink-0 self-start overflow-hidden rounded-md bg-soft">

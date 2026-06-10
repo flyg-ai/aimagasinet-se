@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { useState } from 'react';
 
 export type MasterHubCategory = {
@@ -60,7 +61,7 @@ export function MasterHubCategorySearch({ categories }: { categories: MasterHubC
         {categories.map((c) => (
           <Link
             key={c.href}
-            href={c.href}
+            href={to(c.href)}
             className={`group relative flex aspect-[16/10] flex-col justify-between overflow-hidden rounded-xl p-6 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl ${
               c.bg ? '' : c.fallbackGradient
             } ${matches(c) ? '' : 'hidden'}`}

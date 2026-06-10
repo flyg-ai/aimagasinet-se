@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { CategoryBadge } from '@/components/CategoryBadge';
 
@@ -22,7 +23,7 @@ export function TrendingSection({ items }: { items: ArticleCardData[] }) {
         {top.map((a, i) => (
           <li key={a.slug} className="h-full">
             <Link
-              href={a.path}
+              href={to(a.path)}
               className="group flex h-full items-start gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-line-strong"
             >
               <span

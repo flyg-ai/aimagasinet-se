@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { resolveToolProfile, toolOverallScore } from '@/components/templates/ReviewTemplate';
 import { MasterHubCategorySearch } from '@/components/MasterHubCategorySearch';
@@ -49,7 +50,7 @@ function EditorsPicks() {
             return (
               <Link
                 key={p.key}
-                href={p.href}
+                href={to(p.href)}
                 className="group flex min-w-[240px] snap-start flex-col gap-3 rounded-xl border border-line bg-page p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl lg:min-w-0"
               >
                 <div className="flex items-center justify-between">

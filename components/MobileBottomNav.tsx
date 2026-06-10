@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Home, Newspaper, Wrench, Search, X } from 'lucide-react';
@@ -45,7 +46,7 @@ export function MobileBottomNav() {
             return (
               <li key={it.href} className="flex">
                 <Link
-                  href={it.href}
+                  href={to(it.href)}
                   className={
                     'flex flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider transition-colors ' +
                     (active

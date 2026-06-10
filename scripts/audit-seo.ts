@@ -25,8 +25,10 @@ const db = createClient(
 
 export const TITLE_MAX = 60;
 export const DESC_MAX = 155;
-/** lowercase letter immediately after a space-wrapped dash separator */
-export const DASH_LC = /\s[–—-]\s+(\p{Ll})/u;
+/** lowercase letter immediately after a space-wrapped dash separator
+ *  ([a-zà-ÿ] täcker svenska gemener å/ä/ö utan att kräva unicode-flaggan `u`,
+ *  som inte är tillgänglig med projektets tsconfig-target). */
+export const DASH_LC = /\s[–—-]\s+([a-zà-ÿ])/;
 
 export type Row = {
   id: number;

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { JsonLd } from '@/components/JsonLd';
@@ -389,7 +390,7 @@ function SubcategoryGrid({ subcategories }: { subcategories: YrkesRollSubcategor
         {subcategories.map((s) => (
           <Link
             key={s.href}
-            href={s.href}
+            href={to(s.href)}
             className="group flex flex-col gap-4 rounded-xl border border-line bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
           >
             <span
@@ -438,7 +439,7 @@ function TopPicks({ picks }: { picks: YrkesRollTopPick[] }) {
           {picks.map((p) => (
             <li key={p.label}>
               <Link
-                href={p.href}
+                href={to(p.href)}
                 className="group flex items-center justify-between gap-4 px-5 py-5 transition-colors hover:bg-soft sm:px-6"
               >
                 <div className="flex min-w-0 flex-1 items-center gap-4 sm:gap-6">

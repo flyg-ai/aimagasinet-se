@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 
 export type Crumb = { label: string; href: string };
 
@@ -80,7 +81,7 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
                 </span>
               ) : (
                 <Link
-                  href={c.href}
+                  href={to(c.href)}
                   className="inline-block rounded px-2 py-1 hover:bg-soft hover:text-accent"
                 >
                   {c.label}
@@ -97,7 +98,7 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
           <>
             <li>
               <Link
-                href={collapsedRoot.href}
+                href={to(collapsedRoot.href)}
                 aria-label={collapsedRoot.label}
                 className="inline-block rounded px-2 py-1.5 hover:bg-soft hover:text-accent"
               >
@@ -126,7 +127,7 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
                 </span>
               ) : (
                 <Link
-                  href={c.href}
+                  href={to(c.href)}
                   className="truncate rounded px-2 py-1.5 hover:bg-soft hover:text-accent"
                 >
                   {c.label}

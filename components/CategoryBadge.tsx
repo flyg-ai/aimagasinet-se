@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 
 const SIZE = {
   sm: 'px-2 py-0.5 text-[10px]',
@@ -52,7 +53,7 @@ export function CategoryBadge({
   const p = PALETTE[slug] ?? FALLBACK;
   return (
     <Link
-      href={`/kategori/${slug}`}
+      href={to(`/kategori/${slug}`)}
       className={`inline-block rounded-sm border ${p.border} ${p.bg} ${p.text} ${p.hover} font-mono font-semibold uppercase tracking-wider transition-colors ${SIZE[size]}`}
     >
       {categoryLabel(slug)}

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { useMemo, useState } from 'react';
 import type { ArticleCardData } from '@/components/ArticleCard';
 
@@ -110,7 +111,7 @@ export function ForetagSearch({ yrkes, subtopicsByYrke }: Props) {
                   ◧
                 </span>
                 <Link
-                  href={y.path}
+                  href={to(y.path)}
                   className="text-xl font-black uppercase tracking-tight text-fg group-hover:text-sky-700"
                 >
                   {cleanYrkeTitle(y.title)}
@@ -130,7 +131,7 @@ export function ForetagSearch({ yrkes, subtopicsByYrke }: Props) {
                     {subs.map((s) => (
                       <li key={s.slug}>
                         <Link
-                          href={s.path}
+                          href={to(s.path)}
                           className="flex items-center justify-between gap-2 py-2 text-sm text-fg hover:text-sky-700"
                         >
                           <span>{cleanYrkeTitle(s.title)}</span>
@@ -143,7 +144,7 @@ export function ForetagSearch({ yrkes, subtopicsByYrke }: Props) {
               )}
 
               <Link
-                href={y.path}
+                href={to(y.path)}
                 className="mt-5 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-sky-700"
               >
                 Hela yrkesguiden <span aria-hidden>›</span>

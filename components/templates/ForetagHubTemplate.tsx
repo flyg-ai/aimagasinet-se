@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { ForetagYrkeSearch, type YrkeLink } from '@/components/ForetagYrkeSearch';
 
@@ -97,7 +98,7 @@ function CategoryGrid() {
         {CATEGORIES.map((c) => (
           <Link
             key={c.href}
-            href={c.href}
+            href={to(c.href)}
             className="group flex flex-col rounded-xl border border-line bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-xl"
           >
             <span

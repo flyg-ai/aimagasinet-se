@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { supabase } from '@/lib/supabase';
 
 /** 5 quick-link tiles to top-reviewed AI tools. Slugs match the review
@@ -46,7 +47,7 @@ export async function PopularToolsSidebar() {
           return (
             <li key={t.path} className={i > 0 ? 'border-t border-line-subtle' : ''}>
               <Link
-                href={t.path}
+                href={to(t.path)}
                 className="group flex items-center gap-3 py-3 transition-colors"
               >
                 {logo ? (

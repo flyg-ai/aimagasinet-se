@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { parseRating, toolNameFromTitle, type Rating } from '@/lib/rating';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
@@ -940,7 +941,7 @@ function Hero({
               {i === crumbs.length - 1 ? (
                 <span className="text-fg-muted">{c.label}</span>
               ) : (
-                <Link href={c.href} className="hover:text-indigo-600">{c.label}</Link>
+                <Link href={to(c.href)} className="hover:text-indigo-600">{c.label}</Link>
               )}
             </span>
           ))}
@@ -1254,7 +1255,7 @@ function Alternatives({
           return (
             <Link
               key={s.slug}
-              href={s.path}
+              href={to(s.path)}
               className="group flex flex-col gap-3 rounded-xl border border-line bg-card p-4 transition-colors hover:border-indigo-300"
             >
               <div className="flex items-start gap-3">
@@ -1280,7 +1281,7 @@ function Alternatives({
       </div>
 
       <Link
-        href={parentPath}
+        href={to(parentPath)}
         className="mt-5 inline-block font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600 hover:text-indigo-700"
       >
         ← Hela topplistan
@@ -1333,7 +1334,7 @@ function NextPrev({ siblings }: { siblings: ArticleCardData[] }) {
   return (
     <div className="mt-8 flex justify-end">
       <Link
-        href={next.path}
+        href={to(next.path)}
         className="group inline-flex flex-col items-end rounded-xl border border-line bg-card px-5 py-4 transition-colors hover:border-indigo-300"
       >
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-fg-subtle">
@@ -1424,7 +1425,7 @@ function SidebarOffer({
 function BackToTopplistan({ parentPath }: { parentPath: string }) {
   return (
     <Link
-      href={parentPath}
+      href={to(parentPath)}
       className="block rounded-xl border border-line bg-card px-5 py-4 transition-colors hover:border-indigo-300"
     >
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-fg-subtle">
@@ -1519,7 +1520,7 @@ function AffiliateBtn({
     );
   }
   return (
-    <a href={url} target="_blank" rel={rel} className={cls}>
+    <a href={to(url)} target="_blank" rel={rel} className={cls}>
       <span>{label}</span>
       <span aria-hidden>↗</span>
     </a>

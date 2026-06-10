@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { CategoryBadge, categoryLabel } from '@/components/CategoryBadge';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 import { AuthorAvatar } from '@/components/AuthorAvatar';
@@ -121,7 +122,7 @@ export function ArticleTemplate({
           {/* Byline: avatar + namn + datum + senast uppdaterad */}
           <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-5">
             {author && (
-              <Link href={`/skribenter/${author.slug}/`} className="flex items-center gap-3">
+              <Link href={to(`/skribenter/${author.slug}/`)} className="flex items-center gap-3">
                 <AuthorAvatar slug={author.slug} name={author.name} avatarUrl={author.avatar_url} size="md" />
                 <span className="text-sm font-bold text-fg hover:text-accent">{author.name}</span>
               </Link>
@@ -204,7 +205,7 @@ function RelatedList({ items }: { items: ArticleCardData[] }) {
       <ul className="flex flex-col divide-y divide-line">
         {items.map((r) => (
           <li key={r.slug} className="py-3 first:pt-0 last:pb-0">
-            <Link href={r.path} className="group block">
+            <Link href={to(r.path)} className="group block">
               <span className="block text-sm font-bold leading-snug text-fg group-hover:text-indigo-700">
                 {r.title}
               </span>

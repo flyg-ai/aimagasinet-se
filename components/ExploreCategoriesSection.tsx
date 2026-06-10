@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { useState } from 'react';
 import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
@@ -130,7 +131,7 @@ export function ExploreCategoriesSection() {
           return (
             <Link
               key={c.href}
-              href={c.href}
+              href={to(c.href)}
               className={
                 `group relative flex aspect-[4/3] flex-col justify-between overflow-hidden rounded-xl p-5 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl sm:p-6 ${
                   c.bg ? '' : c.fallbackGradient

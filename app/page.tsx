@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { supabase } from '@/lib/supabase';
 import {
   SidebarArticleCard,
@@ -107,7 +108,7 @@ export default async function HomePage() {
         <section className="grid gap-6 lg:grid-cols-[1.85fr_1fr]">
           {/* Big hero */}
           <Link
-            href={hero.path}
+            href={to(hero.path)}
             className="card group relative block overflow-hidden rounded-xl border border-line bg-card hover:border-line-strong"
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-soft">

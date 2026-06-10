@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { ArticleCard } from '@/components/ArticleCard';
@@ -170,7 +171,7 @@ function Featured({ guide }: { guide: ArticleCardData }) {
         Börja här
       </div>
       <Link
-        href={guide.path}
+        href={to(guide.path)}
         className="group block overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-indigo-50 via-card to-muted p-6 transition-colors hover:border-indigo-300 sm:p-8"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -223,7 +224,7 @@ function CategoryGrid({ guides }: { guides: ArticleCardData[] }) {
             return (
               <Link
                 key={c.slug}
-                href={c.href}
+                href={to(c.href)}
                 className="group flex flex-col gap-4 rounded-xl border border-line bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
               >
                 <span

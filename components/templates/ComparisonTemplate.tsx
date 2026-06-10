@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import {
@@ -105,7 +106,7 @@ function Hero({ a, b, crumbs }: { a: ComparedTool; b: ComparedTool; crumbs: { la
               {i === crumbs.length - 1 ? (
                 <span className="text-fg-muted">{c.label}</span>
               ) : (
-                <Link href={c.href} className="hover:text-indigo-600">{c.label}</Link>
+                <Link href={to(c.href)} className="hover:text-indigo-600">{c.label}</Link>
               )}
             </span>
           ))}
@@ -338,7 +339,7 @@ function CtaButton({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
   const cls = `flex items-center justify-center gap-2 rounded-xl px-6 py-4 text-base font-bold text-white shadow-sm transition-colors ${kit.btn}`;
   const label = <>{tool.ctaLabel} <span aria-hidden>→</span></>;
   if (!tool.ctaUrl) return <span className={`${cls} cursor-default opacity-80`}>{label}</span>;
-  return <a href={tool.ctaUrl} target="_blank" rel="nofollow noopener" className={cls}>{label}</a>;
+  return <a href={to(tool.ctaUrl)} target="_blank" rel="nofollow noopener" className={cls}>{label}</a>;
 }
 
 /* ─── Magazine analysis text (Haiku) ───────────────────────────── */
@@ -373,7 +374,7 @@ function RelatedComparisons({ currentSlug }: { currentSlug: string }) {
           {others.map((c) => (
             <Link
               key={c.slug}
-              href={`/ai-verktyg/jamfor/${c.slug}`}
+              href={to(`/ai-verktyg/jamfor/${c.slug}`)}
               className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg break-words transition-colors hover:border-indigo-300 hover:bg-indigo-50"
             >
               <span className="text-indigo-600">{c.aName}</span>

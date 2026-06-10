@@ -20,7 +20,18 @@ const nextConfig = {
     ],
   },
   async redirects() {
-    return [
+    // Eftersom trailingSlash: true gör Next ett extra 308 från slash-lös form
+    // till slash-form. Om en redirect-destination saknar avslutande slash blir
+    // varje gammal indexerad URL därför en 2-stegskedja: 301 → 308 → 200.
+    // Normalisera alla interna destinationer till slash-form så det blir ETT
+    // enda 301-hopp. Idempotent; rör inte root, externa URL:er eller query/hash.
+    const trailing = (dest) => {
+      if (!dest || dest === '/' || /^https?:\/\//i.test(dest)) return dest;
+      if (dest.endsWith('/') || dest.includes('?') || dest.includes('#')) return dest;
+      return `${dest}/`;
+    };
+    const norm = (list) => list.map((r) => ({ ...r, destination: trailing(r.destination) }));
+    return norm([
       {
         // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
         // startup-artikeln.
@@ -120,7 +131,7 @@ const nextConfig = {
       // Dubblett-sammanslagning: raderade varianter → kanonisk /ai-verktyg/<slug>
       // (auto-genererad, se scripts/merge-duplicates.ts).
       ...dedupRedirects,
-    ];
+    ]);
   },
 };
 

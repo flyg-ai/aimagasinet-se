@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { JsonLd } from '@/components/JsonLd';
 import { breadcrumbSchema } from '@/lib/schemas';
@@ -124,7 +125,7 @@ function SubcategoryGrid() {
         {SUBCATEGORIES.map((s) => (
           <Link
             key={s.href}
-            href={s.href}
+            href={to(s.href)}
             className="group flex flex-col gap-4 rounded-xl border border-line bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
           >
             <span
@@ -172,7 +173,7 @@ function TopPicks() {
             return (
               <Link
                 key={p.key}
-                href={p.href}
+                href={to(p.href)}
                 className="group flex flex-col gap-3 rounded-xl border border-line bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl"
               >
                 <div className="flex items-center justify-between">

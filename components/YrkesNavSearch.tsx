@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { to } from '@/lib/links';
 import Link from 'next/link';
 
 export type YrkeNavItem = {
@@ -57,7 +58,7 @@ export function YrkesNavSearch({ items }: { items: YrkeNavItem[] }) {
           {filtered.map((y) => (
             <Link
               key={y.slug}
-              href={y.href}
+              href={to(y.href)}
               className="group flex flex-col gap-3 rounded-2xl border border-line bg-card p-6 transition-colors hover:border-indigo-300 hover:bg-indigo-50/40"
             >
               <span aria-hidden className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl text-indigo-700">

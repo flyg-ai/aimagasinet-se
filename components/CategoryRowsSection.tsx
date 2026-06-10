@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { ArticleCardData } from '@/components/ArticleCard';
 
 type Column = {
@@ -39,7 +40,7 @@ export function CategoryRowsSection({ pool }: { pool: ArticleCardData[] }) {
               className="flex flex-col overflow-hidden rounded-lg border border-line bg-card"
             >
               <Link
-                href={col.href}
+                href={to(col.href)}
                 className={`flex items-center justify-between px-4 py-3 ${col.headerBg} text-white transition-colors hover:brightness-110`}
               >
                 <span className="font-mono text-[11px] font-black uppercase tracking-[0.2em]">
@@ -54,7 +55,7 @@ export function CategoryRowsSection({ pool }: { pool: ArticleCardData[] }) {
                 {items.map((a) => (
                   <li key={a.slug}>
                     <Link
-                      href={a.path}
+                      href={to(a.path)}
                       className="group flex items-start gap-3 p-3 transition-colors hover:bg-soft"
                     >
                       <div className="relative aspect-[16/9] w-24 shrink-0 overflow-hidden rounded-md bg-soft">

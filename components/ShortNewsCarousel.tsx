@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { categoryLabel } from '@/components/CategoryBadge';
 
@@ -45,7 +46,7 @@ export function ShortNewsCarousel({ items }: { items: ArticleCardData[] }) {
                   className="w-64 shrink-0 snap-start"
                 >
                   <Link
-                    href={a.path}
+                    href={to(a.path)}
                     className="group block overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950 transition-colors hover:border-indigo-500"
                   >
                     <div className="relative aspect-[16/9] overflow-hidden bg-zinc-900">
