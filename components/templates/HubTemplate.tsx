@@ -1407,9 +1407,6 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
             Läs recension <span aria-hidden>›</span>
           </Link>
         )}
-        <span className="text-center font-mono text-[10px] uppercase tracking-wider text-fg-faint lg:text-right">
-          ⊙ 18+ · Annonslänk
-        </span>
       </div>
     </li>
   );

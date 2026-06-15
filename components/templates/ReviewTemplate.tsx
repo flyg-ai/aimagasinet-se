@@ -1415,9 +1415,6 @@ function SidebarOffer({
       <div className="mt-3">
         <AffiliateBtn affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} fullWidth />
       </div>
-      <div className="mt-3 text-center font-mono text-[10px] uppercase tracking-wider text-fg-faint">
-        Annonslänk · 18+
-      </div>
     </div>
   );
 }
