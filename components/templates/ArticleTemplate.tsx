@@ -13,6 +13,7 @@ import { toolLinkCards } from '@/lib/article-html';
 import { readingTimeMinutes } from '@/lib/reading-time';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
+import { ShareButtons } from '@/components/ShareButtons';
 
 function fmtDate(iso: string): string {
   return new Date(iso).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -42,6 +43,9 @@ export function ArticleTemplate({
   const crumbs = buildCrumbs(a.path);
   const children = items;
   const minutes = readingTimeMinutes(a.content_mdx);
+  // Share-knappar bara på riktiga nyheter/artiklar (type='post') — inte på
+  // verktygsrecensioner eller sidor som också renderas via denna mall.
+  const isPost = a.type === 'post';
 
   // Inject heading ids (→ ToC anchors) and turn standalone internal tool links
   // into cards, in that order so the card transform sees the id-rewritten HTML.
@@ -140,6 +144,12 @@ export function ArticleTemplate({
               )}
             </div>
           </div>
+
+          {isPost && (
+            <div className="mt-7 border-t border-line pt-5">
+              <ShareButtons path={a.path} title={a.title} />
+            </div>
+          )}
         </div>
       </header>
 
@@ -161,6 +171,12 @@ export function ArticleTemplate({
                     {t}
                   </span>
                 ))}
+              </div>
+            )}
+
+            {isPost && (
+              <div className="mt-12 border-t border-line pt-7">
+                <ShareButtons path={a.path} title={a.title} />
               </div>
             )}
           </div>
