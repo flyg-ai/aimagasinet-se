@@ -47,16 +47,91 @@ const nextConfig = {
       },
       // ── Gamla WordPress-URL:er som Google Search Console rapporterar
       //    som 404. 301 forwards link equity / rensar crawl-felen. ──
-      {
-        // WP-standardinlägget som följde med installationen.
-        source: '/hello-world',
-        destination: '/',
-        statusCode: 301,
-      },
+      // OBS: /hello-world och alla wp-* hanteras numera som 410 Gone i
+      // middleware.ts (WP-skräp ska droppas av Google, inte forwardas).
       {
         // Gammalt kombinerat nyhetsinlägg → kanonisk nyhetskategori.
         source: '/ai-nyheter/ai-konst-marknadsforing-juridik',
         destination: '/kategori/ai-nyheter',
+        statusCode: 301,
+      },
+      // ── GSC-404-audit (juni 2026): riktiga 404 med kanonisk destination
+      //    verifierad mot DB + live. Dessa MÅSTE ligga i config-redirects (körs
+      //    FÖRE middleware) så att /category/-källan nedan 301:ar och inte
+      //    fångas av 410-patternet för /category/ i middleware.ts. ──
+      {
+        // Ljud-verktyg under gammal hub-slug ai-ljud-musik (ny: ai-ljud-och-musik),
+        // flatten-redirecten täcker bara den nya slugen → denna saknades.
+        source: '/ai-verktyg/ai-ljud-musik/elevenlabs',
+        destination: '/ai-verktyg/elevenlabs',
+        statusCode: 301,
+      },
+      {
+        // WP-dubblett med "-2"-suffix → kanonisk recension.
+        source: '/ai-verktyg/juridik/harvey-ai-2',
+        destination: '/ai-verktyg/harvey-ai',
+        statusCode: 301,
+      },
+      {
+        // Felaktig kategori-slug (rätt: ai-sakerhet-etik).
+        source: '/kategori/ai-sakerhet',
+        destination: '/kategori/ai-sakerhet-etik',
+        statusCode: 301,
+      },
+      {
+        // Gammal WP-engelsk taxonomi /category/ → svensk /kategori/ (motsvarighet finns).
+        source: '/category/samhalle-paverkan',
+        destination: '/kategori/samhalle-paverkan',
+        statusCode: 301,
+      },
+      {
+        // Gamla företags-ingångar → kanonisk företags-hub.
+        source: '/ai-for-foretag',
+        destination: '/ai-verktyg/foretag',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/ai-for-foretag',
+        destination: '/ai-verktyg/foretag',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/ai-verktyg-for-foretag',
+        destination: '/ai-verktyg/foretag',
+        statusCode: 301,
+      },
+      {
+        // Gammal kod-hub-slug → kanonisk kod-hub.
+        source: '/ai-verktyg/ai-verktyg-for-kod',
+        destination: '/ai-verktyg/ai-kod-verktyg',
+        statusCode: 301,
+      },
+      {
+        // Gamla bild-hub-slugs (saknad bindestreck / kort form) → kanonisk bild-hub.
+        source: '/ai-verktyg/ai-bildverktyg',
+        destination: '/ai-verktyg/ai-bild-verktyg',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/ai-bild',
+        destination: '/ai-verktyg/ai-bild-verktyg',
+        statusCode: 301,
+      },
+      {
+        // Kort alternativ slug → kanonisk full slug (samma artikel i DB).
+        source: '/trump-stoppar-anthropic-pentagon-sakerhetsrisk',
+        destination: '/trump-stoppar-anthropic-i-usa-pentagon-klassar-ai-bolaget-som-sakerhetsrisk',
+        statusCode: 301,
+      },
+      {
+        // Gamla yrke-subkategorier utan egen subhub → förälder-hubben ekonomi.
+        source: '/ai-verktyg/foretag/yrke/ekonomi-redovisning/kalkyl-analys',
+        destination: '/ai-verktyg/ekonomi',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/foretag/yrke/ekonomi-redovisning/rapporter',
+        destination: '/ai-verktyg/ekonomi',
         statusCode: 301,
       },
       {
@@ -69,18 +144,6 @@ const nextConfig = {
         // Ljud-hubben bytte slug ai-ljud-musik → ai-ljud-och-musik.
         source: '/ai-verktyg/ai-ljud-musik',
         destination: '/ai-verktyg/ai-ljud-och-musik',
-        statusCode: 301,
-      },
-      {
-        // WP-mediabibliotekets uppladdningar finns inte längre.
-        source: '/wp-content/uploads/:path*',
-        destination: '/',
-        statusCode: 301,
-      },
-      {
-        // Övriga WP-systemfiler (wp-login, wp-admin, wp-json m.fl.).
-        source: '/wp-:file*',
-        destination: '/',
         statusCode: 301,
       },
       {
