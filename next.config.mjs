@@ -30,7 +30,19 @@ const nextConfig = {
       if (dest.endsWith('/') || dest.includes('?') || dest.includes('#')) return dest;
       return `${dest}/`;
     };
-    const norm = (list) => list.map((r) => ({ ...r, destination: trailing(r.destination) }));
+    // Avpublicerade verktygssidor (se middleware.ts DEAD_TOOL_SLUGS): släng alla
+    // redirect-regler som pekar PÅ dem — annars blir gamla yrke-/ekonomi-URL:er en
+    // 301→410-kedja. Utan regel faller källorna i stället rakt till middleware som
+    // 410:ar dem (matchar sista path-segmentet). Inget av dem är en flyttad sida.
+    const DEAD_TOOL_SLUGS = new Set(['accountingai', 'accountingai-pro', 'reconcile-ai', 'height']);
+    const pointsAtDead = (dest) => {
+      const seg = String(dest ?? '').replace(/[?#].*$/, '').replace(/\/+$/, '').split('/').pop();
+      return DEAD_TOOL_SLUGS.has(seg);
+    };
+    const norm = (list) =>
+      list
+        .filter((r) => !pointsAtDead(r.destination))
+        .map((r) => ({ ...r, destination: trailing(r.destination) }));
     return norm([
       {
         // Gamla "alla svenska AI-företag"-listan ersatt av den granskande

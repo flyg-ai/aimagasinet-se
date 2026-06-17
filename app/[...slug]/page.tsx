@@ -82,11 +82,11 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   ],
   '/ai-verktyg/ekonomi/bokforing': [
     'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'speedledger-ai',
-    'klara-ai', 'accountingai', 'billogram-ai', 'wint-ai', 'pleo-ai',
+    'klara-ai', 'billogram-ai', 'wint-ai', 'pleo-ai',
   ],
   '/ai-verktyg/ekonomi/redovisning': [
     'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
-    'xero-ai', 'quickbooks-ai', 'accountingai-pro', 'reconcile-ai', 'taxdome-ai',
+    'xero-ai', 'quickbooks-ai', 'taxdome-ai',
   ],
 
   // ── Parent nav-hubs: broad cross-section, not subcategory-specific ──

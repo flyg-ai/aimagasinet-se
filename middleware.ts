@@ -28,18 +28,28 @@ const GONE: RegExp[] = [
 // C-klassade /category/-källor som har en 301 i next.config.mjs.
 const REDIRECTED = new Set(['/category/samhalle-paverkan', '/category/samhalle-paverkan/']);
 
+// Avpublicerade verktygssidor — 410 Gone. FAKE (påhittade varumärken) eller
+// nedlagda produkter; se uppdiktade-verktyg.md. Matchas på SISTA path-segmentet
+// så även gamla yrke-/ekonomi-URL:er som pekade hit fångas (deras 301-regler
+// filtreras bort i next.config.mjs så de faller hit i stället för att 301:a).
+const DEAD_TOOL_SLUGS = new Set(['accountingai', 'accountingai-pro', 'reconcile-ai', 'height']);
+
+function gone() {
+  return new NextResponse('410 Gone', {
+    status: 410,
+    headers: {
+      'content-type': 'text/plain; charset=utf-8',
+      'x-robots-tag': 'noindex',
+    },
+  });
+}
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (REDIRECTED.has(pathname)) return NextResponse.next();
-  if (GONE.some((re) => re.test(pathname))) {
-    return new NextResponse('410 Gone', {
-      status: 410,
-      headers: {
-        'content-type': 'text/plain; charset=utf-8',
-        'x-robots-tag': 'noindex',
-      },
-    });
-  }
+  const lastSeg = pathname.replace(/\/+$/, '').split('/').pop() ?? '';
+  if (DEAD_TOOL_SLUGS.has(lastSeg)) return gone();
+  if (GONE.some((re) => re.test(pathname))) return gone();
   return NextResponse.next();
 }
 
