@@ -22,17 +22,17 @@ const CATEGORIES: CategoryCard[] = [
 
 const YRKEN: YrkeLink[] = [
   { label: 'Lärare/pedagog', href: '/ai-verktyg/utbildning/larare/', kw: 'lärare pedagog skola utbildning undervisning' },
-  { label: 'Advokat/jurist', href: '/ai-verktyg/juridik/advokat/', kw: 'advokat jurist juridik avtal' },
-  { label: 'Revisor', href: '/ai-verktyg/ekonomi/revisor/', kw: 'revisor revision ekonomi' },
-  { label: 'Bokförare', href: '/ai-verktyg/ekonomi/bokforare/', kw: 'bokförare bokföring ekonomi' },
-  { label: 'Marknadsförare', href: '/ai-verktyg/marknadsforing/marknadsforing-yrke/', kw: 'marknadsförare marknadsföring content seo annonser' },
+  { label: 'Advokat/jurist', href: '/ai-verktyg/juridik/', kw: 'advokat jurist juridik avtal' },
+  { label: 'Revisor', href: '/ai-verktyg/ekonomi/redovisning/', kw: 'revisor revision ekonomi' },
+  { label: 'Bokförare', href: '/ai-verktyg/ekonomi/bokforing/', kw: 'bokförare bokföring ekonomi' },
+  { label: 'Marknadsförare', href: '/ai-verktyg/marknadsforing/', kw: 'marknadsförare marknadsföring content seo annonser' },
   { label: 'Säljare', href: '/ai-verktyg/crm/saljare/', kw: 'säljare försäljning sälj crm account' },
   { label: 'HR-ansvarig', href: '/ai-verktyg/rekrytering/hr/', kw: 'hr personal medarbetare human resources' },
   { label: 'Fotograf', href: '/ai-verktyg/foretag/yrke/fotograf-video/', kw: 'fotograf video foto bild film' },
   { label: 'Designer', href: '/ai-verktyg/foretag/yrke/designer/', kw: 'designer design grafik ui ux' },
   { label: 'Utvecklare', href: '/ai-verktyg/ai-kod-verktyg/utvecklare/', kw: 'utvecklare programmerare kod developer engineer' },
-  { label: 'Kundtjänstmedarbetare', href: '/ai-verktyg/kundservice/kundtjanst-yrke/', kw: 'kundtjänst kundservice support' },
-  { label: 'Rekryterare', href: '/ai-verktyg/rekrytering/rekryterare/', kw: 'rekryterare rekrytering talent sourcing' },
+  { label: 'Kundtjänstmedarbetare', href: '/ai-verktyg/kundservice/', kw: 'kundtjänst kundservice support' },
+  { label: 'Rekryterare', href: '/ai-verktyg/rekrytering/', kw: 'rekryterare rekrytering talent sourcing' },
 ];
 
 export function ForetagHubTemplate({ article: a }: { article: Article }) {

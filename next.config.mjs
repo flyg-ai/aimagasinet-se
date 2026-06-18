@@ -202,6 +202,16 @@ const nextConfig = {
       // Yrkes-omstrukturering: gamla /ai-verktyg/foretag/yrke/* → kanoniska
       // /ai-verktyg/{juridik|kundservice|rekrytering|ekonomi|marknadsforing}/*
       // (auto-genererad lista, se scripts/build-redirects-config.ts).
+      // ── Yrkesguide-konsolidering (juni 2026): 6 tunna/överlappande yrkesguider
+      //    301:as in i sin kategori-hub. Unik prosa mergades in i hubbarnas
+      //    content_mdx först (scripts/merge-yrke-into-hubs.ts). norm() ger
+      //    single-hop slash-form. ──
+      { source: '/ai-verktyg/kundservice/kundtjanst-yrke', destination: '/ai-verktyg/kundservice', statusCode: 301 },
+      { source: '/ai-verktyg/rekrytering/rekryterare', destination: '/ai-verktyg/rekrytering', statusCode: 301 },
+      { source: '/ai-verktyg/marknadsforing/marknadsforing-yrke', destination: '/ai-verktyg/marknadsforing', statusCode: 301 },
+      { source: '/ai-verktyg/juridik/advokat', destination: '/ai-verktyg/juridik', statusCode: 301 },
+      { source: '/ai-verktyg/ekonomi/bokforare', destination: '/ai-verktyg/ekonomi/bokforing', statusCode: 301 },
+      { source: '/ai-verktyg/ekonomi/revisor', destination: '/ai-verktyg/ekonomi/redovisning', statusCode: 301 },
       ...yrkesRedirects,
       // Designer/fotograf-video-uppstädning: dubbletter → kanonisk, orphans
       // flyttade till kategori-hub, tomma topplista-hubbar → kategori-hub.

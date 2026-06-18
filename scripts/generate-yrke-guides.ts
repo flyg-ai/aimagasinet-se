@@ -37,52 +37,6 @@ const YRKEN: Yrke[] = [
     ],
   },
   {
-    path: '/ai-verktyg/juridik/advokat', baseSlug: 'advokat', yrke: 'advokat och jurist',
-    title: 'AI för advokater & jurister 2026 — så använder du AI i juridiken',
-    excerpt: 'Praktisk guide för jurister: AI för avtalsgranskning, rättsutredning, due diligence och dokumentutkast — med verktygstips och fallgropar kring sekretess.',
-    tags: ['AI för jurister', 'juridik', 'advokat'],
-    focus: 'avtalsgranskning, rättsutredning och praxissökning, due diligence, utkast till dokument, samt sekretess och tystnadsplikt vid AI-användning',
-    links: [
-      { label: 'AI-verktyg för juridik', href: '/ai-verktyg/juridik/' },
-      { label: 'Harvey AI', href: '/ai-verktyg/juridik/harvey-ai/' },
-      { label: 'AI-textverktyg', href: '/ai-verktyg/ai-text-verktyg/' },
-    ],
-  },
-  {
-    path: '/ai-verktyg/ekonomi/revisor', baseSlug: 'revisor', yrke: 'revisor',
-    title: 'AI för revisorer 2026 — så använder du AI i revisionen',
-    excerpt: 'Praktisk guide för revisorer: AI för dataanalys, avvikelseidentifiering, dokumentation och bokslut — med verktygstips och vad du bör tänka på kring kvalitet.',
-    tags: ['AI för revisorer', 'revision', 'ekonomi'],
-    focus: 'dataanalys och stickprov, avvikelse- och riskidentifiering, dokumentation och rapportering, månads- och årsbokslut, samt kvalitetssäkring och oberoende',
-    links: [
-      { label: 'AI-verktyg för ekonomi', href: '/ai-verktyg/ekonomi/' },
-      { label: 'AI för redovisning', href: '/ai-verktyg/ekonomi/redovisning/' },
-    ],
-  },
-  {
-    path: '/ai-verktyg/ekonomi/bokforare', baseSlug: 'bokforare', yrke: 'bokförare',
-    title: 'AI för bokförare 2026 — så använder du AI i bokföringen',
-    excerpt: 'Praktisk guide för bokförare: AI för automatisk kontering, kvittotolkning, avstämning och kundkommunikation — med konkreta verktygstips för svenska byråer.',
-    tags: ['AI för bokförare', 'bokföring', 'ekonomi'],
-    focus: 'automatisk kontering och kvittotolkning, avstämningar, löpande bokföring, kundkommunikation och rådgivning, samt hur byråer skalar med AI',
-    links: [
-      { label: 'AI för bokföring', href: '/ai-verktyg/ekonomi/bokforing/' },
-      { label: 'AI-verktyg för ekonomi', href: '/ai-verktyg/ekonomi/' },
-    ],
-  },
-  {
-    path: '/ai-verktyg/marknadsforing/marknadsforing-yrke', baseSlug: 'marknadsforare', yrke: 'marknadsförare',
-    title: 'AI för marknadsförare 2026 — så använder du AI i marknadsföringen',
-    excerpt: 'Praktisk guide för marknadsförare: AI för content, SEO, annonser och sociala medier — med konkreta verktygstips och en arbetsflödesplan.',
-    tags: ['AI för marknadsförare', 'marknadsföring'],
-    focus: 'content och copywriting, SEO, annonsproduktion och paid media, sociala medier, samt hur man bygger ett AI-stött marknadsflöde utan generisk text',
-    links: [
-      { label: 'AI för marknadsföring', href: '/ai-verktyg/marknadsforing/' },
-      { label: 'AI för SEO', href: '/ai-verktyg/marknadsforing/seo/' },
-      { label: 'AI för content & copywriting', href: '/ai-verktyg/marknadsforing/content-copywriting/' },
-    ],
-  },
-  {
     path: '/ai-verktyg/crm/saljare', baseSlug: 'saljare', yrke: 'säljare',
     title: 'AI för säljare 2026 — så använder du AI i försäljningen',
     excerpt: 'Praktisk guide för säljare: AI för leads, lead scoring, mejl, samtalsanalys och prognoser — med verktygstips för CRM och hur du vinner tid till kundmöten.',
@@ -114,28 +68,6 @@ const YRKEN: Yrke[] = [
     links: [
       { label: 'AI-kodverktyg', href: '/ai-verktyg/ai-kod-verktyg/' },
       { label: 'AI-textverktyg', href: '/ai-verktyg/ai-text-verktyg/' },
-    ],
-  },
-  {
-    path: '/ai-verktyg/kundservice/kundtjanst-yrke', baseSlug: 'kundtjanst', yrke: 'kundtjänstmedarbetare',
-    title: 'AI för kundtjänst 2026 — så använder du AI i kundservice',
-    excerpt: 'Praktisk guide för kundtjänst: AI för svarsförslag, chatbottar, ärendesammanfattning och tonläge — med verktygstips och hur du behåller den mänskliga känslan.',
-    tags: ['AI för kundtjänst', 'kundservice'],
-    focus: 'svarsförslag och mallar, chatbottar och självbetjäning, ärendesammanfattning och routing, tonläge och översättning, samt när en människa bör ta över',
-    links: [
-      { label: 'AI för kundservice', href: '/ai-verktyg/kundservice/' },
-      { label: 'AI-textverktyg', href: '/ai-verktyg/ai-text-verktyg/' },
-    ],
-  },
-  {
-    path: '/ai-verktyg/rekrytering/rekryterare', baseSlug: 'rekryterare', yrke: 'rekryterare',
-    title: 'AI för rekryterare 2026 — så använder du AI i rekryteringen',
-    excerpt: 'Praktisk guide för rekryterare: AI för jobbannonser, CV-screening, kandidatmatchning och intervjuförberedelse — med verktygstips och fallgropar kring partiskhet.',
-    tags: ['AI för rekryterare', 'rekrytering'],
-    focus: 'jobbannonser, CV-screening och gallring, kandidatmatchning och sourcing, intervjuförberedelse, samt partiskhet, transparens och kandidatupplevelse',
-    links: [
-      { label: 'AI för rekrytering & HR', href: '/ai-verktyg/rekrytering/' },
-      { label: 'AI-verktyg för företag', href: '/ai-verktyg/foretag/' },
     ],
   },
 ];
