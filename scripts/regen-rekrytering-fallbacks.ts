@@ -28,9 +28,9 @@ async function main() {
   for (const slug of SLUGS) {
     const variants = YRKE_TOOLS.filter((t) => PARENTS.includes(t.parent) && slugify(t.brand) === slug);
     if (variants.length < 2) { console.warn(`⚠ ${slug}: ${variants.length} varianter, hoppar`); continue; }
-    const top = [...variants].sort((a, b) => b.score - a.score)[0];
+    const top = [...variants].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
     const merged = {
-      ...top, score: Math.round((variants.reduce((s, v) => s + v.score, 0) / variants.length) * 10) / 10,
+      ...top, score: Math.round((variants.reduce((s, v) => s + (v.score ?? 0), 0) / variants.length) * 10) / 10,
       pros: uniq(variants.flatMap((v) => v.pros)).slice(0, 4), cons: uniq(variants.flatMap((v) => v.cons)).slice(0, 3),
     };
     const areas = variants.map((v) => `### ${LABELS[v.parent]}\n${toContentMdx(v)}`).join('\n\n---\n\n');

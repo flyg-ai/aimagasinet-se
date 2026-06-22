@@ -118,7 +118,7 @@ async function main() {
   for (const prof of PROFS) {
     console.log(`\n=== ${prof.key}  (${prof.hubPath}) ${APPLY ? '' : '[DRY]'} ===`);
     const tools = YRKE_TOOLS.filter((t) => prof.parents.includes(t.parent));
-    const topp = [...tools].sort((a, b) => b.score - a.score).map((t) => ({ slug: t.slug, brand: t.brand, score: t.score }));
+    const topp = [...tools].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).map((t) => ({ slug: t.slug, brand: t.brand, score: t.score ?? 0 }));
 
     // ChatGPT-grupp (endast denna mergas).
     const chatgptVariants = tools.filter((t) => t.brand.toLowerCase() === 'chatgpt');
@@ -156,9 +156,9 @@ async function main() {
 
     // 3) ChatGPT-merge (marknadsföring)
     if (chatgptVariants.length > 1) {
-      const top = [...chatgptVariants].sort((a, b) => b.score - a.score)[0];
+      const top = [...chatgptVariants].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
       const merged = {
-        ...top, score: Math.round((chatgptVariants.reduce((s, v) => s + v.score, 0) / chatgptVariants.length) * 10) / 10,
+        ...top, score: Math.round((chatgptVariants.reduce((s, v) => s + (v.score ?? 0), 0) / chatgptVariants.length) * 10) / 10,
         features: uniq(chatgptVariants.flatMap((v) => v.features)).slice(0, 6),
         pros: uniq(chatgptVariants.flatMap((v) => v.pros)).slice(0, 4),
         cons: uniq(chatgptVariants.flatMap((v) => v.cons)).slice(0, 3),

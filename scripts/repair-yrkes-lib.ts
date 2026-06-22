@@ -57,10 +57,10 @@ async function main() {
       const base = row.slug.replace(/-\d+$/, '');
       const variants = YRKE_TOOLS.filter((t) => parents.includes(t.parent) && slugify(t.brand) === base);
       if (!variants.length) { console.warn(`  ⚠ ingen YRKE_TOOLS-match för ${row.slug} (base=${base})`); missing++; continue; }
-      const top = [...variants].sort((a, b) => b.score - a.score)[0];
+      const top = [...variants].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
       const merged = {
         ...top,
-        score: Math.round((variants.reduce((s, v) => s + v.score, 0) / variants.length) * 10) / 10,
+        score: Math.round((variants.reduce((s, v) => s + (v.score ?? 0), 0) / variants.length) * 10) / 10,
         features: Array.from(new Set(variants.flatMap((v) => v.features))).slice(0, 6),
         pros: Array.from(new Set(variants.flatMap((v) => v.pros))).slice(0, 4),
         cons: Array.from(new Set(variants.flatMap((v) => v.cons))).slice(0, 3),

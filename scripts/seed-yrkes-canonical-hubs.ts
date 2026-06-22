@@ -195,10 +195,10 @@ type Canon = {
 
 /** Bygg en kanonisk YrkeTool genom att slå ihop 1–N parent-varianter. */
 function mergeVariants(variants: Variant[]): YrkeTool {
-  const base = [...variants].sort((a, b) => b.score - a.score)[0]; // högsta betyg
+  const base = [...variants].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0]; // högsta betyg
   return {
     ...base,
-    score: Math.round((variants.reduce((s, v) => s + v.score, 0) / variants.length) * 10) / 10,
+    score: Math.round((variants.reduce((s, v) => s + (v.score ?? 0), 0) / variants.length) * 10) / 10,
     features: uniq(variants.flatMap((v) => v.features)).slice(0, 6),
     pros: uniq(variants.flatMap((v) => v.pros)).slice(0, 4),
     cons: uniq(variants.flatMap((v) => v.cons)).slice(0, 3),
@@ -218,9 +218,9 @@ function collectCanon(prof: Profession): Canon[] {
   const canon: Canon[] = [];
   for (const [base, variants] of Array.from(byBrand.entries())) {
     const merged = mergeVariants(variants);
-    canon.push({ slug: base, brand: merged.brand, merged, variants, score: merged.score });
+    canon.push({ slug: base, brand: merged.brand, merged, variants, score: merged.score ?? 0 });
   }
-  return canon.sort((a, b) => b.score - a.score);
+  return canon.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 }
 
 /* ─── content generation ───────────────────────────────────────── */

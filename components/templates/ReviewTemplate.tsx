@@ -36,8 +36,9 @@ export type ReviewProfile = {
   label: string;
   /** Brand name for CTA buttons (e.g. "Prova Kling" not "Prova Kling AI"). */
   ctaName?: string;
-  /** Editorial score override — wins over parseRating + seed mock. */
-  score?: number;
+  /** Editorial score override — wins over parseRating + seed mock.
+   *  `null` = explicit "ännu ej betygsatt": dölj betygssiffra/stjärnor/rank. */
+  score?: number | null;
   /** Direct external URL used when articles.affiliate_url is NULL. Rendered
    *  with rel="nofollow noopener" instead of "sponsored". */
   fallbackUrl?: string;
@@ -844,13 +845,16 @@ export function ReviewTemplate({
 }) {
   const toolName = toolNameFromTitle(a.title);
   const profile = buildReviewProfile(a);
+  // score === null = explicit "ännu ej betygsatt" (t.ex. wint-ai i väntan på
+  // ombedömning). Döljer betygssiffra, stjärnor, rank och Review-schemat.
+  const noScore = profile.score === null;
   const rating = getRating(a);
-  const rank = rankAmongSiblings(a, siblings);
+  const rank = noScore ? null : rankAmongSiblings(a, siblings);
   const crumbs = buildCrumbs(a.path);
   const monthLabel = currentMonthLabel();
-  const stars = starsFromScore(rating.score);
+  const stars = noScore ? null : starsFromScore(rating.score);
 
-  const reviewLd = {
+  const reviewLd = noScore ? null : {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -869,7 +873,8 @@ export function ReviewTemplate({
   const breadcrumbLd = crumbs.length > 0
     ? breadcrumbSchema([...crumbs, { label: a.title, href: a.path }])
     : null;
-  const allLd = breadcrumbLd ? [reviewLd, breadcrumbLd] : reviewLd;
+  const ldItems = [reviewLd, breadcrumbLd].filter(Boolean);
+  const allLd = ldItems.length === 1 ? ldItems[0] : ldItems;
 
   // Table of contents: inject anchor ids into the body H2/H3 and collect items
   // for the sticky desktop sidebar + the mobile collapsible TOC.
@@ -889,7 +894,7 @@ export function ReviewTemplate({
         article={a}
         toolName={toolName}
         profile={profile}
-        rating={rating}
+        rating={noScore ? null : rating}
         stars={stars}
         rank={rank}
         crumbs={crumbs}
@@ -957,9 +962,9 @@ function Hero({
   article: Article;
   toolName: string;
   profile: ReviewProfile;
-  rating: Rating;
-  stars: number;
-  rank: number;
+  rating: Rating | null;
+  stars: number | null;
+  rank: number | null;
   crumbs: { label: string; href: string }[];
   monthLabel: string;
 }) {
@@ -1021,20 +1026,36 @@ function Hero({
             </div>
           </div>
 
-          {/* Rating block — centered on mobile, right-aligned on desktop */}
+          {/* Rating block — centered on mobile, right-aligned on desktop.
+              Utan betyg (noScore) visas en neutral "ännu ej betygsatt"-platta. */}
           <div className="flex flex-col items-center gap-2 text-center lg:items-end lg:text-right">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-4 border-teal-200 bg-teal-50 lg:mx-0">
-              <span className="text-3xl font-black leading-none tracking-tight text-teal-600">
-                {rating.score.toFixed(1)}
-              </span>
-            </div>
-            <span className="text-base leading-none tracking-widest text-indigo-500">
-              {'★'.repeat(stars)}
-              <span className="text-line-strong">{'★'.repeat(5 - stars)}</span>
-            </span>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
-              #{rank} · {profile.label}
-            </span>
+            {rating ? (
+              <>
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-4 border-teal-200 bg-teal-50 lg:mx-0">
+                  <span className="text-3xl font-black leading-none tracking-tight text-teal-600">
+                    {rating.score.toFixed(1)}
+                  </span>
+                </div>
+                <span className="text-base leading-none tracking-widest text-indigo-500">
+                  {'★'.repeat(stars ?? 0)}
+                  <span className="text-line-strong">{'★'.repeat(5 - (stars ?? 0))}</span>
+                </span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
+                  #{rank} · {profile.label}
+                </span>
+              </>
+            ) : (
+              <>
+                <div className="mx-auto flex h-24 items-center justify-center rounded-full border-4 border-line-strong bg-soft px-6 lg:mx-0">
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle">
+                    Ännu ej betygsatt
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600">
+                  {profile.label}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -1110,6 +1131,8 @@ function Verdict({
 }
 
 function RatingMatrixSection({ profile }: { profile: ReviewProfile }) {
+  // Inga kriterier (t.ex. ännu ej betygsatt verktyg) → hoppa över sektionen.
+  if (profile.ratingCriteria.length === 0) return null;
   return (
     <section className="mt-10 rounded-2xl border border-line bg-card p-6 sm:p-8">
       <Eyebrow>Så testade vi</Eyebrow>

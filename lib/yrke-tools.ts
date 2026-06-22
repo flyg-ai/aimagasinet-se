@@ -47,7 +47,9 @@ export type YrkeTool = {
   company: string;
   founded: number;
   hq: string;
-  score: number;
+  /** Sammanvägt betyg. Utelämnas när verktyget ännu inte (om)bedömts —
+   *  då renderas sidan utan betygssiffra (se ReviewTemplate `noScore`). */
+  score?: number;
   fallbackUrl: string;
   /** Article title — used as <h1> and seed for ReviewTemplate.toolNameFromTitle. */
   title: string;
@@ -806,18 +808,18 @@ export const YRKE_TOOLS: YrkeTool[] = [
   },
   {
     slug: 'wint-ai', parent: 'bokforing', brand: 'Wint', company: 'Wint AB', founded: 2011, hq: 'Göteborg, Sverige',
-    score: 7.9, fallbackUrl: 'https://wint.se',
-    title: 'Wint AI — AI-controller för månadsbokslut',
-    oneliner: 'AI-controller som automatiserar månadsbokslut för redovisningsteam.',
-    features: ['AI-driven månadsbokslut', 'Auto-avstämning mellan systems', 'Anomaly detection i transaktioner', 'Audit trail för compliance'],
-    pros: ['Stark för mid-market controllers', 'Auto-avstämning sparar tid', 'God audit trail'],
-    cons: ['Engelskspråkig produkt', 'Krav på integrationer'],
-    pricing: 'Custom pricing — typiskt 1000-5000 USD/mån baserat på storlek.',
-    bestFor: 'Mid-market företag med interna controllers',
-    offer: { title: 'Demo bokas via sajt', price: 'Custom pricing' },
-    tags: ['Controller', 'Månadsbokslut', 'Anomaly', 'Audit'],
-    useCases: ['Månadsbokslut', 'Auto-avstämning', 'Anomaly detection', 'Audit-trail', 'Controller-flöden'],
-    label: 'Bäst för controllers', logo: 'bg-indigo-700',
+    fallbackUrl: 'https://wint.se',
+    title: 'Wint — helautomatiserad bokföring för aktiebolag',
+    oneliner: 'Svensk tjänst som sköter bokföring, bokslut och deklaration.',
+    features: ['Automatisk bokföring och kontering', 'Kvitto- och fakturahantering', 'Moms- och skattedeklaration', 'Bokslut och årsredovisning'],
+    pros: ['Svensk tjänst med svensk support', 'Kombinerar bokföringsprogram och byrå i ett', 'Heltäckande för aktiebolag — från bokföring till deklaration'],
+    cons: ['Främst inriktat på aktiebolag', 'Mindre lämpligt om du vill sköta bokföringen själv i ett traditionellt program'],
+    pricing: 'Från 699 kr/mån.',
+    bestFor: 'Aktiebolag som vill automatisera hela ekonomin',
+    offer: { title: 'Prova Wint', price: 'Från 699 kr/mån' },
+    tags: ['Svenskt', 'Bokföring', 'Bokslut', 'Aktiebolag'],
+    useCases: ['Löpande bokföring', 'Kvitto- och fakturahantering', 'Moms- och skatterapportering', 'Bokslut och deklaration', 'Lönehantering'],
+    label: 'Bäst för helautomatiserad bokföring', logo: 'bg-indigo-700',
   },
   {
     slug: 'pleo-ai', parent: 'bokforing', brand: 'Pleo', company: 'Pleo', founded: 2015, hq: 'Köpenhamn, Danmark',
@@ -967,7 +969,7 @@ export function toHubProfile(t: YrkeTool) {
   return {
     logo: t.logo,
     ctaName: t.brand,
-    score: t.score,
+    score: t.score ?? null,
     fallbackUrl: t.fallbackUrl,
     tagline: t.oneliner,
     tags: t.tags,
@@ -983,14 +985,14 @@ export function toReviewProfile(t: YrkeTool) {
   return {
     logo: t.logo,
     ctaName: t.brand,
-    score: t.score,
+    score: t.score ?? null,
     fallbackUrl: t.fallbackUrl,
     company: t.company,
     model: `${t.brand} plattform`,
     founded: t.founded,
     hq: t.hq,
     useCases: t.useCases,
-    ratingCriteria: makeCriteria(t.parent, t.score),
+    ratingCriteria: t.score != null ? makeCriteria(t.parent, t.score) : [],
     tags: t.tags,
     pros: t.pros,
     cons: t.cons,
@@ -1009,10 +1011,15 @@ export function toContentMdx(t: YrkeTool): string {
   const pros = t.pros.map((p) => `  <li>${p}</li>`).join('\n');
   const cons = t.cons.map((c) => `  <li>${c}</li>`).join('\n');
   const useCases = t.useCases.map((u) => `  <li>${u}</li>`).join('\n');
+  // Betygssiffran utelämnas helt när score saknas (ej (om)bedömt verktyg).
+  const betygSats = t.score != null
+    ? ` Vår sammanvägda bedömning landar på ${t.score.toFixed(1)} av 10 efter test mot ${t.brand}s direkta konkurrenter.`
+    : '';
+  const intryck = t.score == null ? 'gott' : t.score >= 9 ? 'mycket starkt' : t.score >= 8 ? 'starkt' : 'solid';
 
   return `
 <h2>Vår analys av ${t.brand}</h2>
-<p>${t.oneliner} ${t.brand} är ett av de verktyg vi rekommenderar inom ${t.parent.replace(/-/g, ' ')} — särskilt för team som värdesätter ${t.bestFor.toLowerCase()}. Vår sammanvägda bedömning landar på ${t.score.toFixed(1)} av 10 efter test mot ${t.brand}s direkta konkurrenter.</p>
+<p>${t.oneliner} ${t.brand} är ett av de verktyg vi rekommenderar inom ${t.parent.replace(/-/g, ' ')} — särskilt för team som värdesätter ${t.bestFor.toLowerCase()}.${betygSats}</p>
 <p>${t.brand} grundades ${t.founded} och har sitt huvudkontor i ${t.hq}. Företaget ligger bakom <strong>${t.label}</strong> i vår topplista och utmärker sig framför allt på ${t.tags.slice(0, 2).join(' och ').toLowerCase()}.</p>
 
 <h2>Funktioner som spelar roll</h2>
@@ -1042,7 +1049,7 @@ ${cons}
 <p>${t.pricing}</p>
 
 <h2>Slutsats</h2>
-<p>Sammantaget ger ${t.brand} ett <strong>${t.score >= 9 ? 'mycket starkt' : t.score >= 8 ? 'starkt' : 'solid'}</strong> intryck i 2026 års test. ${t.brand} placerar sig som <strong>${t.label}</strong> och passar bäst för ${t.bestFor.toLowerCase()}.</p>
+<p>Sammantaget ger ${t.brand} ett <strong>${intryck}</strong> intryck i 2026 års test. ${t.brand} placerar sig som <strong>${t.label}</strong> och passar bäst för ${t.bestFor.toLowerCase()}.</p>
 `.trim();
 }
 
