@@ -25,11 +25,11 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
 type Pick = { category: string; name: string; key: string; tagline: string; href: string };
 
 const EDITORS_PICKS: Pick[] = [
-  { category: 'AI-text',   name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',  href: '/ai-verktyg/ai-text-verktyg/claude/' },
-  { category: 'AI-bilder', name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',         href: '/ai-verktyg/ai-bild-verktyg/midjourney/' },
+  { category: 'AI-text',   name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',  href: '/ai-verktyg/claude/' },
+  { category: 'AI-bilder', name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',         href: '/ai-verktyg/midjourney/' },
   { category: 'AI-video',  name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',     href: '/ai-video/kling-ai/' },
-  { category: 'AI-ljud',   name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',       href: '/ai-verktyg/ai-ljud-och-musik/suno-ai/' },
-  { category: 'AI-kod',    name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',       href: '/ai-verktyg/ai-kod-verktyg/cursor-ai/' },
+  { category: 'AI-ljud',   name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',       href: '/ai-verktyg/suno-ai/' },
+  { category: 'AI-kod',    name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',       href: '/ai-verktyg/cursor-ai/' },
 ];
 
 function EditorsPicks() {

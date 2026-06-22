@@ -10,11 +10,11 @@ type ToolLink = { slug: string; name: string; path: string };
  *  homepage already renders PopularToolsSidebar in the main grid sidebar
  *  and that one's the source of truth. */
 const POPULAR_TOOLS: ToolLink[] = [
-  { slug: 'claude',    name: 'Claude',     path: '/ai-verktyg/ai-text-verktyg/claude' },
-  { slug: 'chatgpt',   name: 'ChatGPT',    path: '/ai-verktyg/ai-text-verktyg/chatgpt' },
-  { slug: 'cursor-ai', name: 'Cursor AI',  path: '/ai-verktyg/ai-kod-verktyg/cursor-ai' },
+  { slug: 'claude',    name: 'Claude',     path: '/ai-verktyg/claude' },
+  { slug: 'chatgpt',   name: 'ChatGPT',    path: '/ai-verktyg/chatgpt' },
+  { slug: 'cursor-ai', name: 'Cursor AI',  path: '/ai-verktyg/cursor-ai' },
   { slug: 'kling-ai',  name: 'Kling AI',   path: '/ai-video/kling-ai' },
-  { slug: 'suno-ai',   name: 'Suno AI',    path: '/ai-verktyg/ai-ljud-och-musik/suno-ai' },
+  { slug: 'suno-ai',   name: 'Suno AI',    path: '/ai-verktyg/suno-ai' },
 ];
 
 type GuideRow = { slug: string; title: string; path: string };

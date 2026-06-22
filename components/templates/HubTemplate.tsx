@@ -499,21 +499,21 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
   'gratis': [
     {
       slug: 'chatgpt-gratis', title: 'ChatGPT',
-      path: '/ai-verktyg/ai-text-verktyg/chatgpt',
+      path: '/ai-verktyg/chatgpt',
       excerpt: 'OpenAIs flaggskepp — gratisversionen ger GPT-5 light, custom GPTs och bilduppladdning. Full access kräver Plus.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null,
     },
     {
       slug: 'claude-gratis', title: 'Claude',
-      path: '/ai-verktyg/ai-text-verktyg/claude',
+      path: '/ai-verktyg/claude',
       excerpt: 'Anthropics Claude med gratis tier — bästa skrivkvaliteten av de fria modellerna, generös kontext.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null,
     },
     {
       slug: 'gemini-gratis', title: 'Gemini',
-      path: '/ai-verktyg/ai-text-verktyg/gemini',
+      path: '/ai-verktyg/gemini',
       excerpt: 'Googles Gemini med gratis access till 2.5 Flash + integration med Gmail, Docs och Drive.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null,
@@ -548,14 +548,14 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
     },
     {
       slug: 'stable-diffusion-gratis', title: 'Stable Diffusion',
-      path: '/ai-verktyg/ai-bild-verktyg/stable-diffusion',
+      path: '/ai-verktyg/stable-diffusion',
       excerpt: 'Open-source-bildmodellen som du kör helt gratis lokalt — eller via gratis webb-UI som ComfyUI.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null,
     },
     {
       slug: 'suno-gratis', title: 'Suno AI',
-      path: '/ai-verktyg/ai-ljud-och-musik/suno-ai',
+      path: '/ai-verktyg/suno-ai',
       excerpt: 'AI-musikgenerator med 10 gratis krediter per dag — fungerar för testning och experimentell musik.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null,

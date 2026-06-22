@@ -805,7 +805,7 @@ export const YRKE_TOOLS: YrkeTool[] = [
     label: 'Bäst för fakturering', logo: 'bg-orange-600',
   },
   {
-    slug: 'wint-ai', parent: 'bokforing', brand: 'Wint', company: 'Wint AI', founded: 2020, hq: 'Tel Aviv, Israel',
+    slug: 'wint-ai', parent: 'bokforing', brand: 'Wint', company: 'Wint AB', founded: 2011, hq: 'Göteborg, Sverige',
     score: 7.9, fallbackUrl: 'https://wint.se',
     title: 'Wint AI — AI-controller för månadsbokslut',
     oneliner: 'AI-controller som automatiserar månadsbokslut för redovisningsteam.',

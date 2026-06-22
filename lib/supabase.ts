@@ -29,7 +29,7 @@ export type Article = {
   tags: string[];
   featured_image: string | null;
   type: 'post' | 'page';
-  path: string;            // canonical URL path, e.g. "/ai-verktyg/ai-text-verktyg/chatgpt"
+  path: string;            // canonical URL path, e.g. "/ai-verktyg/chatgpt"
   parent_slug: string | null;
   affiliate_url: string | null;
   published_at: string | null;
