@@ -311,6 +311,39 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: 'Gratis med Adobe-konto', price: 'Gratis · Firefly 9 USD/mån', bestFor: 'Designers i Adobe-ekosystemet' },
     label: 'Bäst för kommersiell trygghet',
   },
+  // Domän-fix: explicit slugnyckel så exakt-matchning vinner före fuzzy-loopen
+  // (slug 'canva-ai' fuzz-matchade tidigare 'udio' via "magic stUDIO"). canva.com
+  // webb-verifierad (doman-mismatch.md).
+  'canva-ai': {
+    logo: 'bg-cyan-500',
+    ctaName: 'Canva', fallbackUrl: 'https://www.canva.com',
+  },
+  // Saknade fallbackUrl → döda CTA-knappar. Domäner webb-verifierade,
+  // produkter bekräftat aktiva (doman-verifiering.md).
+  'leonardo-ai': {
+    logo: 'bg-amber-500',
+    ctaName: 'Leonardo AI', fallbackUrl: 'https://leonardo.ai',
+  },
+  ideogram: {
+    logo: 'bg-violet-600',
+    ctaName: 'Ideogram', fallbackUrl: 'https://ideogram.ai',
+  },
+  'playground-ai': {
+    logo: 'bg-emerald-600',
+    ctaName: 'Playground AI', fallbackUrl: 'https://playground.com',
+  },
+  'bing-image-creator': {
+    logo: 'bg-sky-600',
+    ctaName: 'Bing Image Creator', fallbackUrl: 'https://www.bing.com/images/create',
+  },
+  flux: {
+    logo: 'bg-zinc-800',
+    ctaName: 'Flux', fallbackUrl: 'https://bfl.ai',
+  },
+  'stable-diffusion': {
+    logo: 'bg-purple-700',
+    ctaName: 'Stable Diffusion', fallbackUrl: 'https://stability.ai',
+  },
 
   /* ── Ljud / musik ─────────────────────────────────────── */
   'suno-ai': {

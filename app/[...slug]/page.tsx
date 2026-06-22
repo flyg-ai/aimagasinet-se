@@ -74,7 +74,7 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   ],
   '/ai-verktyg/marknadsforing/annonser': [
     'adcreative-ai', 'pencil-ai', 'persado', 'smartly-io', 'albert-ai',
-    'pattern89', 'motionapp', 'madgicx', 'revealbot',
+    'motionapp', 'madgicx', 'revealbot',
   ],
   '/ai-verktyg/marknadsforing/sociala-medier': [
     'hootsuite-ai', 'buffer-ai', 'predis-ai', 'flick-ai', 'lately-ai',
@@ -82,7 +82,7 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   ],
   '/ai-verktyg/ekonomi/bokforing': [
     'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'speedledger-ai',
-    'klara-ai', 'billogram-ai', 'wint-ai', 'pleo-ai',
+    'billogram-ai', 'wint-ai', 'pleo-ai',
   ],
   '/ai-verktyg/ekonomi/redovisning': [
     'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
@@ -108,7 +108,7 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   ],
   '/ai-verktyg/rost-och-tal': [
     'elevenlabs', 'murf-ai', 'speechify', 'play-ht', 'resemble-ai',
-    'wellsaid-labs', 'lovo-ai', 'voicemaker', 'replica-studios', 'amazon-polly',
+    'wellsaid-labs', 'lovo-ai', 'voicemaker', 'amazon-polly',
   ],
   '/ai-verktyg/podcast-ljudredigering': [
     'descript', 'adobe-podcast', 'riverside-fm', 'cleanvoice-ai', 'auphonic',

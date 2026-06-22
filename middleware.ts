@@ -32,7 +32,12 @@ const REDIRECTED = new Set(['/category/samhalle-paverkan', '/category/samhalle-p
 // nedlagda produkter; se uppdiktade-verktyg.md. Matchas på SISTA path-segmentet
 // så även gamla yrke-/ekonomi-URL:er som pekade hit fångas (deras 301-regler
 // filtreras bort i next.config.mjs så de faller hit i stället för att 301:a).
-const DEAD_TOOL_SLUGS = new Set(['accountingai', 'accountingai-pro', 'reconcile-ai', 'height']);
+const DEAD_TOOL_SLUGS = new Set([
+  'accountingai', 'accountingai-pro', 'reconcile-ai', 'height',
+  // Domän-audit: påhittad/ej verifierbar (klara-ai) + nedlagda produkter
+  // (pattern89 uppgått i Shutterstock, replica-studios stängt 2025-06-30).
+  'klara-ai', 'pattern89', 'replica-studios',
+]);
 
 function gone() {
   return new NextResponse('410 Gone', {
