@@ -52,7 +52,7 @@ const A1 = {
   tags: ['Five Eyes', 'cybersäkerhet', 'AI-hot', 'frontier-AI', 'zero-day', 'nyhet'],
   content: `<p>Den 22 juni 2026 gick säkerhetscheferna i underrättelsealliansen Five Eyes — USA, Storbritannien, Kanada, Australien och Nya Zeeland — ut med ett ovanligt gemensamt offentligt uttalande: generativa AI-modeller som kan driva avancerade cyberattacker mot företag och myndigheter är "månader, inte år" bort. Budskapet till omvärlden var lika kort som ovanligt — agera nu.</p>
 
-<p>Att de fem ländernas underrättelsetjänster över huvud taget uttalar sig tillsammans och offentligt är i sig en nyhet. Five Eyes-samarbetet bygger normalt på diskret informationsdelning, inte gemensamma varningar till allmänheten. Att steget tas nu tolkas som en signal om att hotbilden har skiftat, enligt rapportering i bland annat <a href="https://www.cbsnews.com/" rel="${REL}">CBS News</a>, <a href="https://www.techradar.com/" rel="${REL}">TechRadar</a> och <a href="https://gizmodo.com/" rel="${REL}">Gizmodo</a>.</p>
+<p>Att de fem ländernas underrättelsetjänster över huvud taget uttalar sig tillsammans och offentligt är i sig en nyhet. Five Eyes-samarbetet bygger normalt på diskret informationsdelning, inte gemensamma varningar till allmänheten. Att steget tas nu tolkas som en signal om att hotbilden har skiftat, enligt rapportering i bland annat <a href="https://www.cbsnews.com/news/ai-bypass-cybersecurity-systems-months-not-years-five-eyes/" rel="${REL}">CBS News</a>, <a href="https://www.techradar.com/pro/security/act-now-five-eyes-warns-that-ai-models-specialized-for-cyber-attacks-are-only-months-away" rel="${REL}">TechRadar</a> och <a href="https://gizmodo.com/top-intel-agencies-say-ai-driven-cyber-catastrophes-are-imminent-the-timeline-is-not-years-it-is-months-2000775369" rel="${REL}">Gizmodo</a>.</p>
 
 <h2>Vad varningen säger</h2>
 
@@ -98,7 +98,7 @@ const A2 = {
   seo_description: 'OpenAI öppnar sitt första nordiska kontor i Stockholm under 2026. Sverige en av bolagets snabbast växande marknader i Europa.',
   excerpt: 'OpenAI, bolaget bakom ChatGPT, öppnar sitt första nordiska kontor i Stockholm under andra halvåret 2026. Sverige är enligt bolaget en av dess snabbast växande marknader i Europa.',
   tags: ['OpenAI', 'Stockholm', 'ChatGPT', 'AI-Sverige', 'etablering', 'nyhet'],
-  content: `<p>Stockholm. OpenAI, bolaget bakom ChatGPT, öppnar sitt första nordiska kontor i Stockholm under andra halvåret 2026. Beskedet, som rapporterades av <a href="https://www.svt.se/nyheter/" rel="${REL}">SVT Nyheter</a> den 18 juni 2026, gör Stockholm till nav för bolagets expansion i en region där användningen av dess tjänster vuxit snabbt.</p>
+  content: `<p>Stockholm. OpenAI, bolaget bakom ChatGPT, öppnar sitt första nordiska kontor i Stockholm under andra halvåret 2026. Beskedet, som rapporterades av <a href="https://www.svt.se/nyheter/inrikes/open-ai-oppnar-kontor-i-stockholm" rel="${REL}">SVT Nyheter</a> den 18 juni 2026, gör Stockholm till nav för bolagets expansion i en region där användningen av dess tjänster vuxit snabbt.</p>
 
 <p>Etableringen är ett tydligt tecken på att Norden blivit en prioriterad marknad för ett av världens mest uppmärksammade AI-bolag. Enligt OpenAI är Sverige i dag en av deras snabbast växande marknader i Europa, med ett stadigt ökande antal användare.</p>
 
