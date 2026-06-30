@@ -56,6 +56,11 @@ const BUDGET: { slug: string; label: string }[] = [
 
 const MAX = 4;
 
+/** Primary CTA — saturated indigo, real elevation, inviting even when
+ *  disabled (muted indigo, never grey-dead). */
+const CTA_CLASS =
+  'inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-indigo-600/25 transition-all hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-600/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:bg-indigo-300 disabled:shadow-none disabled:hover:bg-indigo-300';
+
 export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -153,6 +158,7 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
 
         {step === 2 && (
           <StepPills
+            current={2}
             title="Vad ska du använda det till?"
             subtitle="Välj en eller flera — det hjälper oss ge en vassare rekommendation."
             options={SYFTE}
@@ -169,6 +175,7 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
 
         {step === 3 && (
           <StepPills
+            current={3}
             title="Budget?"
             subtitle="Vi väger in pris i rekommendationen."
             options={BUDGET}
@@ -212,15 +219,7 @@ const STEP_LABELS = ['Verktyg', 'Syfte', 'Budget', 'Resultat'] as const;
 function StepBar({ current }: { current: 1 | 2 | 3 | 4 }) {
   const total = STEP_LABELS.length;
   return (
-    <div className="mb-7 sm:mb-9">
-      {/* Always-visible "where am I" line — readable on mobile too */}
-      <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em]">
-        <span className="text-indigo-600">Steg {current}</span>
-        <span className="text-fg-subtle"> av {total}</span>
-        <span className="px-1.5 text-line-strong">·</span>
-        <span className="text-fg">{STEP_LABELS[current - 1]}</span>
-      </p>
-
+    <div className="mb-6 sm:mb-7">
       <ol className="flex items-center" aria-label={`Förlopp: steg ${current} av ${total}, ${STEP_LABELS[current - 1]}`}>
         {STEP_LABELS.map((label, i) => {
           const n = i + 1;
@@ -274,10 +273,11 @@ function StepTools({
   const tools = catalog.filter((t) => t.category === activeCat);
 
   return (
-    <StepPanel>
-      <h2 className="mb-1 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">Välj verktyg att jämföra</h2>
-      <p className="mb-6 text-fg-subtle">Markera 2–4 verktyg. Bläddra mellan kategorierna nedan.</p>
-
+    <StepPanel
+      current={1}
+      title="Välj verktyg att jämföra"
+      subtitle="Markera 2–4 verktyg. Bläddra mellan kategorierna nedan."
+    >
       <div className="mb-6 flex flex-wrap gap-2">
         {CATEGORY_ORDER.map((c) => {
           const active = c === activeCat;
@@ -321,7 +321,7 @@ function StepTools({
           type="button"
           onClick={onNext}
           disabled={selected.length < 2}
-          className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-line-strong disabled:text-fg-subtle"
+          className={CTA_CLASS}
         >
           Nästa <span aria-hidden>→</span>
         </button>
@@ -330,13 +330,32 @@ function StepTools({
   );
 }
 
-/* ─── Shared step panel — indigo-tinted card that breaks the white
-   surface and pulls the eye to the active question. ─────────────── */
+/* ─── Shared step panel ─────────────────────────────────────────────
+   A light, elevated card with real depth (soft indigo-tinted shadow +
+   indigo ring), a slim indigo accent bar on top, and an indigo-tinted
+   header zone carrying the flyg.ai-style step label + the question.
+   No overflow-hidden → step 1's sticky CTA bar still works. */
 
-function StepPanel({ children }: { children: ReactNode }) {
+function StepPanel({
+  current, title, subtitle, children,
+}: {
+  current: 1 | 2 | 3 | 4; title: string; subtitle: string; children: ReactNode;
+}) {
+  const label = `Jämförelse · Steg ${current} av ${STEP_LABELS.length} · ${STEP_LABELS[current - 1]}`;
   return (
-    <div className="rounded-3xl border border-indigo-200/70 bg-gradient-to-b from-indigo-50/80 via-card to-card p-5 shadow-sm shadow-indigo-900/[0.04] sm:p-7">
-      {children}
+    <div className="rounded-[24px] bg-card shadow-[0_2px_8px_rgba(24,24,27,0.04),0_28px_64px_-28px_rgba(79,70,229,0.30)] ring-1 ring-indigo-100">
+      {/* slim indigo accent — panel identity without going dark */}
+      <div aria-hidden className="h-1.5 rounded-t-[24px] bg-gradient-to-r from-indigo-600 via-violet-500 to-indigo-500" />
+
+      {/* header zone */}
+      <div className="border-b border-indigo-100/70 bg-gradient-to-b from-indigo-50/80 to-card px-5 pb-5 pt-5 sm:px-8 sm:pb-6 sm:pt-6">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-600">{label}</p>
+        <h2 className="mt-2.5 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">{title}</h2>
+        <p className="mt-1.5 text-fg-subtle">{subtitle}</p>
+      </div>
+
+      {/* body */}
+      <div className="px-5 py-6 sm:px-8 sm:py-7">{children}</div>
     </div>
   );
 }
@@ -375,8 +394,9 @@ function SelectableCard({
 /* ─── Steps 2 & 3: pill pickers ────────────────────────────────── */
 
 function StepPills({
-  title, subtitle, options, selected, onToggle, onBack, onSkip, onNext, nextLabel, nextDisabled, hint,
+  current, title, subtitle, options, selected, onToggle, onBack, onSkip, onNext, nextLabel, nextDisabled, hint,
 }: {
+  current: 2 | 3;
   title: string; subtitle: string;
   options: { slug: string; label: string }[];
   selected: string[]; onToggle: (slug: string) => void;
@@ -384,20 +404,18 @@ function StepPills({
   nextLabel: string; nextDisabled: boolean; hint: string;
 }) {
   return (
-    <StepPanel>
-      <h2 className="mb-1 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">{title}</h2>
-      <p className="mb-6 text-fg-subtle">{subtitle}</p>
+    <StepPanel current={current} title={title} subtitle={subtitle}>
       <PillRow options={options} selected={selected} onToggle={onToggle} />
       <div className="mt-8 flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
-          <button type="button" onClick={onBack} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">← Tillbaka</button>
-          <div className="flex items-center gap-3">
-            <button type="button" onClick={onSkip} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">Hoppa över</button>
+          <button type="button" onClick={onBack} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle transition-colors hover:text-indigo-600">← Tillbaka</button>
+          <div className="flex items-center gap-4">
+            <button type="button" onClick={onSkip} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle transition-colors hover:text-indigo-600">Hoppa över</button>
             <button
               type="button"
               onClick={onNext}
               disabled={nextDisabled}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-line-strong disabled:text-fg-subtle"
+              className={CTA_CLASS}
             >
               {nextLabel}
             </button>
@@ -427,20 +445,16 @@ function PillRow({
             type="button"
             onClick={() => onToggle(o.slug)}
             aria-pressed={on}
-            className={`group inline-flex items-center gap-2 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-all duration-150 ${
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-2 px-5 py-2.5 text-sm font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-card ${
               on
-                ? 'border-indigo-600 bg-indigo-600 text-white shadow-sm shadow-indigo-600/25'
-                : 'border-line bg-card text-fg-muted hover:-translate-y-0.5 hover:border-indigo-400 hover:text-indigo-700 hover:shadow-md'
+                ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                : 'border-indigo-100 bg-indigo-50/50 text-fg-muted hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-md'
             }`}
           >
-            {/* check affordance: empty ring signals "selectable", filled = chosen */}
-            <span
-              aria-hidden
-              className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-black leading-none transition-colors ${
-                on ? 'bg-white text-indigo-600' : 'border border-line-strong text-transparent group-hover:border-indigo-400'
-              }`}
-            >
-              ✓
+            {/* fixed-width check slot: shows ✓ when chosen, empty (no grey
+                circle) otherwise — keeps width stable so siblings don't reflow */}
+            <span aria-hidden className="flex w-4 shrink-0 items-center justify-center text-xs font-black leading-none">
+              {on ? '✓' : ''}
             </span>
             {o.label}
           </button>
@@ -587,7 +601,7 @@ function ResultView({
           type="button"
           onClick={onGenerate}
           disabled={loading}
-          className="mt-6 flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+          className={`mt-6 ${CTA_CLASS}`}
         >
           {loading ? 'Genererar…' : dirty || !rec ? 'Generera rekommendation →' : 'Uppdatera rekommendation →'}
         </button>
