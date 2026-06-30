@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import {
   resolveToolProfile,
@@ -54,6 +54,40 @@ function display(token: string) {
   if (!ref) throw new Error(`Unknown compare token: ${token}`);
   const profile = resolveToolProfile(ref.key, ref.name);
   return { name: ref.name, logo: profile.logo, score: toolOverallScore(profile) };
+}
+
+/** Clean skeleton matching the wizard's first-step footprint so there is
+ *  no layout jump when the client component hydrates. */
+function WizardSkeleton() {
+  return (
+    <div className="animate-pulse" aria-hidden>
+      {/* progress line + step dots */}
+      <div className="mb-3 h-3 w-44 rounded bg-soft" />
+      <div className="mb-9 flex items-center gap-2.5">
+        {[0, 1, 2, 3].map((i) => (
+          <Fragment key={i}>
+            {i > 0 && <span className="h-0.5 flex-1 rounded-full bg-soft" />}
+            <span className="h-8 w-8 rounded-full bg-soft" />
+          </Fragment>
+        ))}
+      </div>
+      {/* panel */}
+      <div className="rounded-3xl border border-line bg-card p-5 sm:p-7">
+        <div className="h-8 w-64 max-w-full rounded bg-soft" />
+        <div className="mt-3 h-4 w-80 max-w-full rounded bg-soft" />
+        <div className="mb-6 mt-6 flex flex-wrap gap-2">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <span key={i} className="h-8 w-20 rounded-full bg-soft" />
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} className="aspect-[4/3] rounded-xl bg-soft" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default async function JamforHub() {
@@ -124,7 +158,7 @@ export default async function JamforHub() {
       </header>
 
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-        <Suspense fallback={<div className="py-20 text-center text-fg-subtle">Laddar…</div>}>
+        <Suspense fallback={<WizardSkeleton />}>
           <ComparisonWizard catalog={catalog} />
         </Suspense>
       </section>

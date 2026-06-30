@@ -121,6 +121,18 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ─── Compare wizard step transition ───────────────────────────────
+   Re-keyed per step so React remounts the subtree and replays this.
+   Only opacity + transform → no layout shift. */
+@keyframes wizard-step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wizard-step { animation: wizard-step-in 200ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .wizard-step { animation: none; }
+}
+
 /* Hide legacy WP "AI compare" widget — replaced by HubTemplate ComparisonTable.
    Markup from WP looks like: <div id="ai-compare" class="ai-compare">…</div>
    plus standalone .ai-vs-* rows. */

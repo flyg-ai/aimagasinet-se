@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { ToolCategory } from '@/lib/compare';
@@ -131,94 +131,129 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
     setGeneratedKey(null); setStep(1); setActiveCat('AI-text');
   }
 
+  const stepIndex: 1 | 2 | 3 | 4 = step === 'result' ? 4 : step;
+
   return (
     <div>
-      {step !== 'result' && <StepBar step={step} />}
+      <StepBar current={stepIndex} />
 
-      {step === 1 && (
-        <StepTools
-          catalog={catalog}
-          selected={selected}
-          activeCat={activeCat}
-          setActiveCat={setActiveCat}
-          onToggle={toggleTool}
-          onNext={() => setStep(2)}
-        />
-      )}
+      {/* key re-mounts the subtree on step change → replays the entrance
+          animation so the brain registers that the step changed. */}
+      <div key={String(step)} className="wizard-step">
+        {step === 1 && (
+          <StepTools
+            catalog={catalog}
+            selected={selected}
+            activeCat={activeCat}
+            setActiveCat={setActiveCat}
+            onToggle={toggleTool}
+            onNext={() => setStep(2)}
+          />
+        )}
 
-      {step === 2 && (
-        <StepPills
-          kicker="Steg 2"
-          title="Vad ska du använda det till?"
-          subtitle="Välj en eller flera — det hjälper oss ge en vassare rekommendation."
-          options={SYFTE}
-          selected={syfte}
-          onToggle={toggleSyfte}
-          onBack={() => setStep(1)}
-          onSkip={() => setStep(3)}
-          onNext={() => setStep(3)}
-          nextLabel="Nästa →"
-          nextDisabled={syfte.length === 0}
-        />
-      )}
+        {step === 2 && (
+          <StepPills
+            title="Vad ska du använda det till?"
+            subtitle="Välj en eller flera — det hjälper oss ge en vassare rekommendation."
+            options={SYFTE}
+            selected={syfte}
+            onToggle={toggleSyfte}
+            onBack={() => setStep(1)}
+            onSkip={() => setStep(3)}
+            onNext={() => setStep(3)}
+            nextLabel="Nästa →"
+            nextDisabled={syfte.length === 0}
+            hint="Välj minst ett syfte för att gå vidare"
+          />
+        )}
 
-      {step === 3 && (
-        <StepPills
-          kicker="Steg 3"
-          title="Budget?"
-          subtitle="Vi väger in pris i rekommendationen."
-          options={BUDGET}
-          selected={budget ? [budget] : []}
-          onToggle={(slug) => setBudget((b) => (b === slug ? '' : slug))}
-          onBack={() => setStep(2)}
-          onSkip={() => { setBudget(''); showResult(); }}
-          onNext={showResult}
-          nextLabel="Visa jämförelse →"
-          nextDisabled={false}
-        />
-      )}
+        {step === 3 && (
+          <StepPills
+            title="Budget?"
+            subtitle="Vi väger in pris i rekommendationen."
+            options={BUDGET}
+            selected={budget ? [budget] : []}
+            onToggle={(slug) => setBudget((b) => (b === slug ? '' : slug))}
+            onBack={() => setStep(2)}
+            onSkip={() => { setBudget(''); showResult(); }}
+            onNext={showResult}
+            nextLabel="Visa jämförelse →"
+            nextDisabled={false}
+            hint=""
+          />
+        )}
 
-      {step === 'result' && (
-        <ResultView
-          catalog={catalog}
-          selected={selected}
-          syfte={syfte}
-          budget={budget}
-          onToggleSyfte={toggleSyfte}
-          onSetBudget={(slug) => setBudget((b) => (b === slug ? '' : slug))}
-          rec={rec}
-          loading={loading}
-          err={err}
-          dirty={dirty}
-          onGenerate={runGenerate}
-          onReset={reset}
-          onBack={() => setStep(3)}
-        />
-      )}
+        {step === 'result' && (
+          <ResultView
+            catalog={catalog}
+            selected={selected}
+            syfte={syfte}
+            budget={budget}
+            onToggleSyfte={toggleSyfte}
+            onSetBudget={(slug) => setBudget((b) => (b === slug ? '' : slug))}
+            rec={rec}
+            loading={loading}
+            err={err}
+            dirty={dirty}
+            onGenerate={runGenerate}
+            onReset={reset}
+            onBack={() => setStep(3)}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
 /* ─── Step indicator ───────────────────────────────────────────── */
 
-function StepBar({ step }: { step: 1 | 2 | 3 }) {
-  const labels = ['Välj verktyg', 'Syfte', 'Budget'];
+const STEP_LABELS = ['Verktyg', 'Syfte', 'Budget', 'Resultat'] as const;
+
+function StepBar({ current }: { current: 1 | 2 | 3 | 4 }) {
+  const total = STEP_LABELS.length;
   return (
-    <div className="mb-8 flex items-center gap-2">
-      {labels.map((l, i) => {
-        const n = (i + 1) as 1 | 2 | 3;
-        const active = n === step;
-        const done = n < step;
-        return (
-          <div key={l} className="flex items-center gap-2">
-            <span className={`flex h-7 w-7 items-center justify-center rounded-full font-mono text-[11px] font-black ${active ? 'bg-indigo-600 text-white' : done ? 'bg-indigo-100 text-indigo-700' : 'bg-soft text-fg-subtle'}`}>
-              {done ? '✓' : n}
-            </span>
-            <span className={`hidden text-sm font-bold sm:inline ${active ? 'text-fg' : 'text-fg-subtle'}`}>{l}</span>
-            {i < 2 && <span aria-hidden className="mx-1 h-px w-5 bg-line sm:w-8" />}
-          </div>
-        );
-      })}
+    <div className="mb-7 sm:mb-9">
+      {/* Always-visible "where am I" line — readable on mobile too */}
+      <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em]">
+        <span className="text-indigo-600">Steg {current}</span>
+        <span className="text-fg-subtle"> av {total}</span>
+        <span className="px-1.5 text-line-strong">·</span>
+        <span className="text-fg">{STEP_LABELS[current - 1]}</span>
+      </p>
+
+      <ol className="flex items-center" aria-label={`Förlopp: steg ${current} av ${total}, ${STEP_LABELS[current - 1]}`}>
+        {STEP_LABELS.map((label, i) => {
+          const n = i + 1;
+          const active = n === current;
+          const done = n < current;
+          return (
+            <Fragment key={label}>
+              {i > 0 && (
+                <span
+                  aria-hidden
+                  className={`mx-1.5 h-0.5 flex-1 rounded-full transition-colors sm:mx-2.5 ${done || active ? 'bg-indigo-500' : 'bg-line'}`}
+                />
+              )}
+              <li className="flex items-center gap-2" aria-current={active ? 'step' : undefined}>
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-mono text-xs font-black transition-all ${
+                    active
+                      ? 'bg-indigo-600 text-white ring-4 ring-indigo-100'
+                      : done
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-soft text-fg-subtle ring-1 ring-inset ring-line'
+                  }`}
+                >
+                  {done ? '✓' : n}
+                </span>
+                <span className={`hidden text-sm font-bold sm:inline ${active ? 'text-fg' : done ? 'text-fg-muted' : 'text-fg-subtle'}`}>
+                  {label}
+                </span>
+              </li>
+            </Fragment>
+          );
+        })}
+      </ol>
     </div>
   );
 }
@@ -239,8 +274,7 @@ function StepTools({
   const tools = catalog.filter((t) => t.category === activeCat);
 
   return (
-    <div>
-      <div className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">Steg 1</div>
+    <StepPanel>
       <h2 className="mb-1 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">Välj verktyg att jämföra</h2>
       <p className="mb-6 text-fg-subtle">Markera 2–4 verktyg. Bläddra mellan kategorierna nedan.</p>
 
@@ -274,7 +308,15 @@ function StepTools({
       </div>
 
       <div className="sticky bottom-4 z-10 mt-8 flex items-center justify-between gap-4 rounded-2xl border border-line bg-card/95 p-4 shadow-lg shadow-black/5 backdrop-blur">
-        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-muted">{selected.length} / {MAX} valda</span>
+        <span aria-live="polite" className="font-mono text-[11px] font-bold uppercase tracking-wider">
+          {selected.length < 2 ? (
+            <span className="text-fg-subtle">
+              Välj minst 2 verktyg <span className="text-indigo-600">· {selected.length}/{MAX}</span>
+            </span>
+          ) : (
+            <span className="text-fg-muted">{selected.length} / {MAX} valda</span>
+          )}
+        </span>
         <button
           type="button"
           onClick={onNext}
@@ -284,6 +326,17 @@ function StepTools({
           Nästa <span aria-hidden>→</span>
         </button>
       </div>
+    </StepPanel>
+  );
+}
+
+/* ─── Shared step panel — indigo-tinted card that breaks the white
+   surface and pulls the eye to the active question. ─────────────── */
+
+function StepPanel({ children }: { children: ReactNode }) {
+  return (
+    <div className="rounded-3xl border border-indigo-200/70 bg-gradient-to-b from-indigo-50/80 via-card to-card p-5 shadow-sm shadow-indigo-900/[0.04] sm:p-7">
+      {children}
     </div>
   );
 }
@@ -322,35 +375,40 @@ function SelectableCard({
 /* ─── Steps 2 & 3: pill pickers ────────────────────────────────── */
 
 function StepPills({
-  kicker, title, subtitle, options, selected, onToggle, onBack, onSkip, onNext, nextLabel, nextDisabled,
+  title, subtitle, options, selected, onToggle, onBack, onSkip, onNext, nextLabel, nextDisabled, hint,
 }: {
-  kicker: string; title: string; subtitle: string;
+  title: string; subtitle: string;
   options: { slug: string; label: string }[];
   selected: string[]; onToggle: (slug: string) => void;
   onBack: () => void; onSkip: () => void; onNext: () => void;
-  nextLabel: string; nextDisabled: boolean;
+  nextLabel: string; nextDisabled: boolean; hint: string;
 }) {
   return (
-    <div>
-      <div className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">{kicker}</div>
+    <StepPanel>
       <h2 className="mb-1 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">{title}</h2>
       <p className="mb-6 text-fg-subtle">{subtitle}</p>
       <PillRow options={options} selected={selected} onToggle={onToggle} />
-      <div className="mt-10 flex items-center justify-between gap-4">
-        <button type="button" onClick={onBack} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">← Tillbaka</button>
-        <div className="flex items-center gap-3">
-          <button type="button" onClick={onSkip} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">Hoppa över</button>
-          <button
-            type="button"
-            onClick={onNext}
-            disabled={nextDisabled}
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-line-strong disabled:text-fg-subtle"
-          >
-            {nextLabel}
-          </button>
+      <div className="mt-8 flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-4">
+          <button type="button" onClick={onBack} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">← Tillbaka</button>
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={onSkip} className="font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle hover:text-indigo-600">Hoppa över</button>
+            <button
+              type="button"
+              onClick={onNext}
+              disabled={nextDisabled}
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-line-strong disabled:text-fg-subtle"
+            >
+              {nextLabel}
+            </button>
+          </div>
         </div>
+        {/* Reserved-height hint → no reflow when it toggles */}
+        <p aria-live="polite" className="min-h-[1rem] text-right font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">
+          {nextDisabled ? hint : ''}
+        </p>
       </div>
-    </div>
+    </StepPanel>
   );
 }
 
@@ -369,8 +427,21 @@ function PillRow({
             type="button"
             onClick={() => onToggle(o.slug)}
             aria-pressed={on}
-            className={`rounded-full border px-5 py-2.5 text-sm font-bold transition-colors ${on ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-line bg-card text-fg-muted hover:border-indigo-300 hover:text-indigo-600'}`}
+            className={`group inline-flex items-center gap-2 rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition-all duration-150 ${
+              on
+                ? 'border-indigo-600 bg-indigo-600 text-white shadow-sm shadow-indigo-600/25'
+                : 'border-line bg-card text-fg-muted hover:-translate-y-0.5 hover:border-indigo-400 hover:text-indigo-700 hover:shadow-md'
+            }`}
           >
+            {/* check affordance: empty ring signals "selectable", filled = chosen */}
+            <span
+              aria-hidden
+              className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-black leading-none transition-colors ${
+                on ? 'bg-white text-indigo-600' : 'border border-line-strong text-transparent group-hover:border-indigo-400'
+              }`}
+            >
+              ✓
+            </span>
             {o.label}
           </button>
         );
