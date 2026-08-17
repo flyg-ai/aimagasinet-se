@@ -5,9 +5,12 @@
  *
  *   (default)     Plockar de äldsta oanvända ämnena ur article_topics och
  *                 skriver en artikel per ämne.
- *   ?mode=news    Söker på webben efter de 3 största AI-nyheterna det senaste
- *                 dygnet med relevans för svensk marknad och skriver en artikel
- *                 per nyhet, med källhänvisningar och interna länkar.
+ *   ?mode=news    Söker på webben efter dygnets viktigaste AI-nyheter med
+ *                 relevans för svensk marknad och skriver en artikel per
+ *                 nyhet, med källhänvisningar och interna länkar.
+ *
+ * COUNT styr hur många artiklar ett anrop producerar. Schemat i vercel.json kör
+ * ett anrop i taget (06/08/10 svensk tid), så COUNT=1 ger tre artiklar per dag.
  *
  * Båda lägen delar publiceringsväg (Unsplash-omslag + upsert på path,
  * published_at=now()) och fyller på ämneskön automatiskt när den sinar.
@@ -24,17 +27,18 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-// Nyhetsläget gör en websökning + 3 parallella genereringar på Opus 5.
-// Kräver Vercel Pro/Fluid Compute (taket där är 800 s).
+// Nyhetsläget gör en websökning + generering på Opus 5, som kan ta flera
+// minuter. Kräver Vercel Pro/Fluid Compute (taket där är 800 s).
 export const maxDuration = 800;
 
-const COUNT = 3;
+/** Artiklar per anrop. Schemat kör tre anrop per dag. */
+const COUNT = 1;
 const MODEL = 'claude-opus-5';
 /** Thinking är på som standard på Opus 5 och ryms inom max_tokens
  *  tillsammans med svarstexten — därav marginalen. */
 const MAX_TOKENS = 16000;
-/** Fyll på ämneskön när färre än så här många oanvända ämnen återstår
- *  (tre nätters förbrukning). */
+/** Fyll på ämneskön när färre än så här många oanvända ämnen återstår.
+ *  Schemat drar två ämnesartiklar per dag, så det är ~4 dygns marginal. */
 const REFILL_THRESHOLD = 9;
 const REFILL_COUNT = 20;
 /** Antal publicerade artiklar som erbjuds som interna länkmål. */
@@ -399,8 +403,12 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
         {
           role: 'user',
           content:
-            `Nedan är en researchsammanställning. Välj de ${COUNT} starkaste nyheterna för en svensk AI-läsekrets ` +
-            `och returnera dem strukturerat. Rubriken ska vara färdig att publicera på svenska. ` +
+            `Nedan är en researchsammanställning. Välj ${
+              COUNT === 1
+                ? 'den enskilt starkaste nyheten'
+                : `de ${COUNT} starkaste nyheterna`
+            } för en svensk AI-läsekrets ` +
+            `och returnera den strukturerat. Rubriken ska vara färdig att publicera på svenska. ` +
             `Ta bara med källor vars fullständiga URL står i sammanställningen — hitta inte på URL:er.\n\n` +
             briefing,
         },

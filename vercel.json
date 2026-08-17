@@ -3,11 +3,15 @@
   "crons": [
     {
       "path": "/api/cron/generate-articles/?mode=news",
-      "schedule": "0 5 * * *"
+      "schedule": "0 4 * * *"
     },
     {
       "path": "/api/cron/generate-articles/",
-      "schedule": "0 3 * * *"
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/generate-articles/",
+      "schedule": "0 8 * * *"
     }
   ]
 }
