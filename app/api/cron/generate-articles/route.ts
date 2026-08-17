@@ -46,19 +46,35 @@ const LINK_CANDIDATES = 80;
 /** Antal senaste rubriker som skickas in för att undvika dubbelbevakning. */
 const RECENT_TITLES = 30;
 
-const SYSTEM_PROMPT = `Du är senior redaktör på AI-Magasinet, Sveriges ledande magasin om artificiell intelligens. Du skriver långa, gedigna nyhets- och bakgrundsartiklar.
+const SYSTEM_PROMPT = `Du är redaktör på AI-Magasinet — Sveriges ledande magasin om artificiell intelligens.
 
-# Ton
-Expert, rak och praktisk affärssvenska — inte "AI-ig". Skriv som en kunnig kollega. Konkret framför generiskt (namn, siffror, exempel). Inga floskler ("revolutionerande", "i en värld där", "game changer"), inga emojis.
+TONALITET:
+- Rak, konkret och engagerande — som en kunnig kollega som förklarar något spännande
+- Inte akademisk eller formell — vi skriver för nyfikna människor, inte forskare
+- Svenska hela vägen — ingen onödig engelska
+- Personlig men professionell — "vi testar", "vi ser att", "det intressanta är"
+- Undvik: "i takt med att", "detta innebär att", "det är värt att notera", klichéer och floskler
 
-# Format
-Ren HTML: <h2>, <h3>, <p>, <ul>/<li>, <strong> (sparsamt), <table> vid behov. Ingen markdown, inga \`\`\`-block, ingen <h1> (titeln finns i mallen). Börja med en <p>-tagg, sluta med </p> eller </ul>.
+STRUKTUR (ren HTML, ingen markdown):
+- Stark inledning som fångar direkt — inga långa uppbyggnader
+- H2-rubriker som är konkreta och klickbara — "Så fungerar X", "Det här betyder det för dig"
+- Korta stycken, max 3-4 meningar
+- Konkreta exempel, siffror och fakta — undvik vaga generaliseringar
+- Intern länk till 2-3 relevanta sidor på aimagasinet.se (verktyg, guider, nyheter)
+- Avslutning med en tydlig takeaway eller nästa steg för läsaren
 
-# Struktur
-Kort intro (1-2 stycken) som etablerar relevansen, H2-sektioner med tydlig röd tråd, och en avslutande slutsats.
+ÄMNEN SOM FUNGERAR:
+- Praktiska AI-verktyg svenska användare faktiskt kan använda
+- Nyheter med direkt påverkan på svenska företag eller privatpersoner
+- "Hur fungerar X" — konkreta förklaringar av AI-fenomen
+- Listor och rankings — topp 10, bästa, billigaste etc
+- Svenska vinklar på internationella nyheter
 
-# Längd
-Mellan 1300 och 1700 ord. Håll dig inom spannet — skriv inte längre för att det finns utrymme.`;
+UNDVIK:
+- Abstrakta filosofiska diskussioner om AI:s framtid
+- Teknisk jargong utan förklaring
+- Artiklar om "AI i allmänhet" utan konkret krok
+- Mer än 800 ord om ämnet inte motiverar det`;
 
 const NEWS_ADDENDUM = `
 
@@ -68,8 +84,7 @@ Detta är en nyhetsartikel om en händelse det senaste dygnet. Utöver riktlinje
 - Slå fast nyheten i första stycket: vad som hänt, vem, när. Inga uppvärmningsstycken.
 - Sätt in händelsen i svensk kontext — vad den betyder för svenska företag, myndigheter eller utvecklare.
 - Skriv bara det källorna faktiskt stödjer. Är något oklart eller obekräftat, skriv ut det istället för att gissa. Hitta inte på siffror, citat eller namn.
-- Referera källorna i brödtexten med <a href="URL" rel="nofollow noopener" target="_blank">källans namn</a>. Använd endast URL:er ur källistan du fått.
-- Väv in 3-5 interna länkar till relaterade artiklar på AI-Magasinet, med <a href="/sokvag/">ankartext</a>. Använd endast sökvägar ur listan du fått, exakt som de står (med avslutande snedstreck). Länka bara där det är naturligt i texten — tvinga inte in dem.`;
+- Referera källorna i brödtexten med <a href="URL" rel="nofollow noopener" target="_blank">källans namn</a>. Använd endast URL:er ur källistan du fått.`;
 
 const NEWS_RESEARCH_PROMPT = `Du är nyhetsredaktör på AI-Magasinet, ett svenskt magasin om artificiell intelligens. Din uppgift är att researcha dagens viktigaste AI-nyheter.
 
@@ -179,6 +194,13 @@ async function unsplashImage(query: string): Promise<string | null> {
    Modellen får en lista giltiga interna sökvägar, men vi litar inte på
    att den håller sig till den. Interna länkar som inte finns i listan
    plattas till ren text; externa länkar får rel/target om de saknas. */
+
+/** Mallen renderar titeln som <h1> (ArticleTemplate.tsx:116) och
+ *  lib/article-html.ts strippar inga rubriker, så en <h1> i brödtexten ger
+ *  sidan två h1:or. En promptregel är rådgivande — det här är garantin. */
+function demoteH1(html: string): string {
+  return html.replace(/<h1\b([^>]*)>/gi, '<h2$1>').replace(/<\/h1\s*>/gi, '</h2>');
+}
 
 function sanitizeLinks(
   html: string,
@@ -454,9 +476,13 @@ async function generateAndPublish(
 ): Promise<Result> {
   const isNews = !!job.sources;
 
-  const linkList = ctx.linkTargets
-    .map((t) => `- ${t.title} — ${t.path}`)
-    .join('\n');
+  // Systemprompten kräver 2-3 interna länkar i BÅDA lägen, så länkmålen måste
+  // med i båda. Utan listan hittar modellen på sökvägar, och sanitizeLinks()
+  // plattar dem till ren text — instruktionen hade tyst fallerat.
+  const linkBlock = [
+    `Interna länkmål — använd endast dessa sökvägar, exakt som de står (med avslutande snedstreck):`,
+    ...ctx.linkTargets.map((t) => `- ${t.title} — ${t.path}`),
+  ].join('\n');
 
   const userPrompt = isNews
     ? [
@@ -467,12 +493,17 @@ async function generateAndPublish(
         `Källor (använd endast dessa URL:er):`,
         ...(job.sources ?? []).map((s) => `- ${s.title} — ${s.url}`),
         ``,
-        `Interna länkmål (använd sökvägarna exakt som de står):`,
-        linkList,
+        linkBlock,
         ``,
         `Ren HTML, börja med första <p>-taggen.`,
       ].join('\n')
-    : `Skriv en artikel med titeln "${job.title}". Ren HTML, börja med första <p>-taggen.`;
+    : [
+        `Skriv en artikel med titeln "${job.title}".`,
+        ``,
+        linkBlock,
+        ``,
+        `Ren HTML, börja med första <p>-taggen.`,
+      ].join('\n');
 
   const msg = await claude.beta.messages.create(
     withFallbacks({
@@ -490,7 +521,7 @@ async function generateAndPublish(
     throw new Error(`svaret kapades av max_tokens (${MAX_TOKENS}) — publiceras inte`);
   }
 
-  const generated = textOf(msg);
+  const generated = demoteH1(textOf(msg));
   const { html, internal } = sanitizeLinks(generated, ctx.allowedPaths);
   const words = wordCount(html);
   if (words < 400) throw new Error(`för kort (${words} ord)`);
