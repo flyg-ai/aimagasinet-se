@@ -2,6 +2,7 @@ import { yrkesRedirects } from './redirects.generated.mjs';
 import { designerFotografRedirects } from './redirects-designer-fotograf.mjs';
 import { flattenRedirects } from './redirects.flatten.generated.mjs';
 import { dedupRedirects } from './redirects.dedup.generated.mjs';
+import { cronDupeRedirects } from './redirects.cron-dupes.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -222,6 +223,9 @@ const nextConfig = {
       // Dubblett-sammanslagning: raderade varianter → kanonisk /ai-verktyg/<slug>
       // (auto-genererad, se scripts/merge-duplicates.ts).
       ...dedupRedirects,
+      // Cron-dubbletter (aug 2026): -2-suffixade omgenereringar → originalet.
+      // Se redirects.cron-dupes.mjs för bakgrund.
+      ...cronDupeRedirects,
     ]);
   },
 };

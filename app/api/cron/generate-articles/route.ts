@@ -338,19 +338,42 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
     .select('id,topic,category')
     .eq('used', false)
     .order('created_at', { ascending: true })
-    .limit(COUNT);
+    .limit(COUNT + 10);
   if (error) {
     const hint = /article_topics/.test(error.message)
       ? ' (kör migrationen supabase/migrations/0012_article_topics.sql först)'
       : '';
     throw new Error(error.message + hint);
   }
-  return (data ?? []).map((t: { id: number; topic: string; category: string | null }) => ({
-    title: t.topic,
-    category: t.category,
-    slug: reserveSlug(ctx, t.topic),
-    topicId: t.id,
-  }));
+  // Ett ämne vars slug redan är upptagen ÄR redan publicerat — troligen
+  // utanför kön. Utan den här kontrollen la reserveSlug() på ett -2-suffix
+  // och en dublett publicerades (id 915-917, 2026-08-18). Markera som
+  // avklarat i stället och gå vidare till nästa ämne.
+  const jobs: Job[] = [];
+  const alreadyPublished: number[] = [];
+  for (const t of (data ?? []) as { id: number; topic: string; category: string | null }[]) {
+    if (jobs.length >= COUNT) break;
+    if (ctx.usedSlugs.has(slugify(t.topic))) {
+      alreadyPublished.push(t.id);
+      continue;
+    }
+    jobs.push({
+      title: t.topic,
+      category: t.category,
+      slug: reserveSlug(ctx, t.topic),
+      topicId: t.id,
+    });
+  }
+  if (alreadyPublished.length) {
+    await db
+      .from('article_topics')
+      .update({ used: true, used_at: new Date().toISOString() })
+      .in('id', alreadyPublished);
+    console.warn(
+      `[cron] ${alreadyPublished.length} ämne(n) hade redan en publicerad artikel — markerade som använda utan att generera om.`,
+    );
+  }
+  return jobs;
 }
 
 /* ── Nyhetsläge ───────────────────────────────────────────────────── */
@@ -447,13 +470,20 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
   }
 
   const valid = new Set(ctx.categorySlugs);
-  return (parsed.stories ?? []).slice(0, COUNT).map((s) => ({
-    title: s.title,
-    category: valid.has(s.category) ? s.category : null,
-    slug: reserveSlug(ctx, s.title),
-    angle: s.angle,
-    sources: (s.sources ?? []).filter((src) => /^https?:\/\//i.test(src.url)),
-  }));
+  return (
+    (parsed.stories ?? [])
+      // Samma skydd som i takeTopics: en nyhet vars slug redan finns är
+      // redan bevakad — publicera den inte igen under ett -2-suffix.
+      .filter((s) => !ctx.usedSlugs.has(slugify(s.title)))
+      .slice(0, COUNT)
+      .map((s) => ({
+        title: s.title,
+        category: valid.has(s.category) ? s.category : null,
+        slug: reserveSlug(ctx, s.title),
+        angle: s.angle,
+        sources: (s.sources ?? []).filter((src) => /^https?:\/\//i.test(src.url)),
+      }))
+  );
 }
 
 /* ── Generering + publicering ─────────────────────────────────────── */
