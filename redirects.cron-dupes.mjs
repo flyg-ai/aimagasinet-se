@@ -8,7 +8,12 @@
 //
 // Grundfelet är åtgärdat i app/api/cron/generate-articles/route.ts — takeTopics()
 // och findNewsStories() hoppar nu över ämnen vars slug redan är upptagen.
-// Raderna 915-917 är raderade ur databasen; backup i tmp/deleted-dupes-2026-08-18.json.
+// Samma sak upprepades 2026-08-19 03:00 UTC (id 918-920, -3-suffix) eftersom fixen
+// aldrig deployades — ingen Vercel-deploy har landat sedan 2026-08-17.
+//
+// Raderna 915-920 är raderade ur databasen (backup: tmp/deleted-dupes-backup.json),
+// och ämne 1-3 är borttagna ur article_topics (backup: tmp/deleted-topics-backup.json)
+// som deploy-oberoende spärr.
 /** @type {{source: string, destination: string, statusCode: number}[]} */
 export const cronDupeRedirects = [
   {
@@ -23,6 +28,21 @@ export const cronDupeRedirects = [
   },
   {
     source: '/open-source-mot-proprietara-ai-modeller-vad-ska-foretag-valja-2026-2',
+    destination: '/open-source-mot-proprietara-ai-modeller-vad-ska-foretag-valja-2026',
+    statusCode: 301,
+  },
+  {
+    source: '/multimodala-ai-modeller-2026-nar-text-bild-och-ljud-smalter-samman-3',
+    destination: '/multimodala-ai-modeller-2026-nar-text-bild-och-ljud-smalter-samman',
+    statusCode: 301,
+  },
+  {
+    source: '/ai-agenter-i-praktiken-sa-automatiserar-svenska-foretag-sina-arbetsflo-3',
+    destination: '/ai-agenter-i-praktiken-sa-automatiserar-svenska-foretag-sina-arbetsflo',
+    statusCode: 301,
+  },
+  {
+    source: '/open-source-mot-proprietara-ai-modeller-vad-ska-foretag-valja-2026-3',
     destination: '/open-source-mot-proprietara-ai-modeller-vad-ska-foretag-valja-2026',
     statusCode: 301,
   },
