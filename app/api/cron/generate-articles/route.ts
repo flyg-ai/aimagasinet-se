@@ -171,20 +171,69 @@ async function unsplashImage(query: string): Promise<string | null> {
   if (!key) return null;
   try {
     const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&content_filter=high`,
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=10&orientation=landscape&content_filter=high`,
       { headers: { Authorization: `Client-ID ${key}` }, cache: 'no-store' }
     );
     if (!res.ok) return null;
     const data = (await res.json()) as {
       results?: { urls?: { regular?: string }; links?: { download_location?: string } }[];
     };
-    const photo = data.results?.[0];
-    if (!photo?.urls?.regular) return null;
+    // Flera ämnen ger ofta samma bildfras ("data center server racks" träffade
+    // tre av sjutton i kön). Med per_page=1 blir det bokstavligen samma foto på
+    // flera artiklar — därför slumpas ett av träffarna i stället.
+    type Photo = { urls?: { regular?: string }; links?: { download_location?: string } };
+    const results = (data.results ?? []).filter(
+      (p: Photo): p is Photo & { urls: { regular: string } } => typeof p.urls?.regular === 'string',
+    );
+    if (!results.length) return null;
+    const photo = results[Math.floor(Math.random() * results.length)];
     // Unsplash API-villkor: trigga en download-event (best-effort).
     if (photo.links?.download_location) {
       fetch(photo.links.download_location, { headers: { Authorization: `Client-ID ${key}` } }).catch(() => {});
     }
     return photo.urls.regular;
+  } catch {
+    return null;
+  }
+}
+
+/** Unsplash söker på engelska och är byggt för korta fraser. Koden skickade
+ *  tidigare in hela den svenska rubriken, vilket i praktiken gav slumpmässiga
+ *  träffar. Här tas en kort, konkret engelsk bildfras fram i stället.
+ *  Returnerar null vid fel — då används rubriken som förut. */
+async function imageQueryFor(claude: Anthropic, title: string): Promise<string | null> {
+  try {
+    const res = await claude.beta.messages.create(
+      withFallbacks({
+        model: MODEL,
+        max_tokens: 300,
+        betas: [FALLBACK_BETA],
+        output_config: {
+          format: {
+            type: 'json_schema' as const,
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['query'],
+              properties: { query: { type: 'string' } },
+            },
+          },
+        },
+        messages: [
+          {
+            role: 'user' as const,
+            content:
+              `Artikelrubrik: "${title}". ` +
+              'Ge en sökfras på ENGELSKA för att hitta ett passande redaktionellt foto på Unsplash. ' +
+              'Två till fyra ord som beskriver ett konkret, fotograferbart motiv — inte abstrakta begrepp. ' +
+              'Skriv till exempel "data center servers", inte "artificial intelligence". ' +
+              'Inga varumärken och ingen text i bilden.',
+          },
+        ],
+      }),
+    );
+    const q = (JSON.parse(textOf(res)) as { query?: string }).query?.trim();
+    return q && q.length > 1 ? q : null;
   } catch {
     return null;
   }
@@ -535,15 +584,20 @@ async function generateAndPublish(
         `Ren HTML, börja med första <p>-taggen.`,
       ].join('\n');
 
-  const msg = await claude.beta.messages.create(
-    withFallbacks({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      betas: [FALLBACK_BETA],
-      system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
-      messages: [{ role: 'user', content: userPrompt }],
-    }),
-  );
+  // Bildfrågan behöver bara rubriken och körs därför parallellt med
+  // genereringen — den kostar ingen extra väggklocka.
+  const [msg, imageQuery] = await Promise.all([
+    claude.beta.messages.create(
+      withFallbacks({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        betas: [FALLBACK_BETA],
+        system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    ),
+    imageQueryFor(claude, job.title),
+  ]);
 
   // En artikel som kapats mitt i HTML-koden passerar 400-ordsgränsen och skulle
   // publiceras trasig. Ordräkningen fångar inte det — stop_reason gör det.
@@ -557,7 +611,7 @@ async function generateAndPublish(
   if (words < 400) throw new Error(`för kort (${words} ord)`);
 
   const excerpt = firstParagraph(html);
-  const image = await unsplashImage(job.title);
+  const image = await unsplashImage(imageQuery ?? job.title);
 
   const { error } = await db.from('articles').upsert(
     {
