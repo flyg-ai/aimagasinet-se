@@ -376,6 +376,10 @@ type Job = {
   slug: string;
   /** Sätts i topics-läget — markeras used efter lyckad publicering. */
   topicId?: number;
+  /** Förgenererad omslagsbild från article_topics.image_url. Är den satt
+   *  hoppas Unsplash över helt. Finns aldrig i nyhetsläget — de ämnena
+   *  upptäcks vid körning och går inte att förbereda. */
+  imageUrl?: string | null;
   /** Sätts i nyhetsläget. */
   angle?: string;
   sources?: Source[];
@@ -384,7 +388,7 @@ type Job = {
 async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
   const { data, error } = await db
     .from('article_topics')
-    .select('id,topic,category')
+    .select('id,topic,category,image_url')
     .eq('used', false)
     .order('created_at', { ascending: true })
     .limit(COUNT + 10);
@@ -400,7 +404,8 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
   // avklarat i stället och gå vidare till nästa ämne.
   const jobs: Job[] = [];
   const alreadyPublished: number[] = [];
-  for (const t of (data ?? []) as { id: number; topic: string; category: string | null }[]) {
+  type Row = { id: number; topic: string; category: string | null; image_url: string | null };
+  for (const t of (data ?? []) as Row[]) {
     if (jobs.length >= COUNT) break;
     if (ctx.usedSlugs.has(slugify(t.topic))) {
       alreadyPublished.push(t.id);
@@ -411,6 +416,7 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
       category: t.category,
       slug: reserveSlug(ctx, t.topic),
       topicId: t.id,
+      imageUrl: t.image_url,
     });
   }
   if (alreadyPublished.length) {
@@ -596,7 +602,8 @@ async function generateAndPublish(
         messages: [{ role: 'user', content: userPrompt }],
       }),
     ),
-    imageQueryFor(claude, job.title),
+    // Har ämnet en förgenererad bild behövs ingen Unsplash-fras alls.
+    job.imageUrl ? Promise.resolve(null) : imageQueryFor(claude, job.title),
   ]);
 
   // En artikel som kapats mitt i HTML-koden passerar 400-ordsgränsen och skulle
@@ -611,7 +618,7 @@ async function generateAndPublish(
   if (words < 400) throw new Error(`för kort (${words} ord)`);
 
   const excerpt = firstParagraph(html);
-  const image = await unsplashImage(imageQuery ?? job.title);
+  const image = job.imageUrl ?? (await unsplashImage(imageQuery ?? job.title));
 
   const { error } = await db.from('articles').upsert(
     {
