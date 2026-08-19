@@ -120,19 +120,38 @@ async function main() {
   // Alla kvarvarande ämnen är okonsumerade — publicerade ämnen raderas ur
   // tabellen av triggern i migration 0013. Därför inget used-filter här; den
   // flaggan har dessutom visat sig opålitlig.
-  const { data, error } = await db
+  // Konvertering och uppladdning är oberoende av image_url-kolumnen. Saknas den
+  // körs allt utom sista steget, och SQL:en för att koppla ihop skrivs ut på
+  // slutet i stället — annars hade en saknad migration blockerat hela jobbet.
+  // Bredare typ än vad respektive select ger, så båda varianterna får plats.
+  type Fetched = {
+    data: { id: number; topic: string; image_url?: string | null }[] | null;
+    error: { message: string } | null;
+  };
+  let canWriteUrl = true;
+  let rows: Fetched = await db
     .from('article_topics')
     .select('id,topic,image_url')
     .order('created_at', { ascending: true });
-  if (error) {
-    const hint = /image_url/.test(error.message)
-      ? ' (kör migrationen supabase/migrations/0014_topic_image_url.sql först)'
-      : '';
-    console.error(error.message + hint);
+  if (rows.error && /image_url/.test(rows.error.message)) {
+    canWriteUrl = false;
+    console.log('OBS: kolumnen image_url saknas — laddar upp ändå, SQL skrivs ut på slutet.');
+    console.log('     (kör supabase/migrations/0014_topic_image_url.sql för att slippa det)');
+    console.log('');
+    rows = await db
+      .from('article_topics')
+      .select('id,topic')
+      .order('created_at', { ascending: true });
+  }
+  if (rows.error) {
+    console.error(rows.error.message);
     process.exitCode = 1;
     return;
   }
-  const topics = (data ?? []) as Topic[];
+  const topics = (rows.data ?? []).map((r) => {
+    const row = r as { id: number; topic: string; image_url?: string | null };
+    return { id: row.id, topic: row.topic, image_url: row.image_url ?? null };
+  }) as Topic[];
 
   // ── Matcha ──────────────────────────────────────────────────────
   const taken = new Set<number>();
@@ -206,6 +225,7 @@ async function main() {
 
   // ── Konvertera, ladda upp, skriv ────────────────────────────────
   console.log('\n── kör ──');
+  const pending: { id: number; url: string }[] = [];
   let ok = 0;
   let attempted = 0;
   for (const p of pairs) {
@@ -228,11 +248,15 @@ async function main() {
       if (up.error) throw new Error(up.error.message);
 
       const publicUrl = db.storage.from(BUCKET).getPublicUrl(storageKey).data.publicUrl;
-      const upd = await db
-        .from('article_topics')
-        .update({ image_url: publicUrl })
-        .eq('id', p.topic.id);
-      if (upd.error) throw new Error(upd.error.message);
+      if (canWriteUrl) {
+        const upd = await db
+          .from('article_topics')
+          .update({ image_url: publicUrl })
+          .eq('id', p.topic.id);
+        if (upd.error) throw new Error(upd.error.message);
+      } else {
+        pending.push({ id: p.topic.id, url: publicUrl });
+      }
 
       console.log(
         `  [${p.topic.id}] ${out.info.width}x${out.info.height}  ${kb(before)} -> ${kb(out.info.size)}  ${storageKey}`,
@@ -242,7 +266,14 @@ async function main() {
       console.log(`  [${p.topic.id}] FEL: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
-  console.log(`\n${ok} av ${attempted} kopplade.`);
+  console.log(`\n${ok} av ${attempted} uppladdade.`);
+  if (pending.length) {
+    console.log('\nKör detta så kopplas bilderna till ämnena:\n');
+    console.log('alter table article_topics add column if not exists image_url text;');
+    for (const p of pending) {
+      console.log(`update article_topics set image_url = '${p.url}' where id = ${p.id};`);
+    }
+  }
 }
 
 main().catch((e) => {
