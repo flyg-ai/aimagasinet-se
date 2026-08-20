@@ -38,7 +38,13 @@ const COUNT = 1;
 const MODEL = 'claude-opus-5';
 /** Thinking är på som standard på Opus 5 och ryms inom max_tokens
  *  tillsammans med svarstexten — därav marginalen. */
-const MAX_TOKENS = 16000;
+const MAX_TOKENS = 8000;
+/** Tidsbudget. Vercel dodar funktionen vid maxDuration utan att skriva nagot i
+ *  loggen — vi avbryter hellre sjalva med marginal och rapporterar varfor.
+ *  30 s buffert racker for upsert, amnesmarkering och svar. */
+const BUDGET_MS = 270_000;
+/** Under sa har lang tid kvar startas ingen ny generering. */
+const MIN_GENERATE_MS = 70_000;
 /** Fyll på ämneskön när färre än så här många oanvända ämnen återstår.
  *  Schemat drar en ämnesartikel per dag, så det är ~9 dygns marginal. */
 const REFILL_THRESHOLD = 9;
@@ -110,6 +116,16 @@ function withFallbacks<T extends object>(params: T): T {
 
 const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
 
+/** Delas mellan alla anrop i en korning. */
+type Deadline = { endsAt: number };
+const msLeft = (dl: Deadline) => dl.endsAt - Date.now();
+
+/** Request-options: avbryt nar budgeten tar slut, och lat inte SDK:ns
+ *  standardomforsok multiplicera tiden. */
+function opts(dl: Deadline) {
+  return { signal: AbortSignal.timeout(Math.max(1000, msLeft(dl))), maxRetries: 1 };
+}
+
 type BetaParams = Anthropic.Beta.MessageCreateParamsNonStreaming;
 
 /** Server-tools kör en serverloop med 10 iterationer som tak. Slår den i taket
@@ -119,16 +135,19 @@ type BetaParams = Anthropic.Beta.MessageCreateParamsNonStreaming;
 async function createWithResume(
   claude: Anthropic,
   params: BetaParams,
-  maxResumes = 3,
+  dl: Deadline,
+  maxResumes = 1,
 ): Promise<Anthropic.Beta.BetaMessage> {
   const messages = [...params.messages];
-  let msg = await claude.beta.messages.create(withFallbacks({ ...params, messages }));
-  for (let i = 0; i < maxResumes && msg.stop_reason === 'pause_turn'; i++) {
+  let msg = await claude.beta.messages.create(withFallbacks({ ...params, messages }), opts(dl));
+  // Varje resume skickar om hela konversationen och kostar lika mycket tid som
+  // ursprungsanropet. Med 300 s budget finns bara rad for ett.
+  for (let i = 0; i < maxResumes && msg.stop_reason === 'pause_turn' && msLeft(dl) > MIN_GENERATE_MS; i++) {
     messages.push({
       role: 'assistant',
       content: msg.content as unknown as Anthropic.Beta.BetaContentBlockParam[],
     });
-    msg = await claude.beta.messages.create(withFallbacks({ ...params, messages }));
+    msg = await claude.beta.messages.create(withFallbacks({ ...params, messages }), opts(dl));
   }
   return msg;
 }
@@ -203,7 +222,7 @@ async function unsplashImage(query: string): Promise<string | null> {
  *  tidigare in hela den svenska rubriken, vilket i praktiken gav slumpmässiga
  *  träffar. Här tas en kort, konkret engelsk bildfras fram i stället.
  *  Returnerar null vid fel — då används rubriken som förut. */
-async function imageQueryFor(claude: Anthropic, title: string): Promise<string | null> {
+async function imageQueryFor(claude: Anthropic, title: string, dl: Deadline): Promise<string | null> {
   try {
     const res = await claude.beta.messages.create(
       withFallbacks({
@@ -233,6 +252,7 @@ async function imageQueryFor(claude: Anthropic, title: string): Promise<string |
           },
         ],
       }),
+      opts(dl),
     );
     const q = (JSON.parse(textOf(res)) as { query?: string }).query?.trim();
     return q && q.length > 1 ? q : null;
@@ -437,7 +457,7 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
 
 type Story = { title: string; angle: string; category: string; sources: Source[] };
 
-async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
+async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promise<Job[]> {
   const today = new Date().toISOString().slice(0, 10);
 
   // Steg 1 — research med websökning. Fri text; strukturen plockas ut i steg 2.
@@ -445,9 +465,11 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
   //  med server-tool-loopen.)
   const research = await createWithResume(claude, {
     model: MODEL,
-    max_tokens: MAX_TOKENS,
+    // Briefingen behover inte vara lang — den ska bara mata extraktionssteget.
+    max_tokens: 5000,
     betas: [FALLBACK_BETA],
-    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 8 }],
+    // Varje sokning ar en rundtur pa Anthropics sida. Atta ryms inte i 300 s.
+    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
     system: [{ type: 'text', text: NEWS_RESEARCH_PROMPT }],
     messages: [
       {
@@ -458,7 +480,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
           ctx.recentTitles.map((t) => `- ${t}`).join('\n'),
       },
     ],
-  });
+  }, dl);
   const briefing = textOf(research);
 
   // Steg 2 — strukturera de tre bästa. Inga verktyg, bara schemat.
@@ -516,6 +538,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx): Promise<Job[]> {
         },
       ],
     }),
+    opts(dl),
   );
 
   const raw = textOf(extracted);
@@ -560,6 +583,7 @@ async function generateAndPublish(
   db: SupabaseClient,
   job: Job,
   ctx: Ctx,
+  dl: Deadline,
 ): Promise<Result> {
   const isNews = !!job.sources;
 
@@ -603,9 +627,10 @@ async function generateAndPublish(
         system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
+      opts(dl),
     ),
     // Har ämnet en förgenererad bild behövs ingen Unsplash-fras alls.
-    job.imageUrl ? Promise.resolve(null) : imageQueryFor(claude, job.title),
+    job.imageUrl ? Promise.resolve(null) : imageQueryFor(claude, job.title, dl),
   ]);
 
   // En artikel som kapats mitt i HTML-koden passerar 400-ordsgränsen och skulle
@@ -666,6 +691,7 @@ async function refillTopicsIfLow(
   claude: Anthropic,
   db: SupabaseClient,
   ctx: Ctx,
+  dl: Deadline,
 ): Promise<{ unused: number; refilled: number; error?: string }> {
   // Inte head:true — en HEAD-request har ingen body att läsa felet ur, så en
   // saknad tabell ger count=null *utan* error och påfyllningen körs i onödan.
@@ -730,6 +756,7 @@ async function refillTopicsIfLow(
         },
       ],
     }),
+    opts(dl),
   );
 
   let parsed: { topics?: { topic: string; category: string }[] };
@@ -779,12 +806,13 @@ export async function GET(req: Request) {
   const claude = new Anthropic();
 
   const mode = new URL(req.url).searchParams.get('mode') === 'news' ? 'news' : 'topics';
+  const dl: Deadline = { endsAt: Date.now() + BUDGET_MS };
 
   let ctx: Ctx;
   let jobs: Job[];
   try {
     ctx = await loadContext(db);
-    jobs = mode === 'news' ? await findNewsStories(claude, ctx) : await takeTopics(db, ctx);
+    jobs = mode === 'news' ? await findNewsStories(claude, ctx, dl) : await takeTopics(db, ctx);
   } catch (e) {
     return Response.json(
       { ok: false, mode, error: e instanceof Error ? e.message : String(e) },
@@ -794,8 +822,22 @@ export async function GET(req: Request) {
 
   // Genereringarna är oberoende av varandra och alla slugs är redan
   // reserverade, så de kan köras parallellt.
+  // Researchsteget kan ata upp budgeten. Da ar det battre att sluta har och
+  // rapportera an att bli dodad mitt i en upsert.
+  if (jobs.length && msLeft(dl) < MIN_GENERATE_MS) {
+    return Response.json(
+      {
+        ok: false,
+        mode,
+        error: `for lite tid kvar (${Math.round(msLeft(dl) / 1000)} s) — researchsteget tog for lang tid`,
+        jobs: jobs.map((j) => j.title),
+      },
+      { status: 500 },
+    );
+  }
+
   const settled = await Promise.allSettled(
-    jobs.map((job) => generateAndPublish(claude, db, job, ctx)),
+    jobs.map((job) => generateAndPublish(claude, db, job, ctx, dl)),
   );
   const results: Result[] = settled.map((s, i) =>
     s.status === 'fulfilled'
@@ -810,7 +852,10 @@ export async function GET(req: Request) {
   // Får aldrig fälla genereringen.
   let topics: Awaited<ReturnType<typeof refillTopicsIfLow>>;
   try {
-    topics = await refillTopicsIfLow(claude, db, ctx);
+    topics =
+      msLeft(dl) < 45_000
+        ? { unused: -1, refilled: 0, error: 'hoppade over — for lite tid kvar' }
+        : await refillTopicsIfLow(claude, db, ctx, dl);
   } catch (e) {
     topics = { unused: -1, refilled: 0, error: e instanceof Error ? e.message : String(e) };
   }
@@ -819,6 +864,7 @@ export async function GET(req: Request) {
     ok: true,
     mode,
     generated: results.filter((r) => r.ok).length,
+    elapsedMs: BUDGET_MS - msLeft(dl),
     results,
     topics,
   });
