@@ -48,7 +48,9 @@ Leta efter:
 
 Undvik produktlanseringar utan nyhetsvärde, rykten utan källa, och renodlade finansnyheter om värderingar.
 
-Redovisa varje kandidat med vad som hänt, varför det spelar roll, och den fullständiga URL:en till källan. Skriv ut URL:erna i klartext.`;
+Leta upp PRIMÄRKÄLLAN för varje nyhet — bolagets eget blogginlägg, myndighetens beslut, forskargruppens rapport. En nyhetssammanställning eller en blogg som refererar någon annan duger bara om primärkällan inte går att hitta.
+
+Redovisa varje kandidat med vad som hänt, varför det spelar roll, och den fullständiga URL:en till källan. Skriv ut URL:erna i klartext, och ange om det är en primärkälla eller ett andrahandsreferat.`;
 
 const SCHEMA = {
   type: 'object',
@@ -113,7 +115,7 @@ async function main() {
       model: MODEL,
       max_tokens: 8000,
       betas: [FALLBACK_BETA],
-      tools: [{ type: 'web_search_20260209' as const, name: 'web_search' as const, max_uses: 8 }],
+      tools: [{ type: 'web_search_20260209' as const, name: 'web_search' as const, max_uses: 16 }],
       system: [{ type: 'text' as const, text: RESEARCH_PROMPT }],
       messages: [
         {
@@ -134,7 +136,7 @@ async function main() {
         model: MODEL,
         max_tokens: 8000,
         betas: [FALLBACK_BETA],
-        tools: [{ type: 'web_search_20260209' as const, name: 'web_search' as const, max_uses: 8 }],
+        tools: [{ type: 'web_search_20260209' as const, name: 'web_search' as const, max_uses: 16 }],
         system: [{ type: 'text' as const, text: RESEARCH_PROMPT }],
         messages: msgs,
       }),
@@ -160,10 +162,23 @@ async function main() {
             'inte forskare. Svenska hela vägen. Inga floskler, inga emojis, inget "i takt med att".\n\n' +
             'subject: ämnesrad, max 60 tecken, konkret snarare än lockande.\n' +
             'headline + lead: veckans enskilt viktigaste händelse, tre meningar.\n' +
-            'items: exakt fyra notiser, två–tre meningar var, med källa ur sammanställningen.\n' +
-            'swedishAngle: vad veckan betyder i Sverige. Konkret.\n' +
-            'tryThis: något läsaren kan testa på fem minuter. Beskriv exakt vad man gör.\n\n' +
-            'Totalt 600–800 ord. Använd bara URL:er som står i sammanställningen — hitta inte på källor.\n\n' +
+            'items: exakt fyra notiser, två–tre meningar var. Varje notis ska ha SIN EGEN källa — ' +
+            'två notiser får aldrig peka på samma URL. Föredra primärkällor.\n' +
+            'swedishAngle: EN enda sak som veckan betyder i Sverige. Max 120 ord.\n' +
+            'tryThis: ETT enda förslag läsaren kan testa på fem minuter. Max 120 ord. Beskriv exakt vad man gör.\n\n' +
+            'Regler som gäller undantagslöst:\n' +
+            '- Lova ALDRIG något om kommande nummer eller om vad redaktionen ska göra. Du får inte ' +
+            'utlova intervjuer, uppföljningar, att någon ska kontaktas eller att svar kommer senare. ' +
+            'Skriv bara om det som redan hänt.\n' +
+            '- Välj inte en händelse du inte kunnat bekräfta som huvudnyhet. Är det bästa du har ' +
+            'osäkert, ta något mindre men säkert som headline och lägg det osäkra som notis med ' +
+            'tydlig reservation.\n' +
+            '- Använd bara URL:er som står i sammanställningen. Hitta inte på källor.\n' +
+            '- Ta bara med händelser från de senaste sju dygnen. Är något äldre hör det inte ' +
+            'hemma i en veckosammanfattning, hur intressant det än är — välj något annat.\n' +
+            '- Väg in källans tyngd. En forumtråd eller en changelog-aggregator kan användas, ' +
+            'men inte för mer än en av de fyra notiserna.\n\n' +
+            'Totalt 600–800 ord — fyll spannet, korta inte ner i onödan.\n\n' +
             briefing,
         },
       ],
