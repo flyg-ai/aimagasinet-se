@@ -24,7 +24,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // RESEND_FROM om du vill byta avsändare.
 const FROM = process.env.RESEND_FROM ?? 'AI-Magasinet <kontakt@aimagasinet.se>';
 
-async function sendWelcome(email: string, articles: WelcomeArticle[]): Promise<{ sent: boolean; reason?: string }> {
+async function sendWelcome(email: string, articles: WelcomeArticle[], token?: string): Promise<{ sent: boolean; reason?: string }> {
   const key = process.env.RESEND_API_KEY;
 
   // 2. Är RESEND_API_KEY satt i miljön (Vercel → Project → Settings →
@@ -46,7 +46,7 @@ async function sendWelcome(email: string, articles: WelcomeArticle[]): Promise<{
       from: FROM,
       to: email,
       subject: 'Välkommen till AI-Magasinet',
-      html: welcomeHtml(email, articles),
+      html: welcomeHtml(email, articles, token),
     });
 
     // Logga hela svaret — { data, error }. data?.id = lyckat utskick.
@@ -118,7 +118,23 @@ export async function POST(req: Request) {
     // Latest 3 published posts for the magazine-style news boxes.
     const articles = await fetchLatestArticles(supabase);
     console.log('[subscribe] latest articles:', articles.length);
-    emailResult = await sendWelcome(normalized, articles);
+    // Token hämtas separat och best-effort. Den får aldrig ingå i upserten:
+    // saknas kolumnen (migration 0017 inte körd) skulle hela registreringen
+    // falla på ett fel i select-listan. Utan token faller welcomeHtml tillbaka
+    // på mailto-länken.
+    let token: string | undefined;
+    try {
+      const t = await db
+        .from('subscribers')
+        .select('unsubscribe_token')
+        .eq('email', normalized)
+        .maybeSingle();
+      token = (t.data as { unsubscribe_token?: string } | null)?.unsubscribe_token;
+      if (t.error) console.warn('[subscribe] ingen unsubscribe_token:', t.error.message);
+    } catch (e) {
+      console.warn('[subscribe] token-hämtning misslyckades:', e);
+    }
+    emailResult = await sendWelcome(normalized, articles, token);
   }
   console.log('[subscribe] emailResult:', JSON.stringify(emailResult));
 

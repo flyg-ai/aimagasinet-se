@@ -142,10 +142,19 @@ function toolSectionHtml(): string {
         </td></tr>`;
 }
 
-export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): string {
-  const unsubscribe = `mailto:kontakt@aimagasinet.se?subject=${encodeURIComponent(
-    'Avprenumerera',
-  )}&body=${encodeURIComponent(`Avregistrera ${email} fran utskick.`)}`;
+/** `token` är prenumerantens unsubscribe_token (migration 0017). Saknas den
+ *  faller vi tillbaka på mailto-varianten, så att gamla anrop och äldre rader
+ *  utan token fortfarande får en fungerande avregistrering. */
+export function welcomeHtml(
+  email: string,
+  articles: WelcomeArticle[] = [],
+  token?: string,
+): string {
+  const unsubscribe = token
+    ? `https://aimagasinet.se/avregistrera/?token=${encodeURIComponent(token)}`
+    : `mailto:kontakt@aimagasinet.se?subject=${encodeURIComponent(
+        'Avprenumerera',
+      )}&body=${encodeURIComponent(`Avregistrera ${email} fran utskick.`)}`;
 
   const articlesBlock = articles.length
     ? articles.map(articleRowHtml).join('')
@@ -177,9 +186,9 @@ export function welcomeHtml(email: string, articles: WelcomeArticle[] = []): str
         <tr><td style="padding:40px 36px 12px;">
           <h1 style="margin:0 0 14px;font-size:32px !important;line-height:1.25 !important;color:#18181b;letter-spacing:-0.5px;">Välkommen till AI-Magasinet! 🎉</h1>
           <p style="margin:0;font-size:18px !important;line-height:1.8 !important;color:#3f3f46;">
-            Du är nu med i Sveriges mest lästa AI-community. Vi mejlar dig de
-            viktigaste AI-nyheterna, nya verktyg och konkreta användningsfall —
-            på svenska, utan hype.
+            Tack för att du hänger med. Vi sammanfattar det viktigaste som hänt
+            inom AI — nyheter, nya verktyg och konkreta användningsfall, på
+            svenska och utan hype.
           </p>
         </td></tr>
 
