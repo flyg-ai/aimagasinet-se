@@ -611,6 +611,17 @@ async function generateAndPublish(
     : [
         `Skriv en artikel med titeln "${job.title}".`,
         ``,
+        // Modellen känner inte till dagens datum. Utan detta beskrivs redan
+        // passerade tidsgränser som framtida — en artikel publicerad
+        // 2026-08-21 skrev att EU-krav från 2 augusti "träder i kraft".
+        `Dagens datum är ${new Date().toISOString().slice(0, 10)}. Kontrollera tempus mot det:`,
+        `datum som passerat ska skrivas i dåtid, inte som något som ska hända.`,
+        ``,
+        `Hänvisar du till en lag, en myndighetsrapport eller ett EU-regelverk —`,
+        `länka till källan med <a href="URL" rel="nofollow noopener" target="_blank">.`,
+        `Hittar du ingen säker URL, skriv ut namn och paragraf i klartext i stället`,
+        `för att gissa en adress.`,
+        ``,
         linkBlock,
         ``,
         `Ren HTML, börja med första <p>-taggen.`,
