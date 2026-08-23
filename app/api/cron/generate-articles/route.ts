@@ -273,6 +273,54 @@ function demoteH1(html: string): string {
   return html.replace(/<h1\b([^>]*)>/gi, '<h2$1>').replace(/<\/h1\s*>/gi, '</h2>');
 }
 
+/** Korrekturläsning i ett eget anrop.
+ *
+ *  Modellen som skrev texten är också den som är blind för sina egna stavfel —
+ *  "Det är där tryckt märks först" gick ut i produktion. Ett separat anrop med
+ *  enda uppgift att rätta språket ser texten med nya ögon.
+ *
+ *  Vakterna är hårda med flit: ändras ordantalet mer än fem procent, eller
+ *  försvinner en länk, behåller vi originalet. Ett korrektur som passar på att
+ *  skriva om texten är värre än stavfelet det rättade. */
+async function proofread(claude: Anthropic, html: string, dl: Deadline): Promise<string> {
+  if (msLeft(dl) < 40_000) return html;
+  try {
+    const res = await claude.beta.messages.create(
+      withFallbacks({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        betas: [FALLBACK_BETA],
+        messages: [
+          {
+            role: 'user' as const,
+            content:
+              'Korrekturläs texten nedan. Rätta stavfel, särskrivningar, felböjningar och ' +
+              'grammatiska fel.\n\n' +
+              'Ändra INGET annat. Inte ordval, inte meningsbyggnad, inte struktur, inte ' +
+              'HTML-taggar, inte länkar. Är texten redan korrekt returnerar du den oförändrad.\n\n' +
+              'Svara med enbart den rättade HTML-koden, utan kommentarer.\n\n' +
+              html,
+          },
+        ],
+      }),
+      opts(dl),
+    );
+    if (res.stop_reason === 'max_tokens') return html;
+    const fixed = textOf(res);
+
+    if (!fixed.startsWith('<')) return html;
+    const linkCount = (s: string) => (s.match(/href="/g) || []).length;
+    if (linkCount(fixed) !== linkCount(html)) return html;
+    const before = wordCount(html);
+    const after = wordCount(fixed);
+    if (before === 0 || Math.abs(after - before) / before > 0.05) return html;
+
+    return fixed;
+  } catch {
+    return html;
+  }
+}
+
 function sanitizeLinks(
   html: string,
   allowedPaths: Set<string>,
@@ -617,10 +665,15 @@ async function generateAndPublish(
         `Dagens datum är ${new Date().toISOString().slice(0, 10)}. Kontrollera tempus mot det:`,
         `datum som passerat ska skrivas i dåtid, inte som något som ska hända.`,
         ``,
-        `Hänvisar du till en lag, en myndighetsrapport eller ett EU-regelverk —`,
-        `länka till källan med <a href="URL" rel="nofollow noopener" target="_blank">.`,
-        `Hittar du ingen säker URL, skriv ut namn och paragraf i klartext i stället`,
-        `för att gissa en adress.`,
+        `Hänvisar du till en lag, en studie, en rapport, en myndighet eller ett`,
+        `EU-regelverk — länka till källan med <a href="URL" rel="nofollow noopener" target="_blank">.`,
+        `Det gäller även namngivna studier och myndigheter: refererar du en studie`,
+        `ska läsaren kunna klicka sig till den. Hittar du ingen säker URL, skriv ut`,
+        `namn, årtal och paragraf i klartext i stället för att gissa en adress.`,
+        ``,
+        `Artikeln ska innehålla minst tre kontrollerbara faktauppgifter — årtal,`,
+        `siffror, paragrafer, namngivna studier, rapporter eller myndigheter.`,
+        `Räcker inte underlaget: skriv färre påståenden. Hitta aldrig på en siffra.`,
         ``,
         linkBlock,
         ``,
@@ -650,7 +703,9 @@ async function generateAndPublish(
     throw new Error(`svaret kapades av max_tokens (${MAX_TOKENS}) — publiceras inte`);
   }
 
-  const generated = demoteH1(textOf(msg));
+  // Korrektur före länkhygienen, så att sanitizeLinks får sista ordet om
+  // något skulle ha rubbats på vägen.
+  const generated = await proofread(claude, demoteH1(textOf(msg)), dl);
   const { html, internal } = sanitizeLinks(generated, ctx.allowedPaths);
   const words = wordCount(html);
   if (words < 400) throw new Error(`för kort (${words} ord)`);
