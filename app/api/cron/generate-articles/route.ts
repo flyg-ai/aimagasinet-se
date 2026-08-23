@@ -53,6 +53,10 @@ const REFILL_COUNT = 20;
 const LINK_CANDIDATES = 80;
 /** Antal senaste rubriker som skickas in för att undvika dubbelbevakning. */
 const RECENT_TITLES = 30;
+/** Byline for allt som publiceras harifran. Egen redaktionspost i stallet for
+ *  nagon av de namngivna skribenterna — texterna ska inte signeras av en enskild
+ *  person som inte last dem. */
+const AUTHOR_SLUG = 'redaktionen';
 
 const SYSTEM_PROMPT = `Du är redaktör på AI-Magasinet — Sveriges ledande magasin om artificiell intelligens.
 
@@ -806,6 +810,7 @@ async function generateAndPublish(
       seo_title: `${job.title} | AI-Magasinet`,
       seo_description: excerpt,
       faq,
+      author_slug: AUTHOR_SLUG,
     },
     { onConflict: 'path' }
   );
