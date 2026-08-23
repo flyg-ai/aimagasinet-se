@@ -282,6 +282,76 @@ function demoteH1(html: string): string {
  *  Vakterna är hårda med flit: ändras ordantalet mer än fem procent, eller
  *  försvinner en länk, behåller vi originalet. Ett korrektur som passar på att
  *  skriva om texten är värre än stavfelet det rättade. */
+type Faq = { question: string; answer: string };
+
+/** Vanliga frågor till artikeln.
+ *
+ *  articles.faq fanns redan och används av hub-, recensions- och
+ *  jämförelsemallarna, men ingenting fyllde den för type='post'. Frågorna
+ *  ger FAQPage-schema och därmed chans till utökade sökresultat — och de här
+ *  ämnena är frågeformade av naturen ("får jag lägga ut en AI-låt på Spotify").
+ *
+ *  Returnerar null vid fel eller tidsbrist. En artikel utan FAQ är fullt
+ *  funktionell; mallen renderar bara ingenting. */
+async function generateFaq(
+  claude: Anthropic,
+  title: string,
+  html: string,
+  dl: Deadline,
+): Promise<Faq[] | null> {
+  if (msLeft(dl) < 40_000) return null;
+  try {
+    const res = await claude.beta.messages.create(
+      withFallbacks({
+        model: MODEL,
+        max_tokens: 2000,
+        betas: [FALLBACK_BETA],
+        output_config: {
+          format: {
+            type: 'json_schema' as const,
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['faqs'],
+              properties: {
+                faqs: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['question', 'answer'],
+                    properties: { question: { type: 'string' }, answer: { type: 'string' } },
+                  },
+                },
+              },
+            },
+          },
+        },
+        messages: [
+          {
+            role: 'user' as const,
+            content:
+              `Artikeln "${title}" finns nedan. Skriv fyra vanliga frågor med svar.\n\n` +
+              'Frågorna ska vara sådana en läsare faktiskt söker på — konkreta och ' +
+              'frågeformade, inte rubriker med frågetecken.\n' +
+              'Svaren: två till fyra meningar, direkta, på svenska.\n' +
+              'Svara ENDAST utifrån vad som står i artikeln. Lägg inte till nya ' +
+              'påståenden, siffror eller källor som inte finns i texten.\n' +
+              'Upprepa inte en H2-rubrik som fråga.\n\n' +
+              html,
+          },
+        ],
+      }),
+      opts(dl),
+    );
+    const parsed = JSON.parse(textOf(res)) as { faqs?: Faq[] };
+    const faqs = (parsed.faqs ?? []).filter((f) => f.question?.trim() && f.answer?.trim());
+    return faqs.length ? faqs.slice(0, 5) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function proofread(claude: Anthropic, html: string, dl: Deadline): Promise<string> {
   if (msLeft(dl) < 40_000) return html;
   try {
@@ -622,6 +692,7 @@ type Result = {
   slug?: string;
   words?: number;
   internalLinks?: number;
+  faq?: number;
   sources?: number;
   error?: string;
 };
@@ -711,7 +782,12 @@ async function generateAndPublish(
   if (words < 400) throw new Error(`för kort (${words} ord)`);
 
   const excerpt = firstParagraph(html);
-  const image = job.imageUrl ?? (await unsplashImage(imageQuery ?? job.title));
+  // Bild och FAQ är oberoende av varandra — kör dem parallellt så de inte
+  // adderar två väntetider till budgeten.
+  const [image, faq] = await Promise.all([
+    job.imageUrl ? Promise.resolve(job.imageUrl) : unsplashImage(imageQuery ?? job.title),
+    generateFaq(claude, job.title, html, dl),
+  ]);
 
   const { error } = await db.from('articles').upsert(
     {
@@ -729,6 +805,7 @@ async function generateAndPublish(
       published_at: new Date().toISOString(),
       seo_title: `${job.title} | AI-Magasinet`,
       seo_description: excerpt,
+      faq,
     },
     { onConflict: 'path' }
   );
@@ -748,6 +825,7 @@ async function generateAndPublish(
     words,
     internalLinks: internal,
     sources: job.sources?.length ?? 0,
+    faq: faq?.length ?? 0,
   };
 }
 

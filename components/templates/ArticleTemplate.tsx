@@ -7,7 +7,8 @@ import { JsonLd } from '@/components/JsonLd';
 import { Toc } from '@/components/Toc';
 import type { Article } from '@/lib/supabase';
 import type { Author } from '@/lib/authors';
-import { articleSchema, newsArticleSchema, breadcrumbSchema } from '@/lib/schemas';
+import { articleSchema, newsArticleSchema, breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
+import { FaqAccordion } from '@/components/FaqAccordion';
 import { buildToc } from '@/lib/toc';
 import { toolLinkCards } from '@/lib/article-html';
 import { readingTimeMinutes } from '@/lib/reading-time';
@@ -190,6 +191,20 @@ export function ArticleTemplate({
           </aside>
         </div>
       </div>
+
+      {/* Vanliga frågor. Mallen saknade det här — FAQ renderades bara av
+          hub-, recensions- och jämförelsemallarna, så alla artiklar av
+          type='post' tappade både accordionet och FAQPage-schemat. */}
+      {Array.isArray(a.faq) && a.faq.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+          <FaqAccordion items={a.faq} heading="Vanliga frågor" />
+          <script
+            type="application/ld+json"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(a.faq)) }}
+          />
+        </section>
+      )}
 
       {/* Underliggande sidor (standalone-sidor med barn) */}
       {children.length > 0 && (
