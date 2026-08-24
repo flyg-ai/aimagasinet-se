@@ -524,6 +524,9 @@ type Job = {
    *  hoppas Unsplash över helt. Finns aldrig i nyhetsläget — de ämnena
    *  upptäcks vid körning och går inte att förbereda. */
   imageUrl?: string | null;
+  /** Önskad längd i ord (article_topics.target_words). Overstyr promptens
+   *  standard pa ~800 ord for amnen som fortjanar djup. */
+  targetWords?: number | null;
   /** Sätts i nyhetsläget. */
   angle?: string;
   sources?: Source[];
@@ -532,7 +535,7 @@ type Job = {
 async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
   const { data, error } = await db
     .from('article_topics')
-    .select('id,topic,category,image_url')
+    .select('id,topic,category,image_url,target_words')
     .eq('used', false)
     .order('created_at', { ascending: true })
     .limit(COUNT + 10);
@@ -548,7 +551,13 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
   // avklarat i stället och gå vidare till nästa ämne.
   const jobs: Job[] = [];
   const alreadyPublished: number[] = [];
-  type Row = { id: number; topic: string; category: string | null; image_url: string | null };
+  type Row = {
+    id: number;
+    topic: string;
+    category: string | null;
+    image_url: string | null;
+    target_words: number | null;
+  };
   for (const t of (data ?? []) as Row[]) {
     if (jobs.length >= COUNT) break;
     if (ctx.usedSlugs.has(slugify(t.topic))) {
@@ -561,6 +570,7 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
       slug: reserveSlug(ctx, t.topic),
       topicId: t.id,
       imageUrl: t.image_url,
+      targetWords: t.target_words,
     });
   }
   if (alreadyPublished.length) {
@@ -749,6 +759,18 @@ async function generateAndPublish(
         `Artikeln ska innehålla minst tre kontrollerbara faktauppgifter — årtal,`,
         `siffror, paragrafer, namngivna studier, rapporter eller myndigheter.`,
         `Räcker inte underlaget: skriv färre påståenden. Hitta aldrig på en siffra.`,
+        ...(job.targetWords
+          ? [
+              ``,
+              `Längd: cirka ${job.targetWords} ord. Det överstyr längdregeln i`,
+              `systemprompten. Bygg ut med fler H2-sektioner där varje rubrik besvarar`,
+              `en konkret fråga — inte med längre stycken.`,
+            ]
+          : []),
+        ``,
+        `Rör artikeln oro, ångest eller psykisk hälsa: avsluta med var läsaren kan`,
+        `vända sig i Sverige — 1177 Vårdguiden, eller Mind på mind.se. Skriv det`,
+        `bara när ämnet faktiskt kräver det, inte som standardtillägg.`,
         ``,
         linkBlock,
         ``,
@@ -761,7 +783,12 @@ async function generateAndPublish(
     claude.beta.messages.create(
       withFallbacks({
         model: MODEL,
-        max_tokens: MAX_TOKENS,
+        // Thinking ryms inom samma tak som svarstexten. En lang artikel behover
+        // darfor mer utrymme an standardvardet, annars kapas den mitt i.
+        max_tokens: Math.min(
+          16000,
+          Math.max(MAX_TOKENS, Math.round((job.targetWords ?? 0) * 4.5)),
+        ),
         betas: [FALLBACK_BETA],
         system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
         messages: [{ role: 'user', content: userPrompt }],
