@@ -53,10 +53,17 @@ const REFILL_COUNT = 20;
 const LINK_CANDIDATES = 80;
 /** Antal senaste rubriker som skickas in för att undvika dubbelbevakning. */
 const RECENT_TITLES = 30;
-/** Byline for allt som publiceras harifran. Egen redaktionspost i stallet for
- *  nagon av de namngivna skribenterna — texterna ska inte signeras av en enskild
- *  person som inte last dem. */
-const AUTHOR_SLUG = 'redaktionen';
+/** Byline. Kortare loptext gar pa redaktionsposten — den ska inte signeras av
+ *  en enskild person. Langre artiklar ar de vi satsar pa att ranka pa och som
+ *  chefredaktoren staller sig bakom, sa de far hans namn. */
+const AUTHOR_DEFAULT = 'redaktionen';
+const AUTHOR_FEATURE = 'nicklas-hallberg';
+/** Fran och med den har mallangden raknas artikeln som en satsning. */
+const FEATURE_MIN_WORDS = 1500;
+
+function bylineFor(targetWords?: number | null): string {
+  return (targetWords ?? 0) >= FEATURE_MIN_WORDS ? AUTHOR_FEATURE : AUTHOR_DEFAULT;
+}
 
 const SYSTEM_PROMPT = `Du är redaktör på AI-Magasinet — Sveriges ledande magasin om artificiell intelligens.
 
@@ -707,6 +714,7 @@ type Result = {
   words?: number;
   internalLinks?: number;
   faq?: number;
+  author?: string;
   sources?: number;
   error?: string;
 };
@@ -837,7 +845,7 @@ async function generateAndPublish(
       seo_title: `${job.title} | AI-Magasinet`,
       seo_description: excerpt,
       faq,
-      author_slug: AUTHOR_SLUG,
+      author_slug: bylineFor(job.targetWords),
     },
     { onConflict: 'path' }
   );
@@ -858,6 +866,7 @@ async function generateAndPublish(
     internalLinks: internal,
     sources: job.sources?.length ?? 0,
     faq: faq?.length ?? 0,
+    author: bylineFor(job.targetWords),
   };
 }
 
