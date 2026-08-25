@@ -56,6 +56,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const a of articlesRes.data ?? []) {
     if (!a.path) continue;
+    // Opublicerat hor inte hemma i sitemapen. Faltet hamtades men anvandes
+    // aldrig, sa avpublicerade artiklar pekades ut for Google.
+    if (!a.published_at) continue;
     const { changeFrequency, priority } = freqAndPriority(a.path, a.type);
     out.push({
       url: `${BASE}${withTrailing(a.path)}`,

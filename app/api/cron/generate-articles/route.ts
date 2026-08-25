@@ -61,8 +61,12 @@ const AUTHOR_FEATURE = 'nicklas-hallberg';
 /** Fran och med den har mallangden raknas artikeln som en satsning. */
 const FEATURE_MIN_WORDS = 1500;
 
+function isFeature(targetWords?: number | null): boolean {
+  return (targetWords ?? 0) >= FEATURE_MIN_WORDS;
+}
+
 function bylineFor(targetWords?: number | null): string {
-  return (targetWords ?? 0) >= FEATURE_MIN_WORDS ? AUTHOR_FEATURE : AUTHOR_DEFAULT;
+  return isFeature(targetWords) ? AUTHOR_FEATURE : AUTHOR_DEFAULT;
 }
 
 const SYSTEM_PROMPT = `Du är redaktör på AI-Magasinet — Sveriges ledande magasin om artificiell intelligens.
@@ -715,6 +719,7 @@ type Result = {
   internalLinks?: number;
   faq?: number;
   author?: string;
+  status?: string;
   sources?: number;
   error?: string;
 };
@@ -841,7 +846,10 @@ async function generateAndPublish(
       path: `/${job.slug}`,
       parent_slug: null,
       affiliate_url: null,
-      published_at: new Date().toISOString(),
+      // Satsningarna publiceras som utkast. De baar chefredaktorens namn och
+      // ska lasas innan de gar ut; published_at=null haller dem borta fran
+      // floden, sitemap och sin egen URL tills scripts/approve-article.ts kors.
+      published_at: isFeature(job.targetWords) ? null : new Date().toISOString(),
       seo_title: `${job.title} | AI-Magasinet`,
       seo_description: excerpt,
       faq,
@@ -867,6 +875,7 @@ async function generateAndPublish(
     sources: job.sources?.length ?? 0,
     faq: faq?.length ?? 0,
     author: bylineFor(job.targetWords),
+    status: isFeature(job.targetWords) ? 'utkast — vantar pa godkannande' : 'publicerad',
   };
 }
 
