@@ -113,14 +113,21 @@ const NEWS_RESEARCH_PROMPT = `Du är nyhetsredaktör på AI-Magasinet, ett svens
 
 Sök på webben och identifiera de nyheter om artificiell intelligens som publicerats det senaste dygnet och som är mest relevanta för en svensk läsekrets: beslutsfattare, utvecklare och företagare.
 
+Det avgörande kriteriet: skulle någon utanför AI-branschen faktiskt söka på det här? En nyhet som ingen söker på blir en artikel ingen läser, hur korrekt den än är.
+
 Prioritera i denna ordning:
 1. Nyheter som direkt rör Sverige eller svenska aktörer.
-2. EU-beslut, regleringar och rättsfall som får genomslag i Sverige.
-3. Internationella nyheter (modellsläpp, större affärer, forskningsgenombrott) med konkret betydelse för svenska verksamheter.
+2. Händelser som redan diskuteras brett — där namnet på företaget, produkten eller personen är något vanligt folk känner igen och söker på.
+3. EU-beslut, regleringar och rättsfall som får genomslag i Sverige.
+4. Internationella nyheter med konkret betydelse för svenska verksamheter eller privatpersoner.
+
+Välj bort branschinternt även när det är korrekt och aktuellt: modeller som pensioneras, versionsnummer, prisjusteringar på API:er, finansieringsrundor och personalförändringar. Sådant söker ingen på utanför branschen. Undantag: om händelsen påverkar något en vanlig användare märker i en tjänst hen använder — då är det den vinkeln som ska drivas, inte versionsnumret.
 
 Undvik ren produktmarknadsföring, spekulativa rykten och nyheter utan verifierbar primärkälla.
 
-Redovisa varje kandidat med: en föreslagen svensk rubrik, två-tre meningar om vad som hänt och varför det angår svenska läsare, samt de fullständiga URL:erna till de källor du faktiskt läst. Skriv ut URL:erna i klartext.`;
+Redovisa varje kandidat med: en föreslagen svensk rubrik, två-tre meningar om vad som hänt och varför det angår svenska läsare, den sökfras du tror att en vanlig person skulle använda för att hitta nyheten, samt de fullständiga URL:erna till de källor du faktiskt läst. Skriv ut URL:erna i klartext.
+
+Kan du inte formulera en trovärdig sökfras för en kandidat är det ett tecken på att ingen letar efter den. Ta med den ändå i listan, men säg det rakt ut.`;
 
 /** SDK 0.99 saknar typer för `fallbacks` (beta server-side-fallback-2026-07-01).
  *  Parametern serialiseras oförändrad i request-body:n, så den läggs på efter
