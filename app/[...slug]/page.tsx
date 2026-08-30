@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -31,19 +32,7 @@ import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 
 export const revalidate = 300;
 
-type Props = { params: { slug: string[] }; searchParams?: { key?: string } };
-
-/** Opublicerade artiklar (published_at = null) ska inte na lasare. Sidan
- *  filtrerade inte pa det alls, sa bade utkast och medvetet avpublicerade
- *  artiklar svarade 200 pa sin URL.
- *
- *  Undantag: ratt nyckel visar utkastet anda, sa att en langre artikel gar att
- *  lasa igenom fore godkannande. Samma monster som /veckobrev/[week]. */
-function draftVisible(published_at: string | null, key?: string): boolean {
-  if (published_at) return true;
-  const secret = process.env.CRON_SECRET;
-  return !!secret && key === secret;
-}
+type Props = { params: { slug: string[] } };
 
 // Base columns guaranteed to exist on `articles`. `affiliate_url` is only
 // available after migration 0003_affiliate.sql is applied — we tack it on
@@ -152,7 +141,11 @@ const SUBHUB_PATHS = new Set(
   )
 );
 
-async function getArticle(path: string) {
+/** cache() dedupliceras per rendering. Utan den korde bade generateMetadata
+ *  och sidkomponenten var sin identiska fraga som hamtar hela raden, inklusive
+ *  content_mdx pa upp mot 10 kB — tva gangers arbete for varje sidvisning.
+ *  Next dedupliceras bara fetch(), inte Supabase-anrop. */
+const getArticle = cache(async (path: string) => {
   const { data, error } = await supabase
     .from('articles')
     .select('*')
@@ -160,7 +153,7 @@ async function getArticle(path: string) {
     .maybeSingle();
   if (error) console.error('[getArticle] supabase error:', error.message);
   return data;
-}
+});
 
 /** Select cards, optionally with affiliate_url + content_mdx. Retries without
  *  affiliate_url on "column does not exist" errors. */
@@ -455,13 +448,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CatchAllPage({ params, searchParams }: Props) {
+export default async function CatchAllPage({ params }: Props) {
   const path = pathFromParams(params.slug);
   const a = await getArticle(path);
   if (!a) notFound();
-  // Samma svar som "finns inte" — annars gar det att kartlagga vad som ligger
-  // i pipeline genom att prova sig fram.
-  if (!draftVisible(a.published_at, searchParams?.key)) notFound();
+  // Opublicerat ska inte na lasare. Ingen nyckelkontroll har: att lasa
+  // searchParams gor hela rutten dynamiskt renderad och slar ut revalidate=300
+  // for samtliga artiklar. Utkast lases pa /utkast/[slug] i stallet.
+  if (!a.published_at) notFound();
 
   const depth = path.split('/').filter(Boolean).length;
   const decision = classify(path, depth, a.type, a.slug, a.parent_slug);

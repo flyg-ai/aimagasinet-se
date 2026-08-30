@@ -1,4 +1,9 @@
 import type { MetadataRoute } from 'next';
+
+// Sitemapen hamtar hela artikeltabellen. Utan revalidate gjordes det vid varje
+// crawler-traff, vilket ar en stor del av CPU-tiden pa en sajt med 400 sidor.
+// En timme ar gott om farskhet for en sitemap.
+export const revalidate = 3600;
 import { supabase } from '@/lib/supabase';
 
 const BASE = 'https://aimagasinet.se';

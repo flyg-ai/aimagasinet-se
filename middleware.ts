@@ -60,5 +60,8 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   // Kör på allt utom Next-interna assets; GONE-mönstren avgör vad som 410:as.
-  matcher: ['/((?!_next/).*)'],
+  // Hoppa over Next-interna assets, API-rutter och de fa statiska filerna i
+  // roten. GONE-monstren galler sidvagar — middleware behover inte kora pa
+  // varje favicon- och sitemap-traff.
+  matcher: ['/((?!_next/|api/|favicon\.ico|robots\.txt|sitemap\.xml|llms\.txt|icon\.png|apple-icon\.png).*)'],
 };
