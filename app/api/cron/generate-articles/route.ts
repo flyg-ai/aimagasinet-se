@@ -915,11 +915,22 @@ async function refillTopicsIfLow(
         {
           role: 'user',
           content:
-            `Föreslå ${REFILL_COUNT} nya artikelämnen för AI-Magasinet, ett svenskt magasin om artificiell intelligens ` +
-            `för beslutsfattare, utvecklare och företagare.\n\n` +
-            `Varje ämne ska vara en färdig, konkret artikelrubrik på svenska som håller minst ett år — ` +
-            `guider, förklaringar, jämförelser och branschanalyser snarare än dagsaktuella nyheter. ` +
-            `Sprid dem över kategorierna.\n\n` +
+            `Föreslå ${REFILL_COUNT} nya artikelämnen för AI-Magasinet, ett svenskt magasin om ` +
+            `artificiell intelligens. Läsarna är nyfikna privatpersoner — inte utvecklare, inte ` +
+            `branschfolk. De vill kunna göra något, prova något eller förstå något som rör dem.\n\n` +
+            `Testet för varje ämne: skulle en vanlig svensk person söka på det här? ` +
+            `Kan du inte formulera sökfrasen de skulle använda, är ämnet fel.\n\n` +
+            `Format som fungerar på sajten i dag:\n` +
+            `- Listor och rankningar: "de 20 bästa", "topp 15", "alla som finns"\n` +
+            `- Gör-det-själv med tydligt resultat: "så gör du X"\n` +
+            `- Priser och jämförelser: "vad kostar X", "vilken är bäst på svenska"\n` +
+            `- Känna igen och skydda sig: "så ser du om X", "så undviker du Y"\n` +
+            `- Vardagsnytta: resa, mat, jobbansökan, ekonomi, skola, foton\n\n` +
+            `Undvik helt: infrastruktur och teknik under huven, modellarkitektur, ` +
+            `branschanalys, företagsstrategi, regelverk skrivet för jurister, och allt ` +
+            `som kräver att läsaren redan jobbar med AI. Sådant söker ingen på.\n\n` +
+            `Varje ämne ska vara en färdig, konkret artikelrubrik på svenska som håller minst ` +
+            `ett år. Låt kategorierna följa av ämnena — sprid dem inte jämnt för spridningens skull.\n\n` +
             `Dessa ämnen finns redan. Föreslå inget som överlappar dem:\n` +
             existingTopics.map((t) => `- ${t}`).join('\n'),
         },
