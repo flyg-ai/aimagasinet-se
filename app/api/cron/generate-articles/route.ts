@@ -295,15 +295,6 @@ function demoteH1(html: string): string {
   return html.replace(/<h1\b([^>]*)>/gi, '<h2$1>').replace(/<\/h1\s*>/gi, '</h2>');
 }
 
-/** Korrekturläsning i ett eget anrop.
- *
- *  Modellen som skrev texten är också den som är blind för sina egna stavfel —
- *  "Det är där tryckt märks först" gick ut i produktion. Ett separat anrop med
- *  enda uppgift att rätta språket ser texten med nya ögon.
- *
- *  Vakterna är hårda med flit: ändras ordantalet mer än fem procent, eller
- *  försvinner en länk, behåller vi originalet. Ett korrektur som passar på att
- *  skriva om texten är värre än stavfelet det rättade. */
 type Faq = { question: string; answer: string };
 
 /** Vanliga frågor till artikeln.
@@ -371,45 +362,6 @@ async function generateFaq(
     return faqs.length ? faqs.slice(0, 5) : null;
   } catch {
     return null;
-  }
-}
-
-async function proofread(claude: Anthropic, html: string, dl: Deadline): Promise<string> {
-  if (msLeft(dl) < 40_000) return html;
-  try {
-    const res = await claude.beta.messages.create(
-      withFallbacks({
-        model: MODEL,
-        max_tokens: MAX_TOKENS,
-        betas: [FALLBACK_BETA],
-        messages: [
-          {
-            role: 'user' as const,
-            content:
-              'Korrekturläs texten nedan. Rätta stavfel, särskrivningar, felböjningar och ' +
-              'grammatiska fel.\n\n' +
-              'Ändra INGET annat. Inte ordval, inte meningsbyggnad, inte struktur, inte ' +
-              'HTML-taggar, inte länkar. Är texten redan korrekt returnerar du den oförändrad.\n\n' +
-              'Svara med enbart den rättade HTML-koden, utan kommentarer.\n\n' +
-              html,
-          },
-        ],
-      }),
-      opts(dl),
-    );
-    if (res.stop_reason === 'max_tokens') return html;
-    const fixed = textOf(res);
-
-    if (!fixed.startsWith('<')) return html;
-    const linkCount = (s: string) => (s.match(/href="/g) || []).length;
-    if (linkCount(fixed) !== linkCount(html)) return html;
-    const before = wordCount(html);
-    const after = wordCount(fixed);
-    if (before === 0 || Math.abs(after - before) / before > 0.05) return html;
-
-    return fixed;
-  } catch {
-    return html;
   }
 }
 
@@ -825,9 +777,12 @@ async function generateAndPublish(
     throw new Error(`svaret kapades av max_tokens (${MAX_TOKENS}) — publiceras inte`);
   }
 
-  // Korrektur före länkhygienen, så att sanitizeLinks får sista ordet om
-  // något skulle ha rubbats på vägen.
-  const generated = await proofread(claude, demoteH1(textOf(msg)), dl);
+  // Inget korrektursteg. En genomgang av de tolv forsta auto-artiklarna gav
+  // 0-4 andringar pa de flesta, tre artiklar omskrivna i sin helhet, och
+  // stavfel som infordes i texten: "innehall" blev "innehal" i en av tre
+  // korningar pa artikel 945. Steget kostade lika mycket som att skriva
+  // artikeln och gjorde den samre. demoteH1 och sanitizeLinks racker.
+  const generated = demoteH1(textOf(msg));
   const { html, internal } = sanitizeLinks(generated, ctx.allowedPaths);
   const words = wordCount(html);
   if (words < 400) throw new Error(`för kort (${words} ord)`);
