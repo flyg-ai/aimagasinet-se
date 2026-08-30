@@ -35,7 +35,6 @@ export const dynamic = 'force-dynamic';
 // på Opus 5 och ligger nära gränsen; timeout innebär att inget publiceras.
 export const maxDuration = 300;
 
-/** Artiklar per anrop. Schemat kör två anrop per dag. */
 /** Artiklar per korning. Hobby tillater bara tva cron-jobb, sa tre artiklar
  *  per dag kraver att nyhetsjobbet producerar tva i samma korning. */
 const COUNT_NEWS = 2;
@@ -384,6 +383,47 @@ async function generateFaq(
   }
 }
 
+/** Kontrollera att de externa länkarna faktiskt finns.
+ *
+ *  Källänk-instruktionen ber modellen länka till lagrum, studier och rapporter.
+ *  Den gissar ibland URL:er som ser rimliga ut men inte existerar — AI-ångest-
+ *  artikeln hade två av nio döda (Ipsos och Brå). En trasig källhänvisning är
+ *  värre än ingen, för den ser ut som ett belägg.
+ *
+ *  Bara 404 och 410 avlänkas. Timeout, 403 och allt annat lämnas — många sajter
+ *  blockerar botar, och mind.se ger 403 för curl men 200 i en webbläsare. Att
+ *  strippa en fungerande källa vore ett sämre fel än att missa en död. */
+async function dropDeadLinks(
+  html: string,
+  dl: Deadline,
+): Promise<{ html: string; checked: number; dropped: number }> {
+  const urls = Array.from(new Set(Array.from(html.matchAll(/href="(https?:[^"]+)"/g), (m) => m[1])));
+  if (!urls.length || msLeft(dl) < 20_000) return { html, checked: 0, dropped: 0 };
+
+  const dead = new Set<string>();
+  await Promise.all(
+    urls.map(async (u) => {
+      try {
+        const res = await fetch(u, {
+          method: 'HEAD',
+          redirect: 'follow',
+          signal: AbortSignal.timeout(Math.min(8000, Math.max(2000, msLeft(dl) - 15_000))),
+        });
+        if (res.status === 404 || res.status === 410) dead.add(u);
+      } catch {
+        // Timeout eller nätverksfel säger inget om sidan finns — behåll länken.
+      }
+    }),
+  );
+  if (!dead.size) return { html, checked: urls.length, dropped: 0 };
+
+  const out = html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (m, attrs: string, inner: string) => {
+    const href = attrs.match(/href="([^"]*)"/i)?.[1];
+    return href && dead.has(href) ? inner : m;
+  });
+  return { html: out, checked: urls.length, dropped: dead.size };
+}
+
 function sanitizeLinks(
   html: string,
   allowedPaths: Set<string>,
@@ -692,6 +732,7 @@ type Result = {
   words?: number;
   internalLinks?: number;
   faq?: number;
+  deadLinks?: number;
   author?: string;
   status?: string;
   sources?: number;
@@ -797,7 +838,8 @@ async function generateAndPublish(
   // korningar pa artikel 945. Steget kostade lika mycket som att skriva
   // artikeln och gjorde den samre. demoteH1 och sanitizeLinks racker.
   const generated = demoteH1(textOf(msg));
-  const { html, internal } = sanitizeLinks(generated, ctx.allowedPaths);
+  const checked = await dropDeadLinks(generated, dl);
+  const { html, internal } = sanitizeLinks(checked.html, ctx.allowedPaths);
   const words = wordCount(html);
   if (words < 400) throw new Error(`för kort (${words} ord)`);
 
@@ -850,6 +892,7 @@ async function generateAndPublish(
     internalLinks: internal,
     sources: job.sources?.length ?? 0,
     faq: faq?.length ?? 0,
+    deadLinks: checked.dropped,
     author: bylineFor(job.targetWords),
     status: isFeature(job.targetWords) ? 'utkast — vantar pa godkannande' : 'publicerad',
   };
