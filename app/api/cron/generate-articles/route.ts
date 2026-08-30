@@ -9,9 +9,11 @@
  *                 relevans för svensk marknad och skriver en artikel per
  *                 nyhet, med källhänvisningar och interna länkar.
  *
- * COUNT styr hur många artiklar ett anrop producerar. Schemat i vercel.json kör
- * två anrop per dag (06 och 08 svensk tid), så COUNT=1 ger två artiklar per dag.
- * Vercel Hobby tillåter högst två cron-jobb.
+ * Tre artiklar per dag ur två cron-jobb — Vercel Hobby tillåter inte fler:
+ *   06 svensk tid  nyhetsläget, COUNT_NEWS=2, skrivs av Sonnet 5
+ *   08 svensk tid  ämnesläget, COUNT_TOPICS=1. Flaggade långartiklar
+ *                  (target_words >= 1500) skrivs av Opus 5, övriga av Sonnet.
+ * FAQ och bildfras går alltid på Haiku.
  *
  * Båda lägen delar publiceringsväg (Unsplash-omslag + upsert på path,
  * published_at=now()) och fyller på ämneskön automatiskt när den sinar.
@@ -34,8 +36,19 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
 /** Artiklar per anrop. Schemat kör två anrop per dag. */
-const COUNT = 1;
-const MODEL = 'claude-opus-5';
+/** Artiklar per korning. Hobby tillater bara tva cron-jobb, sa tre artiklar
+ *  per dag kraver att nyhetsjobbet producerar tva i samma korning. */
+const COUNT_NEWS = 2;
+const COUNT_TOPICS = 1;
+
+/** Modellval foljer artikeltypen, uppmatt i scripts/measure-cost.ts:
+ *   Opus 5   ~1,01 kr per artikel — flaggade langartiklar som ska ranka lange
+ *   Sonnet 5 ~0,61 kr — nyheter och ovrig loptext
+ *   Haiku    ~0,05 kr — FAQ och bildfras, dar jamforelsen mot Opus och Sonnet
+ *                       gav 30/30 ratt for alla tre */
+const MODEL_FEATURE = 'claude-opus-5';
+const MODEL_STANDARD = 'claude-sonnet-5';
+const MODEL_CHEAP = 'claude-haiku-4-5';
 /** Thinking är på som standard på Opus 5 och ryms inom max_tokens
  *  tillsammans med svarstexten — därav marginalen. */
 const MAX_TOKENS = 8000;
@@ -129,14 +142,22 @@ Redovisa varje kandidat med: en föreslagen svensk rubrik, två-tre meningar om 
 
 Kan du inte formulera en trovärdig sökfras för en kandidat är det ett tecken på att ingen letar efter den. Ta med den ändå i listan, men säg det rakt ut.`;
 
-/** SDK 0.99 saknar typer för `fallbacks` (beta server-side-fallback-2026-07-01).
- *  Parametern serialiseras oförändrad i request-body:n, så den läggs på efter
- *  typkontrollen. Ta bort helpern när @anthropic-ai/sdk uppgraderas. */
-function withFallbacks<T extends object>(params: T): T {
-  return { ...params, fallbacks: 'default' } as T;
+const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
+
+/** SDK 0.99 saknar typer för `fallbacks`. Parametern serialiseras oförändrad
+ *  i request-body:n, så den läggs på efter typkontrollen.
+ *
+ *  Bara Opus far den. Haiku avvisar bade parametern och beta-flaggan med 400,
+ *  vilket hade fallt varje FAQ- och bildfrasanrop i produktion. */
+function withFallbacks<T extends { model?: string }>(params: T): T {
+  if (params.model !== MODEL_FEATURE) return params;
+  return { ...params, fallbacks: 'default', betas: [FALLBACK_BETA] } as T;
 }
 
-const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
+/** Skrivmodell for ett jobb. Flaggade langartiklar far Opus, allt annat Sonnet. */
+function writerFor(job: Job): string {
+  return isFeature(job.targetWords) ? MODEL_FEATURE : MODEL_STANDARD;
+}
 
 /** Delas mellan alla anrop i en korning. */
 type Deadline = { endsAt: number };
@@ -248,9 +269,8 @@ async function imageQueryFor(claude: Anthropic, title: string, dl: Deadline): Pr
   try {
     const res = await claude.beta.messages.create(
       withFallbacks({
-        model: MODEL,
+        model: MODEL_CHEAP,
         max_tokens: 300,
-        betas: [FALLBACK_BETA],
         output_config: {
           format: {
             type: 'json_schema' as const,
@@ -316,9 +336,8 @@ async function generateFaq(
   try {
     const res = await claude.beta.messages.create(
       withFallbacks({
-        model: MODEL,
+        model: MODEL_CHEAP,
         max_tokens: 2000,
-        betas: [FALLBACK_BETA],
         output_config: {
           format: {
             type: 'json_schema' as const,
@@ -508,7 +527,7 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
     .select('id,topic,category,image_url,target_words')
     .eq('used', false)
     .order('created_at', { ascending: true })
-    .limit(COUNT + 10);
+    .limit(COUNT_TOPICS + 10);
   if (error) {
     const hint = /article_topics/.test(error.message)
       ? ' (kör migrationen supabase/migrations/0012_article_topics.sql först)'
@@ -529,7 +548,7 @@ async function takeTopics(db: SupabaseClient, ctx: Ctx): Promise<Job[]> {
     target_words: number | null;
   };
   for (const t of (data ?? []) as Row[]) {
-    if (jobs.length >= COUNT) break;
+    if (jobs.length >= COUNT_TOPICS) break;
     if (ctx.usedSlugs.has(slugify(t.topic))) {
       alreadyPublished.push(t.id);
       continue;
@@ -566,10 +585,9 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   // (Delat i två anrop så att den strukturerade extraktionen inte behöver samsas
   //  med server-tool-loopen.)
   const research = await createWithResume(claude, {
-    model: MODEL,
+    model: MODEL_STANDARD,
     // Briefingen behover inte vara lang — den ska bara mata extraktionssteget.
     max_tokens: 5000,
-    betas: [FALLBACK_BETA],
     // Varje sokning ar en rundtur pa Anthropics sida. Atta ryms inte i 300 s.
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
     system: [{ type: 'text', text: NEWS_RESEARCH_PROMPT }],
@@ -588,9 +606,8 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   // Steg 2 — strukturera de tre bästa. Inga verktyg, bara schemat.
   const extracted = await claude.beta.messages.create(
     withFallbacks({
-      model: MODEL,
+      model: MODEL_STANDARD,
       max_tokens: 4000,
-      betas: [FALLBACK_BETA],
       output_config: {
         format: {
           type: 'json_schema' as const,
@@ -629,12 +646,10 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
         {
           role: 'user',
           content:
-            `Nedan är en researchsammanställning. Välj ${
-              COUNT === 1
-                ? 'den enskilt starkaste nyheten'
-                : `de ${COUNT} starkaste nyheterna`
-            } för en svensk AI-läsekrets ` +
-            `och returnera den strukturerat. Rubriken ska vara färdig att publicera på svenska. ` +
+            `Nedan är en researchsammanställning. Välj de ${COUNT_NEWS} starkaste nyheterna ` +
+            `för en svensk AI-läsekrets och returnera dem strukturerat. De ska handla om ` +
+            `olika saker — inte två vinklar på samma händelse. ` +
+            `Rubrikerna ska vara färdiga att publicera på svenska. ` +
             `Ta bara med källor vars fullständiga URL står i sammanställningen — hitta inte på URL:er.\n\n` +
             briefing,
         },
@@ -657,7 +672,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
       // Samma skydd som i takeTopics: en nyhet vars slug redan finns är
       // redan bevakad — publicera den inte igen under ett -2-suffix.
       .filter((s) => !ctx.usedSlugs.has(slugify(s.title)))
-      .slice(0, COUNT)
+      .slice(0, COUNT_NEWS)
       .map((s) => ({
         title: s.title,
         category: valid.has(s.category) ? s.category : null,
@@ -754,14 +769,13 @@ async function generateAndPublish(
   const [msg, imageQuery] = await Promise.all([
     claude.beta.messages.create(
       withFallbacks({
-        model: MODEL,
+        model: writerFor(job),
         // Thinking ryms inom samma tak som svarstexten. En lang artikel behover
         // darfor mer utrymme an standardvardet, annars kapas den mitt i.
         max_tokens: Math.min(
           16000,
           Math.max(MAX_TOKENS, Math.round((job.targetWords ?? 0) * 4.5)),
         ),
-        betas: [FALLBACK_BETA],
         system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -871,9 +885,8 @@ async function refillTopicsIfLow(
 
   const msg = await claude.beta.messages.create(
     withFallbacks({
-      model: MODEL,
+      model: MODEL_STANDARD,
       max_tokens: 4000,
-      betas: [FALLBACK_BETA],
       output_config: {
         format: {
           type: 'json_schema' as const,
