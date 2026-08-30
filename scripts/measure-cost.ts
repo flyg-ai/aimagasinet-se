@@ -80,7 +80,8 @@ function record(name: string, model: string, msg: Anthropic.Beta.BetaMessage): s
 
 async function main() {
   const news = has('news');
-  const cheap = has('haiku') ? HAIKU : OPUS;
+  const cheapArg = arg('cheap') ?? (has('haiku') ? 'haiku' : 'opus');
+  const cheap = cheapArg === 'haiku' ? HAIKU : cheapArg === 'sonnet' ? SONNET : OPUS;
   const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
   });
