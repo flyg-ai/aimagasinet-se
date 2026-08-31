@@ -868,7 +868,10 @@ async function generateAndPublish(
       // ska lasas innan de gar ut; published_at=null haller dem borta fran
       // floden, sitemap och sin egen URL tills scripts/approve-article.ts kors.
       published_at: isFeature(job.targetWords) ? null : new Date().toISOString(),
-      seo_title: `${job.title} | AI-Magasinet`,
+      // Utan suffix: app/layout.tsx sätter title.template till "%s | AI-Magasinet"
+      // och lägger på det själv. Skrevs det in har blev taggen
+      // "... | AI-Magasinet | AI-Magasinet" pa varje autoartikel.
+      seo_title: job.title,
       seo_description: excerpt,
       faq,
       author_slug: bylineFor(job.targetWords),
