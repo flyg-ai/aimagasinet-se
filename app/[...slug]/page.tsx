@@ -34,6 +34,19 @@ export const revalidate = 300;
 
 type Props = { params: { slug: string[] } };
 
+/** Sidor som ska stanna kvar men ut ur Googles index.
+ *
+ *  Bakgrund: /ai-verktyg/marknadsforing/seo ligger på position 24,9 med 156
+ *  exponeringar och noll klick per 28 dagar. Vi testar samma ämne som artikel
+ *  på /basta-ai-seo-verktyg-2026. Ligger båda inne riskerar Google att fortsätta
+ *  välja hubben — den är redan klassad för frågan — och artikeln får aldrig en
+ *  ärlig utvärdering. Då blir testresultatet falskt negativt.
+ *
+ *  follow: true med flit. Sidan ska fortfarande skicka vidare länkvärde.
+ *  Tas bort igen om testet faller ut negativt. Blir det ett återkommande behov
+ *  hör det hemma i en kolumn på articles i stället för här. */
+const NOINDEX_PATHS = new Set<string>(['/ai-verktyg/marknadsforing/seo']);
+
 // Base columns guaranteed to exist on `articles`. `affiliate_url` is only
 // available after migration 0003_affiliate.sql is applied — we tack it on
 // optionally via `selectCards()` and fall back gracefully if the column is
@@ -421,6 +434,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(NOINDEX_PATHS.has(a.path) ? { robots: { index: false, follow: true } } : {}),
     alternates: {
       canonical: canonicalPath,
       languages: { 'sv-SE': canonicalPath },
