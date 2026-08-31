@@ -85,9 +85,13 @@ export function ArticleTemplate({
           <div className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 sm:pt-8">
             <div className="relative overflow-hidden rounded-2xl border border-line">
               {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* Titeln som alt. Bilden ligger direkt ovanför H1:an med samma
+                  text, så en skärmläsare hör den två gånger — men tom alt gör
+                  omslaget osynligt för bildsök, och det är en trafikkälla vi
+                  inte använder alls i dag. Avvägningen får gå åt det hållet. */}
               <img
                 src={a.featured_image}
-                alt=""
+                alt={a.title}
                 className="aspect-[16/9] max-h-[500px] w-full object-cover"
               />
               {/* Kategori-badge + lästid överst på bilden */}
