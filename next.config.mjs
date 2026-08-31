@@ -3,6 +3,7 @@ import { designerFotografRedirects } from './redirects-designer-fotograf.mjs';
 import { flattenRedirects } from './redirects.flatten.generated.mjs';
 import { dedupRedirects } from './redirects.dedup.generated.mjs';
 import { cronDupeRedirects } from './redirects.cron-dupes.mjs';
+import { seoTestRedirects, seoTestSupersededSources } from './redirects.seo-test.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -40,11 +41,22 @@ const nextConfig = {
       const seg = String(dest ?? '').replace(/[?#].*$/, '').replace(/\/+$/, '').split('/').pop();
       return DEAD_TOOL_SLUGS.has(seg);
     };
+    // Formattestet (se redirects.seo-test.mjs) flyttar SEO-hubben till en
+    // artikel. Regler i de genererade listorna som pekade PÅ hubben måste bort,
+    // annars blir gamla indexerade URL:er en kedja 301 → 301 i stället för ett
+    // hopp. Testets egna regler läggs först — Next tar första träffen — och
+    // passerar inte det filtret, eftersom en av dem delar source med regeln
+    // den ersätter.
+    const superseded = (src) =>
+      seoTestSupersededSources.has(String(src ?? '').replace(/\/+$/, ''));
     const norm = (list) =>
       list
         .filter((r) => !pointsAtDead(r.destination))
+        .filter((r) => !superseded(r.source))
         .map((r) => ({ ...r, destination: trailing(r.destination) }));
-    return norm([
+    return [
+      ...seoTestRedirects.map((r) => ({ ...r, destination: trailing(r.destination) })),
+      ...norm([
       {
         // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
         // startup-artikeln.
@@ -226,7 +238,8 @@ const nextConfig = {
       // Cron-dubbletter (aug 2026): -2-suffixade omgenereringar → originalet.
       // Se redirects.cron-dupes.mjs för bakgrund.
       ...cronDupeRedirects,
-    ]);
+      ]),
+    ];
   },
 };
 
