@@ -39,6 +39,9 @@ export const maxDuration = 300;
  *  per dag kraver att nyhetsjobbet producerar tva i samma korning. */
 const COUNT_NEWS = 2;
 const COUNT_TOPICS = 1;
+/** Kandidater att be om i urvalssteget. Fler an COUNT_NEWS, sa att filtret mot
+ *  redan bevakade slugs kan slanga nagra utan att korningen tappar en artikel. */
+const NEWS_CANDIDATES = COUNT_NEWS + 2;
 
 /** Modellval foljer artikeltypen, uppmatt i scripts/measure-cost.ts:
  *   Opus 5   ~1,01 kr per artikel — flaggade langartiklar som ska ranka lange
@@ -643,7 +646,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   }, dl);
   const briefing = textOf(research);
 
-  // Steg 2 — strukturera de tre bästa. Inga verktyg, bara schemat.
+  // Steg 2 — strukturera kandidaterna. Inga verktyg, bara schemat.
   const extracted = await claude.beta.messages.create(
     withFallbacks({
       model: MODEL_STANDARD,
@@ -658,6 +661,12 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
             properties: {
               stories: {
                 type: 'array',
+                // Utan minItems tillat schemat en enda nyhet, och modellen tog
+                // regelbundet den utvagen — darav en artikel per korning i
+                // stallet for COUNT_NEWS. Vi ber om fler kandidater an vi
+                // behover eftersom usedSlugs-filtret nedan kan slanga nagra.
+                minItems: COUNT_NEWS,
+                maxItems: NEWS_CANDIDATES,
                 items: {
                   type: 'object',
                   additionalProperties: false,
@@ -686,9 +695,11 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
         {
           role: 'user',
           content:
-            `Nedan är en researchsammanställning. Välj de ${COUNT_NEWS} starkaste nyheterna ` +
-            `för en svensk AI-läsekrets och returnera dem strukturerat. De ska handla om ` +
-            `olika saker — inte två vinklar på samma händelse. ` +
+            `Nedan är en researchsammanställning. Välj de ${NEWS_CANDIDATES} starkaste nyheterna ` +
+            `för en svensk AI-läsekrets och returnera dem strukturerat, starkast först. ` +
+            `Vi publicerar de ${COUNT_NEWS} första som klarar dubblettkontrollen — ` +
+            `ta därför med samtliga ${NEWS_CANDIDATES}, även om du tycker att de sista är svagare. ` +
+            `De ska handla om olika saker — inte två vinklar på samma händelse. ` +
             `Rubrikerna ska vara färdiga att publicera på svenska. ` +
             `Ta bara med källor vars fullständiga URL står i sammanställningen — hitta inte på URL:er.\n\n` +
             briefing,
