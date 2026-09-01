@@ -632,7 +632,10 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
     // Briefingen behover inte vara lang — den ska bara mata extraktionssteget.
     max_tokens: 5000,
     // Varje sokning ar en rundtur pa Anthropics sida. Atta ryms inte i 300 s.
-    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
+    // Sex i stallet for fyra: nar en sokning fallerar gor modellen om den, och
+    // med fyra tog kvoten slut mitt i researchen 1 september — briefingen blev
+    // en ursakt utan en enda kalla och korningen gav noll artiklar.
+    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 6 }],
     system: [{ type: 'text', text: NEWS_RESEARCH_PROMPT }],
     messages: [
       {
@@ -645,6 +648,17 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
     ],
   }, dl);
   const briefing = textOf(research);
+
+  // En briefing utan en enda kalla ar inte en briefing. Nar websokningen
+  // fallerar svarar modellen med en artig forklaring i stallet, extraktionen
+  // far ingenting att arbeta med, och korningen returnerade tidigare ok:true
+  // med noll artiklar — tyst. Kasta i stallet, sa syns felet i loggen.
+  if (!/https?:\/\//.test(briefing)) {
+    throw new Error(
+      `researchsteget gav ingen kalla (${briefing.length} tecken) — websokningen fallerade sannolikt. ` +
+        `Borjan: ${briefing.slice(0, 200)}`,
+    );
+  }
 
   // Steg 2 — strukturera kandidaterna. Inga verktyg, bara schemat.
   const extracted = await claude.beta.messages.create(
@@ -661,12 +675,11 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
             properties: {
               stories: {
                 type: 'array',
-                // Utan minItems tillat schemat en enda nyhet, och modellen tog
-                // regelbundet den utvagen — darav en artikel per korning i
-                // stallet for COUNT_NEWS. Vi ber om fler kandidater an vi
-                // behover eftersom usedSlugs-filtret nedan kan slanga nagra.
-                minItems: COUNT_NEWS,
-                maxItems: NEWS_CANDIDATES,
+                // Varken minItems eller maxItems gar att satta har — API:et
+                // svarar 400 pa bada (minItems tillater bara 0 eller 1).
+                // Antalet styrs darfor enbart av prompten, och vi ber om fler
+                // kandidater an vi behover eftersom usedSlugs-filtret nedan
+                // kan slanga nagra.
                 items: {
                   type: 'object',
                   additionalProperties: false,
