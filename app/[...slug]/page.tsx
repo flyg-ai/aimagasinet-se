@@ -448,6 +448,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/** Utan den har exporten ar rutten dynamiskt renderad — `ƒ /[...slug]` i
+ *  bygglistan — och da har `revalidate = 300` ingen verkan alls. Varje
+ *  sidvisning kordes mot Supabase och renderades om, vilket syntes rakt av i
+ *  Vercels Fluid CPU: taket for gratisplanen slogs i pa en sajt med ett par
+ *  hundra besok om dagen.
+ *
+ *  Med listan pa plats forrenderas sidorna vid bygget och revalideras var
+ *  femte minut. `dynamicParams` ar sant som standard, sa artiklar som cronen
+ *  publicerar mellan tva bygganden renderas pa forsta traffen och cachas
+ *  darefter — de behover inte finnas i listan. */
+export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
+  const rows: { path: string }[] = [];
+  // PostgREST tar max 1000 rader per svar.
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('path')
+      .not('published_at', 'is', null)
+      .order('path')
+      .range(from, from + 999);
+    if (error) {
+      // Bygget ska inte falla om databasen strular — utan lista blir rutten
+      // dynamisk igen, vilket ar samma lage som innan.
+      console.error('[generateStaticParams] supabase error:', error.message);
+      break;
+    }
+    rows.push(...((data ?? []) as { path: string }[]));
+    if (!data || data.length < 1000) break;
+  }
+  return rows
+    .map((r) => r.path.split('/').filter(Boolean))
+    .filter((segs) => segs.length > 0)
+    .map((slug) => ({ slug }));
+}
+
 export default async function CatchAllPage({ params }: Props) {
   const path = pathFromParams(params.slug);
   const a = await getArticle(path);
@@ -460,7 +495,6 @@ export default async function CatchAllPage({ params }: Props) {
   const depth = path.split('/').filter(Boolean).length;
   const decision = classify(path, depth, a.type, a.slug, a.parent_slug);
 
-  console.log('[CatchAllPage]', { path, depth, type: a.type, kind: decision.kind, reason: decision.reason });
 
   if (decision.kind === 'about') {
     const authorsMap = await fetchAuthorsMap();
