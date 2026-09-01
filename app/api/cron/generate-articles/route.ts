@@ -629,13 +629,15 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   //  med server-tool-loopen.)
   const research = await createWithResume(claude, {
     model: MODEL_STANDARD,
-    // Briefingen behover inte vara lang — den ska bara mata extraktionssteget.
-    max_tokens: 5000,
+    // Sokresultaten raknas mot utdatabudgeten. Med 5000 tog den slut innan
+    // modellen hunnit skriva sammanstallningen — stop_reason blev max_tokens
+    // och briefingen kom tillbaka tom, vilket ar varfor 1 september gav noll
+    // artiklar. Briefingen i sig behover inte vara lang; taket maste rymma
+    // sokresultaten ocksa.
+    max_tokens: 16000,
     // Varje sokning ar en rundtur pa Anthropics sida. Atta ryms inte i 300 s.
-    // Sex i stallet for fyra: nar en sokning fallerar gor modellen om den, och
-    // med fyra tog kvoten slut mitt i researchen 1 september — briefingen blev
-    // en ursakt utan en enda kalla och korningen gav noll artiklar.
-    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 6 }],
+    // Fler an fyra ater dessutom upp utdatabudgeten utan att ge battre urval.
+    tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
     system: [{ type: 'text', text: NEWS_RESEARCH_PROMPT }],
     messages: [
       {
