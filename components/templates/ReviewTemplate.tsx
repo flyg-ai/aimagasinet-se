@@ -592,9 +592,29 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: 'Helt gratis för individer', price: 'Gratis · Teams 12 USD/mån', bestFor: 'Soloutvecklare och hobbyprojekt' },
     label: 'Bäst gratis',
   },
+  'claude-code': {
+    logo: 'bg-orange-600',
+    ctaName: 'Claude Code', score: 9.3, fallbackUrl: 'https://claude.com/product/claude-code',
+    company: 'Anthropic', model: 'Claude Opus 5 / Sonnet 5', founded: 2021, hq: 'San Francisco, USA',
+    tagline: 'Kodagent som tar hela uppgiften, inte nästa rad',
+    useCases: ['Refaktorering över många filer', 'Migreringar', 'Buggsökning med reproduktion', 'Ärende till pull request', 'Sätta sig in i okänd kodbas'],
+    ratingCriteria: [
+      { label: 'Kontextförståelse', score: 9.7 }, { label: 'Agentiskt arbete', score: 9.6 },
+      { label: 'Kodkvalitet', score: 9.5 }, { label: 'Editor-integration', score: 8.8 },
+      { label: 'Pris / prestanda', score: 8.8 }, { label: 'Modellval', score: 7.5 },
+    ],
+    tags: ['Terminal', 'Underagenter', 'GitHub-PR', 'MCP'],
+    pros: ['Läser hela kodbasen utan att du pekar ut filer', 'Utför avgränsade uppgifter självständigt', 'Finns i terminal, editor, webb och mobil'],
+    cons: ['Bara Anthropics egna modeller — inget modellval', 'Terminalvant arbetssätt höjer tröskeln', 'Användningstaket på Pro tar snabbt slut i stora kodbaser'],
+    offer: { title: 'Ingår i Claude Pro', price: 'Pro 20 USD/mån · Max från 100 USD/mån', bestFor: 'Avgränsade uppgifter i stora kodbaser' },
+    label: 'Starkast agent',
+  },
   'amazon-codewhisperer': {
     logo: 'bg-orange-700',
-    ctaName: 'CodeWhisperer', score: 8.0, fallbackUrl: 'https://aws.amazon.com/codewhisperer/',
+    // AWS bytte namn pa CodeWhisperer till Q Developer den 30 april 2024 och
+    // den gamla produktsidan 301:ar dit. Slug och URL far sta kvar tills vidare
+    // — att byta dem kraver en redirect — men namn och lank pekar ratt.
+    ctaName: 'Q Developer', score: 8.0, fallbackUrl: 'https://aws.amazon.com/q/developer/',
     company: 'Amazon Web Services', model: 'Amazon Q Developer', founded: 2006, hq: 'Seattle, USA',
     useCases: ['AWS-utveckling', 'Lambda och serverless', 'Security-fokuserad kod', 'Infrastructure as Code', 'Enterprise AWS-team'],
     ratingCriteria: [
