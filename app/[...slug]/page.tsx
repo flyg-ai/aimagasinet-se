@@ -407,8 +407,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalPath = a.path === '/' || a.path.endsWith('/') ? a.path : `${a.path}/`;
 
   // Next.js *replaces* parent openGraph entirely (no deep merge), so we
-  // always emit an image — featured_image when set, brand icon otherwise.
-  const ogImage = a.featured_image ?? '/apple-icon.png';
+  // always emit an image.
+  //
+  // og_image ar den genererade delningsbilden (scripts/generate-og-images.ts).
+  // featured_image gar inte att aterbruka for det: ReviewTemplate renderar den
+  // som kvadratisk logotyp pa verktygssidor, inte som banner. Utan nagondera
+  // faller vi tillbaka pa sajtikonen, vilket gjorde att 293 verktygssidor
+  // visade AI-Magasinets logga nar de delades.
+  //
+  // Kolumnen finns forst efter migration 0020; dessforinnan ar den undefined
+  // och kedjan faller igenom till ikonen som tidigare.
+  const ogImage = a.featured_image ?? a.og_image ?? '/apple-icon.png';
 
   // Google News: news_keywords = kategori + taggar (endast för nyhetsinlägg).
   const newsKeywords =
