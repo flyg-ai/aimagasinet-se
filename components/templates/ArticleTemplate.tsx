@@ -41,7 +41,21 @@ export function ArticleTemplate({
   /** Same-category posts for the sidebar "Relaterade artiklar". */
   related?: ArticleCardData[];
 }) {
-  const crumbs = buildCrumbs(a.path);
+  /** buildCrumbs bygger stigen ur URL-segmenten och slänger det sista. En
+   *  artikel på toppnivå har bara ett segment och fick darfor noll brödsmulor
+   *  — vilket betydde att samtliga nyhetsartiklar saknade både BreadcrumbList
+   *  i schemat och den synliga stigen, eftersom Breadcrumb returnerar null på
+   *  en tom lista.
+   *
+   *  Kategorin är den naturliga föräldern för dem: Start › Teknik & modeller ›
+   *  artikeln. Kategorirutten finns på /kategori/<slug>. */
+  const pathCrumbs = buildCrumbs(a.path);
+  const crumbs =
+    pathCrumbs.length > 0
+      ? pathCrumbs
+      : a.category
+        ? [{ label: categoryLabel(a.category), href: `/kategori/${a.category}` }]
+        : [];
   const children = items;
   const minutes = readingTimeMinutes(a.content_mdx);
   // Share-knappar bara på riktiga nyheter/artiklar (type='post') — inte på
