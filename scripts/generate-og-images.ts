@@ -21,6 +21,7 @@
 import { config as loadEnv } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
+import { readFileSync } from 'node:fs';
 
 loadEnv({ path: '.env.local' });
 
@@ -126,6 +127,26 @@ function svg(title: string, accent: string, score: number | null, kicker: string
  *  stallet; de ar vanlig TypeScript utan JSX, sa inget React dras in. */
 type Profile = { logo?: string; score?: number | null };
 
+/** De 24 profiler som star direkt i ReviewTemplate.tsx efter spread-raderna.
+ *  Att importera .tsx-filen hit skulle dra in React och hela komponenttradet,
+ *  sa vi laser blocket som text. Avgransningen maste vara '\n};\n' — ett enkelt
+ *  '\n};' traffar det forsta nastlade objektet och ger bara 1,7 kB i stallet
+ *  for 39. */
+function inlineProfiles(): Record<string, Profile> {
+  const src = readFileSync('components/templates/ReviewTemplate.tsx', 'utf8');
+  const start = src.indexOf('export const REVIEW_KNOWN');
+  if (start < 0) return {};
+  const block = src.slice(start, src.indexOf('\n};\n', start));
+  const out: Record<string, Profile> = {};
+  for (const m of Array.from(block.matchAll(/^ {2}'([a-z0-9-]+)':\s*\{([\s\S]*?)\n {2}\},/gm))) {
+    out[m[1]] = {
+      logo: m[2].match(/logo:\s*'([^']+)'/)?.[1],
+      score: m[2].match(/score:\s*([0-9.]+)/) ? Number(RegExp.$1) : undefined,
+    };
+  }
+  return out;
+}
+
 async function loadProfiles(): Promise<Record<string, Profile>> {
   const mods = await Promise.all([
     import('../lib/yrke-tools').then((m) => m.YRKE_REVIEW_KNOWN),
@@ -136,7 +157,9 @@ async function loadProfiles(): Promise<Record<string, Profile>> {
     import('../lib/crm-tools').then((m) => m.CRM_REVIEW_KNOWN),
     import('../lib/category-hub-tools-3').then((m) => m.CATEGORY_HUB_REVIEW_KNOWN_3),
   ]);
-  return Object.assign({}, ...mods) as Record<string, Profile>;
+  // Inline sist — den vinner over lib-filerna, precis som spread-ordningen i
+  // ReviewTemplate.
+  return Object.assign({}, ...mods, inlineProfiles()) as Record<string, Profile>;
 }
 
 async function main() {
