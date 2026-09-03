@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { resolveToken, type CompareToolRef } from '@/lib/compare';
 import { resolveToolProfile, toolOverallScore, type ReviewProfile } from '@/components/templates/ReviewTemplate';
 
@@ -56,7 +57,26 @@ Returnera EXAKT JSON, inget annat:
 { "winner": "<token>", "recommendation": "…" }
 INGEN \`\`\`json\`\`\`-wrapping, ingen prosa före eller efter.`;
 
+/** Varje anrop kostar ett Haiku-anrop, sa rutten far ett tak. Tva fonster:
+ *  det korta slapper igenom nagon som justerar syfte och budget och trycker
+ *  om, det langa stoppar en som later ett skript mala. */
+const LIMITS = [
+  { limit: 10, windowMs: 60_000, tag: 'min' },
+  { limit: 60, windowMs: 3_600_000, tag: 'h' },
+];
+
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  for (const l of LIMITS) {
+    const r = rateLimit(`compare-recommend:${l.tag}:${ip}`, l);
+    if (!r.ok) {
+      return NextResponse.json(
+        { error: 'rate_limited' },
+        { status: 429, headers: { 'Retry-After': String(r.retryAfter) } },
+      );
+    }
+  }
+
   let body: { tools?: unknown; syfte?: unknown; budget?: unknown };
   try {
     body = await req.json();

@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useState, type ReactNode } from 'react';
+import { Fragment, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { ToolCategory } from '@/lib/compare';
@@ -104,11 +104,11 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
       .finally(() => setLoading(false));
   }
 
-  // Auto-generate once when first landing on the result step.
-  useEffect(() => {
-    if (step === 'result' && generatedKey === null) runGenerate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
+  // Rekommendationen genereras INTE automatiskt. Resultatsteget nas ocksa
+  // genom att ladda en URL med ?tools=, sa en autofyrning kostade ett
+  // Haiku-anrop per uppdatering, delning, bakatknapp och crawlerbesok av
+  // samma lank — utan att nagon bett om det. Verktygskorten och betygen
+  // renderas anda; anropet sker forst nar anvandaren trycker pa knappen.
 
   function toggleTool(token: string) {
     setSelected((prev) => {
