@@ -209,6 +209,9 @@ export type ComparedTool = {
   score: number;
   ctaUrl: string | null;
   ctaLabel: string;
+  /** featured_image fran artikelraden. Null → ToolLogo faller tillbaka pa
+   *  den fargade rutan med begynnelsebokstaven. */
+  image: string | null;
 };
 
 /* ─── Templated fallbacks ───────────────────────────────────────────

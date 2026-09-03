@@ -22,7 +22,7 @@ export const revalidate = 300;
 type Props = { params: { jamforelse: string } };
 
 /** Build the fully-resolved comparison side from a tool ref. */
-function buildTool(ref: CompareToolRef): ComparedTool {
+function buildTool(ref: CompareToolRef, image: string | null): ComparedTool {
   const profile = resolveToolProfile(ref.key, ref.name);
   return {
     ref,
@@ -30,7 +30,27 @@ function buildTool(ref: CompareToolRef): ComparedTool {
     score: toolOverallScore(profile),
     ctaUrl: profile.fallbackUrl ?? null,
     ctaLabel: `Prova ${profile.ctaName ?? ref.name}`,
+    image,
   };
+}
+
+/** featured_image for the two tools, keyed by REVIEW_KNOWN key (= article
+ *  slug). Best-effort: a miss leaves the logo as the coloured initial, which
+ *  is what every comparison rendered before the tool tiles existed. */
+async function fetchImages(keys: string[]): Promise<Record<string, string | null>> {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('slug,featured_image')
+    .in('slug', keys);
+  if (error || !data) {
+    if (error) console.error('[jamforelse] fetchImages error:', error.message);
+    return {};
+  }
+  const out: Record<string, string | null> = {};
+  for (const row of data as { slug: string; featured_image: string | null }[]) {
+    out[row.slug] = row.featured_image;
+  }
+  return out;
 }
 
 /** Pull Haiku-generated content from the comparisons table. Returns null on
@@ -97,10 +117,13 @@ export default async function ComparisonPage({ params }: Props) {
   const parsed = parseComparisonSlug(params.jamforelse);
   if (!parsed) notFound();
 
-  const a = buildTool(parsed.a);
-  const b = buildTool(parsed.b);
+  const [images, stored] = await Promise.all([
+    fetchImages([parsed.a.key, parsed.b.key]),
+    getStoredContent(params.jamforelse),
+  ]);
+  const a = buildTool(parsed.a, images[parsed.a.key] ?? null);
+  const b = buildTool(parsed.b, images[parsed.b.key] ?? null);
 
-  const stored = await getStoredContent(params.jamforelse);
   const content: ComparisonContent = stored ?? {
     intro: fallbackIntro(a, b),
     verdict:

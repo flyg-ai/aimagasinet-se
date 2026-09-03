@@ -81,11 +81,24 @@ export function ComparisonTemplate({
 
 /* ─── Logo ─────────────────────────────────────────────────────── */
 
-function ToolLogo({ name, color, size = 'md' }: { name: string; color: string; size?: 'md' | 'lg' | 'xl' }) {
+function ToolLogo({
+  name,
+  color,
+  image,
+  size = 'md',
+}: { name: string; color: string; image?: string | null; size?: 'md' | 'lg' | 'xl' }) {
   const dims =
     size === 'xl' ? 'h-20 w-20 text-3xl rounded-3xl'
     : size === 'lg' ? 'h-16 w-16 text-2xl rounded-2xl'
     : 'h-11 w-11 text-lg rounded-xl';
+  if (image) {
+    return (
+      <span className={`flex shrink-0 items-center justify-center overflow-hidden border border-line bg-card shadow-sm ${dims}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={image} alt="" loading="lazy" className="h-full w-full object-cover" />
+      </span>
+    );
+  }
   return (
     <span className={`flex shrink-0 items-center justify-center font-black uppercase text-white shadow-sm ${color} ${dims}`} aria-hidden>
       {name.charAt(0)}
@@ -144,7 +157,7 @@ function BigToolCard({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
   const p = tool.profile;
   return (
     <div className={`flex flex-col items-center rounded-2xl border-2 bg-card p-6 text-center shadow-sm ${kit.ring}`}>
-      <ToolLogo name={tool.ref.name} color={p.logo} size="xl" />
+      <ToolLogo name={tool.ref.name} color={p.logo} image={tool.image} size="xl" />
       <h2 className="mt-4 text-xl font-black tracking-tight text-fg break-words">{tool.ref.name}</h2>
       <p className="mt-1 text-xs text-fg-subtle">{p.company} · {p.model}</p>
       <div className="mt-4 flex items-baseline gap-1">
@@ -202,7 +215,7 @@ function WinnerSection({ winner, loser, verdict, tie }: { winner: ComparedTool; 
         </div>
         <div className="p-6 sm:p-8">
           <div className="flex items-center gap-4">
-            <ToolLogo name={winner.ref.name} color={winner.profile.logo} size="lg" />
+            <ToolLogo name={winner.ref.name} color={winner.profile.logo} image={winner.image} size="lg" />
             <div>
               <h3 className="text-2xl font-black tracking-tight text-fg break-words sm:text-3xl">{winner.ref.name}</h3>
               <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-600">
@@ -295,7 +308,7 @@ function ProsConsCard({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
   return (
     <div className={`rounded-2xl border-2 bg-card p-6 ${kit.ring}`}>
       <div className="mb-4 flex items-center gap-3">
-        <ToolLogo name={tool.ref.name} color={p.logo} />
+        <ToolLogo name={tool.ref.name} color={p.logo} image={tool.image} />
         <h3 className="text-lg font-black tracking-tight text-fg break-words">{tool.ref.name}</h3>
       </div>
       <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-600">Fördelar</p>
