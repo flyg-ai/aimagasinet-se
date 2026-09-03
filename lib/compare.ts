@@ -208,6 +208,38 @@ export function toolPricing(key: string, offer: { title: string; price: string }
   return { free, paid: paid || '—' };
 }
 
+/** De atta syftena i jamfor-wizarden steg 2. Kanonisk lista — bade wizarden,
+ *  API-rutten och genereringsskriptet for duellsidornas per-syfte-sektion
+ *  laser samma slugs/etiketter harifran i stallet for att halla varsin
+ *  kopia som kan glida isar. */
+export const SYFTE_OPTIONS: { slug: string; label: string }[] = [
+  { slug: 'skrivande', label: 'Skrivande' },
+  { slug: 'kodning', label: 'Kodning' },
+  { slug: 'bildgenerering', label: 'Bildgenerering' },
+  { slug: 'analys-research', label: 'Analys & research' },
+  { slug: 'kreativitet', label: 'Kreativitet' },
+  { slug: 'marknadsforing', label: 'Marknadsföring' },
+  { slug: 'kundservice', label: 'Kundservice' },
+  { slug: 'automation', label: 'Automation' },
+];
+
+/** Vilka verktygskategorier ett syfte i praktiken drar mot. Fyra av atta ar
+ *  entydiga (skrivande/kodning/bildgenerering/automation), fyra spanner
+ *  flera kategorier pa riktigt (kreativitet, marknadsforing, kundservice) —
+ *  att tvinga fram en enda kategori dar hade varit att gissa, inte matcha.
+ *  Ingen match innebar bara att helhetsbetyget avgor, precis som innan
+ *  denna lista fanns. */
+export const SYFTE_CATEGORY_HINTS: Record<string, ToolCategory[]> = {
+  skrivande: ['AI-text'],
+  kodning: ['AI-kod'],
+  bildgenerering: ['AI-bilder'],
+  'analys-research': ['AI-text'],
+  kreativitet: ['AI-bilder', 'AI-video'],
+  marknadsforing: ['AI-text', 'AI-automation'],
+  kundservice: ['AI-automation'],
+  automation: ['AI-automation'],
+};
+
 export const SEPARATOR = '-eller-';
 
 export function comparisonSlug(aToken: string, bToken: string): string {
@@ -242,6 +274,10 @@ export function parseComparisonSlug(
 
 /* ─── Comparison content (Haiku-generated, cached in Supabase) ──────── */
 
+/** En rad per SYFTE_OPTIONS-post: vem av de tva vinner for just det
+ *  anvandningsomradet, och varfor — kan avvika fran den totala vinnaren. */
+export type UseCaseVerdict = { syfte: string; winner: 'a' | 'b'; reason: string };
+
 export type ComparisonContent = {
   /** 2-3 sentence editorial lead comparing the two tools. */
   intro: string;
@@ -250,6 +286,11 @@ export type ComparisonContent = {
   verdict: string;
   /** Exactly 5 FAQ pairs about the head-to-head. */
   faqs: FaqItem[];
+  /** En dom per syfte i SYFTE_OPTIONS (8 st). Detta ar innehallet som
+   *  ersatte wizardens "vad ska du anvanda det till"-fraga pa de statiska
+   *  duellsidorna — i stallet for att fraga far lasaren svaret for alla atta
+   *  anvandningsomraden direkt pa sidan. */
+  useCases: UseCaseVerdict[];
 };
 
 /** A fully resolved side of a comparison — profile + derived display bits. */
@@ -287,6 +328,33 @@ export function fallbackVerdict(winner: ComparedTool, loser: ComparedTool): stri
     `${loser.ref.name} är dock ett mycket starkt alternativ — särskilt om du värdesätter ${loser.profile.pros[0]?.toLowerCase() ?? 'dess styrkor'}. ` +
     `Båda har gratisnivåer, så det enklaste är att testa själv innan du betalar.`
   );
+}
+
+/** Kategori-fit forst (ar verktyget overhuvudtaget byggt for det har?),
+ *  helhetsbetyg som tiebreak nar bada eller ingen matchar — samma hierarki
+ *  som den deterministiska motorn i /api/compare-recommend anvander for
+ *  wizardens fria verktygsval. */
+export function fallbackUseCases(a: ComparedTool, b: ComparedTool): UseCaseVerdict[] {
+  return SYFTE_OPTIONS.map(({ slug, label }) => {
+    const cats = SYFTE_CATEGORY_HINTS[slug] ?? [];
+    const aFits = cats.includes(a.ref.category);
+    const bFits = cats.includes(b.ref.category);
+
+    if (aFits && !bFits) {
+      return { syfte: slug, winner: 'a' as const, reason: a.ref.name + ' är byggt för ' + label.toLowerCase() + ' — ' + b.ref.name + ' är det inte, oavsett helhetsbetyg.' };
+    }
+    if (bFits && !aFits) {
+      return { syfte: slug, winner: 'b' as const, reason: b.ref.name + ' är byggt för ' + label.toLowerCase() + ' — ' + a.ref.name + ' är det inte, oavsett helhetsbetyg.' };
+    }
+    const aWins = a.score >= b.score;
+    const winner = aWins ? a : b;
+    const loser = aWins ? b : a;
+    return {
+      syfte: slug,
+      winner: (aWins ? 'a' : 'b') as 'a' | 'b',
+      reason: 'Ingen tydlig kategoriskillnad för ' + label.toLowerCase() + ' — ' + winner.ref.name + ' har högre helhetsbetyg (' + winner.score.toFixed(1) + ' mot ' + loser.score.toFixed(1) + ').',
+    };
+  });
 }
 
 export function fallbackFaqs(a: ComparedTool, b: ComparedTool): FaqItem[] {

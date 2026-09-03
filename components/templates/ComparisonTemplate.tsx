@@ -6,10 +6,12 @@ import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import {
   COMPARE_TOOLS,
   FEATURED_COMPARISONS,
+  SYFTE_OPTIONS,
   comparisonSlug,
   toolPricing,
   type ComparedTool,
   type ComparisonContent,
+  type UseCaseVerdict,
 } from '@/lib/compare';
 
 /* flyg.ai-inspired head-to-head. Tool A is indigo, tool B is cyan throughout.
@@ -68,6 +70,7 @@ export function ComparisonTemplate({
       <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
         <Snabbfakta a={a} b={b} />
         <WinnerSection winner={winner} loser={loser} verdict={content.verdict} tie={a.score === b.score} />
+        <UseCaseBreakdown a={a} b={b} useCases={content.useCases} />
         <CriteriaTable a={a} b={b} />
         <ProsCons a={a} b={b} />
         <CtaPair a={a} b={b} />
@@ -260,6 +263,32 @@ function WinnerSection({ winner, loser, verdict, tie }: { winner: ComparedTool; 
 }
 
 /* ─── Criteria table (win indicator per row) ───────────────────── */
+
+function UseCaseBreakdown({ a, b, useCases }: { a: ComparedTool; b: ComparedTool; useCases: UseCaseVerdict[] }) {
+  return (
+    <section className="pt-14 sm:pt-20">
+      <SectionHeader kicker="Användningsområden" title="Vem vinner för vad?" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        {useCases.map((u) => {
+          const label = SYFTE_OPTIONS.find((o) => o.slug === u.syfte)?.label ?? u.syfte;
+          const winnerTool = u.winner === 'a' ? a : b;
+          const side = SIDE[u.winner];
+          return (
+            <div key={u.syfte} className="rounded-xl border border-line bg-card p-4">
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">{label}</span>
+                <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-black uppercase tracking-wider ${side.pill}`}>
+                  {winnerTool.ref.name}
+                </span>
+              </div>
+              <p className="text-sm text-fg-muted">{u.reason}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 function CriteriaTable({ a, b }: { a: ComparedTool; b: ComparedTool }) {
   const rows = a.profile.ratingCriteria.map((cA, i) => ({

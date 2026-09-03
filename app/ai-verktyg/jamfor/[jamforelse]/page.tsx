@@ -12,9 +12,12 @@ import {
   fallbackIntro,
   fallbackVerdict,
   fallbackFaqs,
+  fallbackUseCases,
+  SYFTE_OPTIONS,
   type CompareToolRef,
   type ComparedTool,
   type ComparisonContent,
+  type UseCaseVerdict,
 } from '@/lib/compare';
 
 export const revalidate = 300;
@@ -53,10 +56,15 @@ async function fetchImages(keys: string[]): Promise<Record<string, string | null
   return out;
 }
 
+/** Vad getStoredContent hamtar fran DB — likt ComparisonContent, men
+ *  useCases kan sakna en giltig rad (aldre content, eller trasig JSON) utan
+ *  att intro/verdict/faqs for den skull ska kasseras. */
+type StoredContent = { intro: string; verdict: string; faqs: ComparisonContent['faqs']; useCases: UseCaseVerdict[] | null };
+
 /** Pull Haiku-generated content from the comparisons table. Returns null on
  *  any miss (table not applied, no row, malformed JSON) so the page falls
  *  back to deterministic templated copy. */
-async function getStoredContent(slug: string): Promise<ComparisonContent | null> {
+async function getStoredContent(slug: string): Promise<StoredContent | null> {
   const { data, error } = await supabase
     .from('comparisons')
     .select('content')
@@ -80,7 +88,21 @@ async function getStoredContent(slug: string): Promise<ComparisonContent | null>
         return typeof x?.question === 'string' && typeof x?.answer === 'string';
       });
     if (!valid) return null;
-    return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5) };
+
+    const rawUseCases: unknown[] = Array.isArray(parsed?.useCases) ? parsed.useCases : [];
+    const useCasesValid =
+      rawUseCases.length === SYFTE_OPTIONS.length &&
+      SYFTE_OPTIONS.every((o) =>
+        rawUseCases.some((u) => {
+          const x = u as { syfte?: unknown; winner?: unknown; reason?: unknown };
+          return x?.syfte === o.slug && (x?.winner === 'a' || x?.winner === 'b') && typeof x?.reason === 'string';
+        }),
+      );
+    const useCases = useCasesValid
+      ? SYFTE_OPTIONS.map((o) => (rawUseCases as UseCaseVerdict[]).find((u) => u.syfte === o.slug)!)
+      : null;
+
+    return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5), useCases };
   } catch {
     return null;
   }
@@ -124,12 +146,16 @@ export default async function ComparisonPage({ params }: Props) {
   const a = buildTool(parsed.a, images[parsed.a.key] ?? null);
   const b = buildTool(parsed.b, images[parsed.b.key] ?? null);
 
-  const content: ComparisonContent = stored ?? {
-    intro: fallbackIntro(a, b),
-    verdict:
-      a.score >= b.score ? fallbackVerdict(a, b) : fallbackVerdict(b, a),
-    faqs: fallbackFaqs(a, b),
-  };
+  // useCases far sin egen fallback oavsett om resten kom fran Haiku eller
+  // ar helt deterministiskt — en aldre rad utan falt ska anda visa nagot.
+  const content: ComparisonContent = stored
+    ? { intro: stored.intro, verdict: stored.verdict, faqs: stored.faqs, useCases: stored.useCases ?? fallbackUseCases(a, b) }
+    : {
+        intro: fallbackIntro(a, b),
+        verdict: a.score >= b.score ? fallbackVerdict(a, b) : fallbackVerdict(b, a),
+        faqs: fallbackFaqs(a, b),
+        useCases: fallbackUseCases(a, b),
+      };
 
   return <ComparisonTemplate a={a} b={b} content={content} slug={params.jamforelse} />;
 }

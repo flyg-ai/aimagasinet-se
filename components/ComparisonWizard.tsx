@@ -3,7 +3,7 @@
 import { Fragment, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { ToolCategory } from '@/lib/compare';
+import { SYFTE_OPTIONS as SYFTE, type ToolCategory } from '@/lib/compare';
 
 export type CatalogTool = {
   token: string;
@@ -35,17 +35,6 @@ const CATEGORY_GRADIENT: Record<ToolCategory, string> = {
   'AI-ljud': 'from-amber-500 to-orange-700',
   'AI-automation': 'from-emerald-500 to-teal-700',
 };
-
-const SYFTE: { slug: string; label: string }[] = [
-  { slug: 'skrivande', label: 'Skrivande' },
-  { slug: 'kodning', label: 'Kodning' },
-  { slug: 'bildgenerering', label: 'Bildgenerering' },
-  { slug: 'analys-research', label: 'Analys & research' },
-  { slug: 'kreativitet', label: 'Kreativitet' },
-  { slug: 'marknadsforing', label: 'Marknadsföring' },
-  { slug: 'kundservice', label: 'Kundservice' },
-  { slug: 'automation', label: 'Automation' },
-];
 
 const BUDGET: { slug: string; label: string }[] = [
   { slug: 'gratis', label: 'Gratis' },
@@ -92,11 +81,10 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
     if (selected.length < 2) return;
     setGeneratedKey(JSON.stringify([selected, syfte, budget]));
     setLoading(true); setErr(false); setRec(null);
-    const labels = syfte.map((s) => SYFTE.find((x) => x.slug === s)?.label ?? s);
     fetch('/api/compare-recommend', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ tools: selected, syfte: labels, budget }),
+      body: JSON.stringify({ tools: selected, syfte, budget }),
     })
       .then((r) => r.json())
       .then((d) => { if (d && d.winner) setRec(d); else setErr(true); })

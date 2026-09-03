@@ -1,7 +1,7 @@
 /**
- * Generate head-to-head comparison copy (intro + verdict + 5 FAQ) for each
- * featured AI-tool duel via Claude Haiku 4.5 and cache it in the `comparisons`
- * table as a JSON string in `content`.
+ * Generate head-to-head comparison copy (intro + verdict + 5 FAQ + a per-purpose
+ * verdict across the 8 SYFTE_OPTIONS) for each featured AI-tool duel via Claude
+ * Haiku 4.5 and cache it in the `comparisons` table as a JSON string in `content`.
  *
  *   npx tsx scripts/generate-comparisons.ts                       # only missing rows
  *   FORCE=1 npx tsx scripts/generate-comparisons.ts               # regenerate all
@@ -15,7 +15,7 @@
 import { config as loadEnv } from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
-import { FEATURED_COMPARISONS, comparisonSlug, resolveToken } from '../lib/compare';
+import { FEATURED_COMPARISONS, comparisonSlug, resolveToken, SYFTE_OPTIONS, type UseCaseVerdict } from '../lib/compare';
 import { resolveToolProfile, toolOverallScore } from '../components/templates/ReviewTemplate';
 
 loadEnv({ path: '.env.local' });
@@ -60,6 +60,10 @@ const SYSTEM = `Du är senior redaktör på AI-Magasinet och skriver en jämför
 - "intro": 2-3 meningar som introducerar duellen och vad valet brukar handla om. Konkret, ingen hype.
 - "verdict": 3-4 meningar som motiverar varför det angivna vinnande verktyget tar hem det totalt sett, men erkänner när det andra verktyget är bättre. Du MÅSTE utgå från den angivna vinnaren — argumentera för den, hitta inte på en egen vinnare.
 - "faqs": exakt 5 "people also ask"-frågor med svar på 2-4 meningar. Variera frågetyper: skillnad, vilket är bäst, pris, nybörjare, kan man använda båda.
+- "useCases": exakt 8 objekt, ett per användningsområde nedan (samma ordning):
+    skrivande, kodning, bildgenerering, analys-research, kreativitet, marknadsforing, kundservice, automation
+  Varje objekt: { "syfte": "<slug ovan>", "winner": "a" eller "b", "reason": "1-2 meningar om VARFÖR just den vinner för DET HÄR användningsområdet." }
+  Vinnaren för ett enskilt användningsområde behöver INTE vara samma som den totala vinnaren — variera på riktigt när det är sant, kopiera inte samma svar 8 gånger.
 - Inga floskler ("revolutionerande", "game changer", "i en värld där..."). Inga emojis. Inga affiliate-CTA.
 
 # Output
@@ -73,13 +77,23 @@ Returnera EXAKT JSON i detta format, ingenting annat:
     { "question": "…?", "answer": "…" },
     { "question": "…?", "answer": "…" },
     { "question": "…?", "answer": "…" }
+  ],
+  "useCases": [
+    { "syfte": "skrivande", "winner": "a", "reason": "…" },
+    { "syfte": "kodning", "winner": "a", "reason": "…" },
+    { "syfte": "bildgenerering", "winner": "a", "reason": "…" },
+    { "syfte": "analys-research", "winner": "a", "reason": "…" },
+    { "syfte": "kreativitet", "winner": "a", "reason": "…" },
+    { "syfte": "marknadsforing", "winner": "a", "reason": "…" },
+    { "syfte": "kundservice", "winner": "a", "reason": "…" },
+    { "syfte": "automation", "winner": "a", "reason": "…" }
   ]
 }
 
 INGEN \`\`\`json\`\`\`-wrapping, inga kommentarer, ingen prosa före eller efter — bara JSON-objektet.`;
 
 type Faq = { question: string; answer: string };
-type Content = { intro: string; verdict: string; faqs: Faq[] };
+type Content = { intro: string; verdict: string; faqs: Faq[]; useCases: UseCaseVerdict[] };
 
 async function generateFor(p: Pair): Promise<Content> {
   const userPrompt = [
@@ -106,7 +120,7 @@ async function generateFor(p: Pair): Promise<Content> {
     .replace(/```\s*$/i, '')
     .trim();
 
-  let parsed: { intro?: string; verdict?: string; faqs?: Faq[] };
+  let parsed: { intro?: string; verdict?: string; faqs?: Faq[]; useCases?: UseCaseVerdict[] };
   try {
     parsed = JSON.parse(text);
   } catch (e) {
@@ -115,10 +129,22 @@ async function generateFor(p: Pair): Promise<Content> {
   const faqs = (parsed.faqs ?? []).filter(
     (f): f is Faq => typeof f?.question === 'string' && typeof f?.answer === 'string',
   );
-  if (typeof parsed.intro !== 'string' || typeof parsed.verdict !== 'string' || faqs.length < 3) {
-    throw new Error(`incomplete content (intro/verdict/faqs=${faqs.length})`);
+  const rawUseCases = Array.isArray(parsed.useCases) ? parsed.useCases : [];
+  const validUseCases = rawUseCases.filter(
+    (u): u is UseCaseVerdict =>
+      typeof u?.syfte === 'string' &&
+      SYFTE_OPTIONS.some((o) => o.slug === u.syfte) &&
+      (u.winner === 'a' || u.winner === 'b') &&
+      typeof u?.reason === 'string',
+  );
+  const missingSlugs = SYFTE_OPTIONS.map((o) => o.slug).filter(
+    (slug) => !validUseCases.some((u) => u.syfte === slug),
+  );
+  if (typeof parsed.intro !== 'string' || typeof parsed.verdict !== 'string' || faqs.length < 3 || missingSlugs.length > 0) {
+    throw new Error(`incomplete content (intro/verdict/faqs=${faqs.length}, missing useCases: ${missingSlugs.join(',') || 'none'})`);
   }
-  return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5) };
+  const useCases = SYFTE_OPTIONS.map((o) => validUseCases.find((u) => u.syfte === o.slug)!);
+  return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5), useCases };
 }
 
 async function existingSlugs(): Promise<Set<string>> {
@@ -166,7 +192,7 @@ async function main() {
       );
       if (error) throw new Error(error.message);
       ok++;
-      console.log(`  ${tag} OK     ${p.slug.padEnd(32)} ${content.faqs.length}q`);
+      console.log(`  ${tag} OK     ${p.slug.padEnd(32)} ${content.faqs.length}q ${content.useCases.length}uc`);
     } catch (e) {
       failed++;
       console.error(`  ${tag} FAILED ${p.slug}: ${e instanceof Error ? e.message : e}`);

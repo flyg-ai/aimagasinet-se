@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
-import { resolveToken, type CompareToolRef } from '@/lib/compare';
+import {
+  resolveToken,
+  toolPricing,
+  SYFTE_OPTIONS,
+  SYFTE_CATEGORY_HINTS,
+  type CompareToolRef,
+  type ToolCategory,
+} from '@/lib/compare';
 import { resolveToolProfile, toolOverallScore, type ReviewProfile } from '@/components/templates/ReviewTemplate';
 
 /** POST { tools: string[], syfte: string[], budget: string }
@@ -9,11 +15,17 @@ import { resolveToolProfile, toolOverallScore, type ReviewProfile } from '@/comp
  *    → 400 { error }
  *
  *  Picks the best of the selected tools for the user's purpose + budget and
- *  writes a short Swedish recommendation via Claude Haiku. Best-effort — falls
- *  back to a deterministic, score-based recommendation when the model is
- *  unavailable, so the result step always renders something useful. */
-
-const MODEL = 'claude-haiku-4-5';
+ *  writes a short Swedish recommendation. Fully deterministic — no model
+ *  call. `syfte` is a list of SYFTE_OPTIONS slugs (the wizard's step-2
+ *  choices); category fit narrows the field first, a free tier narrows it
+ *  further when budget is "gratis", and overall score breaks the remaining
+ *  tie. This used to be a Haiku call: the wizard lets a reader pick any 2-4
+ *  of 52 tools (hundreds of millions of combinations with syfte/budget
+ *  folded in), which can't be pre-written, but Haiku's own prompt was fed
+ *  nothing the deterministic version doesn't already have — the same
+ *  scores, prices and use-case text — so the model wasn't adding judgment,
+ *  just prose. Removing the call also closes the one place on the site
+ *  where ordinary page traffic could run up an API bill. */
 
 const BUDGET_LABELS: Record<string, string> = {
   gratis: 'Gratis',
@@ -26,40 +38,93 @@ function asStringArray(v: unknown): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
 }
 
-type Tool = { token: string; name: string; profile: ReviewProfile; score: number };
-
 function budgetLabel(slug: string): string {
   return BUDGET_LABELS[slug] ?? 'ej angiven';
 }
 
-function buildFallback(tools: Tool[], syfte: string[], budget: string, winner: string) {
-  const w = tools.find((t) => t.token === winner) ?? tools[0];
-  const purpose = syfte.length ? syfte.join(', ').toLowerCase() : 'allmän användning';
-  const budgetClause = budget && budget !== 'egal' ? ` med budgeten "${budgetLabel(budget)}"` : '';
-  const recommendation =
-    `För ${purpose}${budgetClause} är ${w.name} vårt förstaval bland de verktyg du valt — ` +
-    `det har högst sammanvägt betyg (${w.score.toFixed(1)}/10) och passar särskilt bra för ${w.profile.offer.bestFor.toLowerCase()}. ` +
-    `${w.profile.pros[0] ?? 'Det levererar jämn kvalitet'} och ${(w.profile.pros[1] ?? 'är lätt att komma igång med').toLowerCase()}. ` +
-    `De övriga är fullgoda alternativ — jämför betygen ovan och testa gärna gratisnivåerna innan du bestämmer dig.`;
-  return { winner: w.token, recommendation };
+function syfteLabel(slug: string): string {
+  return SYFTE_OPTIONS.find((o) => o.slug === slug)?.label ?? slug;
 }
 
-const SYSTEM = `Du är senior redaktör på AI-Magasinet. Användaren har valt 2-4 AI-verktyg och berättat vad de ska användas till samt sin budget. Välj DET BÄSTA verktyget för just detta syfte + budget bland de valda, och motivera kort.
+type Tool = {
+  token: string;
+  key: string;
+  name: string;
+  category: ToolCategory;
+  profile: ReviewProfile;
+  score: number;
+};
 
-# Krav
-- Skriv på svenska (naturlig affärssvenska, inte direktöversatt engelska).
-- "recommendation": 3-4 meningar. Motivera valet utifrån användarens syfte OCH budget. Konkret, ingen hype. Nämn gärna när ett annat av de valda verktygen passar bättre i vissa fall.
-- "winner" MÅSTE vara exakt en av de angivna verktygs-tokens (fältet "token").
-- Inga floskler ("revolutionerande", "game changer"). Inga emojis. Inga affiliate-CTA.
+/** Purpose first, budget next, quality as the tiebreaker. Narrows the
+ *  candidate set at each step and only proceeds when narrowing actually
+ *  leaves a choice — a syfte with no category hint, or a budget that isn't
+ *  "gratis", is a no-op and score decides alone, same as before this
+ *  function existed. */
+function pickWinner(tools: Tool[], syfteSlugs: string[], budget: string): Tool {
+  const matchCounts = tools.map((t) =>
+    syfteSlugs.filter((s) => (SYFTE_CATEGORY_HINTS[s] ?? []).includes(t.category)).length,
+  );
+  const maxMatches = Math.max(...matchCounts, 0);
+  let candidates = maxMatches > 0 ? tools.filter((_, i) => matchCounts[i] === maxMatches) : tools;
 
-# Output
-Returnera EXAKT JSON, inget annat:
-{ "winner": "<token>", "recommendation": "…" }
-INGEN \`\`\`json\`\`\`-wrapping, ingen prosa före eller efter.`;
+  if (budget === 'gratis' && candidates.length > 1) {
+    const free = candidates.filter((t) => toolPricing(t.key, t.profile.offer).free !== null);
+    if (free.length > 0) candidates = free;
+  }
 
-/** Varje anrop kostar ett Haiku-anrop, sa rutten far ett tak. Tva fonster:
- *  det korta slapper igenom nagon som justerar syfte och budget och trycker
- *  om, det langa stoppar en som later ett skript mala. */
+  return [...candidates].sort((a, b) => b.score - a.score)[0];
+}
+
+function buildRecommendation(
+  tools: Tool[],
+  syfteSlugs: string[],
+  budget: string,
+): { winner: string; recommendation: string } {
+  const w = pickWinner(tools, syfteSlugs, budget);
+  const purposeLabels = syfteSlugs.map(syfteLabel);
+  const purpose = purposeLabels.length ? purposeLabels.join(', ').toLowerCase() : 'allmän användning';
+  const budgetClause = budget && budget !== 'egal' ? ` med budgeten "${budgetLabel(budget)}"` : '';
+  const matchesPurpose = syfteSlugs.some((s) => (SYFTE_CATEGORY_HINTS[s] ?? []).includes(w.category));
+
+  const leadIn = matchesPurpose
+    ? `${w.name} är vårt förstaval bland de valda verktygen för ${purpose}${budgetClause} — det ligger i rätt kategori för uppgiften och har högst betyg (${w.score.toFixed(1)}/10) bland alternativen som passar.`
+    : `För ${purpose}${budgetClause} är ${w.name} vårt förstaval bland de verktyg du valt — det har högst sammanvägt betyg (${w.score.toFixed(1)}/10) och passar särskilt bra för ${w.profile.offer.bestFor.toLowerCase()}.`;
+
+  let budgetSentence = '';
+  if (budget === 'gratis') {
+    const wFree = toolPricing(w.key, w.profile.offer).free;
+    // Nar frifaltet bara ar det generiska ordet "Gratis" (inget verktyg med
+    // en riktig kvot att namna) blir "borja helt gratis: gratis" en
+    // dubblering — skriv den meningen annorlunda i det fallet.
+    const isGenericFree = wFree !== null && /^gratis$/i.test(wFree.trim());
+    if (wFree && isGenericFree) {
+      budgetSentence = ` ${w.name} går att börja med helt gratis.`;
+    } else if (wFree) {
+      budgetSentence = ` Du kan börja helt gratis: ${wFree.toLowerCase()}.`;
+    } else {
+      const freeAlt = tools.find((t) => t.token !== w.token && toolPricing(t.key, t.profile.offer).free !== null);
+      if (freeAlt) {
+        budgetSentence = ` ${w.name} har ingen gratisnivå — vill du testa utan kostnad först är ${freeAlt.name} ett gratisalternativ bland dina val.`;
+      }
+    }
+  }
+
+  const prosSentence =
+    ` ${w.profile.pros[0] ?? 'Det levererar jämn kvalitet'} och ${(w.profile.pros[1] ?? 'är lätt att komma igång med').toLowerCase()}.`;
+
+  const anyFree = tools.some((t) => toolPricing(t.key, t.profile.offer).free !== null);
+  const closer = anyFree
+    ? ' De övriga är fullgoda alternativ — jämför betygen ovan och testa gärna gratisnivåerna innan du bestämmer dig.'
+    : ' De övriga är fullgoda alternativ — jämför betygen och kriterierna ovan innan du bestämmer dig.';
+
+  return { winner: w.token, recommendation: leadIn + budgetSentence + prosSentence + closer };
+}
+
+/** Basic request-flood hygiene. The route no longer calls Claude, so this
+ *  isn't guarding an API bill any more — but a synchronous route with no
+ *  cap at all is still a route anyone can hammer, and there's no reason to
+ *  remove working protection just because the original reason for adding
+ *  it went away. */
 const LIMITS = [
   { limit: 10, windowMs: 60_000, tag: 'min' },
   { limit: 60, windowMs: 3_600_000, tag: 'h' },
@@ -96,63 +161,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'need_2_4_tools' }, { status: 400 });
   }
 
-  const syfte = asStringArray(body.syfte).slice(0, 8);
+  const syfteSlugs = asStringArray(body.syfte).slice(0, 8);
   const budget = typeof body.budget === 'string' ? body.budget : '';
 
   const tools: Tool[] = refs.map((r) => {
     const profile = resolveToolProfile(r.key, r.name);
-    return { token: r.token, name: r.name, profile, score: toolOverallScore(profile) };
+    return { token: r.token, key: r.key, name: r.name, category: r.category, profile, score: toolOverallScore(profile) };
   });
-  const topByScore = [...tools].sort((a, b) => b.score - a.score)[0].token;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json(buildFallback(tools, syfte, budget, topByScore));
-  }
-
-  try {
-    const claude = new Anthropic();
-    const userPrompt = [
-      `Användarens syfte: ${syfte.length ? syfte.join(', ') : 'ej angivet'}`,
-      `Budget: ${budgetLabel(budget)}`,
-      '',
-      'Valda verktyg:',
-      ...tools.map((t) =>
-        `- token: ${t.token} | ${t.name} (${t.profile.company}) · betyg ${t.score.toFixed(1)}/10 · pris: ${t.profile.offer.price} · bäst för: ${t.profile.offer.bestFor} · styrkor: ${t.profile.pros.join(', ')}`,
-      ),
-      '',
-      'Välj det bästa verktyget för syftet + budgeten och returnera JSON enligt schemat.',
-    ].join('\n');
-
-    const msg = await claude.messages.create({
-      model: MODEL,
-      max_tokens: 700,
-      system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
-      messages: [{ role: 'user', content: userPrompt }],
-    });
-
-    const text = msg.content
-      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-      .map((b) => b.text)
-      .join('')
-      .trim()
-      .replace(/^```(?:json)?\s*/i, '')
-      .replace(/```\s*$/i, '')
-      .trim();
-
-    const parsed = JSON.parse(text) as { winner?: unknown; recommendation?: unknown };
-    const winner =
-      typeof parsed.winner === 'string' && tools.some((t) => t.token === parsed.winner)
-        ? parsed.winner
-        : topByScore;
-    const recommendation =
-      typeof parsed.recommendation === 'string' && parsed.recommendation.length > 20
-        ? parsed.recommendation
-        : buildFallback(tools, syfte, budget, winner).recommendation;
-
-    return NextResponse.json({ winner, recommendation });
-  } catch (e) {
-    console.error('[compare-recommend] haiku error:', e instanceof Error ? e.message : e);
-    return NextResponse.json(buildFallback(tools, syfte, budget, topByScore));
-  }
+  return NextResponse.json(buildRecommendation(tools, syfteSlugs, budget));
 }
