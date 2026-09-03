@@ -142,7 +142,11 @@ Undvik ren produktmarknadsföring, spekulativa rykten och nyheter utan verifierb
 
 Redovisa varje kandidat med: en föreslagen svensk rubrik, två-tre meningar om vad som hänt och varför det angår svenska läsare, den sökfras du tror att en vanlig person skulle använda för att hitta nyheten, samt de fullständiga URL:erna till de källor du faktiskt läst. Skriv ut URL:erna i klartext.
 
-Kan du inte formulera en trovärdig sökfras för en kandidat är det ett tecken på att ingen letar efter den. Ta med den ändå i listan, men säg det rakt ut.`;
+Kan du inte formulera en trovärdig sökfras för en kandidat är det ett tecken på att ingen letar efter den. Ta med den ändå i listan, men säg det rakt ut.
+
+SÖKKVOT: du har exakt fyra websökningar. Planera dem brett i stället för att söka smalt och sedan komplettera — kvoten räcker inte till uppföljningar.
+
+När kvoten är slut svarar verktyget "max_uses_exceeded" på varje ytterligare försök. Det är väntat och betyder inte att något är trasigt. Skriv då sammanställningen utifrån det du redan hittat. Lämna aldrig tillbaka en förklaring om att sökningen misslyckades — utan källor blir körningen värdelös, och några källor är alltid bättre än en ursäkt.`;
 
 const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
 
