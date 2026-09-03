@@ -8,13 +8,15 @@
  *   ONLY=chatgpt-eller-claude FORCE=1 npx tsx scripts/…           # one pair, forced
  *
  * Requires that supabase/migrations/0010_comparisons.sql has been applied
- * (anon-read + service-role-write). Self-contained — the pair list mirrors
- * FEATURED_COMPARISONS in lib/compare.ts; the `winner` is precomputed from
- * toolOverallScore so the verdict prose matches the page's score-based pick.
+ * (anon-read + service-role-write). The pair list and the `winner` are derived
+ * from FEATURED_COMPARISONS and toolOverallScore, so the verdict prose always
+ * matches the page's own score-based pick.
  */
 import { config as loadEnv } from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
+import { FEATURED_COMPARISONS, comparisonSlug, resolveToken } from '../lib/compare';
+import { resolveToolProfile, toolOverallScore } from '../components/templates/ReviewTemplate';
 
 loadEnv({ path: '.env.local' });
 
@@ -32,21 +34,24 @@ const ONLY = process.env.ONLY?.trim() || null;
 
 type Pair = { slug: string; aName: string; bName: string; winner: string };
 
-// slug = `${aToken}-eller-${bToken}`; winner = higher toolOverallScore.
-const PAIRS: Pair[] = [
-  { slug: 'chatgpt-eller-claude',          aName: 'ChatGPT',      bName: 'Claude',        winner: 'ChatGPT' },
-  { slug: 'cursor-eller-github-copilot',   aName: 'Cursor AI',    bName: 'GitHub Copilot', winner: 'Cursor AI' },
-  { slug: 'midjourney-eller-dall-e-3',     aName: 'Midjourney',   bName: 'DALL·E 3',      winner: 'DALL·E 3' },
-  { slug: 'suno-eller-udio',               aName: 'Suno AI',      bName: 'Udio',          winner: 'Suno AI' },
-  { slug: 'kling-eller-pika-labs',         aName: 'Kling AI',     bName: 'Pika Labs',     winner: 'Kling AI' },
-  { slug: 'chatgpt-eller-gemini',          aName: 'ChatGPT',      bName: 'Gemini',        winner: 'ChatGPT' },
-  { slug: 'claude-eller-gemini',           aName: 'Claude',       bName: 'Gemini',        winner: 'Claude' },
-  { slug: 'chatgpt-eller-cursor',          aName: 'ChatGPT',      bName: 'Cursor AI',     winner: 'Cursor AI' },
-  { slug: 'midjourney-eller-adobe-firefly', aName: 'Midjourney',  bName: 'Adobe Firefly', winner: 'Midjourney' },
-  { slug: 'elevenlabs-eller-suno-ai',      aName: 'ElevenLabs',   bName: 'Suno AI',       winner: 'ElevenLabs' },
-  { slug: 'make-eller-zapier-ai',          aName: 'Make',         bName: 'Zapier',        winner: 'Make' },
-  { slug: 'cursor-eller-windsurf',         aName: 'Cursor AI',    bName: 'Windsurf',      winner: 'Cursor AI' },
-];
+/** Parlistan harleds ur FEATURED_COMPARISONS och vinnaren ur
+ *  toolOverallScore — samma kalla som sidan sjalv anvander. Den handkopierade
+ *  listan som stod har lag och slapade efter varje gang en duell lades till,
+ *  och en felskriven vinnare hade gett en text som argumenterar for fel
+ *  verktyg an vad sidans betyg visar. */
+const PAIRS: Pair[] = FEATURED_COMPARISONS.map(([aToken, bToken]) => {
+  const a = resolveToken(aToken);
+  const b = resolveToken(bToken);
+  if (!a || !b) throw new Error(`okand token i FEATURED_COMPARISONS: ${aToken} / ${bToken}`);
+  const sa = toolOverallScore(resolveToolProfile(a.key, a.name));
+  const sb = toolOverallScore(resolveToolProfile(b.key, b.name));
+  return {
+    slug: comparisonSlug(aToken, bToken),
+    aName: a.name,
+    bName: b.name,
+    winner: sa >= sb ? a.name : b.name,
+  };
+});
 
 const SYSTEM = `Du är senior redaktör på AI-Magasinet och skriver en jämförelse mellan två AI-verktyg.
 

@@ -278,18 +278,46 @@ function StepTools({
       title="Välj verktyg att jämföra"
       subtitle="Markera 2–4 verktyg. Bläddra mellan kategorierna nedan."
     >
-      <div className="mb-6 flex flex-wrap gap-2">
+      {/* Kategorivalet lag tidigare som sma piller i 11 px och lastes som
+          dekoration — det syntes inte att verktygen bakom dem var andra. Nu
+          en rad riktiga flikar: storre yta, verktygsantalet per kategori
+          utskrivet, och antalet valda som prick i hornet. */}
+      <div
+        role="tablist"
+        aria-label="Verktygskategori"
+        className="mb-7 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
+      >
         {CATEGORY_ORDER.map((c) => {
           const active = c === activeCat;
+          const total = catalog.filter((t) => t.category === c).length;
           const count = selected.filter((tok) => catalog.find((t) => t.token === tok)?.category === c).length;
           return (
             <button
               key={c}
               type="button"
+              role="tab"
+              aria-selected={active}
               onClick={() => setActiveCat(c)}
-              className={`rounded-full border px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-colors ${active ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-line bg-card text-fg-muted hover:border-indigo-300 hover:text-indigo-600'}`}
+              className={`relative flex flex-col items-start gap-0.5 rounded-xl border-2 px-4 py-3 text-left transition-all ${
+                active
+                  ? 'border-indigo-600 bg-indigo-600 text-white shadow-md'
+                  : 'border-line bg-card text-fg hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-sm'
+              }`}
             >
-              {c}{count > 0 && <span className={active ? 'text-indigo-200' : 'text-indigo-500'}> · {count}</span>}
+              <span className="text-sm font-bold leading-tight">{c}</span>
+              <span className={`font-mono text-[11px] ${active ? 'text-indigo-200' : 'text-fg-subtle'}`}>
+                {total} verktyg
+              </span>
+              {count > 0 && (
+                <span
+                  aria-label={`${count} valda`}
+                  className={`absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
+                    active ? 'bg-white text-indigo-700' : 'bg-indigo-600 text-white'
+                  }`}
+                >
+                  {count}
+                </span>
+              )}
             </button>
           );
         })}

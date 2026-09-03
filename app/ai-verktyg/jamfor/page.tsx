@@ -9,7 +9,9 @@ import {
 import {
   COMPARE_TOOLS,
   FEATURED_COMPARISONS,
+  TOOL_CATEGORIES,
   comparisonSlug,
+  comparisonCategory,
   resolveToken,
 } from '@/lib/compare';
 import { breadcrumbSchema } from '@/lib/schemas';
@@ -111,11 +113,16 @@ export default async function JamforHub() {
     };
   });
 
-  const popular = FEATURED_COMPARISONS.map(([x, y]) => ({
-    slug: comparisonSlug(x, y),
-    a: display(x),
-    b: display(y),
-  }));
+  /** Duellerna grupperade per kategori. Som platt lista gick de tolv forsta
+   *  an, men med tjugonio blir det en vagg dar inget hittas — rubrikerna gor
+   *  att man kan hoppa till den kategori man faktiskt ar ute efter. */
+  const popularGroups = TOOL_CATEGORIES.map((category) => ({
+    category,
+    duels: FEATURED_COMPARISONS.filter(([x, y]) => comparisonCategory(x, y) === category).map(
+      ([x, y]) => ({ slug: comparisonSlug(x, y), a: display(x), b: display(y) }),
+    ),
+  })).filter((g) => g.duels.length > 0);
+  const duelCount = popularGroups.reduce((n, g) => n + g.duels.length, 0);
 
   const breadcrumbLd = breadcrumbSchema([
     { label: 'Hem', href: '/' },
@@ -169,20 +176,34 @@ export default async function JamforHub() {
           <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
             Populära jämförelser
           </div>
-          <h2 className="mb-8 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
+          <h2 className="mb-2 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg sm:text-3xl">
             Färdiga dueller
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {popular.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/ai-verktyg/jamfor/${c.slug}`}
-                className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg transition-colors hover:border-indigo-300 hover:bg-indigo-50"
-              >
-                <span className="text-indigo-600">{c.a.name}</span>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">vs</span>
-                <span className="text-cyan-600">{c.b.name}</span>
-              </Link>
+          <p className="mb-9 text-sm text-fg-subtle">
+            {duelCount} jämförelser vi redan skrivit. Hittar du inte din — bygg den själv i väljaren ovan.
+          </p>
+
+          <div className="space-y-9">
+            {popularGroups.map((g) => (
+              <div key={g.category}>
+                <h3 className="mb-3 flex items-baseline gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg-muted">
+                  {g.category}
+                  <span className="text-fg-subtle">· {g.duels.length}</span>
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {g.duels.map((c) => (
+                    <Link
+                      key={c.slug}
+                      href={`/ai-verktyg/jamfor/${c.slug}`}
+                      className="group flex items-center justify-center gap-2 rounded-xl border border-line bg-page px-4 py-4 text-center text-sm font-bold tracking-tight text-fg transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+                    >
+                      <span className="text-indigo-600">{c.a.name}</span>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">vs</span>
+                      <span className="text-cyan-600">{c.b.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
 
