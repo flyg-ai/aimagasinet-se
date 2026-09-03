@@ -291,7 +291,7 @@ function CriteriaTable({ a, b }: { a: ComparedTool; b: ComparedTool }) {
 function CriteriaRow({ label, av, bv, striped, total }: { label: string; av: number; bv: number; striped?: boolean; total?: boolean }) {
   const aWins = av > bv;
   const bWins = bv > av;
-  const bg = total ? 'bg-soft' : striped ? 'bg-page/40' : '';
+  const bg = total ? 'bg-soft' : striped ? 'bg-muted' : '';
   const border = total ? 'border-t-2 border-line' : 'border-t border-line-subtle';
   return (
     <div className={`grid grid-cols-[1fr_72px_72px] items-center gap-2 px-4 py-3 sm:grid-cols-[1fr_96px_96px] sm:px-6 ${border} ${bg}`}>

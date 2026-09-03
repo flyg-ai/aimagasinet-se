@@ -335,7 +335,16 @@ function StepTools({
         ))}
       </div>
 
-      <div className="sticky bottom-4 z-10 mt-8 flex items-center justify-between gap-4 rounded-2xl border border-line bg-card/95 p-4 shadow-lg shadow-black/5 backdrop-blur">
+      {/* bg-card/95 gav genomskinlig rad: --bg-card ar en fardig farg
+          (#ffffff), inte kanalvarden, sa Tailwinds opacitetsmodifierare
+          bygger ogiltig CSS som webblasaren slanger — resultatet blev
+          rgba(0,0,0,0) och verktygskorten syntes rakt igenom. bg-soft ar
+          opak i bada temana (#f4f4f5 / #18181b).
+
+          bottom-4 lade raden bakom MobileBottomNav, som ar fixed bottom-0
+          med hojd 60 px och z-50. Pa mobil lyfts den darfor over navet;
+          fran md: finns inget nav och 16 px racker. */}
+      <div className="sticky bottom-[76px] z-30 mt-8 flex items-center justify-between gap-4 rounded-2xl border border-line-strong bg-soft p-4 shadow-lg shadow-black/10 md:bottom-4">
         <span aria-live="polite" className="font-mono text-[11px] font-bold uppercase tracking-wider">
           {selected.length < 2 ? (
             <span className="text-fg-subtle">
