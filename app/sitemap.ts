@@ -5,6 +5,7 @@ import type { MetadataRoute } from 'next';
 // En timme ar gott om farskhet for en sitemap.
 export const revalidate = 3600;
 import { supabase } from '@/lib/supabase';
+import { featuredSlugs } from '@/lib/compare';
 
 const BASE = 'https://aimagasinet.se';
 
@@ -79,6 +80,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.7,
+    });
+  }
+
+  // Jamforelserna bor i koden, inte i articles-tabellen, sa slingan ovan
+  // missar dem: varken hubben eller nagon av duellerna har nansin legat i
+  // sitemapen. Google har bara kunnat hitta dem via interna lankar.
+  out.push({
+    url: `${BASE}/ai-verktyg/jamfor/`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  });
+  for (const slug of featuredSlugs()) {
+    out.push({
+      url: `${BASE}/ai-verktyg/jamfor/${slug}/`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     });
   }
 
