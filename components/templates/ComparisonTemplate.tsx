@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { to } from '@/lib/links';
 import { FaqAccordion } from '@/components/FaqAccordion';
@@ -6,6 +7,7 @@ import {
   COMPARE_TOOLS,
   FEATURED_COMPARISONS,
   comparisonSlug,
+  toolPricing,
   type ComparedTool,
   type ComparisonContent,
 } from '@/lib/compare';
@@ -173,11 +175,38 @@ function BigToolCard({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
 
 /* ─── Snabbfakta row ───────────────────────────────────────────── */
 
+/** En cell i gratisraden. Gron bock nar det finns en gratisniva, dampad
+ *  bock-fri text nar det inte gor det — sa att svaret gar att lasa av utan
+ *  att jamfora tva prosastrangar mot varandra. */
+function FreeCell({ value }: { value: string | null }) {
+  if (!value) {
+    return (
+      <span className="flex items-start gap-1.5 text-sm text-fg-subtle">
+        <span aria-hidden className="mt-px font-bold text-fg-subtle">–</span>
+        <span>Ingen gratisnivå</span>
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-start gap-1.5 text-sm font-semibold text-emerald-700">
+      <span aria-hidden className="mt-px">✓</span>
+      <span>{value}</span>
+    </span>
+  );
+}
+
 function Snabbfakta({ a, b }: { a: ComparedTool; b: ComparedTool }) {
-  const rows: { label: string; av: string; bv: string }[] = [
-    { label: 'Pris', av: a.profile.offer.price, bv: b.profile.offer.price },
-    { label: 'Typ', av: a.ref.category, bv: b.ref.category },
+  // Priset i profilen ar en enda strang dar gratisnivan ligger inbakad
+  // ("Gratis · Pro 20 USD/man"). Uppdelad blir bade priset och gratisnivan
+  // lasbara var for sig, vilket var hela poangen med tabellen.
+  const pa = toolPricing(a.ref.key, a.profile.offer);
+  const pb = toolPricing(b.ref.key, b.profile.offer);
+
+  const rows: { label: string; av: ReactNode; bv: ReactNode }[] = [
+    { label: 'Pris', av: pa.paid, bv: pb.paid },
+    { label: 'Gratisnivå', av: <FreeCell value={pa.free} />, bv: <FreeCell value={pb.free} /> },
     { label: 'Bäst för', av: a.profile.offer.bestFor, bv: b.profile.offer.bestFor },
+    { label: 'Typ', av: a.ref.category, bv: b.ref.category },
   ];
   return (
     <section className="pt-10 sm:pt-12">

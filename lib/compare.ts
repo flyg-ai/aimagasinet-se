@@ -158,6 +158,56 @@ export const FEATURED_COMPARISONS: [string, string][] = [
   ['canva-ai', 'adobe-firefly'],
 ];
 
+/* ─── Pris och gratisniva ────────────────────────────────────────
+   Profilerna har inget eget faltet for gratisniva. Informationen finns
+   dock redan i `offer`: `price` foljer nastan alltid formen
+   "<gratisdel> · <betaldel>", och `title` bar ofta den faktiska gransen
+   ("10k tecken gratis varje manad"). Harledningen plockar ut bada delarna
+   sa att jamforelsetabellen kan svara pa fragan utan att 371 profiler
+   behover skrivas om for hand. */
+
+/** Titlar som beskriver en provperiod pa BETALPLANEN, inte en gratisniva —
+ *  "14 dagar Pro gratis", "Gemini Advanced 2 man gratis". De far inte hamna
+ *  i gratiskolumnen, dar de skulle lasas som att verktyget ar gratis. */
+const TRIAL_TITLE = /\b\d+\s*(dygn|dagar|veckor|man(ader)?|månader|mån)\b/i;
+
+/** Verktyg dar prisfaltet inte avslojar gratisnivan. Halls kort med flit —
+ *  vaxer listan mycket ar det ett tecken pa att `offer` behover ett eget
+ *  falt i stallet for en harledning. */
+const FREE_TIER_OVERRIDE: Record<string, string | null> = {
+  // Priset listar bara Pro, men hela redigeraren ar gratis.
+  'capcut-ai-vklipp': 'Gratis, hela verktyget',
+  // Bara en provperiod — ingen gratisniva att tala om.
+  'jetbrains-ai': '7 dagar gratis',
+};
+
+export type ToolPricing = {
+  /** Beskrivning av gratisnivan, eller null nar det inte finns nagon. */
+  free: string | null;
+  /** Betalplanerna, utan gratisdelen. */
+  paid: string;
+};
+
+/** Delar upp `offer` i gratisniva och betalpris for jamforelsetabellen. */
+export function toolPricing(key: string, offer: { title: string; price: string }): ToolPricing {
+  const parts = String(offer.price ?? '').split('·').map((x) => x.trim()).filter(Boolean);
+  const freeIdx = parts.findIndex((x) => /gratis/i.test(x));
+  const paid = freeIdx === -1 ? parts.join(' · ') : parts.filter((_, i) => i !== freeIdx).join(' · ');
+
+  if (Object.prototype.hasOwnProperty.call(FREE_TIER_OVERRIDE, key)) {
+    return { free: FREE_TIER_OVERRIDE[key], paid: paid || '—' };
+  }
+  if (freeIdx === -1) return { free: null, paid: paid || '—' };
+
+  // Titeln ar mer specifik an "Gratis" nar den namner en kvot. Namner den i
+  // stallet ett antal dagar ar det en provperiod och far inte anvandas.
+  const title = String(offer.title ?? '').trim();
+  const titleIsFreeTier = /gratis|free/i.test(title) && !TRIAL_TITLE.test(title);
+  const free = titleIsFreeTier && title.length > parts[freeIdx].length ? title : parts[freeIdx];
+
+  return { free, paid: paid || '—' };
+}
+
 export const SEPARATOR = '-eller-';
 
 export function comparisonSlug(aToken: string, bToken: string): string {
