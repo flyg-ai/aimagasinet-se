@@ -32,23 +32,46 @@ const FORCE = process.env.FORCE === '1';
 /** Restrict generation to a single slug (still honours FORCE for that slug). */
 const ONLY = process.env.ONLY?.trim() || null;
 
-type Pair = { slug: string; aName: string; bName: string; winner: string };
+type ToolBrief = {
+  name: string;
+  score: number;
+  bestFor: string;
+  pros: string[];
+  cons: string[];
+  ratingCriteria: { label: string; score: number }[];
+  tags: string[];
+};
+
+type Pair = { slug: string; a: ToolBrief; b: ToolBrief; winner: string };
 
 /** Parlistan harleds ur FEATURED_COMPARISONS och vinnaren ur
  *  toolOverallScore — samma kalla som sidan sjalv anvander. Den handkopierade
  *  listan som stod har lag och slapade efter varje gang en duell lades till,
  *  och en felskriven vinnare hade gett en text som argumenterar for fel
  *  verktyg an vad sidans betyg visar. */
+function brief(name: string, profile: ReturnType<typeof resolveToolProfile>, score: number): ToolBrief {
+  return {
+    name, score,
+    bestFor: profile.offer.bestFor,
+    pros: profile.pros,
+    cons: profile.cons,
+    ratingCriteria: profile.ratingCriteria,
+    tags: profile.tags,
+  };
+}
+
 const PAIRS: Pair[] = FEATURED_COMPARISONS.map(([aToken, bToken]) => {
   const a = resolveToken(aToken);
   const b = resolveToken(bToken);
   if (!a || !b) throw new Error(`okand token i FEATURED_COMPARISONS: ${aToken} / ${bToken}`);
-  const sa = toolOverallScore(resolveToolProfile(a.key, a.name));
-  const sb = toolOverallScore(resolveToolProfile(b.key, b.name));
+  const aProfile = resolveToolProfile(a.key, a.name);
+  const bProfile = resolveToolProfile(b.key, b.name);
+  const sa = toolOverallScore(aProfile);
+  const sb = toolOverallScore(bProfile);
   return {
     slug: comparisonSlug(aToken, bToken),
-    aName: a.name,
-    bName: b.name,
+    a: brief(a.name, aProfile, sa),
+    b: brief(b.name, bProfile, sb),
     winner: sa >= sb ? a.name : b.name,
   };
 });
@@ -58,12 +81,12 @@ const SYSTEM = `Du är senior redaktör på AI-Magasinet och skriver en jämför
 # Krav
 - Skriv på svenska (naturlig affärssvenska, inte direktöversatt engelska).
 - "intro": 2-3 meningar som introducerar duellen och vad valet brukar handla om. Konkret, ingen hype.
-- "verdict": 3-4 meningar som motiverar varför det angivna vinnande verktyget tar hem det totalt sett, men erkänner när det andra verktyget är bättre. Du MÅSTE utgå från den angivna vinnaren — argumentera för den, hitta inte på en egen vinnare.
+- "verdict": 3-4 meningar som motiverar varför det angivna vinnande verktyget tar hem det totalt sett, men erkänner när det andra verktyget är bättre. Du MÅSTE utgå från den angivna vinnaren för DETTA fält — argumentera för den, hitta inte på en egen vinnare. (Gäller bara "verdict" — se separat regel för "useCases" nedan.)
 - "faqs": exakt 5 "people also ask"-frågor med svar på 2-4 meningar. Variera frågetyper: skillnad, vilket är bäst, pris, nybörjare, kan man använda båda.
 - "useCases": exakt 8 objekt, ett per användningsområde nedan (samma ordning):
     skrivande, kodning, bildgenerering, analys-research, kreativitet, marknadsforing, kundservice, automation
   Varje objekt: { "syfte": "<slug ovan>", "winner": "a" eller "b", "reason": "1-2 meningar om VARFÖR just den vinner för DET HÄR användningsområdet." }
-  Vinnaren för ett enskilt användningsområde behöver INTE vara samma som den totala vinnaren — variera på riktigt när det är sant, kopiera inte samma svar 8 gånger.
+  VIKTIGT: bedöm varje användningsområde HELT FRISTÅENDE från den totala vinnaren ovan — den gäller bara för "verdict". Använd i stället de faktiska styrkorna, svagheterna och kriteriebetygen som listas för respektive verktyg nedan. Ett verktyg med lägre sammanvägt betyg vinner ofta flera enskilda användningsområden om dess konkreta styrkor pekar dit — leta aktivt efter det i stället för att förlänga det sammanvägda betyget rad för rad.
 - Inga floskler ("revolutionerande", "game changer", "i en värld där..."). Inga emojis. Inga affiliate-CTA.
 
 # Output
@@ -96,12 +119,27 @@ type Faq = { question: string; answer: string };
 type Content = { intro: string; verdict: string; faqs: Faq[]; useCases: UseCaseVerdict[] };
 
 async function generateFor(p: Pair): Promise<Content> {
+  const describe = (t: ToolBrief) =>
+    [
+      `Namn: ${t.name}`,
+      `Sammanvägt betyg: ${t.score.toFixed(1)}/10`,
+      `Bäst för: ${t.bestFor}`,
+      `Styrkor: ${t.pros.join('; ')}`,
+      `Svagheter: ${t.cons.join('; ')}`,
+      `Kriterier: ${t.ratingCriteria.map((c) => `${c.label} ${c.score}`).join(', ')}`,
+      `Taggar: ${t.tags.join(', ')}`,
+    ].join('\n');
+
   const userPrompt = [
-    `Verktyg A: ${p.aName}`,
-    `Verktyg B: ${p.bName}`,
-    `Vinnare (sammanvägt betyg, utgå från denna): ${p.winner}`,
+    `Verktyg A:`,
+    describe(p.a),
     '',
-    `Skriv jämförelsen mellan ${p.aName} och ${p.bName} nu. Returnera bara JSON-objektet enligt schemat.`,
+    `Verktyg B:`,
+    describe(p.b),
+    '',
+    `Vinnare (sammanvägt betyg, utgå från denna för "verdict"): ${p.winner}`,
+    '',
+    `Skriv jämförelsen mellan ${p.a.name} och ${p.b.name} nu. Returnera bara JSON-objektet enligt schemat.`,
   ].join('\n');
 
   const msg = await claude.messages.create({
@@ -184,8 +222,8 @@ async function main() {
       const { error } = await db.from('comparisons').upsert(
         {
           slug: p.slug,
-          verktyg_a: p.aName,
-          verktyg_b: p.bName,
+          verktyg_a: p.a.name,
+          verktyg_b: p.b.name,
           content: JSON.stringify(content),
         },
         { onConflict: 'slug' },
