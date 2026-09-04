@@ -192,6 +192,7 @@ async function createWithResume(
   // Varje resume skickar om hela konversationen och kostar lika mycket tid som
   // ursprungsanropet. Med 300 s budget finns bara rad for ett.
   for (let i = 0; i < maxResumes && msg.stop_reason === 'pause_turn' && msLeft(dl) > MIN_GENERATE_MS; i++) {
+    console.log(`[cron] resume ${i + 1}: turen pausade (pause_turn), skickar om konversationen`);
     messages.push({
       role: 'assistant',
       content: msg.content as unknown as Anthropic.Beta.BetaContentBlockParam[],
@@ -631,6 +632,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   // Steg 1 — research med websökning. Fri text; strukturen plockas ut i steg 2.
   // (Delat i två anrop så att den strukturerade extraktionen inte behöver samsas
   //  med server-tool-loopen.)
+  const tResearch = Date.now();
   const research = await createWithResume(claude, {
     model: MODEL_STANDARD,
     // Sokresultaten raknas mot utdatabudgeten. Med 5000 tog den slut innan
@@ -639,6 +641,16 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
     // artiklar. Briefingen i sig behover inte vara lang; taket maste rymma
     // sokresultaten ocksa.
     max_tokens: 16000,
+    // Sonnet 5 kor adaptiv thinking pa effort "high" som standard, och ett
+    // uppmatt korningssvar hade 11 728 av 15 443 output-tokens i thinking —
+    // nastan tre fjardedelar av tiden gick at att TANKA, inte skriva
+    // briefingen. Sok-och-sammanfatta ar inget flerstegsresonemang som
+    // motiverar det, och den langa, varierande tankekedjan ar den troliga
+    // orsaken till att researchsteget ibland tar 40 s och ibland 220+ s —
+    // vilket i varsta fall ater hela 270 s-budgeten och gor att korningen
+    // avbryts utan att nagot publiceras. "medium" haller kvaliteten men
+    // tar bort den langa svansen.
+    output_config: { effort: 'medium' },
     // Varje sokning ar en rundtur pa Anthropics sida. Atta ryms inte i 300 s.
     // Fler an fyra ater dessutom upp utdatabudgeten utan att ge battre urval.
     tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 }],
@@ -654,6 +666,21 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
     ],
   }, dl);
   const briefing = textOf(research);
+  // Kvar permanent, inte bara for felsokning: researchsteget var den enda
+  // anledningen till att korningar tog slut pa tid (se effort-kommentaren
+  // ovan). Om thinking_tokens nagon gang smyger upp igen syns det har innan
+  // det hinner bli en ny runda med noll artiklar.
+  // output_tokens_details finns i svaret men saknas an i SDK-typerna (ny
+  // API-yta) — lasa via en lokalt typad vy i stallet for att kasta bort
+  // typkontrollen for hela usage-objektet.
+  const usageDetails = research.usage as Anthropic.Beta.BetaUsage & {
+    output_tokens_details?: { thinking_tokens?: number };
+  };
+  console.log(
+    `[cron] research: ${Date.now() - tResearch}ms, ${briefing.length} tecken, ` +
+    `thinking=${usageDetails.output_tokens_details?.thinking_tokens ?? '?'} ` +
+    `output=${research.usage.output_tokens} sokningar=${research.usage.server_tool_use?.web_search_requests ?? '?'}`,
+  );
 
   // En briefing utan en enda kalla ar inte en briefing. Nar websokningen
   // fallerar svarar modellen med en artig forklaring i stallet, extraktionen
@@ -667,11 +694,17 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
   }
 
   // Steg 2 — strukturera kandidaterna. Inga verktyg, bara schemat.
+  const tExtract = Date.now();
   const extracted = await claude.beta.messages.create(
     withFallbacks({
       model: MODEL_STANDARD,
       max_tokens: 4000,
+      // Samma resonemang som i researchsteget: valja ut och strukturera
+      // kandidater ar mekaniskt, inte ett resonemangsproblem, och schemat
+      // tvingar redan fram formen — hog thinking-effort kostar tid har utan
+      // att ge nagot tillbaka.
       output_config: {
+        effort: 'medium',
         format: {
           type: 'json_schema' as const,
           schema: {
@@ -728,6 +761,7 @@ async function findNewsStories(claude: Anthropic, ctx: Ctx, dl: Deadline): Promi
     opts(dl),
   );
 
+  console.log(`[cron] extraction: ${Date.now() - tExtract}ms`);
   const raw = textOf(extracted);
   let parsed: { stories?: Story[] };
   try {
