@@ -51,9 +51,15 @@ const NEWS_CANDIDATES = COUNT_NEWS + 2;
 const MODEL_FEATURE = 'claude-opus-5';
 const MODEL_STANDARD = 'claude-sonnet-5';
 const MODEL_CHEAP = 'claude-haiku-4-5';
-/** Thinking är på som standard på Opus 5 och ryms inom max_tokens
- *  tillsammans med svarstexten — därav marginalen. */
-const MAX_TOKENS = 8000;
+/** Thinking ar pa som standard (effort "high") pa bade Opus 5 och Sonnet 5
+ *  och ryms inom max_tokens tillsammans med svarstexten. Hur mycket den
+ *  tanker varierar per korning — samma monster som gjorde att nyhetslaget
+ *  ibland tog slut pa tid (se researchsteget). 8000 var golvet har och
+ *  rackte inte: en artikel utan explicit malllangd fick stop_reason
+ *  max_tokens och kastades ratt (topics-kon markeras inte som anvand vid
+ *  fel, sa amnet forsokte om — men det ar fortfarande en misslyckad
+ *  korning per gang det hander). */
+const MAX_TOKENS = 12000;
 /** Tidsbudget. Vercel dodar funktionen vid maxDuration utan att skriva nagot i
  *  loggen — vi avbryter hellre sjalva med marginal och rapporterar varfor.
  *  30 s buffert racker for upsert, amnesmarkering och svar. */
@@ -78,6 +84,14 @@ const FEATURE_MIN_WORDS = 1500;
 
 function isFeature(targetWords?: number | null): boolean {
   return (targetWords ?? 0) >= FEATURE_MIN_WORDS;
+}
+
+/** Tak for artikelgenereringen. MAX_TOKENS ar golvet (racker for kortare
+ *  artiklar plus thinking-svansen), 16000 ar taket for langa satsningar.
+ *  Egen funktion sa att felmeddelandet vid trunkering kan rapportera det
+ *  faktiska taket i stallet for bara golv-konstanten. */
+function articleMaxTokens(targetWords?: number | null): number {
+  return Math.min(16000, Math.max(MAX_TOKENS, Math.round((targetWords ?? 0) * 4.5)));
 }
 
 function bylineFor(targetWords?: number | null): string {
@@ -877,10 +891,7 @@ async function generateAndPublish(
         model: writerFor(job),
         // Thinking ryms inom samma tak som svarstexten. En lang artikel behover
         // darfor mer utrymme an standardvardet, annars kapas den mitt i.
-        max_tokens: Math.min(
-          16000,
-          Math.max(MAX_TOKENS, Math.round((job.targetWords ?? 0) * 4.5)),
-        ),
+        max_tokens: articleMaxTokens(job.targetWords),
         system: [{ type: 'text', text: isNews ? SYSTEM_PROMPT + NEWS_ADDENDUM : SYSTEM_PROMPT }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
@@ -893,7 +904,7 @@ async function generateAndPublish(
   // En artikel som kapats mitt i HTML-koden passerar 400-ordsgränsen och skulle
   // publiceras trasig. Ordräkningen fångar inte det — stop_reason gör det.
   if (msg.stop_reason === 'max_tokens') {
-    throw new Error(`svaret kapades av max_tokens (${MAX_TOKENS}) — publiceras inte`);
+    throw new Error(`svaret kapades av max_tokens (${articleMaxTokens(job.targetWords)}) — publiceras inte`);
   }
 
   // Inget korrektursteg. En genomgang av de tolv forsta auto-artiklarna gav
