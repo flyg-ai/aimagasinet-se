@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Link from 'next/link';
+import { Analytics } from '@vercel/analytics/next';
 import { supabase } from '@/lib/supabase';
 import { BreakingTicker } from '@/components/BreakingTicker';
 import { SiteNav } from '@/components/SiteNav';
@@ -208,6 +209,12 @@ export default async function RootLayout({
             </div>
           </div>
         </footer>
+
+        {/* Vercel Web Analytics — cookiefri besöksmätning (sidvisningar,
+            besökare, hänvisare inkl. chatgpt.com/perplexity.ai). Kräver att
+            Web Analytics är aktiverat på projektet i Vercel-dashboarden;
+            utan det renderas skriptet men rapporterar ingenting. */}
+        <Analytics />
       </body>
     </html>
   );
