@@ -10,8 +10,11 @@
  */
 
 // <p> ... <a href="/ai-verktyg/... | /ai-video/..."> text </a> ... </p>
-// där paragrafen inte innehåller annan text än länken.
-const BLOCK_LINK = /<p>\s*<a\s+href="((?:https?:\/\/(?:www\.)?aimagasinet\.se)?\/ai-(?:verktyg|video)\/[^"]+)"[^>]*>([\s\S]*?)<\/a>\s*<\/p>/gi;
+// där paragrafen inte innehåller annan text än länken. Länktexten får inte
+// korsa en </a> eller </p>: annars matchar ett stycke som bara BÖRJAR med en
+// verktygslänk ända fram till nästa stycke som slutar med en länk, och allt
+// däremellan ersätts av ett kort.
+const BLOCK_LINK = /<p>\s*<a\s+href="((?:https?:\/\/(?:www\.)?aimagasinet\.se)?\/ai-(?:verktyg|video)\/[^"]+)"[^>]*>((?:(?!<\/?(?:a|p)\b)[\s\S])*?)<\/a>\s*<\/p>/gi;
 
 function card(href: string, label: string): string {
   return (
