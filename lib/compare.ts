@@ -67,9 +67,7 @@ export const COMPARE_TOOLS: CompareToolRef[] = [
   { token: 'cursor',         key: 'cursor-ai',      name: 'Cursor AI',      category: 'AI-kod' },
   { token: 'claude-code',    key: 'claude-code',    name: 'Claude Code',    category: 'AI-kod' },
   { token: 'github-copilot', key: 'github-copilot', name: 'GitHub Copilot', category: 'AI-kod' },
-  { token: 'windsurf',       key: 'windsurf',       name: 'Windsurf',       category: 'AI-kod' },
   { token: 'tabnine',        key: 'tabnine',        name: 'Tabnine',        category: 'AI-kod' },
-  { token: 'codeium',        key: 'codeium',        name: 'Codeium',        category: 'AI-kod' },
   { token: 'jetbrains-ai',   key: 'jetbrains-ai',   name: 'JetBrains AI',   category: 'AI-kod' },
   { token: 'replit',         key: 'replit-ai',      name: 'Replit AI',      category: 'AI-kod' },
   { token: 'cody',           key: 'sourcegraph-cody', name: 'Sourcegraph Cody', category: 'AI-kod' },
@@ -79,7 +77,6 @@ export const COMPARE_TOOLS: CompareToolRef[] = [
   { token: 'elevenlabs',     key: 'elevenlabs',     name: 'ElevenLabs',     category: 'AI-ljud' },
   { token: 'descript',       key: 'descript',       name: 'Descript',       category: 'AI-ljud' },
   { token: 'murf',           key: 'murf-ai',        name: 'Murf AI',        category: 'AI-ljud' },
-  { token: 'play-ht',        key: 'play-ht',        name: 'Play.ht',        category: 'AI-ljud' },
   { token: 'speechify',      key: 'speechify',      name: 'Speechify',      category: 'AI-ljud' },
   { token: 'riverside',      key: 'riverside-fm',   name: 'Riverside',      category: 'AI-ljud' },
   { token: 'podcastle',      key: 'podcastle',      name: 'Podcastle',      category: 'AI-ljud' },
@@ -89,7 +86,6 @@ export const COMPARE_TOOLS: CompareToolRef[] = [
   { token: 'zapier-ai',      key: 'zapier-ai',      name: 'Zapier',         category: 'AI-automation' },
   { token: 'n8n',            key: 'n8n',            name: 'n8n',            category: 'AI-automation' },
   { token: 'power-automate', key: 'power-automate', name: 'Power Automate', category: 'AI-automation' },
-  { token: 'relay',          key: 'relay-app',      name: 'Relay',          category: 'AI-automation' },
 ];
 
 const TOKEN_INDEX: Record<string, CompareToolRef> = Object.fromEntries(
@@ -129,7 +125,6 @@ export const FEATURED_COMPARISONS: [string, string][] = [
   ['midjourney', 'adobe-firefly'],
   ['elevenlabs', 'suno-ai'],
   ['make', 'zapier-ai'],
-  ['cursor', 'windsurf'],
 
   // Andra omgangen. Urvalet ar dueller folk faktiskt soker pa — inte alla
   // par som gar att bilda. Bada sidor maste ha pros/cons och ratingCriteria
@@ -141,14 +136,11 @@ export const FEATURED_COMPARISONS: [string, string][] = [
   ['claude', 'perplexity'],
   ['claude-code', 'cursor'],
   ['claude-code', 'github-copilot'],
-  ['github-copilot', 'windsurf'],
-  ['codeium', 'github-copilot'],
   ['heygen', 'synthesia'],
   ['sora-2', 'kling'],
   ['runway-gen-3', 'luma'],
   ['descript', 'riverside'],
   ['elevenlabs', 'murf'],
-  ['elevenlabs', 'play-ht'],
   ['make', 'n8n'],
   ['zapier-ai', 'n8n'],
   ['midjourney', 'leonardo-ai'],

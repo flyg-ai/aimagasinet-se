@@ -57,6 +57,30 @@ const nextConfig = {
     return [
       ...seoTestRedirects.map((r) => ({ ...r, destination: trailing(r.destination) })),
       ...norm([
+      // ── Nedlagda verktyg (verifierat september 2026): Play.ht/Play.ai svarar
+      //    inte längre på DNS, och Windsurf/Codeium har uppgått i Cognitions
+      //    Devin. Duellsidorna är borttagna ur FEATURED_COMPARISONS, så de
+      //    gamla URL:erna pekas om till närmast levande motsvarighet. ──
+      {
+        source: '/ai-verktyg/jamfor/elevenlabs-eller-play-ht/',
+        destination: '/ai-verktyg/jamfor/elevenlabs-eller-murf/',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/jamfor/cursor-eller-windsurf/',
+        destination: '/ai-verktyg/jamfor/cursor-eller-github-copilot/',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/jamfor/github-copilot-eller-windsurf/',
+        destination: '/ai-verktyg/jamfor/cursor-eller-github-copilot/',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/jamfor/codeium-eller-github-copilot/',
+        destination: '/ai-verktyg/jamfor/cursor-eller-github-copilot/',
+        statusCode: 301,
+      },
       {
         // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
         // startup-artikeln.

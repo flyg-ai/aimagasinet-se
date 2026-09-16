@@ -108,7 +108,7 @@ const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'meta-ai', 'mistral-le-chat', 'deepseek', 'grok', 'pi-ai',
   ],
   '/ai-verktyg/rost-och-tal': [
-    'elevenlabs', 'murf-ai', 'speechify', 'play-ht', 'resemble-ai',
+    'elevenlabs', 'murf-ai', 'speechify', 'resemble-ai',
     'wellsaid-labs', 'lovo-ai', 'voicemaker', 'amazon-polly',
   ],
   '/ai-verktyg/podcast-ljudredigering': [
