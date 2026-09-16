@@ -82,6 +82,14 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // Sora 2 nedlagd (verifierat september 2026): appen stängde 26 april
+        // 2026, API:t stängs 24 sep 2026. Duellsidan borttagen ur
+        // FEATURED_COMPARISONS — pekas om till närmast levande motsvarighet.
+        source: '/ai-verktyg/jamfor/sora-2-eller-kling/',
+        destination: '/ai-verktyg/jamfor/kling-eller-pika-labs/',
+        statusCode: 301,
+      },
+      {
         // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
         // startup-artikeln.
         source: '/svenska-ai-foretag-2026',

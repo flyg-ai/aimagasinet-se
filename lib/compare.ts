@@ -46,9 +46,8 @@ export const COMPARE_TOOLS: CompareToolRef[] = [
   { token: 'mistral',        key: 'mistral-le-chat', name: 'Mistral Le Chat', category: 'AI-text' },
   // AI-video
   { token: 'kling',          key: 'kling-ai',       name: 'Kling AI',       category: 'AI-video' },
-  { token: 'runway-gen-3',   key: 'runway-gen-3',   name: 'Runway Gen-3',   category: 'AI-video' },
+  { token: 'runway-gen-3',   key: 'runway-gen-3',   name: 'Runway',         category: 'AI-video' },
   { token: 'pika-labs',      key: 'pika-labs',      name: 'Pika Labs',      category: 'AI-video' },
-  { token: 'sora-2',         key: 'sora-2',         name: 'Sora 2',         category: 'AI-video' },
   { token: 'heygen',         key: 'heygen',         name: 'HeyGen',         category: 'AI-video' },
   { token: 'synthesia',      key: 'synthesia',      name: 'Synthesia',      category: 'AI-video' },
   { token: 'luma',           key: 'luma-dream-machine', name: 'Luma Dream Machine', category: 'AI-video' },
@@ -137,7 +136,6 @@ export const FEATURED_COMPARISONS: [string, string][] = [
   ['claude-code', 'cursor'],
   ['claude-code', 'github-copilot'],
   ['heygen', 'synthesia'],
-  ['sora-2', 'kling'],
   ['runway-gen-3', 'luma'],
   ['descript', 'riverside'],
   ['elevenlabs', 'murf'],
