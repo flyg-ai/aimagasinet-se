@@ -107,10 +107,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'ChatGPT',
     fallbackUrl: 'https://chat.openai.com',
     tagline: 'Allround AI för text, kod och analys',
-    tags: ['GPT-5', 'Custom GPTs', 'Canvas', 'Röst & syn'],
-    pros: ['Snabb och korrekt', 'Stort ekosystem av GPTs', 'Bäst röstläge'],
-    cons: ['Knapphändig källhantering', 'Begränsningar i gratisläget'],
-    offer: { title: 'Plus-läge gratis i 7 dagar', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Allt-i-ett textproduktion' },
+    tags: ['GPT-6 Astra', 'GPT-Live röst', 'Custom GPTs', 'Canvas'],
+    pros: ['Snabb och mångsidig', 'Stort ekosystem av GPTs', 'GPT-Live – röstläge för samtal i realtid'],
+    cons: ['Knapphändig källhantering', 'GPT-6 Astra i chatten kräver Pro eller Business', 'Ingen video sedan Sora stängdes'],
+    offer: { title: 'Gratisplan finns', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Allt-i-ett textproduktion' },
     label: 'Redaktionens val',
   },
   claude: {
@@ -251,10 +251,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.1,
     fallbackUrl: 'https://runwayml.com',
     tagline: 'Video, redigering och effekter i ett',
-    tags: ['Gen-4.5', 'Redigering', 'Effekter', 'Image-to-video'],
-    pros: ['Inbyggd redigeringsstudio', 'Avancerad kamerakontroll', 'Brett ekosystem av effekter'],
-    cons: ['Dyrt för längre projekt', 'Mindre stark på text-i-bild'],
-    offer: { title: 'Basic gratis', price: 'Gratis · Standard 15 USD/mån', bestFor: 'Video, redigering och effekter' },
+    tags: ['Gen-4.5', 'Aleph 2.0', 'Characters API', 'Tredjepartsmodeller'],
+    pros: ['Generering och redigering (Aleph 2.0) i samma verktyg', 'Kling 3.0 och Seedance på samma krediter', 'API för video och realtidsavatarer (Characters)'],
+    cons: ['Krediterna tar slut fort vid längre projekt', 'Gen-4.5 kan få orsak och verkan i fel ordning – enligt Runway själva', 'Gratisplanen ger bara 125 krediter en gång'],
+    offer: { title: '125 gratiskrediter att börja med', price: 'Gratis · Standard 15 USD/mån', bestFor: 'Video, redigering och realtidsavatarer' },
     label: 'Bäst för redigering & effekter',
   },
   'pika-labs': {
@@ -272,13 +272,13 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   'sora-2': {
     logo: 'bg-zinc-900',
     ctaName: 'Sora',
-    score: 8.2,
-    fallbackUrl: 'https://chatgpt.com',
-    tags: ['Sora 2', 'Text-till-video', '20s clips', 'Multi-shot'],
-    pros: ['Branschens skarpaste video-AI när tillgänglig', 'Multi-shot storytelling', 'Konsistenta karaktärer'],
-    cons: ['sora.com nedlagt — endast via ChatGPT', 'Begränsad åtkomst för svenska användare'],
-    offer: { title: 'Begränsad åtkomst', price: 'Endast via ChatGPT Plus 20 USD/mån', bestFor: 'AI-genererad video från text' },
-    label: 'Begränsad tillgång',
+    score: null,
+    fallbackUrl: 'https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation',
+    tags: ['Sora 2', 'Nedlagd', 'Appen stängd 26 april 2026', 'API stängs 24 sep 2026'],
+    pros: ['Skapade bild och ljud i samma generering', 'Hjälpartikel från OpenAI om export och återbetalning'],
+    cons: ['Appen och sora.com stängde 26 april 2026', 'API:t stängs 24 september 2026', 'OpenAI har inte angett något skäl'],
+    offer: { title: 'Appen stängde 26 april 2026', price: 'Nedlagd', bestFor: 'Ingen – se alternativen Runway, Kling och Pika' },
+    label: 'Nedlagd',
   },
 
   /* ── Ljud / musik ─────────────────────────────────────── */
@@ -346,8 +346,9 @@ type ToolProfile = {
   /** Brand name for CTA buttons (e.g. "Prova Kling"). Falls back to
    *  toolNameFromTitle(child.title) when not set. */
   ctaName?: string;
-  /** Curated score override for topplistan. Wins over parseRating + seed mock. */
-  score?: number;
+  /** Curated score override for topplistan. Wins over parseRating + seed mock.
+   *  `null` = explicit "ännu ej betygsatt" / nedlagd — döljer betygssiffra. */
+  score?: number | null;
   /** Direct external URL used when articles.affiliate_url is NULL. Rendered
    *  with rel="nofollow noopener" (not "sponsored") since it's an editorial
    *  reference, not an affiliate placement. */

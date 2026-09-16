@@ -495,7 +495,6 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "tags": [
       "Studio-editor",
       "Teamsamarbete",
-      "Svenska röster",
       "Företag"
     ],
     "pros": [
@@ -3208,7 +3207,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Duolingo AI",
     "fallbackUrl": "https://www.duolingo.com",
     "company": "Duolingo",
-    "model": "Bygger på generativ AI (ursprungligen lanserad med GPT-4; nuvarande modell anges inte)",
+    "model": "Öppna modeller för AI-samtal (tidigare OpenAI)",
     "founded": 2011,
     "hq": "Pittsburgh, USA",
     "useCases": [
@@ -3246,26 +3245,27 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "tags": [
       "Språkinlärning",
+      "Video Call",
       "Spelifiering",
-      "Mobilapp",
-      "Engelska"
+      "Mobilapp"
     ],
     "pros": [
-      "Exceptionellt engagerande spelmekanik som driver daglig användning",
-      "Svenska finns som målspråk och undervisningsspråk i flera kurser",
-      "AI-roleplays med inbyggda karaktärer ger realistisk konversationsträning"
+      "Spelmekanik som får dig att öva varje dag",
+      "Video Call och Roleplay ger samtalsträning utan manus",
+      "Explain My Mistake förklarar varför svaret blev fel"
     ],
     "cons": [
-      "Fokuserar nästan uteslutande på språk, vilket gör verktyget smalt för generell skolanvändning",
-      "Djupare grammatik och skrivfärdigheter kräver Duolingo Max-prenumeration"
+      "Max framtid oklar – vd:n säger att nivån kanske läggs ned",
+      "Oklart vilka kurser som har AI-funktionerna – kontrollera i appen",
+      "Smalt: bara språk, och ytligt på högre nivåer"
     ],
     "offer": {
-      "title": "Duolingo Free / Duolingo Max",
-      "price": "Gratis · Max 14,99 USD/mån",
-      "bestFor": "Elever och vuxna som vill lära sig ett nytt språk i ett lättillgängligt och motiverande format"
+      "title": "Duolingo Free / Super / Max",
+      "price": "Gratis · Super och Max (pris i appen)",
+      "bestFor": "Den som vill bygga en daglig språkvana och öva samtal med AI"
     },
     "label": "",
-    "score": 8.7
+    "score": 8.3
   },
   "coursera-ai": {
     "logo": "bg-orange-500",
@@ -3464,7 +3464,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Quizlet AI",
     "fallbackUrl": "https://quizlet.com",
     "company": "Quizlet",
-    "model": "GPT-4 (integrerad)",
+    "model": "Quizlet AI (Magic Notes, AI-övningsprov)",
     "founded": 2005,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -3502,22 +3502,23 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "tags": [
       "Flash-cards",
-      "Pluggverktyg",
-      "Repetition",
-      "Samarbete"
+      "Magic Notes",
+      "AI-övningsprov",
+      "Repetition"
     ],
     "pros": [
-      "Extremt snabb att komma igång med — klistra in text och få ett komplett studieset på sekunder",
-      "Spaced repetition-algoritmen är väldokumenterad och effektiv",
-      "Fungerar lika bra för språk, historia, biologi och juridik"
+      "Från anteckningar till kort och övningsprov på sekunder",
+      "Learn-läget repeterar det du glömmer oftare",
+      "Plus Unlimited kostar under 4 USD/mån vid årsbetalning"
     ],
     "cons": [
-      "Gratisversionen är nu kraftigt begränsad och de viktigaste AI-funktionerna kräver Plus",
-      "Djupare förklaringar och konceptuell förståelse ligger utanför verktygets räckvidd"
+      "Billiga Plus-nivån har tak: 3 övningsprov och 20 Learn-rundor per månad",
+      "Månadsbetalning är betydligt dyrare än årsbetalning",
+      "Offentliga kortlekar kan hålla ojämn kvalitet"
     ],
     "offer": {
-      "title": "Quizlet Free / Quizlet Plus",
-      "price": "Gratis (begränsat) · Plus 7,99 USD/mån",
+      "title": "Quizlet Free / Plus / Plus Unlimited",
+      "price": "Gratis · Plus Unlimited 3,75 USD/mån (årsbetalning)",
       "bestFor": "Elever och studenter som vill effektivisera sin inläsning med AI-genererade studieset och spaced repetition"
     },
     "label": "",
@@ -3759,24 +3760,25 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "tags": [
       "Plagiatdetektering",
       "AI-detektion",
-      "Högskolenivå",
+      "Ersätter Ouriginal/Urkund",
       "Institutionslicens"
     ],
     "pros": [
-      "Branschstandard för akademisk integritet med dokumenterat hög träffsäkerhet",
-      "AI-detektionsrapporten ger procentsats och markerade textpassager",
-      "Djup LMS-integration gör arbetsflödet smidigt för lärare"
+      "Etablerad standard för att granska akademiska texter",
+      "Rapporten markerar exakt vilka passager som gav utslag",
+      "Inbyggt i lärplattformar – läraren byter inte system"
     ],
     "cons": [
-      "Enbart institutionslicens gör verktyget otillgängligt för enskilda lärare och småskolor",
-      "Falska positiva identifieringar av AI-genererat innehåll förekommer och kan skapa orättvisa situationer"
+      "Bara institutionslicens – ingen plan för enskilda lärare eller privatpersoner",
+      "AI-detektorn ger falska larm: Turnitin anger själv omkring 4 % falska positiva på meningsnivå",
+      "Flera universitet har stängt av AI-detektorn"
     ],
     "offer": {
       "title": "Turnitin Feedback Studio",
       "price": "Institutionslicens — pris på offert",
-      "bestFor": "Högskolor och gymnasieskolor som behöver ett tillförlitligt system för att upprätthålla akademisk integritet"
+      "bestFor": "Högskolor och gymnasieskolor som behöver ett gemensamt system för att granska inlämningar"
     },
     "label": "",
-    "score": 8.2
+    "score": 7.6
   }
 };
