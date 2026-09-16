@@ -397,3 +397,225 @@ body {
 .prose-invert [style*="border: 2px solid #"] {
   border-color: rgb(39 39 42) !important;
 }
+
+/* ─── Artikelblock: topplista + jämförelsetabell ─────────────────
+   Används i content_mdx (HTML från databasen). Tailwind ser inte den
+   HTML:en, så blocken stylas här med tokens och ljus/mörk-varianter.
+   Wrappern har class="not-prose" så prose-stilarna inte krockar. */
+.toplist {
+  margin: 2rem 0;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.toplist-head,
+.toplist-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+.toplist-foot {
+  border-top: 1px solid var(--line);
+  font-family: inherit;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.55;
+}
+.toplist-item {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0.9rem 1.1rem;
+  padding: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.toplist-item.is-first { background: rgba(99, 102, 241, 0.05); }
+.toplist-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--bg-card);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--fg-subtle);
+}
+.toplist-item.is-first .toplist-rank {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+.toplist-name {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.toplist-badge {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  background: #eef2ff;
+  color: #4338ca;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.toplist-desc {
+  margin: 0.55rem 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.toplist-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.toplist-facts li {
+  margin: 0;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--bg-soft);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--fg-muted);
+}
+.toplist-facts b { font-weight: 600; color: var(--fg); }
+.toplist-actions {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.toplist-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none !important;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.toplist-btn-primary { background: #4f46e5; color: #fff !important; }
+.toplist-btn-primary:hover { background: #4338ca; }
+.toplist-btn-ghost {
+  border: 1px solid var(--line-strong);
+  background: var(--bg-card);
+  color: var(--fg) !important;
+}
+.toplist-btn-ghost:hover { border-color: #818cf8; color: #4338ca !important; }
+@media (min-width: 768px) {
+  .toplist-item {
+    grid-template-columns: 3.5rem minmax(0, 1fr) 12.5rem;
+    align-items: center;
+    padding: 1.4rem 1.5rem;
+  }
+  .toplist-rank { width: 3.5rem; height: 3.5rem; font-size: 1.35rem; }
+  .toplist-actions { grid-column: auto; flex-direction: column; }
+}
+.dark .toplist-item.is-first { background: rgba(99, 102, 241, 0.08); }
+.dark .toplist-item.is-first .toplist-rank,
+.dark .toplist-badge {
+  border-color: rgba(129, 140, 248, 0.35);
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+}
+.dark .toplist-btn-ghost:hover { color: #a5b4fc !important; }
+
+.compare-table-wrap {
+  margin: 2rem 0;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  overflow-x: auto;
+  background: var(--bg-page);
+}
+.compare-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.compare-table th {
+  padding: 0.75rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fg-subtle);
+}
+.compare-table td {
+  padding: 0.75rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+.compare-table tbody tr:last-child td { border-bottom: 0; }
+.compare-table tbody tr:not(.compare-group):hover td { background: var(--bg-muted); }
+.compare-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-page);
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--fg);
+}
+.compare-table td:first-child a { color: inherit; text-decoration: none; }
+.compare-table td:first-child a:hover { color: #4f46e5; }
+.compare-table tr.compare-group td {
+  padding: 1.1rem 1rem 0.45rem;
+  border-bottom: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4f46e5;
+}
+.dark .compare-table tr.compare-group td { color: #a5b4fc; }
+.cov {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  }
+.cov-yes     { background: #dcfce7; color: #166534; }
+.cov-partial { background: #fef3c7; color: #92400e; }
+.cov-no      { background: var(--bg-soft); color: var(--fg-subtle); }
+.dark .cov-yes     { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+.dark .cov-partial { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
