@@ -291,6 +291,10 @@ export type ComparisonContent = {
    *  duellsidorna — i stallet for att fraga far lasaren svaret for alla atta
    *  anvandningsomraden direkt pa sidan. */
   useCases: UseCaseVerdict[];
+  /** ISO-tidsstämpel satt av scripts/generate-comparisons.ts vid genereringen.
+   *  Driver "Uppdaterad"-etiketten så att den speglar när texten faktiskt
+   *  skrevs — äldre rader saknar fältet och får då ingen etikett. */
+  generated_at?: string;
 };
 
 /** A fully resolved side of a comparison — profile + derived display bits. */

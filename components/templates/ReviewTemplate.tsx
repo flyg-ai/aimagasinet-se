@@ -14,6 +14,7 @@ import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { buildToc, type TocItem } from '@/lib/toc';
 import { Toc } from '@/components/Toc';
+import { formatSvDate } from '@/lib/format-date';
 
 /* ─── Types ────────────────────────────────────────────────────── */
 
@@ -52,11 +53,6 @@ const LOGO_COLORS = [
   'bg-emerald-500', 'bg-orange-500', 'bg-sky-500', 'bg-violet-500',
   'bg-rose-500', 'bg-amber-500', 'bg-teal-500', 'bg-indigo-500',
   'bg-fuchsia-500', 'bg-lime-600',
-];
-
-const SE_MONTHS = [
-  'januari', 'februari', 'mars', 'april', 'maj', 'juni',
-  'juli', 'augusti', 'september', 'oktober', 'november', 'december',
 ];
 
 /** Default criteria labels for unknown tools — generic enough for any AI tool. */
@@ -892,11 +888,6 @@ function buildCrumbs(path: string): { label: string; href: string }[] {
   return crumbs;
 }
 
-function currentMonthLabel(): string {
-  const d = new Date();
-  return `${SE_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-}
-
 function starsFromScore(score: number): number {
   return Math.max(1, Math.min(5, Math.round((score / 10) * 5)));
 }
@@ -931,7 +922,10 @@ export function ReviewTemplate({
   const rating = getRating(a);
   const rank = noScore ? null : rankAmongSiblings(a, siblings);
   const crumbs = buildCrumbs(a.path);
-  const monthLabel = currentMonthLabel();
+  // Ärligt datum: det som faktiskt står i raden, samma värde som schemats
+  // dateModified. Saknas båda visas ingen "Uppdaterad"-fras alls.
+  const updatedIso = a.updated_at ?? a.published_at ?? null;
+  const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   const stars = noScore ? null : starsFromScore(rating.score);
 
   const reviewLd = noScore ? null : {
@@ -978,7 +972,7 @@ export function ReviewTemplate({
         stars={stars}
         rank={rank}
         crumbs={crumbs}
-        monthLabel={monthLabel}
+        updatedLabel={updatedLabel}
       />
 
       <OfferBanner profile={profile} toolName={toolName} affiliateUrl={a.affiliate_url} />
@@ -1037,7 +1031,7 @@ function Hero({
   stars,
   rank,
   crumbs,
-  monthLabel,
+  updatedLabel,
 }: {
   article: Article;
   toolName: string;
@@ -1046,7 +1040,7 @@ function Hero({
   stars: number | null;
   rank: number | null;
   crumbs: { label: string; href: string }[];
-  monthLabel: string;
+  updatedLabel: string | null;
 }) {
   return (
     <header className="border-b border-line bg-card">
@@ -1073,7 +1067,7 @@ function Hero({
             <div className="min-w-0 flex-1">
               <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
                 <span aria-hidden>✦</span>
-                Recension · Uppdaterad {monthLabel}
+                Recension{updatedLabel ? ` · Uppdaterad ${updatedLabel}` : ''}
               </span>
 
               <h1 className="mt-4 text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">

@@ -12,6 +12,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
+import { formatSvDate } from '@/lib/format-date';
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -22,11 +23,6 @@ export type HubChild = ArticleCardData & {
    *  snippet. Always present for DB-backed children; null for virtuals. */
   content_mdx?: string | null;
 };
-
-const SE_MONTHS = [
-  'januari', 'februari', 'mars', 'april', 'maj', 'juni',
-  'juli', 'augusti', 'september', 'oktober', 'november', 'december',
-];
 
 /* ─── Mock data palette ─────────────────────────────────────────── */
 
@@ -475,11 +471,6 @@ function highlightTitle(title: string) {
       ? <span key={i} className="text-indigo-600">{t}</span>
       : <span key={i}>{t}</span>
   );
-}
-
-function currentMonthLabel(): string {
-  const d = new Date();
-  return `${SE_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /* ─── Virtual children (tools without their own DB article yet) ─
@@ -1029,7 +1020,8 @@ export function HubTemplate({
   const top = ranked[0];
 
   const crumbs = buildCrumbs(a.path);
-  const monthLabel = currentMonthLabel();
+  const updatedIso = a.updated_at ?? a.published_at ?? null;
+  const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   const updatedYear = new Date().getFullYear();
   const facts = getHubFacts(a.slug);
 
@@ -1044,7 +1036,7 @@ export function HubTemplate({
         article={a}
         crumbs={crumbs}
         toolsCount={ranked.length}
-        monthLabel={monthLabel}
+        updatedLabel={updatedLabel}
         updatedYear={updatedYear}
         facts={facts}
       />
@@ -1127,14 +1119,14 @@ function Hero({
   article: a,
   crumbs,
   toolsCount,
-  monthLabel,
+  updatedLabel,
   updatedYear,
   facts,
 }: {
   article: Article;
   crumbs: { label: string; href: string }[];
   toolsCount: number;
-  monthLabel: string;
+  updatedLabel: string | null;
   updatedYear: number;
   facts: HubFacts;
 }) {
@@ -1172,7 +1164,7 @@ function Hero({
 
           {/* Indigo badge med kategorinamn ovan H1 */}
           <span className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
-            <span aria-hidden>✦</span> Uppdaterad {monthLabel}
+            <span aria-hidden>✦</span>{updatedLabel ? ` Uppdaterad ${updatedLabel}` : ' Översikt'}
           </span>
 
           <h1 className="mt-6 max-w-3xl text-balance break-words text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-4xl md:text-5xl">
@@ -1219,7 +1211,7 @@ function Hero({
             {/* Badge — hide "X verktyg testade" when the topplistan is empty */}
             <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
               <span aria-hidden>✦</span>
-              Uppdaterad {monthLabel}
+              {updatedLabel ? `Uppdaterad ${updatedLabel}` : 'Översikt'}
               {toolsCount > 0 && <> · {toolsCount} verktyg testade</>}
             </span>
 

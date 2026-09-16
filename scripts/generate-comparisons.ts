@@ -116,7 +116,7 @@ Returnera EXAKT JSON i detta format, ingenting annat:
 INGEN \`\`\`json\`\`\`-wrapping, inga kommentarer, ingen prosa före eller efter — bara JSON-objektet.`;
 
 type Faq = { question: string; answer: string };
-type Content = { intro: string; verdict: string; faqs: Faq[]; useCases: UseCaseVerdict[] };
+type Content = { intro: string; verdict: string; faqs: Faq[]; useCases: UseCaseVerdict[]; generated_at: string };
 
 async function generateFor(p: Pair): Promise<Content> {
   const describe = (t: ToolBrief) =>
@@ -182,7 +182,7 @@ async function generateFor(p: Pair): Promise<Content> {
     throw new Error(`incomplete content (intro/verdict/faqs=${faqs.length}, missing useCases: ${missingSlugs.join(',') || 'none'})`);
   }
   const useCases = SYFTE_OPTIONS.map((o) => validUseCases.find((u) => u.syfte === o.slug)!);
-  return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5), useCases };
+  return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5), useCases, generated_at: new Date().toISOString() };
 }
 
 async function existingSlugs(): Promise<Set<string>> {

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { to } from '@/lib/links';
+import { formatSvDate } from '@/lib/format-date';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import {
@@ -17,16 +18,6 @@ import {
 /* flyg.ai-inspired head-to-head. Tool A is indigo, tool B is cyan throughout.
    `content` is always supplied by the route — Haiku-generated when a Supabase
    row exists, deterministic templated fallback otherwise. */
-
-const SE_MONTHS = [
-  'januari', 'februari', 'mars', 'april', 'maj', 'juni',
-  'juli', 'augusti', 'september', 'oktober', 'november', 'december',
-];
-
-function monthLabel(): string {
-  const d = new Date();
-  return `${SE_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-}
 
 const SIDE = {
   a: { text: 'text-indigo-600', bar: 'bg-indigo-500', ring: 'border-indigo-200', btn: 'bg-indigo-600 hover:bg-indigo-700', pill: 'bg-indigo-100 text-indigo-700' },
@@ -65,7 +56,7 @@ export function ComparisonTemplate({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
       />
 
-      <Hero a={a} b={b} crumbs={crumbs} />
+      <Hero a={a} b={b} crumbs={crumbs} generatedAt={content.generated_at ?? null} />
 
       <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
         <Snabbfakta a={a} b={b} />
@@ -113,7 +104,7 @@ function ToolLogo({
 
 /* ─── Hero — two big tool cards + VS ───────────────────────────── */
 
-function Hero({ a, b, crumbs }: { a: ComparedTool; b: ComparedTool; crumbs: { label: string; href: string }[] }) {
+function Hero({ a, b, crumbs, generatedAt }: { a: ComparedTool; b: ComparedTool; crumbs: { label: string; href: string }[]; generatedAt: string | null }) {
   return (
     <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-cyan-50">
       <div className="mx-auto max-w-5xl px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
@@ -132,7 +123,7 @@ function Hero({ a, b, crumbs }: { a: ComparedTool; b: ComparedTool; crumbs: { la
 
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
-            <span aria-hidden>⚔</span> Jämförelse · Uppdaterad {monthLabel()}
+            <span aria-hidden>⚔</span> Jämförelse{generatedAt ? ` · Uppdaterad ${formatSvDate(generatedAt)}` : ''}
           </span>
           <h1 className="mx-auto mt-5 max-w-3xl text-balance break-words text-2xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
             <span className={SIDE.a.text}>{a.ref.name}</span>{' '}

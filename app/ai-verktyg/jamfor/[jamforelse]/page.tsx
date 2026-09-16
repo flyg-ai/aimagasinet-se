@@ -59,7 +59,7 @@ async function fetchImages(keys: string[]): Promise<Record<string, string | null
 /** Vad getStoredContent hamtar fran DB — likt ComparisonContent, men
  *  useCases kan sakna en giltig rad (aldre content, eller trasig JSON) utan
  *  att intro/verdict/faqs for den skull ska kasseras. */
-type StoredContent = { intro: string; verdict: string; faqs: ComparisonContent['faqs']; useCases: UseCaseVerdict[] | null };
+type StoredContent = { intro: string; verdict: string; faqs: ComparisonContent['faqs']; useCases: UseCaseVerdict[] | null; generated_at?: string };
 
 /** Pull Haiku-generated content from the comparisons table. Returns null on
  *  any miss (table not applied, no row, malformed JSON) so the page falls
@@ -102,7 +102,13 @@ async function getStoredContent(slug: string): Promise<StoredContent | null> {
       ? SYFTE_OPTIONS.map((o) => (rawUseCases as UseCaseVerdict[]).find((u) => u.syfte === o.slug)!)
       : null;
 
-    return { intro: parsed.intro, verdict: parsed.verdict, faqs: faqs.slice(0, 5), useCases };
+    return {
+      intro: parsed.intro,
+      verdict: parsed.verdict,
+      faqs: faqs.slice(0, 5),
+      useCases,
+      ...(typeof parsed.generated_at === 'string' ? { generated_at: parsed.generated_at } : {}),
+    };
   } catch {
     return null;
   }
@@ -149,7 +155,13 @@ export default async function ComparisonPage({ params }: Props) {
   // useCases far sin egen fallback oavsett om resten kom fran Haiku eller
   // ar helt deterministiskt — en aldre rad utan falt ska anda visa nagot.
   const content: ComparisonContent = stored
-    ? { intro: stored.intro, verdict: stored.verdict, faqs: stored.faqs, useCases: stored.useCases ?? fallbackUseCases(a, b) }
+    ? {
+        intro: stored.intro,
+        verdict: stored.verdict,
+        faqs: stored.faqs,
+        useCases: stored.useCases ?? fallbackUseCases(a, b),
+        ...(stored.generated_at ? { generated_at: stored.generated_at } : {}),
+      }
     : {
         intro: fallbackIntro(a, b),
         verdict: a.score >= b.score ? fallbackVerdict(a, b) : fallbackVerdict(b, a),
