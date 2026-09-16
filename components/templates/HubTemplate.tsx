@@ -122,10 +122,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Claude',
     fallbackUrl: 'https://claude.ai',
     tagline: 'Bäst på långform, kod och nyanserat resonemang',
-    tags: ['Claude 4 Opus', 'Projects', 'Artifacts', '200k context'],
-    pros: ['Bäst på långform', 'Säker källhantering', 'Skarp på nyans'],
+    tags: ['Claude Opus 5', 'Projects', 'Artifacts', '1M context'],
+    pros: ['Bäst på långform', 'Starkast på agentisk kodning — samma modeller som Claude Code', 'Säker källhantering', 'Skarp på nyans'],
     cons: ['Långsammare än GPT', 'Dyrare per token'],
-    offer: { title: '200k token kontext gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Långa dokument och nyans' },
+    offer: { title: '1M token kontext', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Långa dokument och nyans' },
     label: 'Bäst för långform',
   },
   gemini: {
@@ -133,10 +133,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Gemini',
     fallbackUrl: 'https://gemini.google.com',
     tagline: 'Googles multimodala AI med enorm kontext',
-    tags: ['Gemini 2.5 Pro', '1M context', 'Workspace', 'Multimodal'],
+    tags: ['Gemini 3.1 Pro', '1M context', 'Workspace', 'Multimodal'],
     pros: ['Enorm kontext', 'Integrerat med Google', 'Stark på multimodal'],
     cons: ['Ojämn svenska', 'Beroende av Google-konto'],
-    offer: { title: 'Gemini Advanced 2 mån gratis', price: 'Gratis · Advanced 22 USD/mån', bestFor: 'Workspace-användare' },
+    offer: { title: 'Google AI Pro', price: 'Gratis · AI Pro 19,99 USD/mån', bestFor: 'Workspace-användare' },
     label: 'Bäst för stora dokument',
   },
   mistral: {
@@ -183,10 +183,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     logo: 'bg-fuchsia-500',
     ctaName: 'DeepSeek',
     fallbackUrl: 'https://www.deepseek.com',
-    tags: ['V3', 'Open source', 'Lågt pris', 'API'],
+    tags: ['Kodning', 'Matematik', 'Kostnadseffektiv', 'Öppen modell'],
     pros: ['Extremt billigt', 'Open source-vikter', 'Bra på kod'],
     cons: ['Svensk dialog svagare', 'Mindre community'],
-    offer: { title: 'API-credits 5 USD gratis', price: 'Gratis · API 0.2 USD/M tokens', bestFor: 'Utvecklare som vill skala' },
+    offer: { title: 'API-credits 5 USD gratis', price: 'Gratis webbgränssnitt · API från 0,15 USD per miljon tokens', bestFor: 'Utvecklare som vill skala' },
     label: 'Bästa pris',
   },
   'jasper-ai': {
@@ -194,10 +194,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Jasper AI',
     fallbackUrl: 'https://www.jasper.ai',
     tagline: 'AI-copy med konsistent brand voice',
-    tags: ['Brand Voice', 'SEO-mode', 'Templates', 'Teams'],
+    tags: ['Brand Voice', 'Canvas', 'Marketing-agenter', 'Teams'],
     pros: ['Konsistent brand voice', 'Många mallar', 'Bra för team'],
     cons: ['Högre pris', 'Smal modell-grund'],
-    offer: { title: 'Jasper 7 dagar gratis', price: 'Gratis · Creator 49 USD/mån', bestFor: 'Marknadsföring' },
+    offer: { title: 'Jasper 7 dagar gratis', price: '7 dagars testperiod · Pro 69 USD/mån', bestFor: 'Marknadsföring' },
     label: 'Bäst för marknadsföring',
   },
   writesonic: {
@@ -205,10 +205,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Writesonic',
     fallbackUrl: 'https://writesonic.com',
     tagline: 'Snabb AI-copy med SEO-läge',
-    tags: ['SEO mode', 'Bulk', 'Chatsonic', 'API'],
+    tags: ['GEO-spårning', 'AI-synlighet', 'AI Article Writer', 'Agenter'],
     pros: ['Snabb', 'Bra pris', 'Bulk-funktion för SEO'],
     cons: ['Svenska är ojämn', 'Mindre nyans i text'],
-    offer: { title: 'Gratisplan med 10k ord/mån', price: 'Gratis · Pro 16 USD/mån', bestFor: 'SEO och snabb copy' },
+    offer: { title: 'Gratisplan med 10k ord/mån', price: 'Gratis att börja · Starter 79 USD/mån (årsbetalning)', bestFor: 'SEO och snabb copy' },
     label: 'Bäst för SEO',
   },
   'copy-ai': {
@@ -216,10 +216,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     ctaName: 'Copy.ai',
     fallbackUrl: 'https://www.copy.ai',
     tagline: 'AI-workflows för säljteam och sociala medier',
-    tags: ['Workflows', 'Templates', 'Brand voice', 'API'],
+    tags: ['Workflows', 'GTM-plattform', 'Brand voice', 'API'],
     pros: ['Många mallar', 'Workflows-automation', 'Lågt instegspris'],
     cons: ['Begränsad svenska', 'Mindre kraftfull modell'],
-    offer: { title: 'Free forever-plan', price: 'Gratis · Pro 36 USD/mån', bestFor: 'Säljteam och social media' },
+    offer: { title: 'Chat-plan 29 USD/mån', price: 'Chat 29 USD/mån · Growth från 1 000 USD/mån', bestFor: 'Säljteam och social media' },
     label: 'Bäst för säljteam',
   },
 
@@ -243,10 +243,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.4,
     fallbackUrl: 'https://klingai.com',
     tagline: 'Realistisk AI-video från text eller bild',
-    tags: ['Kling 1.6', 'Realism', 'Lip sync', 'Image-to-video'],
+    tags: ['Kling 3.0', 'Realism', 'Lip sync', 'Long-form'],
     pros: ['Marknadens mest realistiska video', 'Lång clip-längd', 'Stark image-to-video'],
     cons: ['Engelska prompts ojämn', 'Mindre community utanför Kina'],
-    offer: { title: 'Gratis begränsad', price: 'Gratis · Pro ~10 USD/mån', bestFor: 'Realistisk AI-video' },
+    offer: { title: 'Gratis begränsad', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Realistisk AI-video' },
     label: 'Redaktionens val',
   },
   'runway-gen-3': {
@@ -255,7 +255,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.1,
     fallbackUrl: 'https://runwayml.com',
     tagline: 'Video, redigering och effekter i ett',
-    tags: ['Gen-3 Alpha', 'Redigering', 'Effekter', 'Image-to-video'],
+    tags: ['Gen-4.5', 'Redigering', 'Effekter', 'Image-to-video'],
     pros: ['Inbyggd redigeringsstudio', 'Avancerad kamerakontroll', 'Brett ekosystem av effekter'],
     cons: ['Dyrt för längre projekt', 'Mindre stark på text-i-bild'],
     offer: { title: 'Basic gratis', price: 'Gratis · Standard 15 USD/mån', bestFor: 'Video, redigering och effekter' },
@@ -267,10 +267,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 8.7,
     fallbackUrl: 'https://pika.art',
     tagline: 'Snabb text- och bild-till-video',
-    tags: ['Pika 2.0', 'Text/bild → video', 'Pikaffects', 'Lip sync'],
+    tags: ['Pika 2.5', 'Text/bild → video', 'Pikaffects', 'Lip sync'],
     pros: ['Snabbaste i klassen', 'Roliga effekter (Pikaffects)', 'Lågt pris för premium'],
     cons: ['Mindre filmisk än Runway/Sora', 'Kortare clip-längd'],
-    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Pro 8 USD/mån', bestFor: 'Text- och bild-till-video' },
+    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Basic 8 USD/mån (årsbetalning)', bestFor: 'Text- och bild-till-video' },
     label: 'Bästa pris-prestanda',
   },
   'sora-2': {
@@ -292,7 +292,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.2,
     fallbackUrl: 'https://suno.com',
     tagline: 'Skapa komplett musik från en textprompt',
-    tags: ['V4', 'Custom lyrics', '4 min spår', 'Stems-export'],
+    tags: ['v6', 'Custom lyrics', '4 min spår', 'Stems-export'],
     pros: ['Snabbast i klassen', 'Bra på lyrik', 'Stems för efterproduktion'],
     cons: ['Mindre nyans än Udio', 'Kommersiella rättigheter kräver Pro'],
     offer: { title: '50 spår gratis varje månad', price: 'Gratis · Pro 8 USD/mån', bestFor: 'Musik från text' },
@@ -304,10 +304,10 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.5,
     fallbackUrl: 'https://elevenlabs.io',
     tagline: 'Världsledande röstsyntes på 30+ språk',
-    tags: ['v3', 'Voice clone', '32 språk', 'Dubbing'],
+    tags: ['v3', 'Voice clone', '74 språk', 'Dubbing'],
     pros: ['Marknadens mest naturliga röster', 'Stark voice cloning', 'Utmärkt svenska'],
     cons: ['Pris skalar snabbt', 'Voice cloning kräver verifiering'],
-    offer: { title: '10k tecken gratis varje månad', price: 'Gratis · Starter 5 USD/mån', bestFor: 'Röstsyntes & text-till-tal' },
+    offer: { title: '10k tecken gratis varje månad', price: 'Gratis · Starter 6 USD/mån', bestFor: 'Röstsyntes & text-till-tal' },
     label: 'Bäst för röst',
   },
 
@@ -318,7 +318,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.5,
     fallbackUrl: 'https://cursor.com',
     tagline: 'AI-first kodeditor som förstår hela din kodbas',
-    tags: ['Composer', 'Tab', 'Multi-file edits', 'MCP'],
+    tags: ['Composer', 'Tab', 'Cloud agents', 'MCP'],
     pros: ['Branschens skarpaste AI-editor', 'Bra context-hantering', 'Stöd för flera modeller'],
     cons: ['Pris högt för soloutvecklare', 'Bara desktop'],
     offer: { title: '14 dagar Pro gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Daglig professionell kodning' },
@@ -330,7 +330,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
     score: 9.1,
     fallbackUrl: 'https://github.com/features/copilot',
     tagline: 'AI-assistent direkt i din editor',
-    tags: ['Inline', 'Chat', 'PR review', 'Enterprise'],
+    tags: ['Inline', 'Coding agent', 'PR review', 'MCP'],
     pros: ['Bred IDE-integration', 'Bästa enterprise-stödet', 'Konkurrenskraftigt pris'],
     cons: ['Mindre agentisk än Cursor', 'Subtila skillnader på modeller'],
     offer: { title: 'Free tier för individer', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Team och enterprise' },
@@ -442,6 +442,15 @@ function cleanExcerpt(excerpt: string | null | undefined): string | null {
   s = s.trim();
   if (s.length > 60) s = s.slice(0, 57).trimEnd() + '…';
   return s || null;
+}
+
+/** En nedlagd tjänst känns igen på profilens label — samma flagga som göms
+ *  bakom CTA:n i ReviewTemplate. */
+export const DISCONTINUED_LABEL = 'Nedlagd';
+
+function isDiscontinued(child: HubChild): boolean {
+  const known = lookupKnownBySlug(child.slug) ?? lookupKnown(toolNameFromTitle(child.title));
+  return known?.label === DISCONTINUED_LABEL;
 }
 
 function getRating(child: HubChild): Rating {
@@ -576,7 +585,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   heygen: {
     logo: 'bg-purple-600', ctaName: 'HeyGen', score: 8.7,
     fallbackUrl: 'https://www.heygen.com',
-    tags: ['Avatarer', 'Företag', '40+ språk', 'Talking heads'],
+    tags: ['Avatarer', 'Företag', '175+ språk', 'Talking heads'],
     pros: ['Realistiska avatarer', 'Bred språkstöd', 'Stark för säljvideo'],
     cons: ['Smalt användningsområde', 'Pris hoppar snabbt'],
     offer: { title: 'Gratis 3 min/månad', price: 'Gratis · Creator 29 USD/mån', bestFor: 'AI-avatarer för företag' },
@@ -585,19 +594,19 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   synthesia: {
     logo: 'bg-blue-600', ctaName: 'Synthesia', score: 8.5,
     fallbackUrl: 'https://www.synthesia.io',
-    tags: ['230+ avatarer', '140 språk', 'L&D', 'Enterprise'],
+    tags: ['240+ avatarer', '160+ språk', 'L&D', 'Enterprise'],
     pros: ['Branschstandard för utbildning', 'Säker för enterprise', 'Massiv språkbredd'],
     cons: ['Dyrt för småteam', 'Mindre rörlig än konkurrenter'],
-    offer: { title: '36 min gratis', price: 'Gratis · Starter 22 USD/mån', bestFor: 'AI-avatarer för utbildning' },
+    offer: { title: '36 min gratis', price: 'Gratis · Starter 29 USD/mån', bestFor: 'AI-avatarer för utbildning' },
     label: 'Bäst för L&D',
   },
   'luma-dream-machine': {
     logo: 'bg-cyan-600', ctaName: 'Luma', score: 8.4,
     fallbackUrl: 'https://lumalabs.ai',
-    tags: ['Dream Machine', 'Realism', 'Image-to-video', 'Genesis'],
+    tags: ['Ray3.2', 'Realism', 'Image-to-video', 'Luma Agents'],
     pros: ['Naturlig fysik och rörelse', 'Stark image-to-video', 'Bra pris'],
     cons: ['Kortare clips', 'Mindre stilkontroll'],
-    offer: { title: '30 generationer gratis', price: 'Gratis · Standard 30 USD/mån', bestFor: 'Realistisk text-till-video' },
+    offer: { title: 'Luma Plus', price: 'Plus 30 USD/mån', bestFor: 'Realistisk text-till-video' },
     label: 'Bäst för naturlig rörelse',
   },
   invideo: {
@@ -606,7 +615,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Sociala medier', 'TikTok/Reels', 'Mallar', 'AI-röster'],
     pros: ['Snabbt social media-flöde', '5000+ mallar', 'Inbyggda röster'],
     cons: ['Lägre kvalitet per generering', 'Vattenstämpel i gratis'],
-    offer: { title: '4h video/månad gratis', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Social media-video i volym' },
+    offer: { title: 'InVideo Starter', price: 'Starter 20 USD/mån per plats (årsbetalning)', bestFor: 'Social media-video i volym' },
     label: 'Bäst för social media',
   },
   'adobe-firefly-video': {
@@ -632,7 +641,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   udio: {
     logo: 'bg-rose-600', ctaName: 'Udio', score: 9.0,
     fallbackUrl: 'https://www.udio.com',
-    tags: ['Musikalisk nyans', 'Lyrik-AI', 'Stems', 'Remix'],
+    tags: ['Voice Control', 'Hög ljudkvalitet', 'Stems', 'Inpainting'],
     pros: ['Mer musikalisk realism än Suno', 'Stark på instrumental', 'Bra svensk text-stöd'],
     cons: ['Långsammare', 'Färre exportformat'],
     offer: { title: '10 spår gratis/dag', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Musikproduktion med AI' },
@@ -703,13 +712,26 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   },
 
   /* ── Kod ──────────────────────────────────────────────── */
+  // Utan en egen post här föll claude-code igenom på den luddiga namnmatchningen
+  // och ärvde chattverktyget Claudes profil — fel CTA ("Prova Claude"), fel URL
+  // och inget kurerat betyg, så topplistan visade ett seed-värde i stället för 9.5.
+  'claude-code': {
+    logo: 'bg-orange-600', ctaName: 'Claude Code', score: 9.5,
+    fallbackUrl: 'https://claude.com/product/claude-code',
+    tagline: 'Kodagent som tar hela uppgiften, inte nästa rad',
+    tags: ['Terminal', 'Underagenter', 'GitHub-PR', 'MCP'],
+    pros: ['Läser hela kodbasen utan att du pekar ut filer', 'Utför avgränsade uppgifter självständigt', 'Finns i terminal, editor, webb och mobil'],
+    cons: ['Bara Anthropics egna modeller — inget modellval', 'Terminalvant arbetssätt höjer tröskeln'],
+    offer: { title: 'Ingår i Claude Pro', price: 'Pro 20 USD/mån · Max från 100 USD/mån', bestFor: 'Avgränsade uppgifter i stora kodbaser' },
+    label: 'Starkast agent',
+  },
   tabnine: {
     logo: 'bg-slate-700', ctaName: 'Tabnine', score: 8.4,
     fallbackUrl: 'https://www.tabnine.com',
-    tags: ['Privacy-first', 'On-prem', 'Enterprise', 'Lokal modell'],
+    tags: ['Privacy-first', 'On-prem', 'Air-gapped', 'MCP'],
     pros: ['Kan köras lokalt eller on-prem', 'Strikt privacy', 'Enterprise-fokus'],
     cons: ['Mindre kraftfull än Cursor/Copilot', 'Lägre modell-kvalitet'],
-    offer: { title: 'Gratis Basic', price: 'Gratis · Pro 12 USD/mån', bestFor: 'Enterprise med strikta datakrav' },
+    offer: { title: 'Endast företagsplaner', price: 'Code Assistant 39 USD/användare/mån · Agentic 59 USD/användare/mån (årsbetalning)', bestFor: 'Enterprise med strikta datakrav' },
     label: 'Bäst för privacy',
   },
   codeium: {
@@ -718,8 +740,8 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Gratis', '70+ språk', '40+ IDE:er', 'Autocomplete'],
     pros: ['Generös gratisversion', 'Brett språkstöd', 'Snabb autocomplete'],
     cons: ['Mindre agentisk', 'Pro-features är begränsade'],
-    offer: { title: 'Helt gratis för individer', price: 'Gratis · Teams 12 USD/mån', bestFor: 'Soloutvecklare och hobbyprojekt' },
-    label: 'Bäst gratis',
+    offer: { title: 'Uppgått i Devin (Cognition)', price: 'Nedlagd', bestFor: 'Soloutvecklare och hobbyprojekt' },
+    label: 'Nedlagd',
   },
   'amazon-codewhisperer': {
     logo: 'bg-orange-700', ctaName: 'CodeWhisperer', score: 8.0,
@@ -736,13 +758,13 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Browser-IDE', 'Agent', 'Deploy', 'Nybörjarvänligt'],
     pros: ['Bygg och deploya i webbläsaren', 'Agent-funktion', 'Lätt att komma igång'],
     cons: ['Begränsat för stora projekt', 'Pris skalar snabbt'],
-    offer: { title: 'Gratisplan', price: 'Gratis · Core 25 USD/mån', bestFor: 'Prototyper och nybörjare' },
+    offer: { title: 'Gratisplan', price: 'Free Mode · Core 20 USD/mån', bestFor: 'Prototyper och nybörjare' },
     label: 'Bäst för prototyper',
   },
   'jetbrains-ai': {
     logo: 'bg-violet-700', ctaName: 'JetBrains AI', score: 8.7,
     fallbackUrl: 'https://www.jetbrains.com/ai/',
-    tags: ['IntelliJ', 'PyCharm', 'WebStorm', 'JetBrains-integration'],
+    tags: ['IntelliJ', 'Junie-agent', 'AI-krediter', 'JetBrains-integration'],
     pros: ['Djup IDE-integration', 'Bra refactoring', 'Skarp för JVM-språk'],
     cons: ['Kräver JetBrains-licens', 'Bara i JetBrains-editorer'],
     offer: { title: '7 dagar gratis', price: 'AI Pro 10 USD/mån', bestFor: 'JetBrains-användare' },
@@ -754,7 +776,7 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Hela kodbasen', 'Cross-file', 'Enterprise', 'Code search'],
     pros: ['Bäst på stora kodbaser', 'Cross-file kontext', 'Enterprise-säkerhet'],
     cons: ['Setup-tid för enterprise', 'Mindre snabbt än Copilot'],
-    offer: { title: 'Gratis Free-plan', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Stora monorepos' },
+    offer: { title: 'Endast Enterprise', price: 'Endast Enterprise – från 16 000 USD/år', bestFor: 'Stora monorepos' },
     label: 'Bäst för stora repos',
   },
   pieces: {
@@ -773,8 +795,8 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Agent', 'Multi-file', 'Cascade', 'Flow-mode'],
     pros: ['Cursor-rival med flow-fokus', 'Stark agent-mode', 'Snabb autonom redigering'],
     cons: ['Nyare än Cursor', 'Mindre community ännu'],
-    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Pro 15 USD/mån', bestFor: 'Agentisk kodning' },
-    label: 'Bäst utmanare',
+    offer: { title: 'Uppgått i Devin (Cognition)', price: 'Nedlagd', bestFor: 'Agentisk kodning' },
+    label: 'Nedlagd',
   },
 
   /* ── Automation ───────────────────────────────────────── */
@@ -790,19 +812,19 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
   'zapier-ai': {
     logo: 'bg-orange-600', ctaName: 'Zapier', score: 8.9,
     fallbackUrl: 'https://zapier.com',
-    tags: ['7000+ appar', 'AI Actions', 'Tables', 'Interfaces'],
+    tags: ['9000+ appar', 'Agents', 'Tables', 'Forms'],
     pros: ['Flest integrationer på marknaden', 'Enkelt att komma igång', 'AI Actions inbyggt'],
     cons: ['Dyrt för stora volymer', 'Mindre flexibelt än Make'],
-    offer: { title: '100 tasks gratis/mån', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Snabb SaaS-integration' },
+    offer: { title: '100 tasks gratis/mån', price: 'Gratis · Professional 29,99 USD/mån (19,99 USD/mån vid årsbetalning)', bestFor: 'Snabb SaaS-integration' },
     label: 'Mest använda',
   },
   n8n: {
     logo: 'bg-rose-600', ctaName: 'n8n', score: 8.7,
     fallbackUrl: 'https://n8n.io',
-    tags: ['Open source', 'Self-host', 'AI-noder', 'Kod-noder'],
+    tags: ['Fair-code', 'Self-host', 'AI-noder', 'Kod-noder'],
     pros: ['Fullt open source', 'Kan självhostas', 'Bra för utvecklare'],
     cons: ['Kräver tekniskt kunnande', 'Mindre polerat UI'],
-    offer: { title: 'Self-host gratis', price: 'Gratis · Cloud 20 EUR/mån', bestFor: 'Tekniska team som vill äga data' },
+    offer: { title: 'Self-host gratis', price: 'Gratis självhostad · Starter 20 EUR/mån (årsbetalning)', bestFor: 'Tekniska team som vill äga data' },
     label: 'Bäst open source',
   },
   'power-automate': {
@@ -829,8 +851,8 @@ const VIRTUAL_KNOWN: Record<string, Partial<ToolProfile>> = {
     tags: ['Human-in-the-loop', 'AI-flöden', 'Approval', 'Modern UI'],
     pros: ['Pausar för mänsklig granskning', 'Modernt UI', 'Bra för kritiska flöden'],
     cons: ['Mindre integrationer än Zapier', 'Tidig produkt'],
-    offer: { title: '200 steg gratis/mån', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Kritiska AI-flöden med kontroll' },
-    label: 'Bäst för human-in-the-loop',
+    offer: { title: 'Tjänsten är nedlagd', price: 'Nedlagd', bestFor: 'Kritiska AI-flöden med kontroll' },
+    label: 'Nedlagd',
   },
   activepieces: {
     logo: 'bg-fuchsia-600', ctaName: 'ActivePieces', score: 7.9,
@@ -994,6 +1016,11 @@ export function HubTemplate({
 }) {
   const virtuals = VIRTUAL_HUB_CHILDREN[a.slug] ?? [];
   const ranked = [...items, ...virtuals].sort((x, y) => {
+    // Nedlagda verktyg sist oavsett betyg — betyget beskriver produkten som
+    // den var, men en nedlagd tjänst ska aldrig toppa en topplista.
+    const dx = isDiscontinued(x) ? 1 : 0;
+    const dy = isDiscontinued(y) ? 1 : 0;
+    if (dx !== dy) return dx - dy;
     const rx = getRating(x).score;
     const ry = getRating(y).score;
     if (ry !== rx) return ry - rx;
@@ -1392,6 +1419,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
       <div className="flex flex-col items-stretch gap-2 lg:items-end">
         <AffiliateButton
           affiliateUrl={child.affiliate_url}
+          discontinued={p.label === DISCONTINUED_LABEL}
           fallbackUrl={p.fallbackUrl}
           label={`Prova ${p.ctaName ?? name}`}
         />
@@ -1454,6 +1482,7 @@ function BestInTest({ child }: { child: HubChild }) {
           <div className="shrink-0">
             <AffiliateButton
               affiliateUrl={child.affiliate_url}
+              discontinued={p.label === DISCONTINUED_LABEL}
               fallbackUrl={p.fallbackUrl}
               label={`Prova ${p.ctaName ?? name}`}
               size="lg"
@@ -1957,12 +1986,16 @@ function AffiliateButton({
   fallbackUrl,
   label,
   size = 'md',
+  discontinued = false,
 }: {
   affiliateUrl: string | null | undefined;
   fallbackUrl: string | null | undefined;
   label: string;
   size?: 'md' | 'lg';
+  /** Nedlagd tjänst — ingen CTA alls, varken länk eller dött <span>. */
+  discontinued?: boolean;
 }) {
+  if (discontinued) return null;
   const cls =
     'inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700 ' +
     (size === 'lg' ? 'px-6 py-3 text-sm' : 'px-4 py-2.5 text-xs');

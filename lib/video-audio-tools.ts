@@ -12,7 +12,7 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
     "score": 8.7,
     "fallbackUrl": "https://www.heygen.com",
     "company": "HeyGen",
-    "model": "HeyGen 3.0",
+    "model": "HeyGen Avatar IV",
     "founded": 2023,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -51,7 +51,7 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
     "tags": [
       "Avatarer",
       "Företag",
-      "40+ språk",
+      "175+ språk",
       "Talking heads"
     ],
     "pros": [
@@ -76,7 +76,7 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
     "score": 8.5,
     "fallbackUrl": "https://www.synthesia.io",
     "company": "Synthesia Ltd",
-    "model": "Synthesia Studio (v3)",
+    "model": "Synthesia AI Avatars",
     "founded": 2017,
     "hq": "London, Förenade kungariket",
     "useCases": [
@@ -113,8 +113,8 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
       }
     ],
     "tags": [
-      "230+ avatarer",
-      "140 språk",
+      "240+ avatarer",
+      "160+ språk",
       "L&D",
       "Enterprise"
     ],
@@ -129,7 +129,7 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
     ],
     "offer": {
       "title": "36 min gratis",
-      "price": "Gratis · Starter 22 USD/mån",
+      "price": "Gratis · Starter 29 USD/mån",
       "bestFor": "AI-avatarer för utbildning"
     },
     "label": "Bäst för L&D"
@@ -192,8 +192,8 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
       "Vattenstämpel i gratis"
     ],
     "offer": {
-      "title": "4h video/månad gratis",
-      "price": "Gratis · Plus 20 USD/mån",
+      "title": "InVideo Starter",
+      "price": "Starter 20 USD/mån per plats (årsbetalning)",
       "bestFor": "Social media-video i volym"
     },
     "label": "Bäst för social media"
@@ -204,7 +204,7 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
     "score": 8.4,
     "fallbackUrl": "https://lumalabs.ai",
     "company": "Luma AI",
-    "model": "Dream Machine",
+    "model": "Ray3.2 (Luma, tidigare Dream Machine)",
     "founded": 2021,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -241,10 +241,10 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
       }
     ],
     "tags": [
-      "Dream Machine",
+      "Ray3.2",
       "Realism",
       "Image-to-video",
-      "Genesis"
+      "Luma Agents"
     ],
     "pros": [
       "Naturlig fysik och rörelse",
@@ -256,8 +256,8 @@ export const VIDEO_AUDIO_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = 
       "Mindre stilkontroll"
     ],
     "offer": {
-      "title": "30 generationer gratis",
-      "price": "Gratis · Standard 30 USD/mån",
+      "title": "Luma Plus",
+      "price": "Plus 30 USD/mån",
       "bestFor": "Realistisk text-till-video"
     },
     "label": "Bäst för naturlig rörelse"

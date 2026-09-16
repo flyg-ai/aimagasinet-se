@@ -119,81 +119,81 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   claude: {
     logo: 'bg-orange-500',
     fallbackUrl: 'https://claude.ai',
-    company: 'Anthropic', model: 'Claude Opus 4.7', founded: 2021, hq: 'San Francisco, USA',
+    company: 'Anthropic', model: 'Claude Opus 5', founded: 2021, hq: 'San Francisco, USA',
     useCases: ['Långform-skrivande', 'Juridiska dokument', 'Vetenskaplig analys', 'Programmering', 'Resonemang i flera steg'],
     ratingCriteria: [
       { label: 'Textkvalitet', score: 9.5 }, { label: 'Hastighet / svar', score: 8.6 },
       { label: 'Pris / prestanda', score: 9.0 }, { label: 'Integrationer', score: 9.2 },
       { label: 'Säkerhet & GDPR', score: 9.3 }, { label: 'Svenska', score: 9.6 },
     ],
-    tags: ['Claude 4 Opus', 'Projects', 'Artifacts', '200k context'],
-    pros: ['Bäst på långform', 'Säker källhantering', 'Skarp på nyans'],
+    tags: ['Claude Opus 5', 'Projects', 'Artifacts', '1M context'],
+    pros: ['Bäst på långform', 'Starkast på agentisk kodning — samma modeller som Claude Code', 'Säker källhantering', 'Skarp på nyans'],
     cons: ['Långsammare än GPT', 'Dyrare per token'],
-    offer: { title: '200k token kontext gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Långa dokument och nyans' },
+    offer: { title: '1M token kontext', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Långa dokument och nyans' },
     label: 'Bäst för långform',
   },
   gemini: {
     logo: 'bg-sky-500',
     fallbackUrl: 'https://gemini.google.com',
-    company: 'Google', model: 'Gemini 2.5 Pro', founded: 1998, hq: 'Mountain View, USA',
+    company: 'Google', model: 'Gemini 3.1 Pro', founded: 1998, hq: 'Mountain View, USA',
     useCases: ['Workspace-integration', 'Stora dokument', 'Multimodal analys', 'Research', 'Data-summering'],
     ratingCriteria: [
       { label: 'Textkvalitet', score: 9.0 }, { label: 'Hastighet / svar', score: 9.4 },
       { label: 'Pris / prestanda', score: 9.1 }, { label: 'Integrationer', score: 9.7 },
       { label: 'Säkerhet & GDPR', score: 8.8 }, { label: 'Svenska', score: 8.5 },
     ],
-    tags: ['Gemini 2.5 Pro', '1M context', 'Workspace', 'Multimodal'],
+    tags: ['Gemini 3.1 Pro', '1M context', 'Workspace', 'Multimodal'],
     pros: ['Enorm kontext', 'Integrerat med Google', 'Stark på multimodal'],
     cons: ['Ojämn svenska', 'Beroende av Google-konto'],
-    offer: { title: 'Gemini Advanced 2 mån gratis', price: 'Gratis · Advanced 22 USD/mån', bestFor: 'Workspace-användare' },
+    offer: { title: 'Google AI Pro', price: 'Gratis · AI Pro 19,99 USD/mån', bestFor: 'Workspace-användare' },
     label: 'Bäst för stora dokument',
   },
   'jasper-ai': {
     logo: 'bg-amber-500',
     fallbackUrl: 'https://www.jasper.ai',
-    company: 'Jasper', model: 'Jasper 4', founded: 2021, hq: 'Austin, USA',
+    company: 'Jasper', model: 'Jasper Canvas', founded: 2021, hq: 'Austin, USA',
     useCases: ['Marknadsföringscopy', 'Sociala medier', 'Annonstexter', 'Bloggar', 'Brand voice'],
     ratingCriteria: [
       { label: 'Textkvalitet', score: 8.7 }, { label: 'Hastighet / svar', score: 9.0 },
       { label: 'Pris / prestanda', score: 7.8 }, { label: 'Integrationer', score: 8.5 },
       { label: 'Säkerhet & GDPR', score: 8.4 }, { label: 'Svenska', score: 8.2 },
     ],
-    tags: ['Brand Voice', 'SEO-mode', 'Templates', 'Teams'],
+    tags: ['Brand Voice', 'Canvas', 'Marketing-agenter', 'Teams'],
     pros: ['Konsistent brand voice', 'Många mallar', 'Bra för team'],
     cons: ['Högre pris', 'Smal modell-grund'],
-    offer: { title: 'Jasper 7 dagar gratis', price: 'Gratis · Creator 49 USD/mån', bestFor: 'Marknadsföring' },
+    offer: { title: 'Jasper 7 dagar gratis', price: '7 dagars testperiod · Pro 69 USD/mån', bestFor: 'Marknadsföring' },
     label: 'Bäst för marknadsföring',
   },
   writesonic: {
     logo: 'bg-violet-500',
     fallbackUrl: 'https://writesonic.com',
-    company: 'Writesonic', model: 'Sonic 4', founded: 2020, hq: 'Bangalore, Indien',
+    company: 'Writesonic', model: 'Writesonic (GEO-plattform)', founded: 2020, hq: 'Bangalore, Indien',
     useCases: ['SEO-artiklar', 'Snabb copy', 'Annonser', 'E-post', 'Produktbeskrivningar'],
     ratingCriteria: [
       { label: 'Textkvalitet', score: 8.3 }, { label: 'Hastighet / svar', score: 9.3 },
       { label: 'Pris / prestanda', score: 9.0 }, { label: 'Integrationer', score: 8.2 },
       { label: 'Säkerhet & GDPR', score: 7.8 }, { label: 'Svenska', score: 7.9 },
     ],
-    tags: ['SEO mode', 'Bulk', 'Chatsonic', 'API'],
+    tags: ['GEO-spårning', 'AI-synlighet', 'AI Article Writer', 'Agenter'],
     pros: ['Snabb', 'Bra pris', 'Bulk-funktion för SEO'],
     cons: ['Svenska är ojämn', 'Mindre nyans i text'],
-    offer: { title: 'Gratisplan med 10k ord/mån', price: 'Gratis · Pro 16 USD/mån', bestFor: 'SEO och snabb copy' },
+    offer: { title: 'Gratisplan med 10k ord/mån', price: 'Gratis att börja · Starter 79 USD/mån (årsbetalning)', bestFor: 'SEO och snabb copy' },
     label: 'Bäst för SEO',
   },
   'copy-ai': {
     logo: 'bg-rose-500',
     fallbackUrl: 'https://www.copy.ai',
-    company: 'Copy.ai', model: 'Copy GPT', founded: 2020, hq: 'Memphis, USA',
+    company: 'Copy.ai', model: 'Bygger på modeller från OpenAI, Anthropic och Google', founded: 2020, hq: 'Memphis, USA',
     useCases: ['Sociala medier', 'Säljmejl', 'Annonser', 'Produktbeskrivningar', 'Slogans'],
     ratingCriteria: [
       { label: 'Textkvalitet', score: 8.0 }, { label: 'Hastighet / svar', score: 9.2 },
       { label: 'Pris / prestanda', score: 9.2 }, { label: 'Integrationer', score: 8.0 },
       { label: 'Säkerhet & GDPR', score: 7.6 }, { label: 'Svenska', score: 7.5 },
     ],
-    tags: ['Workflows', 'Templates', 'Brand voice', 'API'],
+    tags: ['Workflows', 'GTM-plattform', 'Brand voice', 'API'],
     pros: ['Många mallar', 'Workflows-automation', 'Lågt instegspris'],
     cons: ['Begränsad svenska', 'Mindre kraftfull modell'],
-    offer: { title: 'Free forever-plan', price: 'Gratis · Pro 36 USD/mån', bestFor: 'Säljteam och social media' },
+    offer: { title: 'Chat-plan 29 USD/mån', price: 'Chat 29 USD/mån · Growth från 1 000 USD/mån', bestFor: 'Säljteam och social media' },
     label: 'Bäst för säljteam',
   },
 
@@ -217,14 +217,14 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'runway-gen-3': {
     logo: 'bg-fuchsia-600',
     ctaName: 'Runway', score: 9.1, fallbackUrl: 'https://runwayml.com',
-    company: 'Runway', model: 'Gen-3 Alpha', founded: 2018, hq: 'New York, USA',
+    company: 'Runway', model: 'Gen-4.5', founded: 2018, hq: 'New York, USA',
     useCases: ['Video & redigering', 'Visuella effekter', 'Filmkonceptarbete', 'Reklamfilm', 'Mode & e-handel'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 9.3 }, { label: 'Promptföljsamhet', score: 8.8 },
       { label: 'Konsistens & rörelse', score: 8.7 }, { label: 'Generationstid', score: 8.5 },
       { label: 'Redigeringsverktyg', score: 9.5 }, { label: 'Stilkontroll', score: 9.2 },
     ],
-    tags: ['Gen-3 Alpha', 'Redigering', 'Effekter', 'Image-to-video'],
+    tags: ['Gen-4.5', 'Redigering', 'Effekter', 'Image-to-video'],
     pros: ['Inbyggd redigeringsstudio', 'Avancerad kamerakontroll', 'Brett ekosystem av effekter'],
     cons: ['Dyrt för längre projekt', 'Mindre stark på text-i-bild'],
     offer: { title: 'Basic gratis', price: 'Gratis · Standard 15 USD/mån', bestFor: 'Video, redigering och effekter' },
@@ -233,33 +233,33 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'pika-labs': {
     logo: 'bg-pink-500',
     ctaName: 'Pika Labs', score: 8.7, fallbackUrl: 'https://pika.art',
-    company: 'Pika', model: 'Pika 2.0', founded: 2023, hq: 'Palo Alto, USA',
+    company: 'Pika', model: 'Pika 2.5', founded: 2023, hq: 'Palo Alto, USA',
     useCases: ['Text-till-video', 'Bild-till-video', 'Sociala medier', 'Animerade memes', 'Produktdemos'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 8.5 }, { label: 'Promptföljsamhet', score: 8.4 },
       { label: 'Konsistens & rörelse', score: 8.0 }, { label: 'Generationstid', score: 9.4 },
       { label: 'Pris / generering', score: 9.0 }, { label: 'Stilkontroll', score: 8.7 },
     ],
-    tags: ['Pika 2.0', 'Text/bild → video', 'Pikaffects', 'Lip sync'],
+    tags: ['Pika 2.5', 'Text/bild → video', 'Pikaffects', 'Lip sync'],
     pros: ['Snabbaste i klassen', 'Roliga effekter (Pikaffects)', 'Lågt pris för premium'],
     cons: ['Mindre filmisk än Runway/Sora', 'Kortare clip-längd'],
-    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Pro 8 USD/mån', bestFor: 'Text- och bild-till-video' },
+    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Basic 8 USD/mån (årsbetalning)', bestFor: 'Text- och bild-till-video' },
     label: 'Bästa pris-prestanda',
   },
   'kling-ai': {
     logo: 'bg-red-500',
     ctaName: 'Kling', score: 9.4, fallbackUrl: 'https://klingai.com',
-    company: 'Kuaishou', model: 'Kling 1.6', founded: 2011, hq: 'Beijing, Kina',
+    company: 'Kuaishou', model: 'Kling 3.0', founded: 2011, hq: 'Beijing, Kina',
     useCases: ['Realistisk AI-video', 'Stiliserade kortvideor', 'Animerade porträtt', 'TikTok/Reels-content', 'Image-to-video'],
     ratingCriteria: [
       { label: 'Visuell realism', score: 9.5 }, { label: 'Promptföljsamhet', score: 9.0 },
       { label: 'Konsistens & rörelse', score: 9.4 }, { label: 'Generationstid', score: 8.8 },
       { label: 'Pris / generering', score: 9.5 }, { label: 'Stilkontroll', score: 9.2 },
     ],
-    tags: ['Kling 1.6', 'Realism', 'Lip sync', 'Long-form'],
+    tags: ['Kling 3.0', 'Realism', 'Lip sync', 'Long-form'],
     pros: ['Marknadens mest realistiska video', 'Lång clip-längd (2 min)', 'Stark image-to-video'],
     cons: ['Engelska prompts ojämn', 'Mindre community utanför Kina'],
-    offer: { title: 'Gratis begränsad', price: 'Gratis · Pro ~10 USD/mån', bestFor: 'Realistisk AI-video' },
+    offer: { title: 'Gratis begränsad', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Realistisk AI-video' },
     label: 'Redaktionens val',
   },
 
@@ -267,14 +267,14 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   midjourney: {
     logo: 'bg-violet-700',
     fallbackUrl: 'https://www.midjourney.com',
-    company: 'Midjourney', model: 'V7', founded: 2021, hq: 'San Francisco, USA',
+    company: 'Midjourney', model: 'V8', founded: 2021, hq: 'San Francisco, USA',
     useCases: ['Konceptkonst', 'Reklamvisualer', 'Bokomslag', 'Mood boards', 'Karaktärsdesign'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 9.7 }, { label: 'Promptföljsamhet', score: 8.8 },
       { label: 'Stilbredd', score: 9.6 }, { label: 'Text-i-bild', score: 8.4 },
       { label: 'Pris / bild', score: 8.6 }, { label: 'Användarvänlighet', score: 8.2 },
     ],
-    tags: ['V7', 'Discord & web', 'Style refs', 'Personalization'],
+    tags: ['V8', 'Discord & web', 'Style refs', 'Personalization'],
     pros: ['Branschens skarpaste bildkvalitet', 'Stilreferenser med --sref', 'Stor estetisk bredd'],
     cons: ['Discord-flöde inlärningströskel', 'Sämre på text i bilden'],
     offer: { title: 'Web-app i basic plan', price: 'Basic 10 USD/mån', bestFor: 'Kreatörer och designers' },
@@ -283,14 +283,14 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'dalle-3': {
     logo: 'bg-emerald-500',
     fallbackUrl: 'https://openai.com/dall-e-3',
-    company: 'OpenAI', model: 'DALL·E 3', founded: 2015, hq: 'San Francisco, USA',
+    company: 'OpenAI', model: 'GPT Image 2.5 (ersätter DALL·E 3)', founded: 2015, hq: 'San Francisco, USA',
     useCases: ['Snabba illustrationer i ChatGPT', 'Bloggbilder', 'Sociala medier', 'Pedagogiska bilder', 'Enkla loggor'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 9.0 }, { label: 'Promptföljsamhet', score: 9.4 },
       { label: 'Stilbredd', score: 8.7 }, { label: 'Text-i-bild', score: 9.0 },
       { label: 'Pris / bild', score: 9.0 }, { label: 'Användarvänlighet', score: 9.5 },
     ],
-    tags: ['DALL·E 3', 'ChatGPT', 'Text i bild', 'API'],
+    tags: ['GPT Image 2.5', 'ChatGPT', 'Text i bild', 'API'],
     pros: ['Enklast att använda', 'Bra på text i bilden', 'Ingår i ChatGPT Plus'],
     cons: ['Smalare stilbredd än MJ', 'Mindre stylekontroll'],
     offer: { title: 'Ingår i ChatGPT Plus', price: 'Plus 20 USD/mån (ChatGPT)', bestFor: 'Bloggare och allmän användning' },
@@ -299,17 +299,17 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'adobe-firefly': {
     logo: 'bg-rose-600',
     ctaName: 'Firefly', fallbackUrl: 'https://www.adobe.com/products/firefly.html',
-    company: 'Adobe', model: 'Firefly Image 3', founded: 1982, hq: 'San José, USA',
+    company: 'Adobe', model: 'Firefly Image 5', founded: 1982, hq: 'San José, USA',
     useCases: ['Kommersiellt säker bildgenerering', 'Photoshop-integration', 'Generative Fill', 'Marknadsföringsmaterial', 'Texteffekter'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 8.7 }, { label: 'Promptföljsamhet', score: 8.6 },
       { label: 'Stilbredd', score: 8.3 }, { label: 'Text-i-bild', score: 8.8 },
       { label: 'Pris / bild', score: 8.7 }, { label: 'Användarvänlighet', score: 9.0 },
     ],
-    tags: ['Firefly Image 3', 'Photoshop', 'Generative Fill', 'Kommersiellt säker'],
+    tags: ['Firefly Image 5', 'Photoshop', 'Generative Fill', 'Kommersiellt säker'],
     pros: ['Kommersiellt trygg (tränad på licensierat material)', 'Djup Adobe-integration', 'Bra på text i bilden'],
     cons: ['Smalare estetik än Midjourney', 'Kräver Adobe-konto för full nytta'],
-    offer: { title: 'Gratis med Adobe-konto', price: 'Gratis · Firefly 9 USD/mån', bestFor: 'Designers i Adobe-ekosystemet' },
+    offer: { title: 'Firefly Standard', price: 'Gratis · Standard 10,98 EUR/mån', bestFor: 'Designers i Adobe-ekosystemet' },
     label: 'Bäst för kommersiell trygghet',
   },
   // Domän-fix: explicit slugnyckel så exakt-matchning vinner före fuzzy-loopen
@@ -352,17 +352,17 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   ideogram: {
     logo: 'bg-violet-600',
     ctaName: 'Ideogram', fallbackUrl: 'https://ideogram.ai',
-    company: 'Ideogram', model: 'Ideogram 3.0', founded: 2022, hq: 'Toronto, Kanada',
+    company: 'Ideogram', model: 'Ideogram 4.0', founded: 2022, hq: 'Toronto, Kanada',
     useCases: ['Affischer och omslag', 'Logotyputkast', 'Bilder där texten måste bli rätt', 'Tryck på kläder', 'Annonser med rubrik i bilden'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 8.6 }, { label: 'Promptföljsamhet', score: 9.0 },
       { label: 'Stilbredd', score: 8.4 }, { label: 'Text-i-bild', score: 9.6 },
       { label: 'Pris / bild', score: 8.8 }, { label: 'Användarvänlighet', score: 9.0 },
     ],
-    tags: ['Ideogram 3.0', 'Typografi', 'Magic Prompt', 'Gratisnivå'],
+    tags: ['Ideogram 4.0', 'Typografi', 'Magic Prompt', 'Gratisnivå'],
     pros: ['Bäst i klassen på att stava rätt inuti bilden', 'Magic Prompt fyller i det du glömde skriva', 'Gratisnivå utan kortuppgift'],
     cons: ['Smalare fotorealism än Midjourney', 'Färre verktyg för efterredigering', 'Mindre community och färre färdiga stilar'],
-    offer: { title: 'Gratis att testa', price: 'Gratis · Basic 8 USD/mån', bestFor: 'Allt där text ska in i bilden' },
+    offer: { title: 'Gratis att testa', price: 'Gratis · Plus 20 USD/mån', bestFor: 'Allt där text ska in i bilden' },
     label: 'Bäst på text i bild',
   },
   'playground-ai': {
@@ -376,17 +376,17 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   flux: {
     logo: 'bg-zinc-800',
     ctaName: 'Flux', fallbackUrl: 'https://bfl.ai',
-    company: 'Black Forest Labs', model: 'FLUX.1.1 Pro', founded: 2024, hq: 'Freiburg, Tyskland',
+    company: 'Black Forest Labs', model: 'FLUX 3', founded: 2024, hq: 'Freiburg, Tyskland',
     useCases: ['Fotorealistiska porträtt', 'Bildgenerering via API', 'Egen hosting', 'Produktvisualisering', 'Finetuning på eget material'],
     ratingCriteria: [
       { label: 'Visuell kvalitet', score: 9.3 }, { label: 'Promptföljsamhet', score: 9.2 },
       { label: 'Stilbredd', score: 8.8 }, { label: 'Text-i-bild', score: 8.9 },
       { label: 'Pris / bild', score: 9.0 }, { label: 'Användarvänlighet', score: 7.4 },
     ],
-    tags: ['FLUX.1.1 Pro', 'API', 'Öppna vikter', 'Finetuning'],
+    tags: ['FLUX 3', 'API', 'Öppna vikter', 'Finetuning'],
     pros: ['Bland det starkaste som finns på fotorealism och hud', 'Öppna vikter i schnell och dev — kör lokalt om du vill', 'Betalas per bild via API i stället för abonnemang'],
     cons: ['Knappt något eget gränssnitt — går via andra tjänster', 'Kräver teknisk vana', 'Pro-modellen är stängd trots ryktet om öppenhet'],
-    offer: { title: 'Betala per bild', price: 'schnell gratis · Pro ca 0,05 USD/bild', bestFor: 'Utvecklare och fotorealism' },
+    offer: { title: 'Betala per bild', price: 'Betala per bild · FLUX.2 [pro] från 0,03 USD/megapixel', bestFor: 'Utvecklare och fotorealism' },
     label: 'Bäst fotorealism',
   },
   'stable-diffusion': {
@@ -402,7 +402,7 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['SD 3.5', 'Öppna vikter', 'LoRA', 'ControlNet'],
     pros: ['Gratis och obegränsat när det körs på egen hårdvara', 'Störst ekosystem av modeller, LoRA och tillägg', 'Full kontroll — ControlNet styr kompositionen på pixelnivå'],
     cons: ['Kräver eget grafikkort och en del handpåläggning', 'Basmodellen är svagare än Midjourney direkt ur lådan', 'Licensen för kommersiellt bruk skiljer sig mellan versionerna'],
-    offer: { title: 'Öppna vikter', price: 'Gratis lokalt · API från 0,03 USD/bild', bestFor: 'Den som vill äga hela kedjan' },
+    offer: { title: 'Brand Studio', price: 'Gratis · Brand Studio 19 USD/mån', bestFor: 'Den som vill äga hela kedjan' },
     label: 'Bäst för egen kontroll',
   },
 
@@ -410,30 +410,30 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'suno-ai': {
     logo: 'bg-amber-600',
     fallbackUrl: 'https://suno.com',
-    company: 'Suno', model: 'V4', founded: 2022, hq: 'Cambridge, USA',
+    company: 'Suno', model: 'v6', founded: 2022, hq: 'Cambridge, USA',
     useCases: ['Demos för låtskrivare', 'Podcast-intros', 'Reklamjinglar', 'TikTok-musik', 'Soundtracks'],
     ratingCriteria: [
       { label: 'Ljudkvalitet', score: 9.0 }, { label: 'Stilbredd', score: 9.2 },
       { label: 'Lyrik-AI', score: 8.6 }, { label: 'Hastighet', score: 9.5 },
       { label: 'Pris / spår', score: 8.8 }, { label: 'Användarvänlighet', score: 9.4 },
     ],
-    tags: ['V4', 'Custom lyrics', '4 min spår', 'Stems-export'],
+    tags: ['v6', 'Custom lyrics', '4 min spår', 'Stems-export'],
     pros: ['Snabbast i klassen', 'Bra på lyrik', 'Stems för efterproduktion'],
     cons: ['Mindre nyans än Udio', 'Kommersiella rättigheter kräver Pro'],
-    offer: { title: '50 spår gratis varje månad', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Musiker och content-skapare' },
+    offer: { title: '50 spår gratis varje månad', price: 'Gratis · Pro 8 USD/mån', bestFor: 'Musiker och content-skapare' },
     label: 'Redaktionens val',
   },
   udio: {
     logo: 'bg-cyan-600',
     ctaName: 'Udio', fallbackUrl: 'https://www.udio.com',
-    company: 'Udio', model: 'Udio v1.5', founded: 2023, hq: 'New York, USA',
+    company: 'Udio', model: 'Udio', founded: 2023, hq: 'New York, USA',
     useCases: ['Studiokvalitativa låtar', 'Detaljerad genrekontroll', 'Vokala covers', 'Soundtracks', 'Remixer'],
     ratingCriteria: [
       { label: 'Ljudkvalitet', score: 9.4 }, { label: 'Stilbredd', score: 8.9 },
       { label: 'Lyrik-AI', score: 8.8 }, { label: 'Hastighet', score: 8.7 },
       { label: 'Pris / spår', score: 8.5 }, { label: 'Användarvänlighet', score: 9.0 },
     ],
-    tags: ['Udio v1.5', 'Hög ljudkvalitet', 'Stems', 'Inpainting'],
+    tags: ['Voice Control', 'Hög ljudkvalitet', 'Stems', 'Inpainting'],
     pros: ['Marknadens skarpaste ljudkvalitet', 'Fin genrekontroll', 'Stark på vokaler'],
     cons: ['Långsammare än Suno', 'Snålare gratisnivå'],
     offer: { title: '10 låtar gratis per dag', price: 'Gratis · Standard 10 USD/mån', bestFor: 'Musiker som prioriterar ljudkvalitet' },
@@ -449,10 +449,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
       { label: 'Voice cloning', score: 9.6 }, { label: 'Hastighet', score: 9.0 },
       { label: 'Pris / minut', score: 8.0 }, { label: 'API & integrationer', score: 9.3 },
     ],
-    tags: ['v3', 'Voice clone', '32 språk', 'Dubbing'],
+    tags: ['v3', 'Voice clone', '74 språk', 'Dubbing'],
     pros: ['Marknadens mest naturliga röster', 'Stark voice cloning', 'Utmärkt svenska'],
     cons: ['Pris skalar snabbt', 'Voice cloning kräver verifiering'],
-    offer: { title: '10k tecken gratis varje månad', price: 'Gratis · Starter 5 USD/mån', bestFor: 'Audiobooks och narration' },
+    offer: { title: '10k tecken gratis varje månad', price: 'Gratis · Starter 6 USD/mån', bestFor: 'Audiobooks och narration' },
     label: 'Bäst för svensk voice',
   },
 
@@ -460,14 +460,14 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'cursor-ai': {
     logo: 'bg-zinc-900',
     fallbackUrl: 'https://www.cursor.com',
-    company: 'Anysphere', model: 'Cursor (uses Claude 4.7 / GPT-5)', founded: 2022, hq: 'San Francisco, USA',
+    company: 'Anysphere', model: 'Cursor Composer', founded: 2022, hq: 'San Francisco, USA',
     useCases: ['Daglig kodning', 'Refactoring', 'Test-skrivning', 'Bug-fixing', 'Inlärning av nya kodbaser'],
     ratingCriteria: [
       { label: 'Kodkvalitet', score: 9.6 }, { label: 'Kontextförståelse', score: 9.5 },
       { label: 'Hastighet', score: 9.2 }, { label: 'Editor-integration', score: 9.7 },
       { label: 'Pris / prestanda', score: 8.6 }, { label: 'Modellval', score: 9.5 },
     ],
-    tags: ['Composer', 'Tab', 'Multi-file edits', 'MCP'],
+    tags: ['Composer', 'Tab', 'Cloud agents', 'MCP'],
     pros: ['Branschens skarpaste AI-editor', 'Bra context-hantering', 'Stöd för flera modeller'],
     cons: ['Pris högt för soloutvecklare', 'Bara desktop'],
     offer: { title: '14 dagar Pro gratis', price: 'Gratis · Pro 20 USD/mån', bestFor: 'Daglig professionell kodning' },
@@ -493,33 +493,33 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   n8n: {
     logo: 'bg-rose-600',
     ctaName: 'n8n', score: 8.7, fallbackUrl: 'https://n8n.io',
-    company: 'n8n', model: 'n8n platform', founded: 2019, hq: 'Berlin, Tyskland',
+    company: 'n8n', model: 'n8n (fair-code, kör dina egna modeller)', founded: 2019, hq: 'Berlin, Tyskland',
     useCases: ['Self-hosted automation', 'AI-pipelines on-prem', 'Webhook-orkestrering', 'Data-ETL', 'Cron-baserade jobs'],
     ratingCriteria: [
       { label: 'Flexibilitet', score: 9.4 }, { label: 'Self-host', score: 9.7 },
       { label: 'AI-noder', score: 9.0 }, { label: 'Integrationer', score: 8.3 },
       { label: 'Community', score: 9.0 }, { label: 'Användarvänlighet', score: 7.5 },
     ],
-    tags: ['Open source', 'Self-host', 'AI-noder', 'Kod-noder'],
+    tags: ['Fair-code', 'Self-host', 'AI-noder', 'Kod-noder'],
     pros: ['Fullt open source', 'Kan självhostas', 'Bra för utvecklare'],
     cons: ['Kräver tekniskt kunnande', 'Mindre polerat UI än Zapier'],
-    offer: { title: 'Self-host gratis', price: 'Gratis · Cloud 20 EUR/mån', bestFor: 'Tekniska team som vill äga data' },
+    offer: { title: 'Self-host gratis', price: 'Gratis självhostad · Starter 20 EUR/mån (årsbetalning)', bestFor: 'Tekniska team som vill äga data' },
     label: 'Bäst open source',
   },
   'zapier-ai': {
     logo: 'bg-orange-600',
     ctaName: 'Zapier', score: 8.9, fallbackUrl: 'https://zapier.com',
-    company: 'Zapier', model: 'Zapier platform', founded: 2011, hq: 'Sunnyvale, USA',
+    company: 'Zapier', model: 'Zapier Agents / AI by Zapier (ingen modell anges)', founded: 2011, hq: 'Sunnyvale, USA',
     useCases: ['SaaS-integration', 'AI Actions', 'Lead-flöden', 'CRM-automation', 'Notisflöden'],
     ratingCriteria: [
       { label: 'Integrationsbredd', score: 9.8 }, { label: 'Användarvänlighet', score: 9.4 },
       { label: 'Pris / prestanda', score: 7.8 }, { label: 'AI-stöd', score: 8.8 },
       { label: 'Stabilitet', score: 9.2 }, { label: 'Dokumentation', score: 9.0 },
     ],
-    tags: ['7000+ appar', 'AI Actions', 'Tables', 'Interfaces'],
+    tags: ['9000+ appar', 'Agents', 'Tables', 'Forms'],
     pros: ['Flest integrationer på marknaden', 'Enkelt att komma igång', 'AI Actions inbyggt'],
     cons: ['Dyrt för stora volymer', 'Mindre flexibelt än Make'],
-    offer: { title: '100 tasks gratis/mån', price: 'Gratis · Starter 20 USD/mån', bestFor: 'Snabb SaaS-integration' },
+    offer: { title: '100 tasks gratis/mån', price: 'Gratis · Professional 29,99 USD/mån (19,99 USD/mån vid årsbetalning)', bestFor: 'Snabb SaaS-integration' },
     label: 'Mest använda',
   },
   'power-automate': {
@@ -567,8 +567,8 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Human-in-the-loop', 'AI-flöden', 'Approval', 'Modern UI'],
     pros: ['Pausar för mänsklig granskning', 'Modernt UI', 'Bra för kritiska flöden'],
     cons: ['Färre integrationer än Zapier', 'Tidig produkt'],
-    offer: { title: '200 steg gratis/mån', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Kritiska AI-flöden med kontroll' },
-    label: 'Bäst för human-in-the-loop',
+    offer: { title: 'Tjänsten är nedlagd', price: 'Nedlagd', bestFor: 'Kritiska AI-flöden med kontroll' },
+    label: 'Nedlagd',
   },
   activepieces: {
     logo: 'bg-fuchsia-600',
@@ -617,23 +617,23 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Agent', 'Multi-file', 'Cascade', 'Flow-mode'],
     pros: ['Cursor-rival med flow-fokus', 'Stark agent-mode', 'Snabb autonom redigering'],
     cons: ['Nyare än Cursor', 'Mindre community ännu'],
-    offer: { title: 'Gratisplan tillgänglig', price: 'Gratis · Pro 15 USD/mån', bestFor: 'Agentisk kodning' },
-    label: 'Bäst utmanare',
+    offer: { title: 'Uppgått i Devin (Cognition)', price: 'Nedlagd', bestFor: 'Agentisk kodning' },
+    label: 'Nedlagd',
   },
   tabnine: {
     logo: 'bg-slate-700',
     ctaName: 'Tabnine', score: 8.4, fallbackUrl: 'https://www.tabnine.com',
-    company: 'Tabnine', model: 'Tabnine AI', founded: 2013, hq: 'Tel Aviv, Israel',
+    company: 'Tabnine', model: 'Bygger på ledande modeller från Anthropic, OpenAI, Google, Meta och Mistral', founded: 2013, hq: 'Tel Aviv, Israel',
     useCases: ['Enterprise med privacy-krav', 'GDPR-känslig kodning', 'Reglerade branscher', 'On-prem AI-assistans', 'Offline-utveckling'],
     ratingCriteria: [
       { label: 'Privacy', score: 9.8 }, { label: 'On-prem stöd', score: 9.6 },
       { label: 'Kodkvalitet', score: 8.3 }, { label: 'Editor-integration', score: 9.0 },
       { label: 'Pris / prestanda', score: 8.0 }, { label: 'Modellval', score: 7.8 },
     ],
-    tags: ['Privacy-first', 'On-prem', 'Enterprise', 'Lokal modell'],
+    tags: ['Privacy-first', 'On-prem', 'Air-gapped', 'MCP'],
     pros: ['Kan köras lokalt eller on-prem', 'Strikt privacy', 'Enterprise-fokus'],
     cons: ['Mindre kraftfull än Cursor/Copilot', 'Lägre modell-kvalitet'],
-    offer: { title: 'Gratis Basic', price: 'Gratis · Pro 12 USD/mån', bestFor: 'Enterprise med strikta datakrav' },
+    offer: { title: 'Endast företagsplaner', price: 'Code Assistant 39 USD/användare/mån · Agentic 59 USD/användare/mån (årsbetalning)', bestFor: 'Enterprise med strikta datakrav' },
     label: 'Bäst för privacy',
   },
   codeium: {
@@ -649,12 +649,12 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Gratis', '70+ språk', '40+ IDE:er', 'Autocomplete'],
     pros: ['Generös gratisversion', 'Brett språkstöd', 'Snabb autocomplete'],
     cons: ['Mindre agentisk än Cursor/Windsurf', 'Pro-features är begränsade'],
-    offer: { title: 'Helt gratis för individer', price: 'Gratis · Teams 12 USD/mån', bestFor: 'Soloutvecklare och hobbyprojekt' },
-    label: 'Bäst gratis',
+    offer: { title: 'Uppgått i Devin (Cognition)', price: 'Nedlagd', bestFor: 'Soloutvecklare och hobbyprojekt' },
+    label: 'Nedlagd',
   },
   'claude-code': {
     logo: 'bg-orange-600',
-    ctaName: 'Claude Code', score: 9.3, fallbackUrl: 'https://claude.com/product/claude-code',
+    ctaName: 'Claude Code', score: 9.5, fallbackUrl: 'https://claude.com/product/claude-code',
     company: 'Anthropic', model: 'Claude Opus 5 / Sonnet 5', founded: 2021, hq: 'San Francisco, USA',
     tagline: 'Kodagent som tar hela uppgiften, inte nästa rad',
     useCases: ['Refaktorering över många filer', 'Migreringar', 'Buggsökning med reproduktion', 'Ärende till pull request', 'Sätta sig in i okänd kodbas'],
@@ -701,7 +701,7 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Browser-IDE', 'Agent', 'Deploy', 'Nybörjarvänligt'],
     pros: ['Bygg och deploya i webbläsaren', 'Agent-funktion', 'Lätt att komma igång'],
     cons: ['Begränsat för stora projekt', 'Pris skalar snabbt'],
-    offer: { title: 'Gratisplan', price: 'Gratis · Core 25 USD/mån', bestFor: 'Prototyper och nybörjare' },
+    offer: { title: 'Gratisplan', price: 'Free Mode · Core 20 USD/mån', bestFor: 'Prototyper och nybörjare' },
     label: 'Bäst för prototyper',
   },
   'jetbrains-ai': {
@@ -714,7 +714,7 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
       { label: 'JVM-stöd', score: 9.5 }, { label: 'Kodkvalitet', score: 8.7 },
       { label: 'Pris / prestanda', score: 8.5 }, { label: 'Modellval', score: 8.0 },
     ],
-    tags: ['IntelliJ', 'PyCharm', 'WebStorm', 'JetBrains-integration'],
+    tags: ['IntelliJ', 'Junie-agent', 'AI-krediter', 'JetBrains-integration'],
     pros: ['Djup IDE-integration', 'Bra refactoring', 'Skarp för JVM-språk'],
     cons: ['Kräver JetBrains-licens', 'Bara i JetBrains-editorer'],
     offer: { title: '7 dagar gratis', price: 'AI Pro 10 USD/mån', bestFor: 'JetBrains-användare' },
@@ -733,7 +733,7 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Hela kodbasen', 'Cross-file', 'Enterprise', 'Code search'],
     pros: ['Bäst på stora kodbaser', 'Cross-file kontext', 'Enterprise-säkerhet'],
     cons: ['Setup-tid för enterprise', 'Mindre snabbt än Copilot'],
-    offer: { title: 'Gratis Free-plan', price: 'Gratis · Pro 9 USD/mån', bestFor: 'Stora monorepos' },
+    offer: { title: 'Endast Enterprise', price: 'Endast Enterprise – från 16 000 USD/år', bestFor: 'Stora monorepos' },
     label: 'Bäst för stora repos',
   },
   pieces: {
@@ -774,14 +774,14 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   'github-copilot': {
     logo: 'bg-indigo-700',
     fallbackUrl: 'https://github.com/features/copilot',
-    company: 'GitHub (Microsoft)', model: 'Copilot (GPT-5 / Claude 4)', founded: 2008, hq: 'San Francisco, USA',
+    company: 'GitHub (Microsoft)', model: 'GPT-5.6 / Claude Opus / Gemini 3.8 (modellval)', founded: 2008, hq: 'San Francisco, USA',
     useCases: ['Inline-autocomplete', 'PR-recensioner', 'Tester', 'Dokumentation', 'CLI-arbetsflöden'],
     ratingCriteria: [
       { label: 'Kodkvalitet', score: 9.2 }, { label: 'Kontextförståelse', score: 9.0 },
       { label: 'Hastighet', score: 9.4 }, { label: 'Editor-integration', score: 9.6 },
       { label: 'Pris / prestanda', score: 9.0 }, { label: 'Modellval', score: 9.0 },
     ],
-    tags: ['Inline', 'Chat', 'PR review', 'Enterprise'],
+    tags: ['Inline', 'Coding agent', 'PR review', 'MCP'],
     pros: ['Bred IDE-integration', 'Bästa enterprise-stödet', 'Konkurrenskraftigt pris'],
     cons: ['Mindre agentisk än Cursor', 'Subtila skillnader på modeller'],
     offer: { title: 'Free tier för individer', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Team och enterprise' },
@@ -1175,7 +1175,7 @@ function OfferBanner({
             </div>
           </div>
         </div>
-        <AffiliateBtn affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} />
+        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} />
       </div>
     </div>
   );
@@ -1456,7 +1456,7 @@ function BottomCta({
             </p>
           </div>
         </div>
-        <AffiliateBtn affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} size="lg" />
+        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} size="lg" />
       </div>
     </section>
   );
@@ -1549,7 +1549,7 @@ function SidebarOffer({
         {profile.offer.title}
       </div>
       <div className="mt-3">
-        <AffiliateBtn affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} fullWidth />
+        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} fullWidth />
       </div>
     </div>
   );
@@ -1627,13 +1627,17 @@ function AffiliateBtn({
   label,
   size = 'md',
   fullWidth = false,
+  discontinued = false,
 }: {
   affiliateUrl: string | null | undefined;
   fallbackUrl: string | null | undefined;
   label: string;
   size?: 'md' | 'lg';
   fullWidth?: boolean;
+  /** Nedlagd tjänst — ingen CTA alls, varken länk eller dött <span>. */
+  discontinued?: boolean;
 }) {
+  if (discontinued) return null;
   const cls =
     'inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 font-bold uppercase tracking-wider text-white transition-colors hover:bg-indigo-700 ' +
     (size === 'lg' ? 'px-6 py-3 text-sm' : 'px-5 py-2.5 text-sm') +

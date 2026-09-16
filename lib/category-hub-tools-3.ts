@@ -8,7 +8,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Perplexity",
     "fallbackUrl": "https://www.perplexity.ai",
     "company": "Perplexity AI",
-    "model": "Perplexity sonar-pro",
+    "model": "Perplexity Sonar Pro",
     "founded": 2022,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -72,7 +72,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Microsoft Copilot",
     "fallbackUrl": "https://copilot.microsoft.com",
     "company": "Microsoft",
-    "model": "GPT-4o via Azure OpenAI",
+    "model": "GPT-5.X via Microsoft (senaste OpenAI-modellerna)",
     "founded": 2023,
     "hq": "Redmond, USA",
     "useCases": [
@@ -125,7 +125,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "offer": {
       "title": "Microsoft Copilot",
-      "price": "Gratis · Microsoft 365 Copilot 30 USD/användare/mån",
+      "price": "Gratis Copilot Chat · Copilot Business 18 USD/användare/mån (årsvis)",
       "bestFor": "Organisationer som arbetar dagligen i Microsoft 365 och Teams"
     },
     "label": "Bäst för företag",
@@ -200,7 +200,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Mistral Le Chat",
     "fallbackUrl": "https://chat.mistral.ai",
     "company": "Mistral AI",
-    "model": "Mistral Large 2",
+    "model": "Mistral Medium 3.5 (Mistral Vibe, tidigare Le Chat)",
     "founded": 2023,
     "hq": "Paris, Frankrike",
     "useCases": [
@@ -252,8 +252,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Svenska svar är korrekta men ibland något stela"
     ],
     "offer": {
-      "title": "Le Chat Pro",
-      "price": "Gratis · Pro 14,99 EUR/mån",
+      "title": "Mistral Vibe Pro (tidigare Le Chat)",
+      "price": "Gratis · Pro 14,99 USD/mån",
       "bestFor": "Europeiska företag och utvecklare med höga krav på dataskydd och öppen infrastruktur"
     },
     "label": "Bäst för GDPR",
@@ -264,7 +264,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "DeepSeek",
     "fallbackUrl": "https://www.deepseek.com",
     "company": "DeepSeek",
-    "model": "DeepSeek-V3",
+    "model": "DeepSeek-V4-Pro",
     "founded": 2023,
     "hq": "Hangzhou, Kina",
     "useCases": [
@@ -317,7 +317,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "offer": {
       "title": "DeepSeek",
-      "price": "Gratis webbgränssnitt · API från 0,27 USD per miljon tokens",
+      "price": "Gratis webbgränssnitt · API från 0,15 USD per miljon tokens",
       "bestFor": "Utvecklare och forskare som söker maximal prestanda per spenderad krona på tekniska uppgifter"
     },
     "label": "",
@@ -328,7 +328,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Grok",
     "fallbackUrl": "https://grok.com",
     "company": "xAI",
-    "model": "Grok-2",
+    "model": "Grok 4.6",
     "founded": 2023,
     "hq": "Austin, USA",
     "useCases": [
@@ -456,7 +456,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Murf AI",
     "fallbackUrl": "https://murf.ai",
     "company": "Murf AI",
-    "model": "Murf Studio v4",
+    "model": "Murf Studio",
     "founded": 2020,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -508,8 +508,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Exportformat är färre än hos konkurrenterna"
     ],
     "offer": {
-      "title": "Business",
-      "price": "Gratis · Pro 29 USD/mån",
+      "title": "Murf Creator",
+      "price": "Gratis · Creator 19 USD/mån (årsbetalning)",
       "bestFor": "Företagsteam som producerar utbildnings- och presentationsmaterial"
     },
     "label": "Bäst för företag",
@@ -520,7 +520,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Speechify",
     "fallbackUrl": "https://speechify.com",
     "company": "Speechify",
-    "model": "Speechify Studio 2.0",
+    "model": "Speechify Studio",
     "founded": 2017,
     "hq": "Los Angeles, USA",
     "useCases": [
@@ -573,7 +573,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "offer": {
       "title": "Premium",
-      "price": "Gratis · Premium 139 USD/år",
+      "price": "Gratis · Premium 29 USD/mån",
       "bestFor": "Privatpersoner och studenter som vill ha text uppläst effektivt"
     },
     "label": "Bäst för privatpersoner",
@@ -636,11 +636,11 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Prisplaner kan vara svåra att jämföra utan att räkna teckenvolymer noga"
     ],
     "offer": {
-      "title": "Creator",
-      "price": "Gratis · Creator 31 USD/mån",
+      "title": "Tjänsten är nedlagd",
+      "price": "Nedlagd",
       "bestFor": "Podcastproducenter och utvecklare som behöver API-access"
     },
-    "label": "Bäst API",
+    "label": "Nedlagd",
     "score": 9
   },
   "resemble-ai": {
@@ -648,7 +648,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Resemble AI",
     "fallbackUrl": "https://www.resemble.ai",
     "company": "Resemble AI",
-    "model": "Resemble Neural v3",
+    "model": "Chatterbox",
     "founded": 2019,
     "hq": "Toronto, Kanada",
     "useCases": [
@@ -700,8 +700,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Inlärningskurvan är brant för användare utan teknisk bakgrund"
     ],
     "offer": {
-      "title": "Growth",
-      "price": "Gratis trial · Growth 99 USD/mån",
+      "title": "Resemble Team",
+      "price": "Gratis · Team 350 USD/mån",
       "bestFor": "Spelutvecklare och företag som bygger röstdrivna applikationer"
     },
     "label": "Bäst voice cloning",
@@ -968,7 +968,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Descript",
     "fallbackUrl": "https://www.descript.com",
     "company": "Descript Inc.",
-    "model": "Descript AI",
+    "model": "Underlord",
     "founded": 2017,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -1020,8 +1020,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Svenska transkriberingar innehåller fler fel än engelska"
     ],
     "offer": {
-      "title": "Descript Pro",
-      "price": "Gratis · Pro 24 USD/mån",
+      "title": "Descript Creator",
+      "price": "Gratis · Creator 24 USD/mån (årsbetalning)",
       "bestFor": "Podcastare som vill redigera ljud som ett textdokument"
     },
     "label": "Redaktionens val",
@@ -1030,9 +1030,9 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
   "riverside-fm": {
     "logo": "bg-teal-500",
     "ctaName": "Riverside.fm",
-    "fallbackUrl": "https://riverside.fm",
+    "fallbackUrl": "https://riverside.com",
     "company": "Riverside.fm Ltd.",
-    "model": "Riverside AI Studio",
+    "model": "Riverside AI Co-Creator",
     "founded": 2019,
     "hq": "Tel Aviv, Israel",
     "useCases": [
@@ -1084,8 +1084,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "AI-transkriberingsmodulen ingår inte i grundplanen"
     ],
     "offer": {
-      "title": "Riverside Standard",
-      "price": "Gratis · Standard 15 USD/mån",
+      "title": "Riverside Pro",
+      "price": "Gratis · Pro 29 USD/mån",
       "bestFor": "Podcastare med distansintervjuer som kräver tillförlitlig inspelningskvalitet"
     },
     "label": "",
@@ -1222,9 +1222,9 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
   "podcastle": {
     "logo": "bg-indigo-600",
     "ctaName": "Podcastle",
-    "fallbackUrl": "https://podcastle.ai",
+    "fallbackUrl": "https://async.com",
     "company": "Podcastle Inc.",
-    "model": "Podcastle AI",
+    "model": "Async (tidigare Podcastle)",
     "founded": 2019,
     "hq": "Los Angeles, USA",
     "useCases": [
@@ -1276,8 +1276,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Exportalternativ för avancerade format som multitrack AIFF är begränsade"
     ],
     "offer": {
-      "title": "Podcastle Storyteller",
-      "price": "Gratis · Storyteller 23,99 USD/mån",
+      "title": "Async Pro (tidigare Podcastle)",
+      "price": "Gratis · Pro 39,99 USD/mån (23,99 USD/mån vid årsbetalning)",
       "bestFor": "Nybörjare som vill producera podcast utan att installera programvara"
     },
     "label": "",
@@ -3144,7 +3144,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Khan Academy AI",
     "fallbackUrl": "https://www.khanacademy.org",
     "company": "Khan Academy",
-    "model": "GPT-4o (anpassad)",
+    "model": "Bygger på flera AI-modeller (leverantören anger inte vilken)",
     "founded": 2008,
     "hq": "Mountain View, USA",
     "useCases": [
@@ -3196,8 +3196,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "AI-förklaringarna kan ibland vara alltför ordrika för elever med lässvårigheter"
     ],
     "offer": {
-      "title": "Khan Academy Gratis",
-      "price": "Gratis · Inga betalplaner för privatpersoner",
+      "title": "Khan Academy (innehåll gratis, AI via Khanmigo)",
+      "price": "Gratis innehållsbibliotek · AI-handledningen kräver betald Khanmigo",
       "bestFor": "Grundskole- och gymnasieelever som vill träna matematik och naturvetenskap på egen hand"
     },
     "label": "Redaktionens val",
@@ -3208,7 +3208,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Duolingo AI",
     "fallbackUrl": "https://www.duolingo.com",
     "company": "Duolingo",
-    "model": "GPT-4 (integrerad)",
+    "model": "Bygger på generativ AI (ursprungligen lanserad med GPT-4; nuvarande modell anges inte)",
     "founded": 2011,
     "hq": "Pittsburgh, USA",
     "useCases": [
@@ -3272,7 +3272,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Coursera AI",
     "fallbackUrl": "https://www.coursera.org",
     "company": "Coursera",
-    "model": "GPT-4 Turbo (anpassad)",
+    "model": "Bygger på generativ AI (leverantören anger inte vilken modell)",
     "founded": 2012,
     "hq": "Mountain View, USA",
     "useCases": [
@@ -3325,7 +3325,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     ],
     "offer": {
       "title": "Coursera Plus",
-      "price": "Gratis (enstaka kurser) · Plus 59 USD/mån",
+      "price": "Gratis (enstaka kurser) · Plus 59 USD/mån · 399 USD/år",
       "bestFor": "Högskolestudenter och yrkesverksamma som söker erkända certifieringar med AI-stöd"
     },
     "label": "",
@@ -3340,11 +3340,11 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "founded": 2018,
     "hq": "Austin, USA",
     "useCases": [
-      "Problemlösning och kritiskt tänkande för barn 6–14 år",
+      "Matematik för barn 5–11 år (räkning, addition, subtraktion, multiplikation, division, bråk)",
+      "Algebraiskt tänkande på lågstadienivå",
       "Matematisk logik via interaktiva simuleringsspel",
-      "Samarbetsövningar i realtid med andra elever",
-      "Adaptiva utmaningar som skalas med elevens nivå",
-      "Föräldrarapporter om kognitiv utveckling"
+      "Adaptiva utmaningar som skalas med barnets nivå",
+      "Föräldrarapporter om matematisk utveckling"
     ],
     "ratingCriteria": [
       {
@@ -3373,10 +3373,10 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       }
     ],
     "tags": [
-      "Kritiskt tänkande",
       "Matematik",
-      "Barn",
-      "Adaptivt lärande"
+      "Barn 5–11 år",
+      "Adaptivt lärande",
+      "Handledning"
     ],
     "pros": [
       "Unikt fokus på problemlösning och beslutsfattande snarare än memanpassning",
@@ -3388,9 +3388,9 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Ingen svenska i gränssnittet och inget innehåll anpassat till svenska läroplanen"
     ],
     "offer": {
-      "title": "Synthesis Tutor",
-      "price": "Gratis (begränsat) · 35 USD/mån",
-      "bestFor": "Föräldrar och skolor som vill stärka barns logiska tänkande och matematiska resonemang"
+      "title": "Synthesis Tutor — ingen bestående gratisnivå",
+      "price": "7 dagars gratis provperiod · 35 USD/mån (ord. 45 USD/mån) · Årsplan 25 USD/mån",
+      "bestFor": "Föräldrar och skolor som vill träna matematik för barn 5–11 år"
     },
     "label": "",
     "score": 8.3
@@ -3400,7 +3400,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Khanmigo",
     "fallbackUrl": "https://www.khanmigo.ai",
     "company": "Khan Academy",
-    "model": "GPT-4o (anpassad med guardrails)",
+    "model": "Bygger på OpenAI:s modeller (exakt version anges inte officiellt)",
     "founded": 2023,
     "hq": "Mountain View, USA",
     "useCases": [
@@ -3452,8 +3452,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Gränssnittet och handledningsspråket är engelska, svenska saknas"
     ],
     "offer": {
-      "title": "Khanmigo för elever & lärare",
-      "price": "9 USD/mån (elev) · Gratis för skolor via ansökan",
+      "title": "Khanmigo — ingen gratisnivå för elever",
+      "price": "4 USD/mån · 44 USD/år (privatperson) · Gratis för lärare",
       "bestFor": "Skolor och lärare som vill erbjuda etisk AI-handledning med inbyggd pedagogisk säkerhet"
     },
     "label": "Redaktionens val",
@@ -3526,9 +3526,9 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
   "socratic": {
     "logo": "bg-amber-500",
     "ctaName": "Socratic",
-    "fallbackUrl": "https://socratic.org",
+    "fallbackUrl": "https://lens.google/#homework",
     "company": "Google",
-    "model": "Gemini (integrerad)",
+    "model": "Google Lens läxhjälp (den fristående Socratic-appen är nedlagd)",
     "founded": 2013,
     "hq": "Mountain View, USA",
     "useCases": [
@@ -3580,9 +3580,9 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Ingen lärarintegration eller möjlighet att spåra elevframsteg"
     ],
     "offer": {
-      "title": "Socratic by Google",
+      "title": "Socratic (nu en funktion i Google Lens)",
       "price": "Gratis",
-      "bestFor": "Gymnasieelever som snabbt behöver en tydlig förklaring till en specifik uppgift eller läroboksfråga"
+      "bestFor": "Gymnasieelever som fotograferar en uppgift — funktionen ligger numera i Google Lens, inte i en egen Socratic-app"
     },
     "label": "",
     "score": 8.7
@@ -3644,8 +3644,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Djupare förklaringar och animerade lösningssteg kräver Plus-prenumeration"
     ],
     "offer": {
-      "title": "Photomath Free / Plus",
-      "price": "Gratis · Plus 9,99 USD/mån",
+      "title": "Photomath Free / Premium",
+      "price": "Gratis · Premium 9,99 USD/mån (69,99 USD/år)",
       "bestFor": "Grundskole- och gymnasieelever som behöver tydliga steg-för-steg-genomgångar i matematik"
     },
     "label": "",
@@ -3656,7 +3656,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "ctaName": "Grammarly",
     "fallbackUrl": "https://www.grammarly.com",
     "company": "Grammarly Inc.",
-    "model": "Proprietär GrammarlyGO",
+    "model": "Proprietär AI (varumärket GrammarlyGO används inte längre i produktkommunikationen)",
     "founded": 2009,
     "hq": "San Francisco, USA",
     "useCases": [
@@ -3708,8 +3708,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "De kraftfullaste omskrivningsfunktionerna kräver Pro-prenumeration"
     ],
     "offer": {
-      "title": "Grammarly Free / Pro / Education",
-      "price": "Gratis · Pro 12 USD/mån · Education via licens",
+      "title": "Grammarly Free / Pro / Enterprise",
+      "price": "Gratis (100 AI-prompter/mån) · Pro 12 USD/mån (2 000 AI-prompter/mån) · Enterprise offert",
       "bestFor": "Studenter och lärare som arbetar med engelskspråkiga texter och vill ha omedelbar och detaljerad skrivåterkoppling"
     },
     "label": "",
