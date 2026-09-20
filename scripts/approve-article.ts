@@ -151,9 +151,9 @@ async function main() {
 
   // Sidorna cachas en timme, så rensa cachen för artikeln och startsidan direkt
   // i stället för att vänta ut den.
-  const secret = process.env.CRON_SECRET;
+  const secret = process.env.REVALIDATE_TOKEN ?? process.env.CRON_SECRET;
   if (!secret) {
-    console.log('  CRON_SECRET saknas — syns i flödet inom en timme.');
+    console.log('  REVALIDATE_TOKEN saknas — syns i flödet inom en timme.');
     return;
   }
   const path = `${r.data[0].path}/`;

@@ -17,8 +17,11 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   const url = new URL(req.url);
-  const secret = process.env.CRON_SECRET;
-  if (!secret || url.searchParams.get('key') !== secret) {
+  const key = url.searchParams.get('key');
+  // REVALIDATE_TOKEN finns för att CRON_SECRET är markerad som Sensitive i
+  // Vercel och därför inte går att läsa ut till en lokal .env.local.
+  const accepted = [process.env.REVALIDATE_TOKEN, process.env.CRON_SECRET].filter(Boolean);
+  if (!key || !accepted.includes(key)) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
