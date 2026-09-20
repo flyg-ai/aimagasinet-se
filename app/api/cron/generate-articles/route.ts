@@ -26,6 +26,7 @@
  * (men loggar en varning) så att den fungerar innan secret konfigurerats.
  */
 import { revalidatePath } from 'next/cache';
+import { excerptFromHtml } from '@/lib/excerpt';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
@@ -241,11 +242,6 @@ function slugify(s: string): string {
     .replace(/-+$/g, '');
 }
 
-function firstParagraph(html: string): string {
-  const m = html.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
-  if (!m) return '';
-  return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().slice(0, 220);
-}
 
 function wordCount(html: string): number {
   return html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
@@ -919,7 +915,7 @@ async function generateAndPublish(
   const words = wordCount(html);
   if (words < 400) throw new Error(`för kort (${words} ord)`);
 
-  const excerpt = firstParagraph(html);
+  const excerpt = excerptFromHtml(html);
   // Bild och FAQ är oberoende av varandra — kör dem parallellt så de inte
   // adderar två väntetider till budgeten.
   const [image, faq] = await Promise.all([
