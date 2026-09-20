@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 type Props = { params: { slug: string } };
 

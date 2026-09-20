@@ -148,7 +148,22 @@ async function main() {
 
   console.log(`Publicerad: ${found.data.title}`);
   console.log(`  ${BASE}${r.data[0].path}/`);
-  console.log(`  Syns i flödet inom fem minuter — sidorna cachas 300 s.`);
+
+  // Sidorna cachas en timme, så rensa cachen för artikeln och startsidan direkt
+  // i stället för att vänta ut den.
+  const secret = process.env.CRON_SECRET;
+  if (!secret) {
+    console.log('  CRON_SECRET saknas — syns i flödet inom en timme.');
+    return;
+  }
+  const path = `${r.data[0].path}/`;
+  const url = `${BASE}/api/revalidate/?key=${encodeURIComponent(secret)}&path=${encodeURIComponent(path)}`;
+  try {
+    const res = await fetch(url, { method: 'POST' });
+    console.log(res.ok ? '  Cachen rensad — syns direkt.' : `  Cachen kunde inte rensas (${res.status}) — syns inom en timme.`);
+  } catch (e) {
+    console.log(`  Cachen kunde inte rensas (${e instanceof Error ? e.message : e}) — syns inom en timme.`);
+  }
 }
 
 main().catch((e) => {

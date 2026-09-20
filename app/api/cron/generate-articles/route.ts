@@ -25,6 +25,7 @@
  * CRON_SECRET är satt. Är den satt kräver vi matchning; annars körs den öppet
  * (men loggar en varning) så att den fungerar innan secret konfigurerats.
  */
+import { revalidatePath } from 'next/cache';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
@@ -960,6 +961,13 @@ async function generateAndPublish(
       .from('article_topics')
       .update({ used: true, used_at: new Date().toISOString() })
       .eq('id', job.topicId);
+  }
+
+  // Sidorna cachas en timme (revalidate = 3600). En nypublicerad nyhet ska
+  // synas direkt, sa rensa cachen for artikeln och startsidan har.
+  if (!isFeature(job.targetWords)) {
+    revalidatePath(`/${job.slug}/`);
+    revalidatePath('/');
   }
 
   return {

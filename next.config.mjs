@@ -12,6 +12,10 @@ const nextConfig = {
   // 308-redirects /foo/ → /foo, which drops link equity on the old URLs.
   trailingSlash: true,
   images: {
+    // Bilderna byts aldrig ut på en befintlig URL (nya filnamn vid nya bilder),
+    // så en optimerad variant får leva i 30 dagar i stället för 60 sekunder.
+    // Det håller nere antalet omvandlingar, som ligger på Hobby-taket.
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       // Legacy WP origin — kept for any leftover content_mdx inline images.
       { protocol: 'https', hostname: 'aimagasinet.se' },

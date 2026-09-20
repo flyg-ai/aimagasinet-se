@@ -20,7 +20,7 @@ import {
   type UseCaseVerdict,
 } from '@/lib/compare';
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 type Props = { params: { jamforelse: string } };
 

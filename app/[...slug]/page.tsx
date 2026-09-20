@@ -30,7 +30,7 @@ import { parseRating, toolNameFromTitle } from '@/lib/rating';
 import { categoryLabel } from '@/components/CategoryBadge';
 import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 type Props = { params: { slug: string[] } };
 

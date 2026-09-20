@@ -18,7 +18,7 @@ import { breadcrumbSchema } from '@/lib/schemas';
 import { ComparisonWizard, type CatalogTool } from '@/components/ComparisonWizard';
 import { JAMFOR_SEO_HTML } from '@/lib/jamfor-seo';
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 const YEAR = new Date().getFullYear();
 

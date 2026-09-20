@@ -16,7 +16,7 @@ import { ExploreCategoriesSection } from '@/components/ExploreCategoriesSection'
 import { readingTimeMinutes } from '@/lib/reading-time';
 import { fetchAuthorsMap, type Author } from '@/lib/authors';
 
-export const revalidate = 300;
+export const revalidate = 600;
 
 // Layout split: 1 hero + 3 sidebar + 20 initial grid = 24 articles loaded
 // server-side WITH content_mdx (so we can compute reading_time). A

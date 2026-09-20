@@ -7,7 +7,7 @@ import { AuthorAvatar } from '@/components/AuthorAvatar';
 import { JsonLd } from '@/components/JsonLd';
 import { personSchema, breadcrumbSchema } from '@/lib/schemas';
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const author = await fetchAuthor(params.slug);
