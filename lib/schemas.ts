@@ -27,7 +27,7 @@ export function organizationSchema() {
       width: 180,
       height: 180,
     },
-    sameAs: [],
+    sameAs: ['https://www.instagram.com/aimagasinet/', 'https://www.facebook.com/aimagasinet/'],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'editorial',
