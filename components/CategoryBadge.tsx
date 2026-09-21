@@ -45,16 +45,20 @@ export function categoryLabel(slug: string): string {
 export function CategoryBadge({
   slug,
   size = 'md',
+  className = '',
 }: {
   slug: string | null | undefined;
   size?: keyof typeof SIZE;
+  /** Extra classes, e.g. `relative z-10` to lift the badge above a
+   *  stretched card link so it stays clickable on its own. */
+  className?: string;
 }) {
   if (!slug) return null;
   const p = PALETTE[slug] ?? FALLBACK;
   return (
     <Link
       href={to(`/kategori/${slug}`)}
-      className={`inline-block rounded-sm border ${p.border} ${p.bg} ${p.text} ${p.hover} font-mono font-semibold uppercase tracking-wider transition-colors ${SIZE[size]}`}
+      className={`inline-block rounded-sm border ${p.border} ${p.bg} ${p.text} ${p.hover} font-mono font-semibold uppercase tracking-wider transition-colors ${SIZE[size]} ${className}`}
     >
       {categoryLabel(slug)}
     </Link>

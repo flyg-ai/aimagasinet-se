@@ -21,12 +21,14 @@ export type ArticleCardData = {
   author_name?: string | null;
 };
 
+/* Cards use the "stretched link" pattern: the card itself is a plain
+ * container, the title Link's ::after overlay covers the whole card, and
+ * the category badge (its own Link) sits above it with `relative z-10`.
+ * Wrapping the card in a Link would nest <a> inside <a>, which is invalid
+ * HTML and breaks hydration. */
 export function ArticleCard({ a }: { a: ArticleCardData }) {
   return (
-    <Link
-      href={to(a.path)}
-      className="card group block overflow-hidden rounded-lg border border-line bg-card hover:border-line-strong"
-    >
+    <div className="card group relative block overflow-hidden rounded-lg border border-line bg-card hover:border-line-strong">
       <div className="relative aspect-[16/9] overflow-hidden bg-soft">
         {a.featured_image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -45,7 +47,7 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
       </div>
       <div className="p-5">
         <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <CategoryBadge slug={a.category} size="sm" />
+          <CategoryBadge slug={a.category} size="sm" className="relative z-10" />
           {a.published_at && (
             <time className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
               {new Date(a.published_at).toLocaleDateString('sv-SE', {
@@ -62,7 +64,9 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
           )}
         </div>
         <h3 className="text-lg font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
-          {a.title}
+          <Link href={to(a.path)} className="after:absolute after:inset-0">
+            {a.title}
+          </Link>
         </h3>
         {a.author_name && (
           <p className="mt-2 text-xs text-fg-subtle">
@@ -75,7 +79,7 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
           </p>
         )}
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -114,10 +118,7 @@ function CardCover({ title, small = false }: { title: string; small?: boolean })
 /* Compact horizontal card for the hero sidebar (image left, text right). */
 export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
   return (
-    <Link
-      href={to(a.path)}
-      className="card group flex gap-4 rounded-lg border border-line-subtle bg-card p-3 hover:border-line-strong"
-    >
+    <div className="card group relative flex gap-4 rounded-lg border border-line-subtle bg-card p-3 hover:border-line-strong">
       <div className="relative aspect-[16/9] w-32 shrink-0 self-start overflow-hidden rounded-md bg-soft">
         {a.featured_image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -132,9 +133,11 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <CategoryBadge slug={a.category} size="sm" />
+        <CategoryBadge slug={a.category} size="sm" className="relative z-10" />
         <h4 className="mt-2 line-clamp-3 text-sm font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
-          {a.title}
+          <Link href={to(a.path)} className="after:absolute after:inset-0">
+            {a.title}
+          </Link>
         </h4>
         <div className="mt-2 flex flex-wrap items-center gap-x-2 font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
           {a.published_at && (
@@ -150,6 +153,6 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

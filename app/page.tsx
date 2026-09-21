@@ -107,77 +107,80 @@ export default async function HomePage() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
         <section className="grid gap-6 lg:grid-cols-[1.85fr_1fr]">
           {/* Big hero */}
-          <Link
-            href={to(hero.path)}
-            className="card group relative block overflow-hidden rounded-xl border border-line bg-card hover:border-line-strong"
-          >
-            <div className="relative aspect-[16/9] overflow-hidden bg-soft">
-              {hero.featured_image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={hero.featured_image}
-                  alt=""
-                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+          {/* The card Link and the meta pill are siblings: the pill holds the
+              CategoryBadge (itself a Link), and <a> inside <a> is invalid
+              HTML that breaks hydration. The pill ignores pointer events so
+              clicks fall through to the card, except on the badge. */}
+          <div className="card group relative overflow-hidden rounded-xl border border-line bg-card hover:border-line-strong">
+            <Link href={to(hero.path)} className="block h-full">
+              <div className="relative aspect-[16/9] overflow-hidden bg-soft">
+                {hero.featured_image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={hero.featured_image}
+                    alt=""
+                    className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-fg-faint">
+                    <span className="font-mono text-xs uppercase tracking-wider">
+                      Ingen bild
+                    </span>
+                  </div>
+                )}
+                {/* Full-card dark gradient sitting on top of the image
+                    — heavier at the bottom where the title lives,
+                    still tinting the top so meta-pill and image-burnt
+                    text never compete for legibility. */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"
                 />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-fg-faint">
-                  <span className="font-mono text-xs uppercase tracking-wider">
-                    Ingen bild
-                  </span>
+
+                {/* Title + excerpt block — sits on top of the full-card
+                    gradient so no second gradient needed here. Capped
+                    to bottom 60% on mobile so the title doesn't grow
+                    upward past the image midpoint. */}
+                <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden p-4 pt-8 sm:max-h-none sm:p-8">
+                  <h1 className="line-clamp-2 text-balance text-xl font-black leading-[1.15] tracking-tight text-white sm:line-clamp-none sm:text-3xl lg:text-4xl">
+                    {hero.title}
+                  </h1>
+                  {hero.excerpt && (
+                    <p className="mt-3 line-clamp-2 hidden max-w-2xl text-sm leading-relaxed text-white/90 sm:block sm:text-base">
+                      {hero.excerpt}
+                    </p>
+                  )}
                 </div>
+              </div>
+            </Link>
+
+            {/* Meta pill — anchored top-left so the category badge
+                reads immediately without competing for space with
+                the title below. Decoupling it from the bottom
+                overlay also fixes the mobile bug where the
+                bottom-aligned block grew upward to fit the title
+                and pushed the cyan badge near the top of the image. */}
+            <div className="pointer-events-none absolute left-4 top-4 z-10 inline-flex flex-wrap items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm sm:left-6 sm:top-6 sm:gap-3">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
+                ★ Utvalt
+              </span>
+              <CategoryBadge slug={hero.category} size="sm" className="pointer-events-auto" />
+              {hero.published_at && (
+                <time className="hidden font-mono text-[10px] uppercase tracking-wider text-white/80 sm:inline">
+                  {new Date(hero.published_at).toLocaleDateString('sv-SE', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </time>
               )}
-              {/* Full-card dark gradient sitting on top of the image
-                  — heavier at the bottom where the title lives,
-                  still tinting the top so meta-pill and image-burnt
-                  text never compete for legibility. */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"
-              />
-
-              {/* Meta pill — anchored top-left so the category badge
-                  reads immediately without competing for space with
-                  the title below. Decoupling it from the bottom
-                  overlay also fixes the mobile bug where the
-                  bottom-aligned block grew upward to fit the title
-                  and pushed the cyan badge near the top of the image. */}
-              <div className="absolute left-4 top-4 inline-flex flex-wrap items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm sm:left-6 sm:top-6 sm:gap-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/95">
-                  ★ Utvalt
+              {hero.reading_time != null && (
+                <span className="font-mono text-[10px] uppercase tracking-wider text-white/80">
+                  · {hero.reading_time} min
                 </span>
-                <CategoryBadge slug={hero.category} size="sm" />
-                {hero.published_at && (
-                  <time className="hidden font-mono text-[10px] uppercase tracking-wider text-white/80 sm:inline">
-                    {new Date(hero.published_at).toLocaleDateString('sv-SE', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </time>
-                )}
-                {hero.reading_time != null && (
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-white/80">
-                    · {hero.reading_time} min
-                  </span>
-                )}
-              </div>
-
-              {/* Title + excerpt block — sits on top of the full-card
-                  gradient so no second gradient needed here. Capped
-                  to bottom 60% on mobile so the title doesn't grow
-                  upward past the image midpoint. */}
-              <div className="absolute inset-x-0 bottom-0 max-h-[60%] overflow-hidden p-4 pt-8 sm:max-h-none sm:p-8">
-                <h1 className="line-clamp-2 text-balance text-xl font-black leading-[1.15] tracking-tight text-white sm:line-clamp-none sm:text-3xl lg:text-4xl">
-                  {hero.title}
-                </h1>
-                {hero.excerpt && (
-                  <p className="mt-3 line-clamp-2 hidden max-w-2xl text-sm leading-relaxed text-white/90 sm:block sm:text-base">
-                    {hero.excerpt}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
-          </Link>
+          </div>
 
           <aside className="flex flex-col gap-3">
             <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-accent">

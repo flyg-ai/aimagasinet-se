@@ -22,10 +22,7 @@ export function TrendingSection({ items }: { items: ArticleCardData[] }) {
       <ol className="grid gap-4 sm:grid-cols-3 sm:items-stretch">
         {top.map((a, i) => (
           <li key={a.slug} className="h-full">
-            <Link
-              href={to(a.path)}
-              className="group flex h-full items-start gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-line-strong"
-            >
+            <div className="group relative flex h-full items-start gap-4 rounded-lg border border-line bg-card p-4 transition-colors hover:border-line-strong">
               <span
                 aria-hidden
                 className="shrink-0 font-mono text-3xl font-black leading-none text-indigo-600 sm:text-4xl"
@@ -33,9 +30,11 @@ export function TrendingSection({ items }: { items: ArticleCardData[] }) {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className="flex min-w-0 flex-1 flex-col">
-                <CategoryBadge slug={a.category} size="sm" />
+                <CategoryBadge slug={a.category} size="sm" className="relative z-10" />
                 <h3 className="mt-2 line-clamp-3 text-sm font-bold leading-snug tracking-tight text-fg group-hover:text-accent">
-                  {a.title}
+                  <Link href={to(a.path)} className="after:absolute after:inset-0">
+                    {a.title}
+                  </Link>
                 </h3>
                 {a.reading_time != null && (
                   <p className="mt-auto pt-2 font-mono text-[10px] uppercase tracking-wider text-fg-faint">
@@ -43,7 +42,7 @@ export function TrendingSection({ items }: { items: ArticleCardData[] }) {
                   </p>
                 )}
               </div>
-            </Link>
+            </div>
           </li>
         ))}
       </ol>
