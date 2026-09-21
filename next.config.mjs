@@ -11,6 +11,12 @@ const nextConfig = {
   // old WordPress install (e.g. /ai-verktyg/gratis/). Without this Next
   // 308-redirects /foo/ → /foo, which drops link equity on the old URLs.
   trailingSlash: true,
+  experimental: {
+    // /admin laddar upp omslagsbilder via en server action. Standardtaket är
+    // 1 MB; Vercel tar emot högst 4,5 MB. Formuläret skalar ner större filer
+    // i webbläsaren så att de håller sig under 4 MB.
+    serverActions: { bodySizeLimit: '4mb' },
+  },
   images: {
     // Bilderna byts aldrig ut på en befintlig URL (nya filnamn vid nya bilder),
     // så en optimerad variant får leva i 30 dagar i stället för 60 sekunder.

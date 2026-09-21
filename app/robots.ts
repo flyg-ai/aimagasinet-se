@@ -8,8 +8,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        // Keep API routes and Next.js internals out of search.
-        disallow: ['/api/', '/_next/'],
+        // Keep API routes, Next.js internals and the admin page out of search.
+        disallow: ['/api/', '/_next/', '/admin/'],
       },
     ],
     sitemap: `${BASE}/sitemap.xml`,

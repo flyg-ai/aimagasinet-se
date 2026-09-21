@@ -51,6 +51,15 @@ function gone() {
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  // /admin (se ADMIN.md) ska aldrig indexeras, inte ens inloggningssidan eller
+  // 404:an. Före 410-logiken så att en slug i adressen (t.ex.
+  // /admin/redigera/<slug>/) aldrig matchas mot DEAD_TOOL_SLUGS. Själva skyddet
+  // (lösenord, session, 404 utan env) ligger i lib/admin/auth.ts.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const res = NextResponse.next();
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return res;
+  }
   if (REDIRECTED.has(pathname)) return NextResponse.next();
   const lastSeg = pathname.replace(/\/+$/, '').split('/').pop() ?? '';
   if (DEAD_TOOL_SLUGS.has(lastSeg)) return gone();
