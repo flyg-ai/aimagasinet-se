@@ -43,13 +43,14 @@ export const adminConfig = {
    *  redigering. Skribenten behålls alltså vid redigering. */
   insertDefaults: {
     tags: [] as string[],
-    author_slug: 'nicklas-hallberg',
     parent_slug: null,
     affiliate_url: null,
     faq: null,
   } as Record<string, unknown>,
 
   categories: { table: 'categories', slugColumn: 'slug', nameColumn: 'name' },
+  /** Skribenterna i väljaren. Nya artiklar förväljs till redaktionen. */
+  authors: { table: 'authors', slugColumn: 'slug', nameColumn: 'name', default: 'redaktionen' },
 
   // ── Adresser ───────────────────────────────────────────────────────────
   /** Värdet i kolumnen path: inget avslutande snedstreck. */
@@ -60,6 +61,7 @@ export const adminConfig = {
   revalidatePaths: (
     a: { slug: string; category: string | null; author: string | null },
     previousCategory?: string | null,
+    previousAuthor?: string | null,
   ) =>
     [
       `/${a.slug}/`,
@@ -67,6 +69,7 @@ export const adminConfig = {
       a.category ? `/kategori/${a.category}/` : null,
       previousCategory && previousCategory !== a.category ? `/kategori/${previousCategory}/` : null,
       a.author ? `/skribenter/${a.author}/` : null,
+      previousAuthor && previousAuthor !== a.author ? `/skribenter/${previousAuthor}/` : null,
       '/sitemap.xml',
     ].filter((p): p is string => !!p),
   /** Slugs som krockar med egna routes, eller som middleware.ts 410:ar, och

@@ -11,7 +11,7 @@ import { isAdmin, login, logout } from '@/lib/admin/auth';
 import { adminConfig as C } from '@/lib/admin/config';
 import { bodyToHtml, plainText } from '@/lib/admin/body';
 import {
-  getArticle, listCategories, pathTaken, saveArticle, titleTaken, unpublishArticle, uploadCover,
+  getArticle, listAuthors, listCategories, pathTaken, saveArticle, titleTaken, unpublishArticle, uploadCover,
   type AdminArticle,
 } from '@/lib/admin/articles';
 import { Preview } from '@/lib/admin/Preview';
@@ -55,7 +55,7 @@ export async function checkSlugAction(slug: string): Promise<{ ok: boolean; mess
 
 // ── Formuläret ─────────────────────────────────────────────────────────
 
-type Evaluated = { article: AdminArticle; issues: Issue[]; isNew: boolean; previousCategory: string | null };
+type Evaluated = { article: AdminArticle; issues: Issue[]; isNew: boolean; previousCategory: string | null; previousAuthor: string | null };
 
 async function evaluate(form: FormData): Promise<Evaluated> {
   const str = (k: string) => String(form.get(k) ?? '');
@@ -101,7 +101,7 @@ async function evaluate(form: FormData): Promise<Evaluated> {
     seoDescription,
     publishedAt: str('publishedAt').trim() || new Date().toISOString(),
     updatedAt: existing?.updatedAt ?? null,
-    author: existing ? existing.author : (C.insertDefaults.author_slug as string),
+    author: str('author').trim() || existing?.author || C.authors.default,
   };
 
   if (isNew) {
@@ -113,6 +113,9 @@ async function evaluate(form: FormData): Promise<Evaluated> {
   }
   if (!article.title) issues.push({ message: 'Rubriken är tom.', hard: true, field: 'title' });
   if (!article.body) issues.push({ message: 'Brödtexten är tom.', hard: true, field: 'body' });
+
+  const authors = new Set((await listAuthors()).map((x) => x.slug));
+  if (!authors.has(article.author ?? '')) issues.push({ message: 'Okänd skribent.', hard: true, field: 'author' });
 
   const categories = new Set((await listCategories()).map((c) => c.slug));
   for (const r of C.validate({ ...article, publishedAt: article.publishedAt ?? '' }, categories)) {
@@ -127,7 +130,7 @@ async function evaluate(form: FormData): Promise<Evaluated> {
     const hard = C.hardStops.has(r.code) || (r.code === 'missing' && C.requiredFields.includes(String(r.field)));
     issues.push({ message: r.message, hard, field: r.field, blockIndex: r.blockIndex, block: r.block });
   }
-  return { article, issues, isNew, previousCategory: existing?.category ?? null };
+  return { article, issues, isNew, previousCategory: existing?.category ?? null, previousAuthor: existing?.author ?? null };
 }
 
 export type PreviewResult = { error?: string; issues?: Issue[]; node?: ReactNode };
@@ -147,7 +150,7 @@ export type PublishResult = { error?: string; issues?: Issue[]; url?: string };
 export async function publishAction(form: FormData): Promise<PublishResult> {
   if (!isAdmin()) return { error: DENIED };
   try {
-    const { article, issues, isNew, previousCategory } = await evaluate(form);
+    const { article, issues, isNew, previousCategory, previousAuthor } = await evaluate(form);
     if (issues.some((i) => i.hard)) return { issues, error: 'Rätta de röda punkterna innan du publicerar.' };
 
     let image: string | null | undefined = form.get('removeImage') === '1' ? null : undefined;
@@ -158,7 +161,7 @@ export async function publishAction(form: FormData): Promise<PublishResult> {
     }
 
     await saveArticle({ ...article, publishedAt: article.publishedAt! }, image, isNew);
-    for (const p of C.revalidatePaths(article, previousCategory)) revalidatePath(p);
+    for (const p of C.revalidatePaths(article, previousCategory, previousAuthor)) revalidatePath(p);
     return { issues, url: C.articleUrl(article.slug) };
   } catch (e) {
     return { error: (e as Error).message };

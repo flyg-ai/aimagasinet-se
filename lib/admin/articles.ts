@@ -19,8 +19,7 @@ export type AdminArticle = {
   seoDescription: string;
   publishedAt: string | null;
   updatedAt: string | null;
-  /** Skribenten (author_slug). Sätts till standardvärdet på nya rader och
-   *  ändras aldrig av admin. */
+  /** Skribenten (author_slug), vald i formuläret. */
   author: string | null;
 };
 
@@ -56,6 +55,13 @@ function inScope(row: Row): boolean {
   for (const [k, v] of Object.entries(C.fixedFields)) if (row[k] !== v) return false;
   for (const k of C.nullFields) if (row[k] != null) return false;
   return true;
+}
+
+export async function listAuthors(): Promise<{ slug: string; name: string }[]> {
+  const a = C.authors;
+  const { data, error } = await supabaseAdmin().from(a.table).select(`${a.slugColumn},${a.nameColumn}`).order(a.nameColumn);
+  if (error) throw new Error(error.message);
+  return ((data ?? []) as unknown as Row[]).map((r) => ({ slug: String(r[a.slugColumn]), name: String(r[a.nameColumn]) }));
 }
 
 export async function listCategories(): Promise<{ slug: string; name: string }[]> {
@@ -113,7 +119,7 @@ export async function titleTaken(title: string): Promise<boolean> {
   return (count ?? 0) > 0;
 }
 
-export type SaveInput = Omit<AdminArticle, 'image' | 'updatedAt' | 'publishedAt' | 'author'> & { publishedAt: string };
+export type SaveInput = Omit<AdminArticle, 'image' | 'updatedAt' | 'publishedAt'> & { publishedAt: string };
 
 /** Skapar eller uppdaterar raden. `image` undefined = rör inte bilden. */
 export async function saveArticle(a: SaveInput, image: string | null | undefined, isNew: boolean): Promise<void> {
@@ -126,6 +132,7 @@ export async function saveArticle(a: SaveInput, image: string | null | undefined
     [col.seoTitle]: a.seoTitle || null,
     [col.seoDescription]: a.seoDescription || null,
     [col.publishedAt]: a.publishedAt,
+    [col.author]: a.author,
     ...C.fixedFields,
   };
   if (image !== undefined) {

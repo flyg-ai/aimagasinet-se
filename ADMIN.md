@@ -27,8 +27,9 @@ ut alla sessioner.
   nyheter och guider på toppnivå. Recensioner, hubbar och sidor syns inte och
   går inte att redigera härifrån.
 - Adressen är `https://aimagasinet.se/<slug>/`; `path` sparas som `/<slug>`.
-- Nya rader får `author_slug = 'nicklas-hallberg'`, `tags = []`, `faq = null`,
-  `affiliate_url = null`. Vid redigering behålls skribent, taggar och FAQ.
+- Skribenten väljs i formuläret ur tabellen `authors`. Nya artiklar förväljs till
+  `redaktionen` (AI-Magasinets redaktion). Nya rader får `tags = []`, `faq = null`,
+  `affiliate_url = null`. Vid redigering behålls taggar och FAQ.
 - `content_mdx` innehåller HTML, trots namnet.
 - Ingenting raderas. Avpublicering sätter `published_at` till null.
 

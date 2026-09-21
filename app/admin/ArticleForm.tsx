@@ -80,7 +80,9 @@ function Issues({ issues }: { issues: Issue[] }) {
   );
 }
 
-export function ArticleForm({ categories, initial }: { categories: { slug: string; name: string }[]; initial: AdminArticle | null }) {
+type Option = { slug: string; name: string };
+
+export function ArticleForm({ categories, authors, defaultAuthor, initial }: { categories: Option[]; authors: Option[]; defaultAuthor: string; initial: AdminArticle | null }) {
   // Slugen raden sparats under. Efter första publiceringen redigerar formuläret den raden.
   const [savedSlug, setSavedSlug] = useState<string | null>(initial?.slug ?? null);
   const isNew = !savedSlug;
@@ -181,6 +183,11 @@ export function ArticleForm({ categories, initial }: { categories: { slug: strin
           <select id="category" name="category" defaultValue={initial?.category ?? ''} required>
             <option value="" disabled>Välj kategori</option>
             {categories.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
+          </select>
+
+          <label htmlFor="author">Skribent</label>
+          <select id="author" name="author" defaultValue={initial?.author ?? defaultAuthor} required>
+            {authors.map((a) => <option key={a.slug} value={a.slug}>{a.name}</option>)}
           </select>
 
           <label htmlFor="excerpt">Ingress</label>
