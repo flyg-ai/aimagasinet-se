@@ -12,7 +12,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN } from '@/lib/category-hub-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
-import { formatSvDate } from '@/lib/format-date';
+import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -1021,7 +1021,7 @@ export function HubTemplate({
   const top = ranked[0];
 
   const crumbs = buildCrumbs(a.path);
-  const updatedIso = a.updated_at ?? a.published_at ?? null;
+  const updatedIso = contentModifiedIso(a) ?? a.published_at ?? null;
   const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   const updatedYear = new Date().getFullYear();
   const facts = getHubFacts(a.slug);

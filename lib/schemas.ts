@@ -65,6 +65,7 @@ type Article = {
   featured_image: string | null;
   published_at: string | null;
   updated_at?: string | null;
+  content_updated_at?: string | null;
   category?: string | null;
   /** Optional extra keywords (e.g. tags) for keywords/news_keywords. */
   keywords?: string[];
@@ -102,7 +103,7 @@ function articleNode(
     url,
     inLanguage: 'sv-SE',
     datePublished: a.published_at ?? undefined,
-    dateModified: a.updated_at ?? a.published_at ?? undefined,
+    dateModified: a.content_updated_at ?? a.updated_at ?? a.published_at ?? undefined,
     image: a.featured_image ? [a.featured_image] : undefined,
     author: authorNode,
     publisher: {

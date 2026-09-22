@@ -39,14 +39,37 @@ function freqAndPriority(path: string, type: 'post' | 'page'): {
   return { changeFrequency: 'monthly', priority: 0.5 };
 }
 
+type SitemapRow = {
+  path: string | null;
+  type: 'post' | 'page';
+  updated_at: string | null;
+  published_at: string | null;
+  content_updated_at?: string | null;
+};
+
+/** Hamtar artiklarna med content_updated_at (migration 0021). Finns kolumnen
+ *  inte an svarar PostgREST med 42703 / "column ... does not exist" — da
+ *  gors samma fraga utan den, och lastModified faller tillbaka pa updated_at. */
+async function fetchSitemapRows() {
+  const base = 'path,type,updated_at,published_at';
+  const query = (cols: string) =>
+    supabase.from('articles').select(cols).order('updated_at', { ascending: false });
+  let res = await query(`${base},content_updated_at`);
+  if (
+    res.error &&
+    (res.error.code === '42703' || /content_updated_at.*does not exist|does not exist.*content_updated_at/i.test(res.error.message))
+  ) {
+    res = await query(base);
+  }
+  if (res.error) console.error('[sitemap] supabase error:', res.error.message);
+  return (res.data ?? []) as unknown as SitemapRow[];
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Pull every article in one shot — 262 rows at time of writing, well
   // under Google's 50K-per-sitemap limit.
-  const [articlesRes, categoriesRes] = await Promise.all([
-    supabase
-      .from('articles')
-      .select('path,type,updated_at,published_at')
-      .order('updated_at', { ascending: false }),
+  const [articles, categoriesRes] = await Promise.all([
+    fetchSitemapRows(),
     supabase.from('categories').select('slug'),
   ]);
 
@@ -60,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  for (const a of articlesRes.data ?? []) {
+  for (const a of articles) {
     if (!a.path) continue;
     // Opublicerat hor inte hemma i sitemapen. Faltet hamtades men anvandes
     // aldrig, sa avpublicerade artiklar pekades ut for Google.
@@ -68,7 +91,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { changeFrequency, priority } = freqAndPriority(a.path, a.type);
     out.push({
       url: `${BASE}${withTrailing(a.path)}`,
-      lastModified: toIso(a.updated_at) ?? toIso(a.published_at) ?? now,
+      lastModified:
+        toIso(a.content_updated_at) ?? toIso(a.updated_at) ?? toIso(a.published_at) ?? now,
       changeFrequency,
       priority,
     });

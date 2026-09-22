@@ -9,7 +9,7 @@ import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { buildToc, type TocItem } from '@/lib/toc';
 import { Toc } from '@/components/Toc';
-import { formatSvDate } from '@/lib/format-date';
+import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 
 // Profilerna och betyget bor i lib/review-profiles.ts och lib/review-score.ts;
 // de gamla importvägarna (lib/compare.ts, hubbmallarna, skripten) fungerar kvar.
@@ -71,7 +71,7 @@ export function ReviewTemplate({
   const crumbs = buildCrumbs(a.path);
   // Ärligt datum: det som faktiskt står i raden, samma värde som schemats
   // dateModified. Saknas båda visas ingen "Uppdaterad"-fras alls.
-  const updatedIso = a.updated_at ?? a.published_at ?? null;
+  const updatedIso = contentModifiedIso(a) ?? a.published_at ?? null;
   const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   const stars = noScore ? null : starsFromScore(rating.score);
 

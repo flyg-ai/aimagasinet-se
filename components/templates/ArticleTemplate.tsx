@@ -18,6 +18,7 @@ import { ShareButtons } from '@/components/ShareButtons';
 import { GuideTools } from '@/components/ContentBlocks';
 import { expandBlocks } from '@/lib/content-blocks';
 import { loadReviewIndex } from '@/lib/review-refs';
+import { contentModifiedIso } from '@/lib/format-date';
 
 function fmtDate(iso: string): string {
   return new Date(iso).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -69,6 +70,10 @@ export async function ArticleTemplate({
   // Inject heading ids (→ ToC anchors) and turn standalone internal tool links
   // into cards, in that order so the card transform sees the id-rewritten HTML.
   const toc = buildToc(a.content_mdx ?? '');
+  // Ärligt ändringsdatum (title/content_mdx), inte radens updated_at som
+  // bumpas av alla skrivningar. Visas bara om det är en annan dag än publicering.
+  const modifiedIso = contentModifiedIso(a);
+  const showUpdated = !!(modifiedIso && a.published_at && !sameDay(modifiedIso, a.published_at));
   const bodyHtml = toolLinkCards(toc.html);
   // Recensionerna som topplistblocken och "Verktyg i guiden" visar — en fråga,
   // och betyget räknas som på recensionssidan (lib/review-score.ts).
@@ -82,7 +87,7 @@ export async function ArticleTemplate({
     path: a.path,
     featured_image: a.featured_image,
     published_at: a.published_at,
-    updated_at: a.updated_at ?? null,
+    updated_at: modifiedIso,
     category: a.category,
     keywords: [a.category ? categoryLabel(a.category) : null, ...(a.tags ?? [])].filter(
       (x): x is string => !!x,
@@ -158,14 +163,14 @@ export async function ArticleTemplate({
               </Link>
             )}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-fg-subtle">
-              {a.published_at && (
-                <time dateTime={a.published_at} className="font-mono uppercase tracking-wider">
-                  {fmtDate(a.published_at)}
+              {showUpdated && modifiedIso && (
+                <time dateTime={modifiedIso} className="font-mono font-semibold uppercase tracking-wider text-accent">
+                  Uppdaterad {fmtDate(modifiedIso)}
                 </time>
               )}
-              {a.updated_at && a.published_at && !sameDay(a.updated_at, a.published_at) && (
-                <time dateTime={a.updated_at} className="font-mono font-semibold uppercase tracking-wider text-accent">
-                  Senast uppdaterad: {fmtDate(a.updated_at)}
+              {a.published_at && (
+                <time dateTime={a.published_at} className="font-mono uppercase tracking-wider">
+                  {showUpdated ? 'Publicerad ' : ''}{fmtDate(a.published_at)}
                 </time>
               )}
             </div>

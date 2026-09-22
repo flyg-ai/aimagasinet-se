@@ -28,6 +28,7 @@ import { parseRating, toolNameFromTitle } from '@/lib/rating';
 import { categoryLabel } from '@/components/CategoryBadge';
 import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 import { classify, CURATED_HUB_TOOL_SLUGS } from '@/lib/route-kind';
+import { contentModifiedIso } from '@/lib/format-date';
 
 export const revalidate = 3600;
 
@@ -226,7 +227,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'AI-Magasinet',
       locale: 'sv_SE',
       publishedTime: a.published_at || undefined,
-      modifiedTime: a.updated_at || a.published_at || undefined,
+      modifiedTime: contentModifiedIso(a) || a.published_at || undefined,
       section: a.category ? categoryLabel(a.category) : undefined,
       tags: a.tags ?? undefined,
       images: [{ url: ogImage }],

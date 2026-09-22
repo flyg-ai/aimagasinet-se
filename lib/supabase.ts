@@ -38,6 +38,9 @@ export type Article = {
   /** Last content update — drives "Senast uppdaterad" + JSON-LD dateModified.
    *  Optional so pre-migration fetches still type-check. */
   updated_at?: string | null;
+  /** Senaste ändring av title/content_mdx (migration 0021). Optional så att
+   *  läsningar före migrationen typkontrollerar — läs via contentModifiedIso(). */
+  content_updated_at?: string | null;
   /** FK to authors.slug — populated after migration 0008_authors.sql.
    *  Optional in TypeScript so pre-migration fetches still type-check. */
   author_slug?: string | null;
