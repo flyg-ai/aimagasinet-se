@@ -29,6 +29,8 @@ export type ReviewRef = {
   logoColor: string;
   initial: string;
   score: ReviewScore;
+  /** Affiliatelänk (articles.affiliate_url) eller null. */
+  affiliateUrl: string | null;
 };
 
 export type ReviewIndex = {
@@ -128,6 +130,7 @@ type Row = {
   parent_slug: string | null;
   featured_image: string | null;
   content_mdx: string | null;
+  affiliate_url: string | null;
 };
 
 function toRef(r: Row): ReviewRef {
@@ -142,6 +145,7 @@ function toRef(r: Row): ReviewRef {
     logoColor: profile.logo,
     initial: (profile.company || name).charAt(0).toUpperCase() || '?',
     score: reviewScore(r),
+    affiliateUrl: r.affiliate_url ?? null,
   };
 }
 
@@ -167,7 +171,7 @@ export async function loadReviewIndex(html: string | null | undefined): Promise<
   if (slugs.length) filters.push(`slug.in.(${slugs.join(',')})`);
   const { data, error } = await supabase
     .from('articles')
-    .select('slug,path,title,type,parent_slug,featured_image,content_mdx')
+    .select('slug,path,title,type,parent_slug,featured_image,content_mdx,affiliate_url')
     .or(filters.join(','))
     .not('published_at', 'is', null);
   if (error) {

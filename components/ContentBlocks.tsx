@@ -18,7 +18,7 @@ import {
   type ToplistBlock,
 } from '@/lib/content-blocks';
 import { listScoreText, type ReviewScore } from '@/lib/review-score';
-import type { ReviewIndex, ReviewRef } from '@/lib/review-refs';
+import { byScore, type ReviewIndex, type ReviewRef } from '@/lib/review-refs';
 
 function A({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
   return isExternalHref(href)
@@ -94,9 +94,15 @@ export function ScoreBadge({ score, compact = false }: { score: ReviewScore; com
 function Toplist({ b, reviews }: { b: ToplistBlock; reviews: ReviewIndex }) {
   // Okända recensioner stoppas av reglerna före publicering; skulle en
   // recension avpubliceras senare faller raden bort i stället för att visa fel.
-  const rows = b.items
+  const found = b.items
     .map((it) => ({ it, tool: reviews.get(it.review) }))
     .filter((r): r is { it: typeof r.it; tool: ReviewRef } => !!r.tool);
+  // "Vårt val" först i skriven ordning, sedan resten — efter betyg om inte
+  // blocket uttryckligen vill ha redaktionens ordning.
+  const featured = found.filter((r) => r.it.featured);
+  const rest = found.filter((r) => !r.it.featured);
+  if (b.sort === 'score') rest.sort((x, y) => byScore(x.tool, y.tool));
+  const rows = [...featured, ...rest];
   if (rows.length === 0) return null;
   return (
     <section className="toplist cb-toplist not-prose" aria-label={b.title ?? 'Topplista'}>
@@ -106,7 +112,7 @@ function Toplist({ b, reviews }: { b: ToplistBlock; reviews: ReviewIndex }) {
       </div>
       <ol className="cb-toplist-rows">
         {rows.map(({ it, tool }, i) => (
-          <li key={tool.slug} className={`toplist-item${i === 0 ? ' is-first' : ''}`}>
+          <li key={tool.slug} className={`toplist-item${i === 0 || it.featured ? ' is-first' : ''}`}>
             <span className="toplist-rank" aria-hidden>{i + 1}</span>
             <div className="min-w-0">
               <div className="tl-tool">
@@ -119,13 +125,22 @@ function Toplist({ b, reviews }: { b: ToplistBlock; reviews: ReviewIndex }) {
                 </div>
                 <ScoreBadge score={tool.score} />
               </div>
+              {it.featured && <span className="toplist-badge tl-pick">Vårt val</span>}{' '}
               {it.badge && <span className="toplist-badge"><Rich text={it.badge} /></span>}
               {it.text && <p className="toplist-desc"><Rich text={it.text} /></p>}
             </div>
             <div className="toplist-actions">
+              {tool.affiliateUrl && !tool.score.discontinued && (
+                <a href={tool.affiliateUrl} target="_blank" rel="noopener noreferrer sponsored" className="toplist-btn toplist-btn-primary">
+                  Prova {tool.name} <span aria-hidden>↗</span>
+                </a>
+              )}
               <Link href={to(tool.path)} className="toplist-btn toplist-btn-ghost">
                 Läs recensionen <span aria-hidden>→</span>
               </Link>
+              {tool.affiliateUrl && !tool.score.discontinued && (
+                <span className="tl-ad">Annonslänk: vi kan få provision.</span>
+              )}
             </div>
           </li>
         ))}

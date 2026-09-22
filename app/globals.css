@@ -809,3 +809,8 @@ body {
 @media (min-width: 640px) {
   .guide-tools ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Topplista: "Vårt val"-etikett och annonsmärkning under affiliateknappen. */
+.toplist-badge.tl-pick { background: #4f46e5; color: #fff; }
+.dark .toplist-badge.tl-pick { background: #6366f1; color: #fff; }
+.tl-ad { font-size: 11px; line-height: 1.3; color: var(--fg-subtle); text-align: center; }

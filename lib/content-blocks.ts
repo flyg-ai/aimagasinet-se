@@ -18,7 +18,10 @@
  * skriv \u003c (admin gör det automatiskt).
  *
  * Blocken och deras fält:
- *   toplist  {title?, note?, items: [{review, badge?, text?}] (1–25)}
+ *   toplist  {title?, note?, sort?: "score" | "editorial", items: [{review, badge?, text?, featured?}] (1–25)}
+ *            Standard sort "score": högst betyg först. Rader med featured: true
+ *            ("Vårt val") läggs alltid överst, i den ordning de står. "editorial"
+ *            behåller ordningen som den är skriven.
  *            review är recensionens slug ("semrush-ai") eller adress
  *            ("/ai-verktyg/semrush-ai/"). Logga, namn, kategori och betyg
  *            hämtas ur recensionen (lib/review-refs.ts, lib/review-score.ts) —
@@ -65,8 +68,8 @@ export type ChartBlock = { type: 'chart'; title: string; unit?: string; note?: s
 export type ImageBlock = { type: 'image'; src: string; alt: string; caption?: string; width?: number; height?: number };
 /** review är normaliserad: en slug ("semrush-ai") eller en adress utan
  *  avslutande snedstreck ("/ai-verktyg/semrush-ai"). */
-export type ToplistItem = { review: string; badge?: string; text?: string };
-export type ToplistBlock = { type: 'toplist'; title?: string; note?: string; items: ToplistItem[] };
+export type ToplistItem = { review: string; badge?: string; text?: string; featured?: boolean };
+export type ToplistBlock = { type: 'toplist'; title?: string; note?: string; sort: 'score' | 'editorial'; items: ToplistItem[] };
 export type Block = ToplistBlock | CompareBlock | StepsBlock | CalloutBlock | ChartBlock | ImageBlock;
 
 /** Storage-bucketen för bilder. */
@@ -263,9 +266,12 @@ function toBlock(type: string, json: string): Block {
       if (!review) fail(`${w}.review "${raw}" ska vara en recensions slug (t.ex. "semrush-ai") eller adress (t.ex. "/ai-verktyg/semrush-ai/")`);
       if (seen.has(review)) fail(`${w}.review "${raw}" finns redan i listan`);
       seen.add(review);
-      return { review, badge: str(o.badge, `${w}.badge`, false), text: str(o.text, `${w}.text`, false) };
+      if (o.featured !== undefined && typeof o.featured !== 'boolean') fail(`${w}.featured ska vara true eller false`);
+      return { review, badge: str(o.badge, `${w}.badge`, false), text: str(o.text, `${w}.text`, false), featured: o.featured === true };
     });
-    return { type, title: str(d.title, 'title', false), note: str(d.note, 'note', false), items };
+    const sort = d.sort === undefined ? 'score' : d.sort;
+    if (sort !== 'score' && sort !== 'editorial') fail('sort ska vara "score" eller "editorial"');
+    return { type, title: str(d.title, 'title', false), note: str(d.note, 'note', false), sort, items };
   }
 
   if (type === 'compare') {
