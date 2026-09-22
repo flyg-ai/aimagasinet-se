@@ -76,6 +76,12 @@ export default async function RootLayout({
 
   return (
     <html lang="sv" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        {/* Verifiering av sajten hos Impact (affiliatenätverket). Impacts
+            egen kod använder attributet value; content finns med för
+            verktyg som bara läser det. */}
+        <meta name="impact-site-verification" {...{ value: 'dba6fd3a-fe21-4a54-913f-911651fd5d3f' }} content="dba6fd3a-fe21-4a54-913f-911651fd5d3f" />
+      </head>
       <body className="min-h-screen bg-page font-sans text-fg">
         {/* Global JSON-LD — Organization + WebSite (with SearchAction).
             Article / Review / Breadcrumb schemas are emitted by the
