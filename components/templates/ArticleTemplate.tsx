@@ -15,6 +15,9 @@ import { readingTimeMinutes } from '@/lib/reading-time';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
 import { ShareButtons } from '@/components/ShareButtons';
+import { GuideTools } from '@/components/ContentBlocks';
+import { expandBlocks } from '@/lib/content-blocks';
+import { loadReviewIndex } from '@/lib/review-refs';
 
 function fmtDate(iso: string): string {
   return new Date(iso).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -28,7 +31,7 @@ function sameDay(a: string, b: string): boolean {
 /** Default template for posts and standalone pages (depth 1 or unknown).
  *  Tech-news layout: full-width hero image, lead + byline, prose body with a
  *  sticky ToC + related-articles sidebar on desktop. */
-export function ArticleTemplate({
+export async function ArticleTemplate({
   article: a,
   items,
   author,
@@ -57,7 +60,8 @@ export function ArticleTemplate({
         ? [{ label: categoryLabel(a.category), href: `/kategori/${a.category}` }]
         : [];
   const children = items;
-  const minutes = readingTimeMinutes(a.content_mdx);
+  // Lästiden räknar blockens text som vanlig text (expandBlocks), inte JSON:en.
+  const minutes = readingTimeMinutes(expandBlocks(a.content_mdx));
   // Share-knappar bara på riktiga nyheter/artiklar (type='post') — inte på
   // verktygsrecensioner eller sidor som också renderas via denna mall.
   const isPost = a.type === 'post';
@@ -66,6 +70,9 @@ export function ArticleTemplate({
   // into cards, in that order so the card transform sees the id-rewritten HTML.
   const toc = buildToc(a.content_mdx ?? '');
   const bodyHtml = toolLinkCards(toc.html);
+  // Recensionerna som topplistblocken och "Verktyg i guiden" visar — en fråga,
+  // och betyget räknas som på recensionssidan (lib/review-score.ts).
+  const reviews = await loadReviewIndex(a.content_mdx);
 
   // schema.org — Article + NewsArticle (Speakable) + breadcrumb. keywords =
   // category + tags so they flow into the schema keywords / news_keywords.
@@ -177,7 +184,8 @@ export function ArticleTemplate({
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-12">
           <div className="min-w-0">
             <Toc items={toc.items} variant="mobile" />
-            <ArticleProse html={bodyHtml} />
+            <ArticleProse html={bodyHtml} reviews={reviews} />
+            <GuideTools tools={reviews.linked} />
 
             {a.tags?.length > 0 && (
               <div className="mt-14 flex flex-wrap gap-2 border-t border-line pt-8">

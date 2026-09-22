@@ -106,7 +106,7 @@ export const adminConfig = {
   validate: (a: {
     slug: string; title: string; excerpt: string; category: string; body: string;
     seoTitle: string; seoDescription: string; publishedAt: string;
-  }, categories: ReadonlySet<string>) =>
+  }, categories: ReadonlySet<string>, unknownReviews: readonly string[] = []) =>
     checkArticle(
       {
         slug: a.slug, title: a.title, excerpt: a.excerpt, category: a.category,
@@ -114,9 +114,9 @@ export const adminConfig = {
         published_at: a.publishedAt,
       },
       // En minuts marginal för klockskillnad mellan webbläsare och server.
-      { categories, now: Date.now() + 60_000 },
+      { categories, now: Date.now() + 60_000, unknownReviews },
     ),
-  hardStops: new Set<RuleCode>(['category', 'date-invalid', 'date-future', 'seo-title-length', 'seo-description-length']),
+  hardStops: new Set<RuleCode>(['category', 'date-invalid', 'date-future', 'seo-title-length', 'seo-description-length', 'block', 'review-unknown']),
   /** Obligatoriska fält (utöver hardStops). Tomma fält i övrigt blir varningar. */
   requiredFields: ['slug', 'title', 'content_mdx', 'category', 'published_at'],
 };

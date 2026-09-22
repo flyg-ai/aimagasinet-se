@@ -6,6 +6,9 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    // Verktygsprofilerna (lib/review-profiles.ts, lib/*-tools*.ts) bär
+    // logofärgerna som Tailwind-klasser, t.ex. "bg-emerald-500".
+    "./lib/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {

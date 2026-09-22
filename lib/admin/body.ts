@@ -7,6 +7,7 @@ import 'server-only';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 import { adminConfig } from './config';
+import { extractBlocks } from '../content-blocks';
 
 /** Ser texten ut som HTML (minst ett blockelement) behandlas den som HTML,
  *  annars som Markdown. */
@@ -71,11 +72,20 @@ const OPTIONS: sanitizeHtml.IOptions = {
   },
 };
 
+/**
+ * Innehållsblocken (<div data-block="…">{JSON}</div>, lib/content-blocks.ts)
+ * plockas ut före Markdown-tolkningen och saneringen och sätts tillbaka
+ * efteråt som validerad, normaliserad JSON. De går därför aldrig genom
+ * allowlisten — och behöver inte: de renderas av React, som escapar all text,
+ * och länkarna i dem valideras (https:// eller /). Ett ogiltigt block sparas
+ * som escapad text så att reglerna kan peka ut felet.
+ */
 export function bodyToHtml(input: string): string {
-  const source = input.replace(/\r\n/g, '\n').trim();
+  const { text, restore } = extractBlocks(input.replace(/\r\n/g, '\n'));
+  const source = text.trim();
   if (!source) return '';
   const html = looksLikeHtml(source) ? source : (marked.parse(source, { async: false, gfm: true, breaks: false }) as string);
-  return sanitizeHtml(html, OPTIONS)
+  return restore(sanitizeHtml(html, OPTIONS))
     .replace(/<p>\s*<\/p>/g, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim();

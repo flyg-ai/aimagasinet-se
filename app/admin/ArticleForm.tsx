@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition, type ReactNode } from 'reac
 import Link from 'next/link';
 import type { AdminArticle } from '@/lib/admin/articles';
 import { checkSlugAction, previewAction, publishAction, type Issue } from './actions';
+import { BLOCK_EXAMPLES } from '@/lib/content-blocks';
 
 const SEO_TITLE_MAX = 60;
 const SEO_DESCRIPTION_MAX = 155;
@@ -200,6 +201,24 @@ export function ArticleForm({ categories, authors, defaultAuthor, initial }: { c
             Klistra in Markdown (t.ex. direkt från ChatGPT) eller HTML. Rubriker blir H2/H3; skript, stilar och
             inbäddningar tas bort. Länkar till aimagasinet.se görs relativa; externa länkar får nofollow och öppnas i ny flik. Varje stycke med ett tal över tolv, procent eller belopp bör ha en källänk.
           </div>
+          <details className="hint">
+            <summary>Innehållsblock: topplista, jämförelsekort, steg, faktaruta, diagram, bild</summary>
+            <p>
+              Ett block är <code>{'<div data-block="typ">{…JSON…}</div>'}</code> på en egen rad. I texten fungerar{' '}
+              <code>**fet**</code> och <code>[länktext](https://…)</code>. I en topplista anger du bara recensionen
+              (slug eller adress): logga, kategori och betyg hämtas ur recensionen, så betyget kan aldrig skilja sig
+              från recensionssidan. Ett diagram kräver <code>source</code>, en bild kräver <code>alt</code> och en fil
+              i bucketen <code>featured-images</code>. Ett felaktigt block eller en okänd recension stoppar
+              publiceringen. Länkar du till minst tre recensioner visas &quot;Verktyg i guiden&quot; automatiskt
+              längst ner.
+            </p>
+            {BLOCK_EXAMPLES.map((ex) => (
+              <div key={ex.type}>
+                <b>{ex.name}</b>
+                <pre style={{ whiteSpace: 'pre-wrap', userSelect: 'all', background: '#f4f4f8', padding: 8, borderRadius: 6, fontSize: 12 }}>{ex.code}</pre>
+              </div>
+            ))}
+          </details>
 
           <label htmlFor="image">Omslagsbild</label>
           {initial?.image && !removeImage && !coverUrl && (

@@ -7,9 +7,15 @@
  * (app/admin/) delar upp fynden i hårda stopp och varningar via `code`, se
  * lib/admin/config.ts.
  *
+ * Innehållsblocken (lib/content-blocks.ts): syntaxfel ger koden 'block' och
+ * en topplista med en recension som inte finns koden 'review-unknown'. Båda är
+ * hårda stopp i /admin. Reglerna nedan körs på blocken som vanlig HTML
+ * (expandBlocks), så att källänksregeln gäller text i blocken också.
+ *
  * Filen får inte importera något från Next eller Node, så att den även kan
  * köras från skript med tsx.
  */
+import { blockErrors, expandBlocks } from './content-blocks';
 
 export const SEO_TITLE_MAX = 60;
 export const SEO_DESCRIPTION_MAX = 155;
@@ -34,7 +40,11 @@ export type RuleCode =
   | 'date-invalid'
   | 'date-future'
   | 'internal-links'
-  | 'unsourced-number';
+  | 'unsourced-number'
+  /** Fel syntax i ett innehållsblock (ogiltig JSON, okänt fält, fel värde). */
+  | 'block'
+  /** En topplista pekar på en recension som inte finns eller inte är publicerad. */
+  | 'review-unknown';
 
 export type RuleIssue = {
   code: RuleCode;
@@ -101,7 +111,13 @@ export function countInternalLinks(html: string): number {
 /** Kör alla regler på en artikel. `categories` är kategorislugs ur databasen. */
 export function checkArticle(
   a: ArticleInput,
-  opts: { categories: ReadonlySet<string>; now?: number },
+  opts: {
+    categories: ReadonlySet<string>;
+    now?: number;
+    /** Topplistreferenser utan publicerad recension (lib/review-refs.ts
+     *  unknownToplistRefs); slås upp i databasen av anroparen. */
+    unknownReviews?: readonly string[];
+  },
 ): RuleIssue[] {
   const now = opts.now ?? Date.now();
   const out: RuleIssue[] = [];
@@ -123,9 +139,19 @@ export function checkArticle(
   if (Number.isNaN(published)) out.push({ code: 'date-invalid', field: 'published_at', message: 'Publiceringsdatumet går inte att tolka' });
   else if (published > now) out.push({ code: 'date-future', field: 'published_at', message: 'Publiceringsdatumet ligger i framtiden' });
 
+  // Innehållsblocken: syntaxfel och okända recensioner stoppar. Resten av
+  // reglerna körs på brödtexten med blocken som vanlig HTML.
+  for (const e of blockErrors(a.content_mdx)) {
+    out.push({ code: 'block', field: 'content_mdx', message: `innehållsblock: ${e}` });
+  }
+  for (const ref of opts.unknownReviews ?? []) {
+    out.push({ code: 'review-unknown', field: 'content_mdx', message: `topplistan pekar på "${ref}", som inte är en publicerad recension` });
+  }
+  const body = expandBlocks(a.content_mdx);
+
   // Interna länkar: minst två. Artiklar som inte länkar vidare i sajten är
   // återvändsgränder både för läsaren och för länkstrukturen.
-  const internal = countInternalLinks(a.content_mdx ?? '');
+  const internal = countInternalLinks(body);
   if (internal < MIN_INTERNAL_LINKS) {
     out.push({ code: 'internal-links', field: 'content_mdx', message: `Bara ${internal} interna länkar (minst ${MIN_INTERNAL_LINKS})` });
   }
@@ -133,7 +159,7 @@ export function checkArticle(
   BLOCK_RE.lastIndex = 0;
   let m: RegExpExecArray | null;
   let index = 0;
-  while ((m = BLOCK_RE.exec(a.content_mdx ?? '')) !== null) {
+  while ((m = BLOCK_RE.exec(body)) !== null) {
     const why = unsourcedNumber(m[2]);
     if (why) {
       const text = stripTags(m[2]);

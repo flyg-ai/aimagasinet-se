@@ -16,6 +16,8 @@ import {
 } from '@/lib/admin/articles';
 import { Preview } from '@/lib/admin/Preview';
 import { excerptFromHtml, excerptFromText } from '@/lib/excerpt';
+import { supabaseAdmin } from '@/lib/supabase';
+import { unknownToplistRefs } from '@/lib/review-refs';
 
 export type Issue = { message: string; hard: boolean; field?: string; blockIndex?: number; block?: string };
 
@@ -118,7 +120,9 @@ async function evaluate(form: FormData): Promise<Evaluated> {
   if (!authors.has(article.author ?? '')) issues.push({ message: 'Okänd skribent.', hard: true, field: 'author' });
 
   const categories = new Set((await listCategories()).map((c) => c.slug));
-  for (const r of C.validate({ ...article, publishedAt: article.publishedAt ?? '' }, categories)) {
+  // Topplistornas recensioner slås upp i databasen; en okänd stoppar.
+  const unknownReviews = await unknownToplistRefs(article.body, supabaseAdmin());
+  for (const r of C.validate({ ...article, publishedAt: article.publishedAt ?? '' }, categories, unknownReviews)) {
     // Tomma obligatoriska fält har redan egna meddelanden ovan.
     if (r.code === 'missing' && ['slug', 'title', 'content_mdx'].includes(String(r.field))) continue;
     // En rubrik över 60 tecken som SEO-titel är ingen inmatningsmiss: Google

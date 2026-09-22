@@ -35,3 +35,20 @@ export function toolLinkCards(html: string): string {
     return card(href, label);
   });
 }
+
+/**
+ * Lägger varje vanlig tabell i brödtexten i en <div class="table-wrap">, som
+ * ger den rundade ramen och horisontell scroll (app/globals.css). En
+ * .compare-table (som redan har sitt eget omslag och sin egen stil) lämnas
+ * orörd, och likaså en tabell som innehåller en annan tabell — matchningen går
+ * till första </table>, så en nästlad tabell skulle annars delas mitt itu.
+ */
+const TABLE = /<table\b([^>]*)>[\s\S]*?<\/table>/gi;
+
+export function wrapTables(html: string): string {
+  return html.replace(TABLE, (match, attrs: string) => {
+    if (/\bcompare-table\b/i.test(attrs)) return match;
+    if (/<table\b/i.test(match.slice(6))) return match;
+    return `<div class="table-wrap">${match}</div>`;
+  });
+}
