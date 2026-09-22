@@ -801,11 +801,21 @@ function AffiliateBtn({
       </span>
     );
   }
-  return (
+  const link = (
     <a href={to(url)} target="_blank" rel={rel} className={cls}>
       <span>{label}</span>
       <span aria-hidden>↗</span>
     </a>
+  );
+  if (!affiliateUrl) return link;
+  // Affiliatelänk: märk den som annons direkt vid knappen (marknadsföringslagen).
+  return (
+    <span className={'inline-flex flex-col gap-1.5' + (fullWidth ? ' w-full' : '')}>
+      {link}
+      <span className="text-[11px] leading-snug text-fg-subtle">
+        Annonslänk: vi kan få provision om du köper via länken. Det påverkar inte betyget.
+      </span>
+    </span>
   );
 }
 
