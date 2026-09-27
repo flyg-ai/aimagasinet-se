@@ -3,6 +3,16 @@ import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { resolveToolProfile, toolOverallScore } from '@/components/templates/ReviewTemplate';
 import { MasterHubCategorySearch } from '@/components/MasterHubCategorySearch';
+import { JsonLd } from '@/components/JsonLd';
+import { FaqAccordion } from '@/components/FaqAccordion';
+import { faqPageSchema } from '@/lib/schemas';
+import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
+
+/** Antal publicerade recensioner under /ai-verktyg/ — hårdkodat snarare än en
+ *  DB-fråga i rendern, eftersom sidan är statisk mellan deployer. Stäm av mot
+ *  `select count(*) from articles where type='page' and path like '/ai-verktyg/%'
+ *  and parent_slug is not null and published_at is not null` vid uppdatering. */
+export const MASTER_HUB_TOOL_COUNT = 304;
 
 /** Master hub for /ai-verktyg — lands users at a curated category grid that
  *  fans out to all sub-hubs. The article's content_mdx still renders below
@@ -14,6 +24,12 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
       <EditorsPicks />
       <CategoryGrid />
       <EditorialBody html={a.content_mdx} />
+      {Array.isArray(a.faq) && a.faq.length > 0 && (
+        <>
+          <FaqAccordion items={a.faq} />
+          <JsonLd data={faqPageSchema(a.faq)} />
+        </>
+      )}
     </article>
   );
 }
@@ -300,6 +316,8 @@ const CATEGORIES: {
 ];
 
 function Hero({ article: a }: { article: Article }) {
+  const updatedIso = contentModifiedIso(a) ?? a.published_at ?? null;
+  const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   return (
     <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-muted">
       <div className="mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-12">
@@ -313,7 +331,8 @@ function Hero({ article: a }: { article: Article }) {
         </nav>
 
         <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
-          <span aria-hidden>✦</span> {CATEGORIES.length} kategorier · {new Date().getFullYear()}
+          <span aria-hidden>✦</span> {MASTER_HUB_TOOL_COUNT} verktyg · {CATEGORIES.length} kategorier
+          {updatedLabel ? ` · Uppdaterad ${updatedLabel}` : ` · ${new Date().getFullYear()}`}
         </span>
 
         <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">

@@ -66,4 +66,12 @@ export const seoTestRedirects = [
     destination: '/basta-bokforingsprogram-med-ai-2026',
     statusCode: 301,
   },
+
+  // ── Test 3: sälj (24 september 2026) ────────────────────────────
+  // Säljarsidan rankade inte och hade inga inkommande länkar i innehållet.
+  {
+    source: '/ai-verktyg/crm/saljare',
+    destination: '/basta-ai-verktyg-for-salj-2026',
+    statusCode: 301,
+  },
 ];

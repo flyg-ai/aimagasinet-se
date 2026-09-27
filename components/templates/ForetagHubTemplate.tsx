@@ -26,7 +26,7 @@ const YRKEN: YrkeLink[] = [
   { label: 'Revisor', href: '/ai-verktyg/ekonomi/redovisning/', kw: 'revisor revision ekonomi' },
   { label: 'Bokförare', href: '/ai-verktyg/ekonomi/bokforing/', kw: 'bokförare bokföring ekonomi' },
   { label: 'Marknadsförare', href: '/ai-verktyg/marknadsforing/', kw: 'marknadsförare marknadsföring content seo annonser' },
-  { label: 'Säljare', href: '/ai-verktyg/crm/saljare/', kw: 'säljare försäljning sälj crm account' },
+  { label: 'Säljare', href: '/basta-ai-verktyg-for-salj-2026/', kw: 'säljare försäljning sälj crm account' },
   { label: 'HR-ansvarig', href: '/ai-verktyg/rekrytering/hr/', kw: 'hr personal medarbetare human resources' },
   { label: 'Fotograf', href: '/ai-verktyg/foretag/yrke/fotograf-video/', kw: 'fotograf video foto bild film' },
   { label: 'Designer', href: '/ai-verktyg/foretag/yrke/designer/', kw: 'designer design grafik ui ux' },

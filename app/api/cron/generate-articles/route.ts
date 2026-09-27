@@ -27,6 +27,7 @@
  */
 import { revalidatePath } from 'next/cache';
 import { excerptFromHtml } from '@/lib/excerpt';
+import { slugify } from '@/lib/slug';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
@@ -230,16 +231,6 @@ function textOf(msg: Anthropic.Beta.BetaMessage): string {
     .replace(/^```(?:html|json)?\s*/i, '')
     .replace(/```\s*$/i, '')
     .trim();
-}
-
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[åä]/g, 'a').replace(/ö/g, 'o')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 70)
-    .replace(/-+$/g, '');
 }
 
 

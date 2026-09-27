@@ -28,6 +28,7 @@ import { createClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
 import { readdirSync, statSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
+import { slugify } from '../lib/slug';
 
 loadEnv({ path: '.env.local' });
 
@@ -56,17 +57,6 @@ function arg(name: string): string | undefined {
 }
 const has = (name: string) => process.argv.includes(`--${name}`);
 
-/** Samma normalisering som slugify i cron-routen, så nycklarna blir förutsägbara. */
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[åä]/g, 'a')
-    .replace(/ö/g, 'o')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 70)
-    .replace(/-+$/g, '');
-}
 
 function tokens(s: string): Set<string> {
   return new Set(
