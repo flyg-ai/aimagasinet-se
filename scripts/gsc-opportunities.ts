@@ -37,6 +37,20 @@ const RECENTLY_CHANGED_GRACE_DAYS = 21; // vänta minst så länge efter en änd
 
 const STOPWORDS = new Set(['och', 'för', 'med', 'att', 'är', 'en', 'ett', 'av', 'på', 'i', 'som', 'du', 'ni', 'de', 'det', 'den', 'till', 'om', 'har', 'vi', 'din', 'er', 'kan', 'man']);
 
+/**
+ * Ett brett sökord som "e-postmarknadsföring" eller "seo verktyg" (utan
+ * AI-kvalificering) ägs strukturellt av etablerade megasajter (Mailchimp,
+ * HubSpot, stora SEO-byråer) — det är inte vår match, oavsett hur bra sidan
+ * är. "AI e-postmarknadsföring" eller "AI SEO-verktyg" DÄREMOT är precis vår
+ * nisch. Skilj de två åt så att "fel intent"-listan inte jagar sökord som
+ * aldrig går att vinna: den listar bara frågor som nämner AI eller ett känt
+ * AI-verktygsnamn, resten hamnar i en separat, icke-actionable bucket.
+ */
+const AI_MARKER_RE = /\bai\b|\bchatgpt\b|\bgpt-?\d|\bclaude\b|\bgemini\b|\bcopilot\b|\bmidjourney\b/i;
+function isNicheQuery(query: string): boolean {
+  return AI_MARKER_RE.test(query);
+}
+
 function normalizePath(pageUrl: string): string {
   try {
     return new URL(pageUrl).pathname.replace(/\/+$/, '') || '/';
@@ -110,6 +124,7 @@ async function main() {
   const recentlyChanged: { path: string; title: string; updated: string }[] = [];
   const felIntent: { path: string; title: string; query: string; clicks: number; impressions: number; position: number }[] = [];
   const tune: { path: string; title: string; query: string; clicks: number; impressions: number; position: number }[] = [];
+  const broadTerms: { path: string; query: string; impressions: number; position: number }[] = [];
   let unmanagedImpressions = 0;
 
   for (const [path, pageRows] of Array.from(byPage.entries())) {
@@ -136,7 +151,11 @@ async function main() {
       if (r.impressions < MIN_IMPRESSIONS) continue;
 
       if (r.position > POOR_POSITION) {
-        felIntent.push({ path, title: article.title, query, clicks: r.clicks, impressions: r.impressions, position: r.position });
+        if (isNicheQuery(query)) {
+          felIntent.push({ path, title: article.title, query, clicks: r.clicks, impressions: r.impressions, position: r.position });
+        } else {
+          broadTerms.push({ path, query, impressions: r.impressions, position: r.position });
+        }
       } else if (r.position >= TUNE_MIN_POSITION && !alreadyTargeted(query, haystack)) {
         tune.push({ path, title: article.title, query, clicks: r.clicks, impressions: r.impressions, position: r.position });
       }
@@ -161,6 +180,13 @@ async function main() {
     console.log(`  ${String(t.impressions).padStart(4)} visn  pos ${t.position.toFixed(1).padStart(5)}  ${t.clicks} klick  "${t.query}"  →  ${t.path}  (${t.title})`);
   }
   if (tune.length === 0) console.log('  (inga över tröskeln)');
+
+  broadTerms.sort((a, b) => b.impressions - a.impressions);
+  console.log(`\n═══ BRETT SÖKORD, EJ VINNBART — ingen AI-kvalificering, ägs av megasajter, ingen åtgärd (topp 10) ═══`);
+  for (const b of broadTerms.slice(0, 10)) {
+    console.log(`  ${String(b.impressions).padStart(4)} visn  pos ${b.position.toFixed(1).padStart(5)}  "${b.query}"  →  ${b.path}`);
+  }
+  if (broadTerms.length === 0) console.log('  (inga)');
 
   console.log(`\n${unmanagedImpressions} exponeringar låg på sidor som inte finns i \`articles\`-tabellen (t.ex. dynamiska jämförelser) och ingår inte ovan.`);
 }
