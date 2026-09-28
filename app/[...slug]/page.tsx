@@ -177,8 +177,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // prefer seo_title when set, fall back to article title. The site-name
   // suffix " | AI-Magasinet" is appended automatically by metadata.title.template
   // in layout.tsx — don't include it here.
+  //
+  // TITLE_FORMAT_TEST_SLUGS: enskilda recensioner som testar seo_title i
+  // stället för standardformatet (t.ex. betyg i titeln), för att se om det
+  // rör CTR. suno-ai lades till 2026-09-28 efter ~13 000 visningar/månad på
+  // bara varumärkesnamnet med i praktiken noll klick. Ta bort ur setet för
+  // att återställa till standardformatet.
+  const TITLE_FORMAT_TEST_SLUGS = new Set<string>(['suno-ai']);
   let title: string;
-  if (kind === 'review') {
+  if (kind === 'review' && !TITLE_FORMAT_TEST_SLUGS.has(a.slug)) {
     title = `${toolNameFromTitle(a.title)} Recension ${year}`;
   } else if (a.seo_title) {
     title = a.seo_title;
