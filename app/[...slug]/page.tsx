@@ -9,6 +9,7 @@ import {
   type HubChild,
 } from '@/components/templates/HubTemplate';
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate';
+import { loadRelatedArticles } from '@/lib/related-articles';
 import { YrkesHubTemplate } from '@/components/templates/YrkesHubTemplate';
 import {
   StandalonePageTemplate,
@@ -368,8 +369,11 @@ export default async function CatchAllPage({ params }: Props) {
   }
 
   if (decision.kind === 'review') {
-    const siblings = await getSiblings(a.parent_slug, a.slug);
-    return <ReviewTemplate article={a} siblings={siblings} />;
+    const [siblings, related] = await Promise.all([
+      getSiblings(a.parent_slug, a.slug),
+      loadRelatedArticles(a.path, a.slug),
+    ]);
+    return <ReviewTemplate article={a} siblings={siblings} related={related} />;
   }
 
   if (decision.kind === 'standalone') {

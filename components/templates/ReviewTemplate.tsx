@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { to } from '@/lib/links';
+import { ArticleCard } from '@/components/ArticleCard';
+import type { RelatedArticles } from '@/lib/related-articles';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
 import { buildReviewProfile, seed, type ReviewProfile } from '@/lib/review-profiles';
 import { formatScore, reviewRating, reviewScore } from '@/lib/review-score';
@@ -54,9 +56,11 @@ function rankAmongSiblings(article: Article, siblings: ArticleCardData[]): numbe
 export function ReviewTemplate({
   article: a,
   siblings,
+  related,
 }: {
   article: Article;
   siblings: ArticleCardData[];
+  related?: RelatedArticles;
 }) {
   const toolName = toolNameFromTitle(a.title);
   const profile = buildReviewProfile(a);
@@ -147,6 +151,13 @@ export function ReviewTemplate({
         </div>
       </div>
 
+      {related && related.news.length > 0 && (
+        <RelatedCarousel heading={`Nyheter om ${toolName}`} items={related.news} />
+      )}
+      {related && related.guides.length > 0 && (
+        <RelatedCarousel heading={`Guider med ${toolName}`} items={related.guides} />
+      )}
+
       {Array.isArray(a.faq) && a.faq.length > 0 && (
         <>
           <FaqAccordion
@@ -161,6 +172,26 @@ export function ReviewTemplate({
         </>
       )}
     </article>
+  );
+}
+
+/** Horisontell karusell för "Nyheter om X" / "Guider med X" längst ner på
+ *  recensionssidan. Data kommer från lib/related-articles.ts (artiklar vars
+ *  brödtext länkar hit), inte manuell taggning per verktyg. */
+function RelatedCarousel({ heading, items }: { heading: string; items: RelatedArticles['news'] }) {
+  return (
+    <section className="border-t border-line bg-card">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+        <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-fg">{heading}</h2>
+        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-4 lg:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {items.map((r) => (
+            <div key={r.slug} className="min-w-[260px] snap-start lg:min-w-0">
+              <ArticleCard a={{ ...r, affiliate_url: null }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

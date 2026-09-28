@@ -921,7 +921,10 @@ async function generateAndPublish(
       excerpt,
       content_mdx: html,
       category: job.category,
-      tags: [],
+      // 'nyhet' skiljer den här artikeln från manuellt skrivna guider i
+      // recensionssidornas "Nyheter"/"Guider"-karuseller (lib/related-articles.ts).
+      // Cron-rutten producerar bara nyheter, aldrig evergreen guider.
+      tags: ['nyhet'],
       featured_image: image,
       type: 'post',
       path: `/${job.slug}`,
