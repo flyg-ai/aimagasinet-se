@@ -2,6 +2,9 @@ import Link from 'next/link';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { SidebarArticleCard } from '@/components/ArticleCard';
+import { JsonLd } from '@/components/JsonLd';
+import { FaqAccordion } from '@/components/FaqAccordion';
+import { faqPageSchema } from '@/lib/schemas';
 
 /** Template for depth-1 standalone guides without a parent (no hub above them).
  *  Layout: wide hero with H1 + ingress, magazine-typography content_mdx, and
@@ -58,6 +61,13 @@ export function StandalonePageTemplate({
                   </span>
                 ))}
               </div>
+            )}
+
+            {Array.isArray(a.faq) && a.faq.length > 0 && (
+              <>
+                <FaqAccordion items={a.faq} />
+                <JsonLd data={faqPageSchema(a.faq)} />
+              </>
             )}
           </main>
 
