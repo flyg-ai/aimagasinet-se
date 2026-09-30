@@ -407,11 +407,18 @@ function CtaButton({ tool, side }: { tool: ComparedTool; side: 'a' | 'b' }) {
 /* ─── Magazine analysis text (Haiku) ───────────────────────────── */
 
 function MagazineText({ a, b, intro }: { a: ComparedTool; b: ComparedTool; intro: string }) {
+  // intro kan vara flera stycken separerade med tomrad — äldre/kortare rader
+  // är fortfarande bara en enda sträng, vilket funkar precis lika bra.
+  const paragraphs = intro.split(/\n\s*\n/).filter(Boolean);
   return (
     <section className="pt-14 sm:pt-20">
       <SectionHeader kicker="Analys" title={`${a.ref.name} vs ${b.ref.name} i korthet`} />
       <div className="rounded-2xl border border-line bg-card p-6 sm:p-8">
-        <p className="text-lg leading-relaxed text-fg-muted sm:text-xl">{intro}</p>
+        {paragraphs.map((p, i) => (
+          <p key={i} className={`text-lg leading-relaxed text-fg-muted sm:text-xl ${i > 0 ? 'mt-4' : ''}`}>
+            {p}
+          </p>
+        ))}
       </div>
     </section>
   );
