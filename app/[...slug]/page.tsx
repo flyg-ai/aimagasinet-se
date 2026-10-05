@@ -31,7 +31,7 @@ import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 import { classify, CURATED_HUB_TOOL_SLUGS } from '@/lib/route-kind';
 import { contentModifiedIso } from '@/lib/format-date';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 type Props = { params: { slug: string[] } };
 
