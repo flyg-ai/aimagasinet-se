@@ -74,4 +74,14 @@ export const seoTestRedirects = [
     destination: '/basta-ai-verktyg-for-salj-2026',
     statusCode: 301,
   },
+
+  // ── Test 4: svenska AI-bolag (7 oktober 2026) ───────────────────
+  // Två artiklar om samma ämne. Den nya (/svenska-ai-foretag-2026) är
+  // bredare och uppdaterad med Lovable, Legora och Neko Health, som
+  // helt saknades i båda originalversionerna. Den gamla konsolideras in.
+  {
+    source: '/svenska-ai-startups-2026',
+    destination: '/svenska-ai-foretag-2026',
+    statusCode: 301,
+  },
 ];
