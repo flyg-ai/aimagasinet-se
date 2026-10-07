@@ -100,13 +100,6 @@ const nextConfig = {
         statusCode: 301,
       },
       {
-        // Gamla "alla svenska AI-företag"-listan ersatt av den granskande
-        // startup-artikeln.
-        source: '/svenska-ai-foretag-2026',
-        destination: '/svenska-ai-startups-2026',
-        statusCode: 301,
-      },
-      {
         // Fable 5-nyheten bytte slug recension → lansering.
         source: '/claude-fable-5-recension',
         destination: '/claude-fable-5-lansering',
