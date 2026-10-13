@@ -5,7 +5,8 @@ import { AuthorAvatar } from '@/components/AuthorAvatar';
 
 /** Renders /om-oss. Mission + redaktionen + varför + kontakt-CTA.
  *  Content stays in code (no DB editing surface for this page yet);
- *  article.content_mdx is rendered after the team section if present.
+ *  article.content_mdx (legacy WP-import filler, duplicated these
+ *  sections and shipped unstyled giant icon SVGs) is no longer rendered.
  *
  *  `authors` are fetched server-side in app/[...slug]/page.tsx and
  *  passed in so the Team section renders the real editorial team
@@ -24,7 +25,6 @@ export function AboutTemplate({
       <Team authors={authors} />
       <WhyWeExist />
       <ContactCta />
-      {a.content_mdx && <EditorialBody html={a.content_mdx} />}
     </article>
   );
 }
@@ -235,38 +235,6 @@ function ContactCta() {
             kontakt@aimagasinet.se
           </a>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function EditorialBody({ html }: { html: string | null }) {
-  if (!html) return null;
-  const clean = html
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    // /om-oss should be ren text — the WP import shipped a large lamp
-    // illustration mid-page that fights the team-grid for attention.
-    // Strip standalone <img> (including self-closing) and <figure>/<picture>
-    // blocks so the AboutTemplate sections own the visual hierarchy.
-    .replace(/<figure\b[^>]*>[\s\S]*?<\/figure>/gi, '')
-    .replace(/<picture\b[^>]*>[\s\S]*?<\/picture>/gi, '')
-    .replace(/<img\b[^>]*\/?>/gi, '');
-  return (
-    <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
-      <div className="magazine-prose">
-        <div
-          className="
-            prose prose-lg max-w-none
-            prose-headings:font-black prose-headings:tracking-tight prose-headings:text-fg
-            prose-h2:mt-12 prose-h2:text-2xl prose-h2:uppercase prose-h2:border-l-4 prose-h2:border-indigo-500 prose-h2:pl-4
-            prose-p:text-fg-muted prose-p:leading-[1.85]
-            prose-a:text-indigo-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-            prose-strong:font-bold prose-strong:text-fg
-            prose-li:text-fg-muted prose-li:leading-[1.75] prose-li:marker:text-indigo-500
-          "
-          dangerouslySetInnerHTML={{ __html: clean }}
-        />
       </div>
     </section>
   );
