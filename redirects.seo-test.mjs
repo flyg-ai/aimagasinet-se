@@ -84,4 +84,19 @@ export const seoTestRedirects = [
     destination: '/svenska-ai-foretag-2026',
     statusCode: 301,
   },
+
+  // ── Test 5: vilken AI är bäst / på svenska (13 oktober 2026) ────
+  // Intern kannibalisering: konkurrenter (aihjalp.se, hurbra.se) rankar på
+  // "vilken är bästa AI-appen på svenska" med en enda bred "king"-artikel som
+  // täcker flera delfrågor (svenska, kod, pris...) i samma stycke. Vi hade
+  // samma ämne utspritt på två sidor: en smal men exakt frastitel-matchande
+  // sida och en bredare flerkategorisida som redan hade en egen (svagare)
+  // svensk-text-sektion. Den smalare konsolideras in — dess verkliga
+  // testmetodik (fem uppgifter, aug 2026) ersatte den breda sidans tidigare
+  // svensk-text-avsnitt, plus ett nytt Snabbt svar-block och utökad FAQ.
+  {
+    source: '/vilken-ai-ar-bast-pa-svenska-vi-testade-chatgpt-claude-och-gemini',
+    destination: '/chatgpt-vs-claude-vs-gemini-2026',
+    statusCode: 301,
+  },
 ];
