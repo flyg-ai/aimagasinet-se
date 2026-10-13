@@ -6,7 +6,7 @@ import type { MetadataRoute } from 'next';
 export const revalidate = 3600;
 import { supabase } from '@/lib/supabase';
 import { featuredSlugs } from '@/lib/compare';
-import { STOCKHOLM_COMPANIES } from '@/lib/ai-konsult/stockholm';
+import { CITIES } from '@/lib/ai-konsult/companies';
 
 const BASE = 'https://aimagasinet.se';
 
@@ -126,16 +126,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // AI-konsult: hubben, stadssidan och profilerna. Statiska sidor, så de finns inte i databasen.
+  // AI-konsult: hubben, städerna och bolagsprofilerna. Statiska sidor, så de finns inte i databasen.
   out.push({ url: `${BASE}/ai-konsult/`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 });
-  out.push({ url: `${BASE}/ai-konsult/stockholm/`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 });
-  for (const c of STOCKHOLM_COMPANIES) {
-    out.push({
-      url: `${BASE}/ai-konsult/stockholm/${c.slug}/`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    });
+  for (const city of CITIES) {
+    out.push({ url: `${BASE}/ai-konsult/${city.slug}/`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 });
+    for (const c of city.companies) {
+      out.push({ url: `${BASE}/ai-konsult/${city.slug}/${c.slug}/`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 });
+    }
   }
 
   return out;

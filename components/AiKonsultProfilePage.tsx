@@ -1,21 +1,6 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { findStockholmCompany } from '@/lib/ai-konsult/stockholm';
+import { companiesInCity, type City } from '@/lib/ai-konsult/companies';
 import AiKonsultForm from '@/components/AiKonsultForm';
-
-type Props = { params: { company: string } };
-
-export function generateMetadata({ params }: Props): Metadata {
-  const c = findStockholmCompany(params.company);
-  if (!c) return {};
-  const title = `${c.name}: AI-konsult i ${c.city}`;
-  return {
-    title,
-    description: `${c.name} i ${c.city}. ${c.text} Uppgifterna är hämtade från bolagets egen webbplats.`,
-    alternates: { canonical: `https://aimagasinet.se/ai-konsult/stockholm/${c.slug}/` },
-  };
-}
 
 const QUESTIONS = [
   { q: 'Vilket problem ska AI lösa?', a: 'Utgå från en konkret process eller utmaning i verksamheten som ni vill förbättra.' },
@@ -23,11 +8,15 @@ const QUESTIONS = [
   { q: 'Hur ser upplägg och kostnad ut?', a: 'Stäm av omfattning, ansvarsfördelning och hur uppföljning sker.' },
 ];
 
-export default function StockholmCompanyPage({ params }: Props) {
-  const c = findStockholmCompany(params.company);
-  if (!c) notFound();
+type Props = {
+  city: City;
+  company: ReturnType<typeof companiesInCity>[number];
+};
 
+/** Profilsidan för ett bolag i en viss stad. Samma mall för alla bolag. */
+export default function AiKonsultProfilePage({ city, company: c }: Props) {
   const siteLabel = c.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const others = companiesInCity(city).filter((o) => o.slug !== c.slug).slice(0, 3);
 
   return (
     <main className="pb-16">
@@ -37,7 +26,9 @@ export default function StockholmCompanyPage({ params }: Props) {
           <nav className="text-sm text-fg/60" aria-label="Brödsmulor">
             <Link href="/" className="hover:underline">Start</Link>
             <span className="mx-2">/</span>
-            <Link href="/ai-konsult/stockholm/" className="hover:underline">AI-konsulter i Stockholm</Link>
+            <Link href="/ai-konsult/" className="hover:underline">AI-konsulter</Link>
+            <span className="mx-2">/</span>
+            <Link href={`/ai-konsult/${city.slug}/`} className="hover:underline">AI-konsulter i {city.name}</Link>
             <span className="mx-2">/</span>
             <span>{c.name}</span>
           </nav>
@@ -49,8 +40,8 @@ export default function StockholmCompanyPage({ params }: Props) {
               </span>
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight text-fg sm:text-4xl">{c.name}</h1>
-                <p className="mt-1 text-fg/80">AI-konsult i {c.city}</p>
-                <p className="mt-1 text-sm text-fg/60">{c.city} · {c.region}</p>
+                <p className="mt-1 text-fg/80">AI-konsult i {city.name}</p>
+                <p className="mt-1 text-sm text-fg/60">{c.location} · {city.region}</p>
                 <span className="mt-3 inline-block rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-fg/70 shadow-sm dark:bg-white/10">
                   Redaktionell företagsprofil
                 </span>
@@ -72,27 +63,22 @@ export default function StockholmCompanyPage({ params }: Props) {
 
       <div className="mx-auto mt-10 grid w-full max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-14">
-          {/* Översikt */}
           <section id="oversikt" className="scroll-mt-24">
             <h2 className="text-2xl font-semibold tracking-tight text-fg">Om {c.name}</h2>
             <p className="mt-3 text-fg/80">{c.text}</p>
             <p className="mt-3 text-sm text-fg/60">Källa: {c.name}s webbplats.</p>
           </section>
 
-          {/* Tjänster */}
           <section id="tjanster" className="scroll-mt-24">
             <h2 className="text-2xl font-semibold tracking-tight text-fg">Tjänster och kompetens</h2>
             <p className="mt-2 text-sm text-fg/60">Tjänsteområden så som de står på bolagets webbplats.</p>
             <ul className="mt-5 grid gap-3 sm:grid-cols-2">
               {c.services.map((s) => (
-                <li key={s} className="rounded-xl border border-black/10 bg-white px-4 py-3 text-fg dark:border-white/10 dark:bg-white/5">
-                  {s}
-                </li>
+                <li key={s} className="rounded-xl border border-black/10 bg-white px-4 py-3 text-fg dark:border-white/10 dark:bg-white/5">{s}</li>
               ))}
             </ul>
           </section>
 
-          {/* Inför kontakt */}
           <section id="kontakta" className="scroll-mt-24">
             <h2 className="text-2xl font-semibold tracking-tight text-fg">Bra frågor inför första kontakten</h2>
             <ol className="mt-5 divide-y divide-black/10 dark:divide-white/10">
@@ -108,22 +94,19 @@ export default function StockholmCompanyPage({ params }: Props) {
             </ol>
           </section>
 
-          {/* Förfrågan */}
-          <AiKonsultForm city={c.city} />
+          <AiKonsultForm city={city.name} />
 
-          {/* Kundcase */}
           <section className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-white/5">
             <h2 className="text-lg font-semibold text-fg">Kundcase och referenser</h2>
             <p className="mt-2 text-fg/80">{c.cases}</p>
           </section>
 
-          {/* Vanliga frågor */}
           <section id="fragor" className="scroll-mt-24">
             <h2 className="text-2xl font-semibold tracking-tight text-fg">Vanliga frågor om {c.name}</h2>
             <dl className="mt-5 divide-y divide-black/10 rounded-xl border border-black/10 bg-white dark:divide-white/10 dark:border-white/10 dark:bg-white/5">
               <div className="p-5">
                 <dt className="font-medium text-fg">Var finns {c.name}?</dt>
-                <dd className="mt-2 text-fg/80">{c.address ? `${c.address}.` : `Adressen står inte på webbplatsen. Orten är ${c.city}.`}</dd>
+                <dd className="mt-2 text-fg/80">{c.address ? `${c.address}.` : `Adressen står inte på webbplatsen. Platsen är ${c.location}.`}</dd>
               </div>
               <div className="p-5">
                 <dt className="font-medium text-fg">Vilka tjänster erbjuder {c.name}?</dt>
@@ -137,15 +120,35 @@ export default function StockholmCompanyPage({ params }: Props) {
               </div>
             </dl>
           </section>
+
+          {others.length > 0 && (
+            <section>
+              <div className="flex items-end justify-between">
+                <h2 className="text-xl font-semibold text-fg">Fler AI-konsulter i {city.name}</h2>
+                <Link href={`/ai-konsult/${city.slug}/#bolag`} className="text-sm font-medium text-indigo-600 hover:underline">Se alla →</Link>
+              </div>
+              <ul className="mt-4 grid gap-4 sm:grid-cols-3">
+                {others.map((o) => (
+                  <li key={o.slug}>
+                    <Link href={`/ai-konsult/${city.slug}/${o.slug}/`} className="block rounded-xl border border-black/10 bg-white p-4 hover:border-indigo-300 dark:border-white/10 dark:bg-white/5">
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-lg font-bold ${o.tone}`} aria-hidden>{o.letter}</span>
+                      <p className="mt-3 font-semibold text-fg">{o.name}</p>
+                      <p className="text-sm text-fg/60">{o.location}</p>
+                      <p className="mt-2 text-sm font-medium text-indigo-600">Visa profil →</p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
 
-        {/* Sidopanel */}
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <section className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-white/5">
             <h2 className="text-lg font-semibold text-fg">Kontakt och företagsinfo</h2>
             <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex justify-between gap-4"><dt className="text-fg/60">Ort</dt><dd className="text-right text-fg">{c.city}</dd></div>
-              <div className="flex justify-between gap-4"><dt className="text-fg/60">Region</dt><dd className="text-right text-fg">{c.region}</dd></div>
+              <div className="flex justify-between gap-4"><dt className="text-fg/60">Plats</dt><dd className="text-right text-fg">{c.location}</dd></div>
+              <div className="flex justify-between gap-4"><dt className="text-fg/60">Region</dt><dd className="text-right text-fg">{city.region}</dd></div>
               <div className="flex justify-between gap-4"><dt className="text-fg/60">Webbplats</dt><dd className="text-right"><a href={c.website} target="_blank" rel="nofollow noopener" className="text-indigo-600 hover:underline">{siteLabel}</a></dd></div>
               {c.email && <div className="flex justify-between gap-4"><dt className="text-fg/60">E-post</dt><dd className="text-right"><a href={`mailto:${c.email}`} className="text-indigo-600 hover:underline">{c.email}</a></dd></div>}
               {c.address && <div className="flex justify-between gap-4"><dt className="text-fg/60">Adress</dt><dd className="text-right text-fg">{c.address}</dd></div>}
@@ -172,11 +175,10 @@ export default function StockholmCompanyPage({ params }: Props) {
         </aside>
       </div>
 
-      {/* Källrad */}
       <div className="mx-auto mt-14 w-full max-w-6xl px-4 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-black/10 bg-white px-5 py-4 text-sm text-fg/70 dark:border-white/10 dark:bg-white/5">
           <span>Sammanställt av AI-Magasinet med {c.name}s webbplats som källa.</span>
-          <Link href="/ai-konsult/stockholm/" className="font-medium text-indigo-600 hover:underline">Jämför fler AI-konsulter i Stockholm →</Link>
+          <Link href={`/ai-konsult/${city.slug}/`} className="font-medium text-indigo-600 hover:underline">Jämför fler AI-konsulter i {city.name} →</Link>
         </div>
       </div>
     </main>

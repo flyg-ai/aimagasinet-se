@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AiKonsultWizard from '@/components/AiKonsultWizard';
+import { CITIES } from '@/lib/ai-konsult/companies';
 
 export const metadata: Metadata = {
   title: 'Hitta rätt AI-konsult för ditt företag',
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aimagasinet.se/ai-konsult/' },
 };
 
-const CITIES = [
-  { name: 'Stockholm', href: '/ai-konsult/stockholm/', live: true },
-  { name: 'Göteborg', href: '', live: false },
-  { name: 'Malmö', href: '', live: false },
-];
+const HUB_CITIES = CITIES.map((c) => ({
+  name: c.name,
+  href: `/ai-konsult/${c.slug}/`,
+  text: `${c.companies.length} bolag, med källa på varje uppgift.`,
+}));
 
 const SERVICES = [
   { title: 'AI-strategi', text: 'Få hjälp att identifiera möjligheter, sätta riktning och skapa en plan som passar er verksamhet.' },
@@ -82,20 +83,13 @@ export default function AiKonsultHub() {
           <Link href="/ai-konsult/stockholm/" className="text-sm font-medium text-indigo-600 hover:underline">Se alla orter →</Link>
         </div>
         <ul className="mt-8 grid gap-6 md:grid-cols-3">
-          {CITIES.map((c) => (
+          {HUB_CITIES.map((c) => (
             <li key={c.name}>
-              {c.live ? (
-                <Link href={c.href} className="block rounded-xl border border-black/10 bg-white p-6 hover:border-indigo-300 dark:border-white/10 dark:bg-white/5">
-                  <p className="text-xl font-semibold text-fg">{c.name}</p>
-                  <p className="mt-2 text-sm text-fg/70">Fem AI-konsulter i Stockholmsområdet, med källa på varje uppgift.</p>
-                  <p className="mt-4 text-sm font-medium text-indigo-600">Utforska konsulter →</p>
-                </Link>
-              ) : (
-                <div className="block rounded-xl border border-dashed border-black/15 p-6 dark:border-white/15">
-                  <p className="text-xl font-semibold text-fg/60">{c.name}</p>
-                  <p className="mt-2 text-sm text-fg/50">Kommer snart.</p>
-                </div>
-              )}
+              <Link href={c.href} className="block rounded-xl border border-black/10 bg-white p-6 hover:border-indigo-300 dark:border-white/10 dark:bg-white/5">
+                <p className="text-xl font-semibold text-fg">{c.name}</p>
+                <p className="mt-2 text-sm text-fg/70">{c.text}</p>
+                <p className="mt-4 text-sm font-medium text-indigo-600">Utforska konsulter →</p>
+              </Link>
             </li>
           ))}
         </ul>
