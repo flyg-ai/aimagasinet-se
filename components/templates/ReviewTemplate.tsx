@@ -142,7 +142,8 @@ export function ReviewTemplate({
             <NextPrev siblings={siblings} />
           </main>
 
-          <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
+          {/* Höjden begränsas till skärmen, så att panelen scrollar inuti sig själv och CTA:n längst ner går att nå. */}
+          <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:pb-2">
             <Toc items={toc.items} variant="sidebar" />
             <Snabbfakta profile={profile} />
             <SidebarOffer toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />

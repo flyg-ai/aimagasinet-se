@@ -105,6 +105,22 @@ const nextConfig = {
         destination: '/claude-fable-5-lansering',
         statusCode: 301,
       },
+      {
+        // Felstavad variant ("und" i stället för "och") som aldrig publicerats
+        // men ändå fått 26 visningar/90 dagar i GSC — troligen en extern
+        // felskriven länk. Svarade 404; fångar in trafiken i stället för att
+        // slösa den.
+        source: '/vilken-ai-ar-bast-pa-svenska-vi-testade-chatgpt-claude-und-gemini',
+        destination: '/vilken-ai-ar-bast-pa-svenska-vi-testade-chatgpt-claude-och-gemini',
+        statusCode: 301,
+      },
+      {
+        // Webbapp-artikeln kannibaliserade "bygga app med ai" mot mobilappsidan,
+        // som vinner sökordet (GSC, 90 dagar: 0 klick vs 6 klick, 164 vs 394 vis).
+        source: '/bygga-app-med-ai',
+        destination: '/bygga-mobilapp-med-ai/',
+        statusCode: 301,
+      },
       // ── Gamla WordPress-URL:er som Google Search Console rapporterar
       //    som 404. 301 forwards link equity / rensar crawl-felen. ──
       // OBS: /hello-world och alla wp-* hanteras numera som 410 Gone i

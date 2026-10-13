@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { supabaseAdmin } from '@/lib/supabase';
+import { expandBlocks } from '@/lib/content-blocks';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,7 +59,7 @@ export default async function Utkast({ params, searchParams }: Props) {
 
       <article
         className="prose prose-neutral mt-9 max-w-none dark:prose-invert prose-headings:font-medium prose-a:underline"
-        dangerouslySetInnerHTML={{ __html: data.content_mdx ?? '' }}
+        dangerouslySetInnerHTML={{ __html: expandBlocks(data.content_mdx) }}
       />
     </main>
   );

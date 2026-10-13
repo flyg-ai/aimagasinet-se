@@ -73,14 +73,9 @@ type Article = {
 
 type AuthorRef = { slug: string; name: string; bio: string | null; avatar_url: string | null };
 
-/** Shared Article/NewsArticle node. `type` switches @type; `speakable` adds a
- *  SpeakableSpecification for voice/AI assistants (targets the H1 + lead). */
-function articleNode(
-  type: 'Article' | 'NewsArticle',
-  a: Article,
-  author?: AuthorRef | null,
-  opts?: { speakable?: boolean },
-) {
+/** Shared Article node. `speakable` adds a SpeakableSpecification for
+ *  voice/AI assistants (targets the H1 + lead). */
+function articleNode(a: Article, author?: AuthorRef | null, opts?: { speakable?: boolean }) {
   const url = absolute(a.path);
   const authorNode = author
     ? {
@@ -95,7 +90,7 @@ function articleNode(
   const keywords = (a.keywords ?? []).filter(Boolean);
   return {
     '@context': 'https://schema.org',
-    '@type': type,
+    '@type': 'Article',
     headline: a.title,
     description: a.excerpt ?? undefined,
     articleBody: a.excerpt ?? undefined,
@@ -125,15 +120,9 @@ function articleNode(
   };
 }
 
-/** schema.org Article. */
+/** schema.org Article med Speakable för röst-/AI-assistenter. */
 export function articleSchema(a: Article, author?: AuthorRef | null) {
-  return articleNode('Article', a, author);
-}
-
-/** schema.org NewsArticle (Google News-kompatibel) med Speakable för
- *  röst-/AI-assistenter. */
-export function newsArticleSchema(a: Article, author?: AuthorRef | null) {
-  return articleNode('NewsArticle', a, author, { speakable: true });
+  return articleNode(a, author, { speakable: true });
 }
 
 type Crumb = { label: string; href?: string };

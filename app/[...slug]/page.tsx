@@ -173,23 +173,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = a.seo_description || a.excerpt || undefined;
   const year = new Date().getFullYear();
 
-  // Review pages always use the canonical "[Tool] Recension [Year]" format —
-  // overrides seo_title because the format is editorial spec. Other templates
-  // prefer seo_title when set, fall back to article title. The site-name
-  // suffix " | AI-Magasinet" is appended automatically by metadata.title.template
-  // in layout.tsx — don't include it here.
+  // Review pages: skräddarsydd seo_title vinner om den finns — manuellt
+  // skriven per sida, ~60 tecken, variation tillåten mellan sidor. Bara
+  // recensioner utan egen seo_title faller tillbaka på det generiska
+  // "[Verktyg] Recension [År]"-formatet. Andra mallar prioriterar seo_title
+  // på samma sätt, med artikeltitel som sista utväg. Site-name-suffixet
+  // " | AI-Magasinet" läggs på automatiskt av metadata.title.template i
+  // layout.tsx — don't include it here.
   //
-  // TITLE_FORMAT_TEST_SLUGS: enskilda recensioner som testar seo_title i
-  // stället för standardformatet (t.ex. betyg i titeln), för att se om det
-  // rör CTR. suno-ai lades till 2026-09-28 efter ~13 000 visningar/månad på
-  // bara varumärkesnamnet med i praktiken noll klick. Ta bort ur setet för
-  // att återställa till standardformatet.
-  const TITLE_FORMAT_TEST_SLUGS = new Set<string>(['suno-ai']);
+  // Bakgrund: det generiska formatet gav flera recensioner stora
+  // visningstal men nära-noll CTR (t.ex. suno-ai: ~13 000 visningar/månad,
+  // i praktiken noll klick) — ett tecken på att enbart varumärkesnamnet
+  // inte lockar klick. 2026-10-09: flippade default till att skrivna
+  // titlar alltid vinner, i stället för en allowlist av undantag.
   let title: string;
-  if (kind === 'review' && !TITLE_FORMAT_TEST_SLUGS.has(a.slug)) {
-    title = `${toolNameFromTitle(a.title)} Recension ${year}`;
-  } else if (a.seo_title) {
+  if (a.seo_title) {
     title = a.seo_title;
+  } else if (kind === 'review') {
+    title = `${toolNameFromTitle(a.title)} Recension ${year}`;
   } else {
     title = a.title;
   }
@@ -292,7 +293,8 @@ export default async function CatchAllPage({ params }: Props) {
   // Opublicerat ska inte na lasare. Ingen nyckelkontroll har: att lasa
   // searchParams gor hela rutten dynamiskt renderad och slar ut revalidate=300
   // for samtliga artiklar. Utkast lases pa /utkast/[slug] i stallet.
-  if (!a.published_at) notFound();
+  // I lokal utveckling (next dev) visas utkast också, så att de går att se på localhost.
+  if (!a.published_at && process.env.NODE_ENV !== 'development') notFound();
 
   const depth = path.split('/').filter(Boolean).length;
   const decision = classify(path, depth, a.type, a.slug, a.parent_slug);

@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { to } from '@/lib/links';
 import {
   imagePublicUrl, isExternalHref, parseInline,
-  type Block, type CalloutBlock, type ChartBlock, type CompareBlock, type ImageBlock, type Source, type StepsBlock,
+  type Block, type CalloutBlock, type ChartBlock, type CompaniesBlock, type CompareBlock, type ImageBlock, type Source, type StepsBlock,
   type ToplistBlock,
 } from '@/lib/content-blocks';
 import { listScoreText, type ReviewScore } from '@/lib/review-score';
@@ -56,7 +56,31 @@ export function ContentBlock({ block, reviews }: { block: Block; reviews: Review
     case 'callout': return <Callout b={block} />;
     case 'chart': return <Chart b={block} />;
     case 'image': return <Figure b={block} />;
+    case 'companies': return <Companies b={block} />;
   }
+}
+
+// ── companies ──────────────────────────────────────────────────────────
+
+/** Redaktionell företagslista. Ordningen är redaktionens och inte beroende av
+ *  betalning. Betald synlighet visas aldrig här, utan i en egen, märkt ruta. */
+function Companies({ b }: { b: CompaniesBlock }) {
+  return (
+    <section className="cb cb-companies not-prose" aria-label={b.title ?? 'Företag'}>
+      {b.title && <p className="cb-title"><Rich text={b.title} /></p>}
+      <ol>
+        {b.items.map((it) => (
+          <li key={it.name}>
+            <h3>{it.href ? <A href={it.href}>{it.name}</A> : it.name} <small>({it.city})</small></h3>
+            <p><Rich text={it.text} /></p>
+            {it.fitsFor && <p><strong>Passar för:</strong> <Rich text={it.fitsFor} /></p>}
+            <Sources items={it.source} />
+          </li>
+        ))}
+      </ol>
+      {b.note && <p className="cb-note"><Rich text={b.note} /></p>}
+    </section>
+  );
 }
 
 // ── Verktygets logga och betyg (delas med "Verktyg i guiden") ──────────

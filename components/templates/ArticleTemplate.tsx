@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { Toc } from '@/components/Toc';
 import type { Article } from '@/lib/supabase';
 import type { Author } from '@/lib/authors';
-import { articleSchema, newsArticleSchema, breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
+import { articleSchema, breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { buildToc } from '@/lib/toc';
 import { toolLinkCards } from '@/lib/article-html';
@@ -79,8 +79,8 @@ export async function ArticleTemplate({
   // och betyget räknas som på recensionssidan (lib/review-score.ts).
   const reviews = await loadReviewIndex(a.content_mdx);
 
-  // schema.org — Article + NewsArticle (Speakable) + breadcrumb. keywords =
-  // category + tags so they flow into the schema keywords / news_keywords.
+  // schema.org — Article + breadcrumb. keywords = category + tags so they
+  // flow into the schema keywords.
   const schemaInput = {
     title: a.title,
     excerpt: a.excerpt,
@@ -93,10 +93,7 @@ export async function ArticleTemplate({
       (x): x is string => !!x,
     ),
   };
-  const schemas: unknown[] = [
-    articleSchema(schemaInput, author ?? null),
-    newsArticleSchema(schemaInput, author ?? null),
-  ];
+  const schemas: unknown[] = [articleSchema(schemaInput, author ?? null)];
   if (crumbs.length > 0) {
     schemas.push(breadcrumbSchema([...crumbs, { label: a.title, href: a.path }]));
   }

@@ -30,6 +30,9 @@
  *            Ett värde som börjar med Ja, Nej eller Delvis får färg och ikon.
  *   steps    {title?, steps: [{title, text?: sträng eller lista (stycken), items?: [...] (punktlista), after?: stycken efter listan, href?, source?}] (minst 2), source?}
  *   callout  {variant: "tips" | "varning" | "info", title?, text?: sträng eller lista, items?: [...]}
+ *   companies {title?, note?, items: [{name, city, text, fitsFor?, href?, source}] (1–8)}
+ *            Redaktionell företagslista. Varje rad kräver source. Betald synlighet
+ *            hör inte hit: den visas i en egen, märkt ruta.
  *   chart    {title, unit?, note?, items: [{label, value: tal, display?}] (minst 2), source}
  *            Utan source renderas diagrammet inte, och reglerna stoppar det.
  *   image    {src, alt, caption?, width?, height?}
@@ -51,8 +54,8 @@
  * i serverkomponenterna.
  */
 
-export type BlockType = 'toplist' | 'compare' | 'steps' | 'callout' | 'chart' | 'image';
-export const BLOCK_TYPES: readonly BlockType[] = ['toplist', 'compare', 'steps', 'callout', 'chart', 'image'];
+export type BlockType = 'toplist' | 'compare' | 'steps' | 'callout' | 'chart' | 'image' | 'companies';
+export const BLOCK_TYPES: readonly BlockType[] = ['toplist', 'compare', 'steps', 'callout', 'chart', 'image', 'companies'];
 
 export type Source = { text: string; url: string };
 export type CompareRow = { label: string; value: string };
@@ -70,7 +73,10 @@ export type ImageBlock = { type: 'image'; src: string; alt: string; caption?: st
  *  avslutande snedstreck ("/ai-verktyg/semrush-ai"). */
 export type ToplistItem = { review: string; badge?: string; text?: string; featured?: boolean };
 export type ToplistBlock = { type: 'toplist'; title?: string; note?: string; sort: 'score' | 'editorial'; items: ToplistItem[] };
-export type Block = ToplistBlock | CompareBlock | StepsBlock | CalloutBlock | ChartBlock | ImageBlock;
+/** Ett företag i en redaktionell lista. Källa krävs per rad — inga uppgifter utan källa. */
+export type CompanyItem = { name: string; city: string; text: string; fitsFor?: string; href?: string; source: Source[] };
+export type CompaniesBlock = { type: 'companies'; title?: string; note?: string; items: CompanyItem[] };
+export type Block = ToplistBlock | CompareBlock | StepsBlock | CalloutBlock | ChartBlock | ImageBlock | CompaniesBlock;
 
 /** Storage-bucketen för bilder. */
 export const IMAGE_BUCKET = 'featured-images';
@@ -336,6 +342,24 @@ function toBlock(type: string, json: string): Block {
     return { type, src: path, alt: str(d.alt, 'alt (beskrivande alt-text)')!, caption: str(d.caption, 'caption', false), width, height };
   }
 
+  if (type === 'companies') {
+    const items = list(d.items, 'items', 1, 8).map((it, i) => {
+      const w = `items[${i}]`;
+      const o = obj(it, w);
+      const href = str(o.href, `${w}.href`, false);
+      if (href && !isAllowedHref(href)) fail(`${w}.href ska börja med https:// eller /`);
+      return {
+        name: str(o.name, `${w}.name`)!,
+        city: str(o.city, `${w}.city`)!,
+        text: str(o.text, `${w}.text`)!,
+        fitsFor: str(o.fitsFor, `${w}.fitsFor`, false),
+        href,
+        source: sources(o.source, `${w}.source`, true)!,
+      };
+    });
+    return { type, title: str(d.title, 'title', false), note: str(d.note, 'note', false), items };
+  }
+
   // chart
   const src = sources(d.source, 'source', true)!;
   const unit = str(d.unit, 'unit', false);
@@ -433,6 +457,10 @@ export function blockToHtml(b: Block): string {
       return b.caption ? `<p>${inlineHtml(b.caption)}</p>` : '';
     case 'chart':
       return `<p>${inlineHtml(b.title)}. ${b.items.map((i) => `${esc(i.label)}: ${esc(i.display)}.`).join(' ')} ${b.note ? inlineHtml(b.note) : ''}${sourcesHtml(b.source)}</p>`;
+    case 'companies':
+      return (b.title ? `<p>${inlineHtml(b.title)}</p>` : '')
+        + '<ul>' + b.items.map((it) => `<li>${esc(it.name)} (${esc(it.city)}). ${inlineHtml(it.text)}${it.fitsFor ? ` Passar för: ${inlineHtml(it.fitsFor)}.` : ''}${sourcesHtml(it.source)}</li>`).join('') + '</ul>'
+        + (b.note ? `<p>${inlineHtml(b.note)}</p>` : '');
   }
 }
 
