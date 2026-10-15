@@ -171,6 +171,9 @@ export async function ArticleTemplate({
                 </time>
               )}
             </div>
+            {/* Googles "Lägg till som önskad källa"-knapp. Scriptet som
+                initierar den laddas i app/layout.tsx. */}
+            <div google-add-preferred-source-btn="" />
           </div>
 
           {isPost && (
