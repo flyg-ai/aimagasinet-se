@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Script from 'next/script';
 import Link from 'next/link';
 import { Analytics } from '@vercel/analytics/next';
 import { supabase } from '@/lib/supabase';
@@ -82,10 +81,6 @@ export default async function RootLayout({
             egen kod använder attributet value; content finns med för
             verktyg som bara läser det. */}
         <meta name="impact-site-verification" {...{ value: 'dba6fd3a-fe21-4a54-913f-911651fd5d3f' }} content="dba6fd3a-fe21-4a54-913f-911651fd5d3f" />
-        {/* Googles "Lägg till som önskad källa"-knapp (Preferred Sources).
-            Initierar varje <div google-add-preferred-source-btn> på sidan —
-            se ArticleTemplate. https://developers.google.com/search/docs/appearance/preferred-sources */}
-        <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
       </head>
       <body className="min-h-screen bg-page font-sans text-fg">
         {/* Global JSON-LD — Organization + WebSite (with SearchAction).

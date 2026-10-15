@@ -15,6 +15,7 @@ import { readingTimeMinutes } from '@/lib/reading-time';
 import { Breadcrumb, buildCrumbs } from './Breadcrumb';
 import { ArticleProse } from './ArticleProse';
 import { ShareButtons } from '@/components/ShareButtons';
+import { PreferredSourceButton } from '@/components/PreferredSourceButton';
 import { GuideTools } from '@/components/ContentBlocks';
 import { expandBlocks } from '@/lib/content-blocks';
 import { loadReviewIndex } from '@/lib/review-refs';
@@ -171,9 +172,7 @@ export async function ArticleTemplate({
                 </time>
               )}
             </div>
-            {/* Googles "Lägg till som önskad källa"-knapp. Scriptet som
-                initierar den laddas i app/layout.tsx. */}
-            <div google-add-preferred-source-btn="" />
+            <PreferredSourceButton />
           </div>
 
           {isPost && (
