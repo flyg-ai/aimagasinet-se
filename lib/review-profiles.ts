@@ -784,6 +784,96 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: 'Free tier för individer', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Team och enterprise' },
     label: 'Bäst för team',
   },
+
+  /* ── AI-detektorer ────────────────────────────────────────────
+   * Kriterier och betyg satta utifrån eget redaktionellt test (se
+   * /fungerar-ai-detektorer-pa-svenska) plus research mot leverantörernas
+   * egna sajter — inte mallens generiska mockdata. */
+  gptzero: {
+    logo: 'bg-slate-700',
+    fallbackUrl: 'https://gptzero.me',
+    company: 'GPTZero', founded: 2023, hq: 'New York, USA',
+    useCases: ['Lärare som granskar inlämningar', 'Innehållsgranskning före publicering', 'Snabb koll utan konto', 'Rekrytering (CV-granskning)'],
+    ratingCriteria: [
+      { label: 'Träffsäkerhet', score: 7.0 }, { label: 'Svenska', score: 5.5 },
+      { label: 'Pris / prestanda', score: 7.5 }, { label: 'Transparens', score: 8.5 },
+      { label: 'Integrationer', score: 7.0 }, { label: 'Användarvänlighet', score: 8.5 },
+    ],
+    tags: ['Gratis webbkoll', 'Chrome-tillägg', 'LMS-integration'],
+    pros: ['Öppen om att svenska bara stöds delvis', 'Gratis att testa utan konto', 'Klarade alla tre texter i vårt test korrekt'],
+    cons: ['Flaggade 28 % AI-andel på en helt mänsklig text', 'Inget publikt pris för enskild användare, bara team/institution'],
+    offer: { title: 'Gratis webbkoll', price: 'Gratis · teamplan efter kontakt', bestFor: 'Snabb koll utan konto' },
+    label: 'Mest transparent om svenska',
+    score: 7.4,
+  },
+  zerogpt: {
+    logo: 'bg-zinc-600',
+    fallbackUrl: 'https://www.zerogpt.com',
+    company: 'ZeroGPT',
+    useCases: ['Snabb gratis koll', 'Studenter som vill dubbelkolla eget arbete', 'Innehållsgranskning i liten skala'],
+    ratingCriteria: [
+      { label: 'Träffsäkerhet', score: 5.0 }, { label: 'Svenska', score: 5.0 },
+      { label: 'Pris / prestanda', score: 8.5 }, { label: 'Transparens', score: 5.5 },
+      { label: 'Integrationer', score: 5.0 }, { label: 'Användarvänlighet', score: 7.5 },
+    ],
+    tags: ['Helt gratis', 'Ingen inloggning'],
+    pros: ['Enkelt och gratis utan konto', 'Rätt på både mänsklig och rå AI-text i vårt test'],
+    cons: ['Missade helt en handomskriven AI-text i vårt test (visade 0 % AI)', 'Ingen varning om begränsat språkstöd'],
+    offer: { title: 'Helt gratis', price: 'Gratis, ingen konto krävs', bestFor: 'Snabb engångskoll' },
+    label: 'Enklast att testa',
+    score: 6.0,
+  },
+  'originality-ai': {
+    logo: 'bg-purple-600',
+    fallbackUrl: 'https://originality.ai',
+    company: 'Originality.ai',
+    useCases: ['Content-team som granskar inköpt text', 'Affiliate- och SEO-sajter', 'Redaktörer före publicering'],
+    ratingCriteria: [
+      { label: 'Träffsäkerhet', score: 3.5 }, { label: 'Svenska', score: 5.0 },
+      { label: 'Pris / prestanda', score: 6.5 }, { label: 'Transparens', score: 6.0 },
+      { label: 'Integrationer', score: 7.5 }, { label: 'Användarvänlighet', score: 7.0 },
+    ],
+    tags: ['Kreditbaserad', 'Plagiatkoll ingår', 'Team-funktioner'],
+    pros: ['Tydlig kreditmodell och prissättning', 'Riktad mot content-team med teamfunktioner'],
+    cons: ['Flaggade en helt mänskligt skriven svensk text som "100 % AI" i vårt test', 'Bara 3 gratis skanningar/dag, inget obegränsat gratisläge'],
+    offer: { title: '3 gratis skanningar/dag', price: 'Pro 12,95 USD/mån (årsvis) · Enterprise 136,58 USD/mån', bestFor: 'Content-team' },
+    label: 'Störst risk för falska larm',
+    score: 5.8,
+  },
+  copyleaks: {
+    logo: 'bg-blue-700',
+    fallbackUrl: 'https://copyleaks.com',
+    company: 'Copyleaks',
+    useCases: ['Skolor och utbildningsinstitutioner', 'Content-granskning i större skala', 'Plagiatkontroll'],
+    ratingCriteria: [
+      { label: 'Träffsäkerhet', score: 6.0 }, { label: 'Svenska', score: 5.5 },
+      { label: 'Pris / prestanda', score: 7.5 }, { label: 'Transparens', score: 7.0 },
+      { label: 'Integrationer', score: 7.5 }, { label: 'Användarvänlighet', score: 5.5 },
+    ],
+    tags: ['Bred språktäckning', 'API för integration'],
+    pros: ['Tydligast prissättning av de fem', 'Brett språkstöd (10+ namngivna språk)'],
+    cons: ['Gick inte att testa i vårt test — gratischeckern stoppades av en captcha', 'Svenska nämns inte explicit bland de namngivna språken'],
+    offer: { title: '25 000 tecken gratis', price: 'Personal 13,99 USD/mån · Pro 74,99 USD/mån', bestFor: 'Skolor och content-team' },
+    label: 'Tydligast prissättning',
+    score: 6.5,
+  },
+  'winston-ai': {
+    logo: 'bg-rose-700',
+    fallbackUrl: 'https://gowinston.ai',
+    company: 'Winston AI',
+    useCases: ['Innehållsgranskning för team med konto', 'Content-team utanför svensktalande marknader'],
+    ratingCriteria: [
+      { label: 'Träffsäkerhet', score: 5.0 }, { label: 'Svenska', score: 2.0 },
+      { label: 'Pris / prestanda', score: 5.0 }, { label: 'Transparens', score: 4.0 },
+      { label: 'Integrationer', score: 6.0 }, { label: 'Användarvänlighet', score: 5.0 },
+    ],
+    tags: ['Kontokrav', 'Plagiatkoll ingår'],
+    pros: ['Plagiatkontroll ingår i samma verktyg'],
+    cons: ['Kräver konto redan för en enda skanning — gick inte att testa', 'Svenska finns inte bland de elva språk Winston AI själva listar som stödda'],
+    offer: { title: 'Kräver konto', price: 'Ej verifierat utan inloggning', bestFor: 'Team som redan har konto' },
+    label: 'Kräver konto att testa',
+    score: null,
+  },
 };
 
 /* ─── Helpers ──────────────────────────────────────────────────── */
