@@ -1,13 +1,22 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { fetchAuthor } from '@/lib/authors';
+import { fetchAuthor, fetchAuthorsMap } from '@/lib/authors';
 import { ArticleCard, type ArticleCardData } from '@/components/ArticleCard';
 import { AuthorAvatar } from '@/components/AuthorAvatar';
 import { JsonLd } from '@/components/JsonLd';
 import { personSchema, breadcrumbSchema } from '@/lib/schemas';
 
 export const revalidate = 3600;
+
+/** Utan den här exporten renderas rutten dynamiskt vid varje anrop trots
+ *  revalidate = 3600 — samma misstag som fixades för app/[...slug]/page.tsx.
+ *  Skribentlänken finns i varje artikels byline, så varje saknad
+ *  prerendering kostade en full funktionskörning per sidvisning. */
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const authors = await fetchAuthorsMap();
+  return Array.from(authors.keys()).map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const author = await fetchAuthor(params.slug);

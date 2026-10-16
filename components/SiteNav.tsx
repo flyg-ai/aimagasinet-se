@@ -188,6 +188,7 @@ export function SiteNav() {
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <Link
           href="/sok/"
+          prefetch={false}
           aria-label="Sök"
           className="hidden min-[360px]:inline-flex rounded-md border border-line p-2 text-fg-subtle transition-colors hover:border-line-strong hover:bg-soft hover:text-accent"
         >

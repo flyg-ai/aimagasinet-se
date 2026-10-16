@@ -7,6 +7,20 @@ export const revalidate = 3600;
 
 type Props = { params: { slug: string } };
 
+/** Utan den här exporten renderas rutten dynamiskt vid varje anrop trots
+ *  revalidate = 3600 — samma misstag som fixades för app/[...slug]/page.tsx
+ *  (se kommentaren där). Kategorilänkar finns i headern, mobilmenyn och på
+ *  varje artikelsida, så varje saknad prerendering kostade en full
+ *  funktionskörning + obegränsad artikelfråga per request. */
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const { data, error } = await supabase.from('categories').select('slug');
+  if (error) {
+    console.error('[kategori generateStaticParams] supabase error:', error.message);
+    return [];
+  }
+  return (data ?? []).map((c: { slug: string }) => ({ slug: c.slug }));
+}
+
 async function getCategory(slug: string) {
   const { data } = await supabase
     .from('categories')
