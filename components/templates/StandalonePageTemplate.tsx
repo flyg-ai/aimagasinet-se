@@ -118,6 +118,15 @@ function Hero({ article: a }: { article: Article }) {
             })}
           </p>
         )}
+
+        {a.featured_image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={a.featured_image}
+            alt={a.title}
+            className="mt-10 w-full max-w-4xl rounded-xl border border-line object-cover"
+          />
+        )}
       </div>
     </header>
   );
