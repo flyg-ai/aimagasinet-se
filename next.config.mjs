@@ -143,6 +143,16 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // GSC-sökordskannibalisering (okt 2026): två byte-identiska artiklar
+        // om AI för CV/personligt brev publicerades 4 minuter efter varandra
+        // 19 aug. Den här fick 0 impressions i Search Console och raderades;
+        // /ai-cv-personligt-brev-basta-verktygen-prompts (publicerad först,
+        // hade faktiska impressions) är kanonisk.
+        source: '/ai-cv-och-personligt-brev-verktyg-prompts',
+        destination: '/ai-cv-personligt-brev-basta-verktygen-prompts',
+        statusCode: 301,
+      },
+      {
         // WP-dubblett med "-2"-suffix → kanonisk recension.
         source: '/ai-verktyg/juridik/harvey-ai-2',
         destination: '/ai-verktyg/harvey-ai',
