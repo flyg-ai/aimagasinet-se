@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase';
 import { BreakingTicker } from '@/components/BreakingTicker';
 import { SiteNav } from '@/components/SiteNav';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { ChromeFrame } from '@/components/ChromeFrame';
+import { IframeAutoHeight } from '@/components/IframeAutoHeight';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationSchema, websiteSchema } from '@/lib/schemas';
 import './globals.css';
@@ -87,55 +89,59 @@ export default async function RootLayout({
             Article / Review / Breadcrumb schemas are emitted by the
             individual templates that own each entity type. */}
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
+        <IframeAutoHeight />
 
-        {/* 0. Brand accent line — 3px gradient hairline at the very top.
-            Purely decorative (aria-hidden); sits above the ticker. */}
-        <div
-          aria-hidden
-          className="h-[3px] w-full bg-gradient-to-r from-indigo-600 via-cyan-500 to-indigo-600"
-        />
+        <ChromeFrame
+          tickerTop={
+            <>
+              {/* 0. Brand accent line — 3px gradient hairline at the very top.
+                  Purely decorative (aria-hidden); sits above the ticker. */}
+              <div
+                aria-hidden
+                className="h-[3px] w-full bg-gradient-to-r from-indigo-600 via-cyan-500 to-indigo-600"
+              />
 
-        {/* 1. Breaking-news ticker — desktop keeps it at the very top.
-            On mobile it's hidden here and re-rendered under the header. */}
-        <div className="hidden md:block">
-          <BreakingTicker items={tickerItems} />
-        </div>
+              {/* 1. Breaking-news ticker — desktop keeps it at the very top.
+                  On mobile it's hidden here and re-rendered under the header. */}
+              <div className="hidden md:block">
+                <BreakingTicker items={tickerItems} />
+              </div>
+            </>
+          }
+          header={
+            /* 2. Sticky header — explicit bg-white (not bg-overlay) and
+                 hardcoded zinc-900 wordmark so the wordmark doesn't disappear
+                 into a translucent background or fail on a CSS-var regression. */
+            <header className="sticky top-0 z-40 border-b border-line bg-white">
+              <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-6 sm:px-6 sm:py-8">
+                <Link
+                  href="/"
+                  className="group flex shrink-0 items-center gap-2.5 text-3xl font-black tracking-tight sm:gap-3 sm:text-4xl"
+                >
+                  {/* indigo-600 matches the brand color the user wants on the
+                      AI badge. Hardcoded so the badge doesn't depend on the
+                      CSS-var-backed bg-accent token (which has regressed before). */}
+                  <span className="rounded-md bg-indigo-600 px-2.5 py-1 text-xl font-black text-white sm:text-2xl">
+                    AI
+                  </span>
+                  <span className="font-black uppercase tracking-tight text-zinc-900">
+                    Magasinet
+                  </span>
+                </Link>
 
-        {/* 2. Sticky header — explicit bg-white (not bg-overlay) and
-             hardcoded zinc-900 wordmark so the wordmark doesn't disappear
-             into a translucent background or fail on a CSS-var regression. */}
-        <header className="sticky top-0 z-40 border-b border-line bg-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-6 sm:px-6 sm:py-8">
-            <Link
-              href="/"
-              className="group flex shrink-0 items-center gap-2.5 text-3xl font-black tracking-tight sm:gap-3 sm:text-4xl"
-            >
-              {/* indigo-600 matches the brand color the user wants on the
-                  AI badge. Hardcoded so the badge doesn't depend on the
-                  CSS-var-backed bg-accent token (which has regressed before). */}
-              <span className="rounded-md bg-indigo-600 px-2.5 py-1 text-xl font-black text-white sm:text-2xl">
-                AI
-              </span>
-              <span className="font-black uppercase tracking-tight text-zinc-900">
-                Magasinet
-              </span>
-            </Link>
-
-            <SiteNav />
-          </div>
-        </header>
-
-        {/* Breaking-news ticker — mobile position, between header and hero.
-            Hidden on desktop (rendered at the top there instead). */}
-        <div className="md:hidden">
-          <BreakingTicker items={tickerItems} />
-        </div>
-
-        {/* pb-[60px] on mobile reserves room for the fixed
-            MobileBottomNav so the footer/content doesn't sit under it. */}
-        <main className="pb-[60px] md:pb-0">{children}</main>
-        <MobileBottomNav />
-
+                <SiteNav />
+              </div>
+            </header>
+          }
+          tickerMobile={
+            /* Breaking-news ticker — mobile position, between header and hero.
+               Hidden on desktop (rendered at the top there instead). */
+            <div className="md:hidden">
+              <BreakingTicker items={tickerItems} />
+            </div>
+          }
+          mobileNav={<MobileBottomNav />}
+          footer={
         <footer className="mt-24 border-t border-zinc-800 bg-zinc-900 text-zinc-100">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
@@ -243,6 +249,10 @@ export default async function RootLayout({
             </div>
           </div>
         </footer>
+          }
+        >
+          {children}
+        </ChromeFrame>
 
         {/* Vercel Web Analytics — cookiefri besöksmätning (sidvisningar,
             besökare, hänvisare inkl. chatgpt.com/perplexity.ai). Kräver att

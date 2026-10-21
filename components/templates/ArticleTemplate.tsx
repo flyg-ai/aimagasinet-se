@@ -190,26 +190,6 @@ export async function ArticleTemplate({
             <Toc items={toc.items} variant="mobile" />
             <ArticleProse html={bodyHtml} reviews={reviews} />
             <GuideTools tools={reviews.linked} />
-
-            {a.tags?.length > 0 && (
-              <div className="mt-14 flex flex-wrap gap-2 border-t border-line pt-8">
-                <span className="mr-2 font-mono text-xs uppercase tracking-wider text-fg-subtle">Taggar:</span>
-                {a.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-sm border border-line bg-soft px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-fg-muted"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {isPost && (
-              <div className="mt-12 border-t border-line pt-7">
-                <ShareButtons path={a.path} title={a.title} />
-              </div>
-            )}
           </div>
 
           {/* Sticky sidebar — ToC + relaterade */}
@@ -222,11 +202,13 @@ export async function ArticleTemplate({
         </div>
       </div>
 
-      {/* Vanliga frågor. Mallen saknade det här — FAQ renderades bara av
+      {/* Vanliga frågor — innehållsmässigt hör den ihop med artikeltexten,
+          så den ska komma före Taggar/Dela (sidfots-metadata), inte efter.
+          Mallen saknade det här från början — FAQ renderades bara av
           hub-, recensions- och jämförelsemallarna, så alla artiklar av
           type='post' tappade både accordionet och FAQPage-schemat. */}
       {Array.isArray(a.faq) && a.faq.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <section className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
           <FaqAccordion items={a.faq} heading="Vanliga frågor" />
           <script
             type="application/ld+json"
@@ -234,6 +216,30 @@ export async function ArticleTemplate({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(a.faq)) }}
           />
         </section>
+      )}
+
+      {(a.tags?.length > 0 || isPost) && (
+        <div className="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
+          {a.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-2 border-t border-line pt-8">
+              <span className="mr-2 font-mono text-xs uppercase tracking-wider text-fg-subtle">Taggar:</span>
+              {a.tags.map((t) => (
+                <span
+                  key={t}
+                  className="rounded-sm border border-line bg-soft px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-fg-muted"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {isPost && (
+            <div className="mt-12 border-t border-line pt-7">
+              <ShareButtons path={a.path} title={a.title} />
+            </div>
+          )}
+        </div>
       )}
 
       {/* Underliggande sidor (standalone-sidor med barn) */}
