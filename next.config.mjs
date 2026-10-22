@@ -153,6 +153,15 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // Tredje artikeln om samma ämne (svenska AI-bolag), publicerad 12 okt
+        // 2026, tunn och mindre rigorös än /svenska-ai-foretag-2026 (som redan
+        // är kanonisk mål för /svenska-ai-startups-2026, se redirects.seo-test.mjs
+        // test 4). Avpublicerad och konsolideras in här.
+        source: '/svenska-ai-startups-att-halla-koll-pa-2026',
+        destination: '/svenska-ai-foretag-2026',
+        statusCode: 301,
+      },
+      {
         // WP-dubblett med "-2"-suffix → kanonisk recension.
         source: '/ai-verktyg/juridik/harvey-ai-2',
         destination: '/ai-verktyg/harvey-ai',

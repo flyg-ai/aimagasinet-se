@@ -194,11 +194,18 @@ body {
 }
 
 /* Constrain inline images (tool logos in hub content) so they don't take
-   over the layout. WP exports them as full-size which can be 400×400+. */
-.magazine-prose img {
+   over the layout. WP exports them as full-size which can be 400×400+.
+   Excludes <figure> images: those are full-width editorial diagrams
+   (StandalonePageTemplate guides also use .magazine-prose, and this rule
+   was squashing their 1400×820 figures down to 80px before the fix). */
+.magazine-prose img:not(figure img) {
   max-height: 80px;
   width: auto;
   display: inline-block;
+}
+.magazine-prose figure img {
+  width: 100%;
+  height: auto;
 }
 
 /* Style WP's `a.ai-button` anchors as proper CTA buttons — they otherwise

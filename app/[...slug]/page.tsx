@@ -14,6 +14,7 @@ import { YrkesHubTemplate } from '@/components/templates/YrkesHubTemplate';
 import {
   StandalonePageTemplate,
   STANDALONE_RELATED_PARENT,
+  STANDALONE_CURATED_SLUGS,
 } from '@/components/templates/StandalonePageTemplate';
 import { MasterHubTemplate } from '@/components/templates/MasterHubTemplate';
 import { ForetagHubTemplate } from '@/components/templates/ForetagHubTemplate';
@@ -379,16 +380,24 @@ export default async function CatchAllPage({ params }: Props) {
   }
 
   if (decision.kind === 'standalone') {
-    // Two ways to populate the sidebar's "Relaterade verktyg":
-    //  1. STANDALONE_RELATED_PARENT maps the slug to a parent_slug whose
+    // Three ways to populate the sidebar's "Relaterade verktyg":
+    //  1. STANDALONE_CURATED_SLUGS gives an exact hand-picked slug list —
+    //     used when sibling/parent-child defaults aren't relevant enough
+    //     (e.g. the GEO guide should show SEO tools, not other ai-guiden
+    //     pages).
+    //  2. STANDALONE_RELATED_PARENT maps the slug to a parent_slug whose
     //     children fill the list (used by depth-1 longreads).
-    //  2. Otherwise, fall back to the article's own siblings. Lets us add
+    //  3. Otherwise, fall back to the article's own siblings. Lets us add
     //     new standalone trees (/ai-guiden/*) without expanding the map.
+    const curatedSlugs = STANDALONE_CURATED_SLUGS[a.slug];
     const relatedParent = STANDALONE_RELATED_PARENT[a.slug];
-    const related = relatedParent
-      ? await getChildren(relatedParent)
-      : await getSiblings(a.parent_slug, a.slug);
-    return <StandalonePageTemplate article={a} related={related} />;
+    const related = curatedSlugs
+      ? await getCuratedChildren(curatedSlugs)
+      : relatedParent
+        ? await getChildren(relatedParent)
+        : await getSiblings(a.parent_slug, a.slug);
+    const author = a.author_slug ? await fetchAuthor(a.author_slug) : null;
+    return <StandalonePageTemplate article={a} related={related} author={author} />;
   }
 
   const [children, author, related] = await Promise.all([

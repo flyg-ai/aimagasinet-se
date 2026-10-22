@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { to } from '@/lib/links';
 import { CategoryBadge } from './CategoryBadge';
+import { resolveToolProfile } from '@/lib/review-profiles';
 
 export type ArticleCardData = {
   slug: string;
@@ -42,7 +43,7 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
           // Styled cover for articles without featured_image: indigo gradient
           // + title's first letter as a watermark. Reads as "intentional" instead
           // of "missing image".
-          <CardCover title={a.title} />
+          <CardCover title={a.title} path={a.path} slug={a.slug} />
         )}
       </div>
       <div className="p-5">
@@ -83,10 +84,24 @@ export function ArticleCard({ a }: { a: ArticleCardData }) {
   );
 }
 
-/** Cover shown when an article has no featured_image. Picks a stable accent
- *  color from the title hash so adjacent cards don't look identical, and
- *  paints the title's first letter as a watermark. */
-function CardCover({ title, small = false }: { title: string; small?: boolean }) {
+/** Cover shown when an article has no featured_image. For tool/review pages
+ *  (/ai-verktyg/*), reuses the tool's own brand color from review-profiles.ts
+ *  (resolveToolProfile(slug).logo) so a tool's card matches its review page
+ *  instead of getting an unrelated random color — the two previously used
+ *  separate, uncoordinated color systems. Everything else falls back to a
+ *  stable accent color from the title hash so adjacent cards don't look
+ *  identical. Either way, the title's first letter is painted as a watermark. */
+function CardCover({
+  title,
+  path,
+  slug,
+  small = false,
+}: {
+  title: string;
+  path?: string;
+  slug?: string;
+  small?: boolean;
+}) {
   const palettes = [
     'from-indigo-500 to-violet-700',
     'from-sky-500 to-indigo-700',
@@ -95,10 +110,26 @@ function CardCover({ title, small = false }: { title: string; small?: boolean })
     'from-fuchsia-500 to-rose-700',
     'from-cyan-500 to-blue-700',
   ];
+  const initial = (title.trim().charAt(0) || '★').toUpperCase();
+
+  const isToolPage = !!path?.startsWith('/ai-verktyg/') && !!slug;
+  if (isToolPage) {
+    const { logo } = resolveToolProfile(slug);
+    return (
+      <div className={`flex h-full w-full items-center justify-center ${logo}`}>
+        <span
+          aria-hidden
+          className={'font-black text-white/30 ' + (small ? 'text-4xl' : 'text-7xl sm:text-8xl')}
+        >
+          {initial}
+        </span>
+      </div>
+    );
+  }
+
   let h = 0;
   for (let i = 0; i < title.length; i++) h = ((h * 31 + title.charCodeAt(i)) >>> 0);
   const palette = palettes[h % palettes.length];
-  const initial = (title.trim().charAt(0) || '★').toUpperCase();
 
   return (
     <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${palette}`}>
@@ -129,7 +160,7 @@ export function SidebarArticleCard({ a }: { a: ArticleCardData }) {
             className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <CardCover title={a.title} small />
+          <CardCover title={a.title} path={a.path} slug={a.slug} small />
         )}
       </div>
       <div className="min-w-0 flex-1">

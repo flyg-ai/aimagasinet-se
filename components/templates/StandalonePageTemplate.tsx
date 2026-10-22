@@ -1,10 +1,13 @@
 import Link from 'next/link';
+import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { SidebarArticleCard } from '@/components/ArticleCard';
+import { AuthorAvatar } from '@/components/AuthorAvatar';
 import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { faqPageSchema } from '@/lib/schemas';
+import type { Author } from '@/lib/authors';
 
 /** Template for depth-1 standalone guides without a parent (no hub above them).
  *  Layout: wide hero with H1 + ingress, magazine-typography content_mdx, and
@@ -15,13 +18,16 @@ import { faqPageSchema } from '@/lib/schemas';
 export function StandalonePageTemplate({
   article: a,
   related,
+  author,
 }: {
   article: Article;
   related: ArticleCardData[];
+  /** Joined from articles.author_slug → authors. */
+  author?: Author | null;
 }) {
   return (
     <article className="bg-page text-fg">
-      <Hero article={a} />
+      <Hero article={a} author={author} />
 
       <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr,320px] lg:gap-14">
@@ -81,7 +87,7 @@ export function StandalonePageTemplate({
   );
 }
 
-function Hero({ article: a }: { article: Article }) {
+function Hero({ article: a, author }: { article: Article; author?: Author | null }) {
   return (
     <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-muted">
       <div className="mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-12">
@@ -108,15 +114,25 @@ function Hero({ article: a }: { article: Article }) {
           </p>
         )}
 
-        {a.published_at && (
-          <p className="mt-6 font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
-            Publicerad{' '}
-            {new Date(a.published_at).toLocaleDateString('sv-SE', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </p>
+        {(author || a.published_at) && (
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {author && (
+              <Link href={to(`/skribenter/${author.slug}/`)} className="flex items-center gap-3">
+                <AuthorAvatar slug={author.slug} name={author.name} avatarUrl={author.avatar_url} size="md" />
+                <span className="text-sm font-bold text-fg hover:text-indigo-600">{author.name}</span>
+              </Link>
+            )}
+            {a.published_at && (
+              <p className="font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
+                Publicerad{' '}
+                {new Date(a.published_at).toLocaleDateString('sv-SE', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
+            )}
+          </div>
         )}
 
         {a.featured_image && (
@@ -190,6 +206,13 @@ export const STANDALONE_RELATED_PARENT: Record<string, string> = {
   'bygga-mobilapp-med-ai': 'ai-kod-verktyg',
   'bygga-app-med-ai': 'ai-kod-verktyg',
   'skapa-faceless-content-med-ai': 'ai-video',
+};
+
+/** Hand-picked exact slugs for standalone guides where the parent-slug or
+ *  sibling fallback isn't relevant (e.g. GEO guide → SEO tools, not other
+ *  /ai-guiden/* longreads). Checked first, before STANDALONE_RELATED_PARENT. */
+export const STANDALONE_CURATED_SLUGS: Record<string, string[]> = {
+  'geo-generative-engine-optimization': ['ahrefs-ai', 'semrush-ai', 'surfer-seo', 'screaming-frog-ai'],
 };
 
 /** True if the slug should render via StandalonePageTemplate. */
