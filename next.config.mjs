@@ -162,6 +162,14 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // GEO-guiden flyttad från /ai-guiden/* (StandalonePageTemplate, "död"
+        // sektion utan startsides-synlighet) till en vanlig article-sida så
+        // den dyker upp som senaste publicerade på startsidan (22 okt 2026).
+        source: '/ai-guiden/geo-generative-engine-optimization',
+        destination: '/geo-generative-engine-optimization',
+        statusCode: 301,
+      },
+      {
         // WP-dubblett med "-2"-suffix → kanonisk recension.
         source: '/ai-verktyg/juridik/harvey-ai-2',
         destination: '/ai-verktyg/harvey-ai',
