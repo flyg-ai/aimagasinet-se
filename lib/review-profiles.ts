@@ -15,6 +15,7 @@ import { YRKES_HUB_REVIEW_KNOWN_EXTRA } from '@/lib/yrkes-hub-tools-extra';
 import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -95,6 +96,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* Kategori-hubbar batch 3 (assistenter, röst & tal, podcast, produktivitet,
    * e-post, dataanalys, utbildning) — genererade i lib/category-hub-tools-3.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN_3,
+
+  /* AI-säkerhet-hubben (Microsoft Security Copilot, CrowdStrike, Darktrace, …) —
+   * genererade i lib/category-hub-tools-ai-sakerhet.ts av scripts/seed-ai-sakerhet-hub.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {

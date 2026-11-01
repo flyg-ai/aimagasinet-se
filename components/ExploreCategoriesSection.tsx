@@ -7,6 +7,7 @@ import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
   MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
+  ShieldCheck,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -68,11 +69,11 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-rose-500 to-pink-800',
   },
   {
-    href: '/ai-verktyg/ai-automation',
-    title: 'AI-automation',
-    icon: Workflow,
-    bg: `${STORAGE}/ai-automation-kategori.webp`,
-    fallbackGradient: 'bg-gradient-to-br from-blue-600 to-indigo-800',
+    href: '/ai-verktyg/ai-sakerhet',
+    title: 'AI-säkerhet',
+    icon: ShieldCheck,
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-sakerhet-hubb.webp',
+    fallbackGradient: 'bg-gradient-to-br from-red-600 to-rose-900',
   },
   {
     href: '/ai-verktyg/gratis',
@@ -82,6 +83,13 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-teal-800',
   },
   // Nya kategori-hubbar (gradient-fallback — saknar foto ännu).
+  {
+    href: '/ai-verktyg/ai-automation',
+    title: 'AI-automation',
+    icon: Workflow,
+    bg: `${STORAGE}/ai-automation-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-blue-600 to-indigo-800',
+  },
   { href: '/ai-verktyg/hemsidebyggare', title: 'AI-hemsidebyggare', icon: Globe, bg: `${STORAGE}/ai-hemsidebyggare-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
   { href: '/ai-verktyg/presentationer', title: 'AI-presentationer', icon: Presentation, bg: `${STORAGE}/ai-presentationer-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700' },
   { href: '/ai-verktyg/motesverktyg', title: 'AI-mötesverktyg', icon: Mic, bg: `${STORAGE}/ai-motesverktyg-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
