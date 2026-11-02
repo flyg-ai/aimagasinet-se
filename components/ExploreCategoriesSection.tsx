@@ -82,6 +82,13 @@ const CARDS: Card[] = [
     bg: `${STORAGE}/gratis-ai-verktyg-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-teal-800',
   },
+  {
+    href: '/ai-verktyg/ai-agenter',
+    title: 'AI-agenter',
+    icon: Workflow,
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-agenter-hubb.webp',
+    fallbackGradient: 'bg-gradient-to-br from-indigo-600 to-violet-900',
+  },
   // Nya kategori-hubbar (gradient-fallback — saknar foto ännu).
   {
     href: '/ai-verktyg/ai-automation',

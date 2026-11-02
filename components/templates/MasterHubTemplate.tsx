@@ -313,6 +313,22 @@ const CATEGORIES: {
     bg: `${KATEGORI_BG}/ai-utbildning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-700',
   },
+  {
+    href: '/ai-verktyg/ai-sakerhet',
+    title: 'AI-säkerhet',
+    description: 'CrowdStrike, Darktrace, Microsoft Security Copilot — AI mot cyberhot.',
+    icon: '🛡',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-sakerhet-hubb.webp',
+    fallbackGradient: 'bg-gradient-to-br from-red-600 to-rose-900',
+  },
+  {
+    href: '/ai-verktyg/ai-agenter',
+    title: 'AI-agenter',
+    description: 'Manus, Lindy, CrewAI, Devin — bygg och driv autonoma AI-agenter.',
+    icon: '◎',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-agenter-hubb.webp',
+    fallbackGradient: 'bg-gradient-to-br from-indigo-600 to-violet-900',
+  },
 ];
 
 function Hero({ article: a }: { article: Article }) {
