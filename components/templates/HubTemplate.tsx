@@ -981,6 +981,12 @@ function getHubFacts(slug: string): HubFacts {
   return HUB_KNOWN[slug] ?? HUB_DEFAULTS;
 }
 
+/* Optional per-hub label inserted into "Topplistan [label] {year}" — default
+ * (no entry) keeps the plain "Topplistan {year}" heading. */
+const HUB_TOPPLISTA_LABEL: Record<string, string> = {
+  'ai-agenter-hub': 'AI Agenter',
+};
+
 /* ─── Subcategory navigation grid ──────────────────────────────────
    For the two parent nav-hubs: a grid of cards linking down to the
    dedicated subcategory hubs, rendered high on the page so the parent
@@ -1051,7 +1057,7 @@ export function HubTemplate({
       )}
 
       {ranked.length > 0 && (
-        <RankingSection ranked={ranked} year={updatedYear} />
+        <RankingSection ranked={ranked} year={updatedYear} label={HUB_TOPPLISTA_LABEL[a.slug]} />
       )}
 
       {top && <BestInTest child={top} />}
@@ -1273,7 +1279,7 @@ function StatBox({ value, label }: { value: string; label: string }) {
   );
 }
 
-function RankingSection({ ranked, year }: { ranked: HubChild[]; year: number }) {
+function RankingSection({ ranked, year, label }: { ranked: HubChild[]; year: number; label?: string }) {
   return (
     <section aria-labelledby="topplistan" className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-2 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
@@ -1282,7 +1288,7 @@ function RankingSection({ ranked, year }: { ranked: HubChild[]; year: number }) 
       </div>
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
         <h2 id="topplistan" className="min-w-0 max-w-full text-3xl font-black uppercase tracking-tight text-fg break-words sm:text-4xl">
-          Topplistan {year}
+          Topplistan {label ? `${label} ` : ''}{year}
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-subtle sm:inline">
           ⓘ Sorterad efter helhetsbetyg
