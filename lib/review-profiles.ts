@@ -16,6 +16,7 @@ import { VIDEO_AUDIO_REVIEW_KNOWN } from '@/lib/video-audio-tools';
 import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -100,6 +101,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* AI-säkerhet-hubben (Microsoft Security Copilot, CrowdStrike, Darktrace, …) —
    * genererade i lib/category-hub-tools-ai-sakerhet.ts av scripts/seed-ai-sakerhet-hub.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET,
+
+  /* AI-agenter-hubben (Manus, Lindy, Relevance AI, CrewAI, Devin, …) —
+   * genererade i lib/category-hub-tools-ai-agenter.ts av scripts/seed-ai-agenter-hub.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
