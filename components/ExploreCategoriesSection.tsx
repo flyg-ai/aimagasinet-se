@@ -7,7 +7,7 @@ import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
   MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
-  ShieldCheck,
+  ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -97,6 +97,13 @@ const CARDS: Card[] = [
     bg: `${STORAGE}/ai-automation-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-blue-600 to-indigo-800',
   },
+  { href: '/ai-verktyg/marknadsforing', title: 'AI-marknadsföring', icon: Megaphone, bg: null, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-pink-900' },
+  { href: '/ai-verktyg/juridik', title: 'AI för juridik', icon: Scale, bg: null, fallbackGradient: 'bg-gradient-to-br from-slate-600 to-slate-900' },
+  { href: '/ai-verktyg/kundservice', title: 'AI-kundservice', icon: Headset, bg: null, fallbackGradient: 'bg-gradient-to-br from-cyan-600 to-blue-900' },
+  { href: '/ai-verktyg/rekrytering', title: 'AI för rekrytering', icon: UserPlus, bg: null, fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800' },
+  { href: '/ai-verktyg/ui-ux', title: 'AI för UI/UX-design', icon: PenTool, bg: null, fallbackGradient: 'bg-gradient-to-br from-violet-600 to-indigo-900' },
+  { href: '/ai-verktyg/ekonomi', title: 'AI för ekonomi', icon: Wallet, bg: null, fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-900' },
+  { href: '/ai-verktyg/tiktok', title: 'AI för TikTok', icon: Hash, bg: null, fallbackGradient: 'bg-gradient-to-br from-rose-600 to-fuchsia-900' },
   { href: '/ai-verktyg/hemsidebyggare', title: 'AI-hemsidebyggare', icon: Globe, bg: `${STORAGE}/ai-hemsidebyggare-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
   { href: '/ai-verktyg/presentationer', title: 'AI-presentationer', icon: Presentation, bg: `${STORAGE}/ai-presentationer-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700' },
   { href: '/ai-verktyg/motesverktyg', title: 'AI-mötesverktyg', icon: Mic, bg: `${STORAGE}/ai-motesverktyg-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
