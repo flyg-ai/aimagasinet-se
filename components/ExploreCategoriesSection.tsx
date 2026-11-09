@@ -199,8 +199,9 @@ export function ExploreCategoriesSection() {
         })}
       </div>
 
-      {/* Expand toggle — collapses to 8 cards on desktop / 4 on mobile. */}
-      <div className="mt-5 flex justify-center">
+      {/* Expand toggle + link to the full master hub — collapses to 8 cards
+          on desktop / 4 on mobile. */}
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
           aria-expanded={showAll}
@@ -210,6 +211,14 @@ export function ExploreCategoriesSection() {
           {showAll ? 'Visa färre' : 'Visa fler kategorier'}
           <span aria-hidden className={`transition-transform ${showAll ? 'rotate-180' : ''}`}>↓</span>
         </button>
+
+        <Link
+          href={to('/ai-verktyg')}
+          className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white shadow-sm transition-colors hover:bg-indigo-700"
+        >
+          Se alla AI-verktyg
+          <span aria-hidden>→</span>
+        </Link>
       </div>
     </section>
   );
