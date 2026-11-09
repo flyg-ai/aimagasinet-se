@@ -27,6 +27,7 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
   return (
     <article className="bg-page text-fg">
       <Hero article={a} />
+      <Top10Section />
       <TopGroupsSection />
       <MoreCategoriesSection />
       <EditorsPicks />
@@ -108,6 +109,89 @@ function EditorsPicks() {
             );
           })}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** Rankad topp 10-lista direkt under hero — matchar sökintentet för
+ *  "bästa ai verktyg" (konkurrenter som rankar på frasen är nästan alla
+ *  numrerade listor med namngivna verktyg högst upp, inte en kategorigrid).
+ *  Poäng hämtas från samma REVIEW_KNOWN-profiler som EditorsPicks, så siffran
+ *  här och på respektive recension kan aldrig gå isär. */
+type Top10Item = { rank: number; category: string; name: string; key: string; tagline: string; href: string };
+
+const TOP_10: Top10Item[] = [
+  { rank: 1,  category: 'AI-text',       name: 'ChatGPT',    key: 'chatgpt',    tagline: 'Mest använd AI-assistent — bred och snabb',        href: '/ai-verktyg/chatgpt/' },
+  { rank: 2,  category: 'AI-text',       name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',                     href: '/ai-verktyg/claude/' },
+  { rank: 3,  category: 'AI-bilder',     name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',                           href: '/ai-verktyg/midjourney/' },
+  { rank: 4,  category: 'AI-text',       name: 'Gemini',     key: 'gemini',     tagline: 'Bäst integrerad i Google Workspace',               href: '/ai-verktyg/gemini/' },
+  { rank: 5,  category: 'AI-video',      name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',                       href: '/ai-video/kling-ai/' },
+  { rank: 6,  category: 'AI-bilder',     name: 'Canva AI',   key: 'canva-ai',   tagline: 'Bäst för snabb design utan designkunskap',         href: '/ai-verktyg/canva-ai/' },
+  { rank: 7,  category: 'AI-kod',        name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',                         href: '/ai-verktyg/cursor-ai/' },
+  { rank: 8,  category: 'AI-ljud',       name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',                         href: '/ai-verktyg/suno-ai/' },
+  { rank: 9,  category: 'AI-ljud',       name: 'ElevenLabs', key: 'elevenlabs', tagline: 'Bäst röstkloning & text-till-tal',                 href: '/ai-verktyg/elevenlabs/' },
+  { rank: 10, category: 'AI-automation', name: 'n8n',        key: 'n8n',        tagline: 'Bäst för att bygga egna AI-flöden',                href: '/ai-verktyg/n8n/' },
+];
+
+function Top10Section() {
+  return (
+    <section className="border-b border-line bg-card">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+        <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
+          Topp 10
+        </div>
+        <h2 className="mb-2 text-2xl font-black tracking-tight text-fg sm:text-3xl">
+          De 10 bästa AI-verktygen 2026
+        </h2>
+        <p className="mb-8 max-w-2xl text-fg-subtle">
+          Rankade efter våra tester och recensioner. Klicka på ett verktyg för fullständig
+          genomgång, pris och alternativ.
+        </p>
+
+        <ol className="grid gap-3 sm:grid-cols-2">
+          {TOP_10.map((item) => {
+            const profile = resolveToolProfile(item.key, item.name);
+            const score = toolOverallScore(profile);
+            return (
+              <li key={item.key}>
+                <Link
+                  href={to(item.href)}
+                  className="group flex items-center gap-4 rounded-xl border border-line bg-page p-4 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-xl"
+                >
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted font-mono text-sm font-black text-fg-subtle"
+                  >
+                    {item.rank}
+                  </span>
+                  <span
+                    aria-hidden
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-base font-black uppercase text-white ring-2 ring-white/40 ${profile.logo}`}
+                  >
+                    {item.name.charAt(0)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="truncate font-black tracking-tight text-fg group-hover:text-indigo-600">
+                        {item.name}
+                      </div>
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-black text-amber-600">
+                        {score.toFixed(1)}
+                        <span aria-hidden>★</span>
+                      </span>
+                    </div>
+                    <p className="truncate text-sm text-fg-muted">{item.tagline}</p>
+                  </div>
+                  <ChevronRight
+                    aria-hidden
+                    className="h-5 w-5 shrink-0 text-fg-faint transition-transform group-hover:translate-x-1 group-hover:text-indigo-600"
+                  />
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
