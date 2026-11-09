@@ -8,6 +8,11 @@ import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
+import {
+  Type, Image as ImageIcon, Video, Code2, Music, Workflow,
+  ChevronRight, ArrowRight, Search as SearchIcon,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 /** Antal publicerade recensioner under /ai-verktyg/ — hårdkodat snarare än en
  *  DB-fråga i rendern, eftersom sidan är statisk mellan deployer. Stäm av mot
@@ -22,6 +27,8 @@ export function MasterHubTemplate({ article: a }: { article: Article }) {
   return (
     <article className="bg-page text-fg">
       <Hero article={a} />
+      <TopGroupsSection />
+      <MoreCategoriesSection />
       <EditorsPicks />
       <CategoryGrid />
       <EditorialBody html={a.content_mdx} />
@@ -54,14 +61,14 @@ function EditorsPicks() {
     <section className="border-b border-line bg-card">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
         <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
-          Redaktionens val per kategori
+          Redaktionens val
         </div>
         <h2 className="mb-6 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
-          Våra toppval
+          Redaktionens favoriter
         </h2>
 
-        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-5 lg:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {EDITORS_PICKS.map((p) => {
+        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0 sm:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {EDITORS_PICKS.slice(0, 3).map((p) => {
             const profile = resolveToolProfile(p.key, p.name);
             const score = toolOverallScore(profile);
             return (
@@ -447,43 +454,252 @@ const CATEGORY_GROUPS = [
   'Gratis',
 ];
 
+/** Snabb-taggar i hero-sökrutan — länkar rakt till de mest sökta
+ *  verktygen/kategorierna. Rent navigations-UI, ingen egen data. */
+const POPULAR_TAGS: { label: string; href: string }[] = [
+  { label: 'ChatGPT', href: '/ai-verktyg/chatgpt' },
+  { label: 'Midjourney', href: '/ai-verktyg/midjourney' },
+  { label: 'Gratis AI', href: '/ai-verktyg/gratis' },
+  { label: 'Claude', href: '/ai-verktyg/claude' },
+];
+
 function Hero({ article: a }: { article: Article }) {
   const updatedIso = contentModifiedIso(a) ?? a.published_at ?? null;
   const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   return (
-    <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-50 via-card to-muted">
-      <div className="mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-12">
+    <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-950 via-violet-950 to-fuchsia-950 text-white">
+      {/* Rent dekorativa, suddiga färgklumpar — ingen bild behövs, håller
+          sidan snabb och ger samma "produkt"-djup som referensmockupen. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-fuchsia-500/30 blur-3xl" />
+        <div className="absolute -left-20 top-1/3 h-80 w-80 rounded-full bg-indigo-500/30 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-violet-500/20 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-12">
         <nav
           aria-label="Brödsmulor"
-          className="mb-8 font-mono text-[11px] font-semibold uppercase tracking-wider text-fg-subtle"
+          className="mb-8 font-mono text-[11px] font-semibold uppercase tracking-wider text-white/60"
         >
-          <Link href="/" className="hover:text-indigo-600">Hem</Link>
-          <span className="mx-2 text-line-strong">›</span>
-          <span className="text-fg-muted">AI-verktyg</span>
+          <Link href="/" className="hover:text-white">Hem</Link>
+          <span className="mx-2 text-white/30">›</span>
+          <span className="text-white/80">AI-verktyg</span>
         </nav>
 
-        <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white/90 ring-1 ring-white/20">
           <span aria-hidden>✦</span> {MASTER_HUB_TOOL_COUNT} verktyg · {CATEGORIES.length} kategorier
           {updatedLabel ? ` · Uppdaterad ${updatedLabel}` : ` · ${new Date().getFullYear()}`}
         </span>
 
-        <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.02] tracking-tight text-fg sm:text-3xl md:text-4xl lg:text-5xl">
+        <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
           {a.title}
         </h1>
 
         {a.excerpt && (
-          <p className="mt-6 max-w-3xl text-balance text-lg leading-relaxed text-fg-subtle sm:text-xl">
+          <p className="mt-6 max-w-3xl text-balance text-lg leading-relaxed text-white/70 sm:text-xl">
             {a.excerpt}
           </p>
         )}
+
+        <form action="/sok/" method="GET" className="mt-8 max-w-xl">
+          <label className="relative block">
+            <span className="sr-only">Sök bland AI-verktyg</span>
+            <SearchIcon
+              aria-hidden
+              className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/50"
+            />
+            <input
+              type="search"
+              name="q"
+              placeholder="Vad letar du efter för verktyg?"
+              className="w-full rounded-xl border border-white/15 bg-white/10 py-4 pl-12 pr-14 text-base text-white placeholder:text-white/50 shadow-sm backdrop-blur-sm focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+            />
+            <button
+              type="submit"
+              aria-label="Sök"
+              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-white text-indigo-700 transition-colors hover:bg-white/90"
+            >
+              <ArrowRight className="h-5 w-5" aria-hidden />
+            </button>
+          </label>
+        </form>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+          <span className="font-semibold text-white/60">Populärt:</span>
+          {POPULAR_TAGS.map((t) => (
+            <Link
+              key={t.href}
+              href={to(t.href)}
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-medium text-white/85 transition-colors hover:border-white/30 hover:bg-white/15"
+            >
+              {t.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </header>
   );
 }
 
+/** De sex största "vad vill du göra"-grupperna, lyfta ur CATEGORIES till
+ *  egna framhävda kort direkt under hero — samma produkt-känsla som
+ *  startsidans ExploreCategoriesSection men med exempel-verktyg i brödtexten
+ *  istället för bara en bakgrundsbild. */
+type TopGroup = {
+  title: string;
+  examples: string;
+  href: string;
+  icon: LucideIcon;
+  tint: string;
+  iconBg: string;
+};
+
+const TOP_GROUPS: TopGroup[] = [
+  {
+    title: 'Text & skrivande',
+    examples: 'ChatGPT, Claude, Jasper',
+    href: '/ai-verktyg/ai-text-verktyg',
+    icon: Type,
+    tint: 'bg-indigo-50 hover:bg-indigo-100',
+    iconBg: 'bg-indigo-600',
+  },
+  {
+    title: 'Bild & design',
+    examples: 'Midjourney, Firefly, DALL·E',
+    href: '/ai-verktyg/ai-bild-verktyg',
+    icon: ImageIcon,
+    tint: 'bg-pink-50 hover:bg-pink-100',
+    iconBg: 'bg-pink-600',
+  },
+  {
+    title: 'Video',
+    examples: 'Kling, Runway, Sora',
+    href: '/ai-video',
+    icon: Video,
+    tint: 'bg-emerald-50 hover:bg-emerald-100',
+    iconBg: 'bg-emerald-600',
+  },
+  {
+    title: 'Kod & utveckling',
+    examples: 'Cursor, Copilot, Windsurf',
+    href: '/ai-verktyg/ai-kod-verktyg',
+    icon: Code2,
+    tint: 'bg-orange-50 hover:bg-orange-100',
+    iconBg: 'bg-orange-600',
+  },
+  {
+    title: 'Ljud & musik',
+    examples: 'Suno, ElevenLabs, Udio',
+    href: '/ai-verktyg/ai-ljud-och-musik',
+    icon: Music,
+    tint: 'bg-fuchsia-50 hover:bg-fuchsia-100',
+    iconBg: 'bg-fuchsia-600',
+  },
+  {
+    title: 'Automation',
+    examples: 'Make, Zapier, n8n',
+    href: '/ai-verktyg/ai-automation',
+    icon: Workflow,
+    tint: 'bg-blue-50 hover:bg-blue-100',
+    iconBg: 'bg-blue-600',
+  },
+];
+
+function TopGroupsSection() {
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
+      <h2 className="mb-1 text-2xl font-black tracking-tight text-fg sm:text-3xl">
+        Vad vill du använda AI till?
+      </h2>
+      <p className="mb-8 text-fg-subtle">Utforska våra huvudkategorier och hitta rätt verktyg för ditt behov.</p>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {TOP_GROUPS.map((g) => {
+          const Icon = g.icon;
+          return (
+            <Link
+              key={g.href}
+              href={to(g.href)}
+              className={`group flex items-start justify-between gap-3 rounded-2xl p-6 transition-colors ${g.tint}`}
+            >
+              <div className="flex items-start gap-4">
+                <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white ${g.iconBg}`}>
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
+                <div>
+                  <div className="font-bold tracking-tight text-fg">{g.title}</div>
+                  <div className="mt-0.5 text-sm text-fg-subtle">{g.examples}</div>
+                </div>
+              </div>
+              <ArrowRight
+                aria-hidden
+                className="mt-1 h-5 w-5 shrink-0 text-fg-faint transition-transform group-hover:translate-x-1 group-hover:text-fg-muted"
+              />
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/** Kompakt lista över resterande kategorier (allt som inte redan syns i
+ *  TOP_GROUPS) — tre spalter, ikon + namn + pil. "Visa alla"-länken hoppar
+ *  till den fullständiga, sökbara kategorigriden längre ner (CategoryGrid). */
+const TOP_GROUP_HREFS = new Set(TOP_GROUPS.map((g) => to(g.href)));
+
+function MoreCategoriesSection() {
+  const rest = CATEGORIES.filter((c) => !TOP_GROUP_HREFS.has(to(c.href)));
+  const shown = rest.slice(0, 8);
+  const overflow = rest.length - shown.length;
+
+  return (
+    <section className="border-t border-line bg-muted/40">
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
+        <div className="mb-6 flex items-baseline justify-between gap-4">
+          <h2 className="text-2xl font-black tracking-tight text-fg sm:text-3xl">
+            Fler verktygskategorier
+          </h2>
+          <a href="#alla-kategorier" className="whitespace-nowrap font-semibold text-indigo-600 hover:underline">
+            Visa alla {CATEGORIES.length} →
+          </a>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {shown.map((c) => (
+            <Link
+              key={c.href}
+              href={to(c.href)}
+              className="group flex items-center justify-between gap-3 rounded-xl border border-line bg-card px-5 py-4 transition-colors hover:border-indigo-300"
+            >
+              <span className="flex items-center gap-3">
+                <span aria-hidden className="text-lg">{c.icon}</span>
+                <span className="font-semibold text-fg">{c.title}</span>
+              </span>
+              <ChevronRight
+                aria-hidden
+                className="h-4 w-4 shrink-0 text-fg-faint transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-600"
+              />
+            </Link>
+          ))}
+          {overflow > 0 && (
+            <a
+              href="#alla-kategorier"
+              className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-line px-5 py-4 font-semibold text-fg-subtle transition-colors hover:border-indigo-300 hover:text-indigo-600"
+            >
+              och {overflow} till…
+              <ChevronRight aria-hidden className="h-4 w-4 shrink-0" />
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CategoryGrid() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+    <section id="alla-kategorier" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 sm:py-20">
       <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
         Välj kategori
       </div>
