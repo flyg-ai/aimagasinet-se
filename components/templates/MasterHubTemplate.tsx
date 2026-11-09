@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { to } from '@/lib/links';
 import type { Article } from '@/lib/supabase';
 import { resolveToolProfile, toolOverallScore } from '@/components/templates/ReviewTemplate';
-import { MasterHubCategorySearch } from '@/components/MasterHubCategorySearch';
+import { MasterHubDiscovery } from '@/components/MasterHubDiscovery';
+import { YRKEN } from '@/components/templates/ForetagHubTemplate';
 import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { faqPageSchema } from '@/lib/schemas';
@@ -12,7 +13,7 @@ import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
  *  DB-fråga i rendern, eftersom sidan är statisk mellan deployer. Stäm av mot
  *  `select count(*) from articles where type='page' and path like '/ai-verktyg/%'
  *  and parent_slug is not null and published_at is not null` vid uppdatering. */
-export const MASTER_HUB_TOOL_COUNT = 304;
+export const MASTER_HUB_TOOL_COUNT = 314;
 
 /** Master hub for /ai-verktyg — lands users at a curated category grid that
  *  fans out to all sub-hubs. The article's content_mdx still renders below
@@ -113,6 +114,9 @@ const KATEGORI_BG = 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/
  *  ExploreCategoriesSection. `fallbackGradient` is applied only when
  *  bg is null (none of the current 8 are null but the field stays so
  *  future entries can opt out of an image). */
+/** `group` buckets the 34 kategorier under ~9 "vad vill du göra"-ämnen för
+ *  snabbfiltret i CategoryGrid — rent frontend-lager, rör inte DB eller
+ *  parent_slug. Håll i synk manuellt när en ny kategori läggs till. */
 const CATEGORIES: {
   href: string;
   title: string;
@@ -120,6 +124,7 @@ const CATEGORIES: {
   icon: string;
   bg: string | null;
   fallbackGradient: string;
+  group: string;
 }[] = [
   {
     href: '/ai-verktyg/ai-text-verktyg',
@@ -128,6 +133,7 @@ const CATEGORIES: {
     icon: '✎',
     bg: `${KATEGORI_BG}/ai-text-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-teal-700',
+    group: 'Text & skrivande',
   },
   {
     href: '/ai-video',
@@ -136,6 +142,7 @@ const CATEGORIES: {
     icon: '▶',
     bg: `${KATEGORI_BG}/ai-video-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
+    group: 'Bild & video',
   },
   {
     href: '/ai-verktyg/ai-bild-verktyg',
@@ -144,6 +151,7 @@ const CATEGORIES: {
     icon: '◐',
     bg: `${KATEGORI_BG}/ai-bild-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-600 to-violet-800',
+    group: 'Bild & video',
   },
   {
     href: '/ai-verktyg/ai-ljud-och-musik',
@@ -152,6 +160,7 @@ const CATEGORIES: {
     icon: '♪',
     bg: `${KATEGORI_BG}/ai-ljud-musik-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
+    group: 'Ljud & röst',
   },
   {
     href: '/ai-verktyg/ai-kod-verktyg',
@@ -160,6 +169,7 @@ const CATEGORIES: {
     icon: '⌥',
     bg: `${KATEGORI_BG}/ai-kod-programmering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-zinc-700 to-zinc-900',
+    group: 'Kod & utveckling',
   },
   {
     href: '/ai-verktyg/ai-automation',
@@ -168,6 +178,7 @@ const CATEGORIES: {
     icon: '⇆',
     bg: `${KATEGORI_BG}/ai-automation-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
+    group: 'Automation & agenter',
   },
   {
     href: '/ai-verktyg/foretag',
@@ -176,6 +187,7 @@ const CATEGORIES: {
     icon: '◧',
     bg: `${KATEGORI_BG}/ai-for-foretag-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-600 to-rose-700',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/gratis',
@@ -184,6 +196,7 @@ const CATEGORIES: {
     icon: '✦',
     bg: `${KATEGORI_BG}/gratis-ai-verktyg-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
+    group: 'Gratis',
   },
   {
     href: '/ai-verktyg/hemsidebyggare',
@@ -192,6 +205,7 @@ const CATEGORIES: {
     icon: '🌐',
     bg: `${KATEGORI_BG}/ai-hemsidebyggare-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-700',
+    group: 'Kod & utveckling',
   },
   {
     href: '/ai-verktyg/presentationer',
@@ -200,6 +214,7 @@ const CATEGORIES: {
     icon: '🖥️',
     bg: `${KATEGORI_BG}/ai-presentationer-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-orange-500 to-amber-700',
+    group: 'Produktivitet & dokument',
   },
   {
     href: '/ai-verktyg/motesverktyg',
@@ -208,6 +223,7 @@ const CATEGORIES: {
     icon: '🎙️',
     bg: `${KATEGORI_BG}/ai-motesverktyg-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-700',
+    group: 'Produktivitet & dokument',
   },
   {
     href: '/ai-verktyg/sociala-medier',
@@ -216,6 +232,7 @@ const CATEGORIES: {
     icon: '📱',
     bg: `${KATEGORI_BG}/ai-sociala-medier-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-pink-500 to-rose-700',
+    group: 'Marknadsföring & sälj',
   },
   {
     href: '/ai-verktyg/projektledning',
@@ -224,6 +241,7 @@ const CATEGORIES: {
     icon: '📋',
     bg: `${KATEGORI_BG}/ai-projektledning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-violet-700',
+    group: 'Produktivitet & dokument',
   },
   {
     href: '/ai-verktyg/e-handel',
@@ -232,6 +250,7 @@ const CATEGORIES: {
     icon: '🛒',
     bg: `${KATEGORI_BG}/ai-ehandel-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
+    group: 'Marknadsföring & sälj',
   },
   {
     href: '/ai-verktyg/oversattning',
@@ -240,6 +259,7 @@ const CATEGORIES: {
     icon: '🌍',
     bg: `${KATEGORI_BG}/ai-oversattning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-cyan-500 to-sky-700',
+    group: 'Text & skrivande',
   },
   {
     href: '/ai-verktyg/dokumenthantering',
@@ -248,6 +268,7 @@ const CATEGORIES: {
     icon: '📄',
     bg: `${KATEGORI_BG}/ai-dokumenthantering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-zinc-600 to-zinc-800',
+    group: 'Produktivitet & dokument',
   },
   {
     href: '/ai-verktyg/ai-assistenter',
@@ -256,6 +277,7 @@ const CATEGORIES: {
     icon: '💬',
     bg: `${KATEGORI_BG}/ai-assistenter-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-blue-700',
+    group: 'Text & skrivande',
   },
   {
     href: '/ai-verktyg/rost-och-tal',
@@ -264,6 +286,7 @@ const CATEGORIES: {
     icon: '🗣️',
     bg: `${KATEGORI_BG}/ai-rost-tal-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-rose-500 to-pink-700',
+    group: 'Ljud & röst',
   },
   {
     href: '/ai-verktyg/podcast-ljudredigering',
@@ -272,6 +295,7 @@ const CATEGORIES: {
     icon: '🎧',
     bg: `${KATEGORI_BG}/podcast-ljudredigering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-violet-600 to-purple-800',
+    group: 'Ljud & röst',
   },
   {
     href: '/ai-verktyg/produktivitet',
@@ -280,6 +304,7 @@ const CATEGORIES: {
     icon: '⚡',
     bg: `${KATEGORI_BG}/ai-produktivitet-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-700',
+    group: 'Produktivitet & dokument',
   },
   {
     href: '/ai-verktyg/e-postmarknadsforing',
@@ -288,6 +313,7 @@ const CATEGORIES: {
     icon: '✉️',
     bg: `${KATEGORI_BG}/ai-epostmarknadsforing-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-700',
+    group: 'Marknadsföring & sälj',
   },
   {
     href: '/ai-verktyg/crm',
@@ -296,6 +322,7 @@ const CATEGORIES: {
     icon: '🤝',
     bg: `${KATEGORI_BG}/ai-crm-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-700',
+    group: 'Marknadsföring & sälj',
   },
   {
     href: '/ai-verktyg/dataanalys',
@@ -304,6 +331,7 @@ const CATEGORIES: {
     icon: '📊',
     bg: `${KATEGORI_BG}/ai-dataanalys-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-700',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/utbildning',
@@ -312,6 +340,7 @@ const CATEGORIES: {
     icon: '🎓',
     bg: `${KATEGORI_BG}/ai-utbildning-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-700',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/ai-sakerhet',
@@ -320,6 +349,7 @@ const CATEGORIES: {
     icon: '🛡',
     bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-sakerhet-hubb.webp',
     fallbackGradient: 'bg-gradient-to-br from-red-600 to-rose-900',
+    group: 'Automation & agenter',
   },
   {
     href: '/ai-verktyg/ai-agenter',
@@ -328,14 +358,16 @@ const CATEGORIES: {
     icon: '◎',
     bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-agenter-hubb.webp',
     fallbackGradient: 'bg-gradient-to-br from-indigo-600 to-violet-900',
+    group: 'Automation & agenter',
   },
   {
     href: '/ai-verktyg/marknadsforing',
     title: 'AI-marknadsföring',
     description: 'ChatGPT, Jasper, Surfer SEO — AI för content och kampanjer.',
     icon: '📣',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-marknadsforing-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-pink-900',
+    group: 'Marknadsföring & sälj',
   },
   {
     href: '/ai-verktyg/juridik',
@@ -344,30 +376,34 @@ const CATEGORIES: {
     icon: '⚖',
     bg: null,
     fallbackGradient: 'bg-gradient-to-br from-slate-600 to-slate-900',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/kundservice',
     title: 'AI-kundservice',
     description: 'Intercom Fin, Zendesk AI, Tidio — AI för chattbottar och kundtjänst.',
     icon: '🎧',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-kundservice-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-cyan-600 to-blue-900',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/rekrytering',
     title: 'AI för rekrytering',
     description: 'Workday, Greenhouse, Eightfold — AI för CV-screening och HR.',
     icon: '🧑‍💼',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-rekrytering-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/ui-ux',
     title: 'AI för UI/UX-design',
-    description: 'Figma AI, Galileo, Uizard — från idé till gränssnitt med AI.',
+    description: 'Figma AI, Google Stitch, Uizard — från idé till gränssnitt med AI.',
     icon: '🎨',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-ui-ux-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-violet-600 to-indigo-900',
+    group: 'Bild & video',
   },
   {
     href: '/ai-verktyg/ekonomi',
@@ -376,15 +412,39 @@ const CATEGORIES: {
     icon: '💰',
     bg: null,
     fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-900',
+    group: 'Yrke & bransch',
   },
   {
     href: '/ai-verktyg/tiktok',
     title: 'AI för TikTok',
     description: 'Topplista och workflow för att skapa TikTok-videos snabbare med AI.',
     icon: '#',
-    bg: null,
+    bg: `${KATEGORI_BG}/ai-tiktok-kategori.webp`,
     fallbackGradient: 'bg-gradient-to-br from-rose-600 to-fuchsia-900',
+    group: 'Marknadsföring & sälj',
   },
+  {
+    href: '/ai-verktyg/ai-trading',
+    title: 'AI för trading',
+    description: 'TradingView, 3Commas, Cryptohopper — AI för aktie- och kryptohandel.',
+    icon: '📈',
+    bg: `${KATEGORI_BG}/ai-trading-kategori.webp`,
+    fallbackGradient: 'bg-gradient-to-br from-purple-700 to-pink-900',
+    group: 'Yrke & bransch',
+  },
+];
+
+/** Ordning på snabbfilter-chipsen — matchar grupperna ovan. */
+const CATEGORY_GROUPS = [
+  'Text & skrivande',
+  'Bild & video',
+  'Ljud & röst',
+  'Kod & utveckling',
+  'Automation & agenter',
+  'Marknadsföring & sälj',
+  'Produktivitet & dokument',
+  'Yrke & bransch',
+  'Gratis',
 ];
 
 function Hero({ article: a }: { article: Article }) {
@@ -436,9 +496,12 @@ function CategoryGrid() {
         </span>
       </div>
 
-      {/* Sökfält + live-filtrerade kort (klient-side; alla kort stannar i DOM
-          för SEO, icke-träffar döljs bara med CSS). */}
-      <MasterHubCategorySearch categories={CATEGORIES} />
+      {/* Sökfält + grupp-chips + live-filtrerade kort (klient-side; alla kort
+          stannar i DOM för SEO, icke-träffar döljs bara med CSS). Samma
+          sökruta filtrerar även yrkes-grided längre ner på sidan, så
+          kategorier och yrken känns som en produkt istället för två
+          separata sök-sektioner. */}
+      <MasterHubDiscovery categories={CATEGORIES} groups={CATEGORY_GROUPS} yrken={YRKEN} />
     </section>
   );
 }

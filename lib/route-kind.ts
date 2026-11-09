@@ -33,7 +33,7 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'neuronwriter', 'marketmuse', 'rankmath-ai', 'screaming-frog-ai',
   ],
   '/ai-verktyg/marknadsforing/content-copywriting': [
-    'claude', 'jasper-content', 'copy-ai', 'writesonic',
+    'claude', 'jasper-ai', 'copy-ai', 'writesonic',
     'koala-writer', 'rytr-content', 'hypotenuse-ai', 'anyword', 'contentatscale',
   ],
   '/ai-verktyg/marknadsforing/annonser': [
@@ -55,7 +55,7 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
 
   // ── Parent nav-hubs: broad cross-section, not subcategory-specific ──
   '/ai-verktyg/marknadsforing': [
-    'chatgpt', 'claude', 'jasper-content',
+    'chatgpt', 'claude', 'jasper-ai',
     'copy-ai', 'anyword', 'adcreative-ai', 'madgicx',
     'hootsuite-ai', 'buffer-ai', 'ocoya',
   ],

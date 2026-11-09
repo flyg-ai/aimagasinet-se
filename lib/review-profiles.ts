@@ -17,6 +17,7 @@ import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -105,6 +106,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* AI-agenter-hubben (Manus, Lindy, Relevance AI, CrewAI, Devin, …) —
    * genererade i lib/category-hub-tools-ai-agenter.ts av scripts/seed-ai-agenter-hub.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER,
+
+  /* AI-trading-hubben (TradingView, Tickeron, Danelfin, Cryptohopper, 3Commas, …) —
+   * genererade i lib/category-hub-tools-ai-trading.ts av scripts/seed-ai-trading-hub.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {

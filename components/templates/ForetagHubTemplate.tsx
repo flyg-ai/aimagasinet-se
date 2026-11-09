@@ -20,17 +20,19 @@ const CATEGORIES: CategoryCard[] = [
   { title: 'Sociala medier', href: '/ai-verktyg/sociala-medier/', icon: '📱', desc: 'Schemaläggning, content och analys.' },
 ];
 
-const YRKEN: YrkeLink[] = [
-  { label: 'Lärare/pedagog', href: '/ai-verktyg/utbildning/larare/', kw: 'lärare pedagog skola utbildning undervisning' },
+/** Exporterad så MasterHubTemplate (/ai-verktyg/) kan återanvända samma
+ *  yrke-sök-sektion — se components/templates/MasterHubTemplate.tsx. */
+export const YRKEN: YrkeLink[] = [
+  { label: 'Lärare/pedagog', href: '/ai-verktyg/larare/', kw: 'lärare pedagog skola utbildning undervisning' },
   { label: 'Advokat/jurist', href: '/ai-verktyg/juridik/', kw: 'advokat jurist juridik avtal' },
   { label: 'Revisor', href: '/ai-verktyg/ekonomi/redovisning/', kw: 'revisor revision ekonomi' },
   { label: 'Bokförare', href: '/ai-verktyg/ekonomi/bokforing/', kw: 'bokförare bokföring ekonomi' },
   { label: 'Marknadsförare', href: '/ai-verktyg/marknadsforing/', kw: 'marknadsförare marknadsföring content seo annonser' },
   { label: 'Säljare', href: '/basta-ai-verktyg-for-salj-2026/', kw: 'säljare försäljning sälj crm account' },
-  { label: 'HR-ansvarig', href: '/ai-verktyg/rekrytering/hr/', kw: 'hr personal medarbetare human resources' },
+  { label: 'HR-ansvarig', href: '/ai-verktyg/hr/', kw: 'hr personal medarbetare human resources onboarding' },
   { label: 'Fotograf', href: '/ai-verktyg/foretag/yrke/fotograf-video/', kw: 'fotograf video foto bild film' },
-  { label: 'Designer', href: '/ai-verktyg/foretag/yrke/designer/', kw: 'designer design grafik ui ux' },
-  { label: 'Utvecklare', href: '/ai-verktyg/ai-kod-verktyg/utvecklare/', kw: 'utvecklare programmerare kod developer engineer' },
+  { label: 'Designer', href: '/basta-ai-verktyg-for-designers-2026/', kw: 'designer design grafik ui ux' },
+  { label: 'Utvecklare', href: '/ai-verktyg/ai-kod-verktyg/', kw: 'utvecklare programmerare kod developer engineer' },
   { label: 'Kundtjänstmedarbetare', href: '/ai-verktyg/kundservice/', kw: 'kundtjänst kundservice support' },
   { label: 'Rekryterare', href: '/ai-verktyg/rekrytering/', kw: 'rekryterare rekrytering talent sourcing' },
 ];

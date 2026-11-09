@@ -11,20 +11,59 @@ export type MasterHubCategory = {
   icon: string;
   bg: string | null;
   fallbackGradient: string;
+  group: string;
 };
 
 /** Live, client-side filter over the master-hub category cards. Every card
  *  stays in the DOM at all times (SEO: server-rendered links are always
  *  crawlable) — non-matching cards are only hidden via the `hidden` CSS class,
- *  never unmounted. Filters on category name. */
-export function MasterHubCategorySearch({ categories }: { categories: MasterHubCategory[] }) {
+ *  never unmounted. Filters on category name + an optional "vad vill du
+ *  göra"-grupp (chips), combined with AND. */
+export function MasterHubCategorySearch({
+  categories,
+  groups,
+}: {
+  categories: MasterHubCategory[];
+  groups: string[];
+}) {
   const [q, setQ] = useState('');
+  const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const needle = q.trim().toLowerCase();
-  const matches = (c: MasterHubCategory) => !needle || c.title.toLowerCase().includes(needle);
+  const matches = (c: MasterHubCategory) =>
+    (!needle || c.title.toLowerCase().includes(needle)) &&
+    (!activeGroup || c.group === activeGroup);
   const anyMatch = categories.some(matches);
 
   return (
     <>
+      <div className="mb-5 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setActiveGroup(null)}
+          className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+            activeGroup === null
+              ? 'border-indigo-600 bg-indigo-600 text-white'
+              : 'border-line bg-card text-fg-muted hover:border-indigo-300 hover:text-fg'
+          }`}
+        >
+          Alla
+        </button>
+        {groups.map((g) => (
+          <button
+            key={g}
+            type="button"
+            onClick={() => setActiveGroup(g === activeGroup ? null : g)}
+            className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+              g === activeGroup
+                ? 'border-indigo-600 bg-indigo-600 text-white'
+                : 'border-line bg-card text-fg-muted hover:border-indigo-300 hover:text-fg'
+            }`}
+          >
+            {g}
+          </button>
+        ))}
+      </div>
+
       <div className="mb-8 max-w-xl">
         <label className="relative block">
           <span className="sr-only">Sök bland AI-verktyg</span>

@@ -13,6 +13,7 @@ import { CRM_REVIEW_KNOWN } from '@/lib/crm-tools';
 import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 
@@ -103,6 +104,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   ...(CATEGORY_HUB_REVIEW_KNOWN_3 as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER as Record<string, Partial<ToolProfile>>),
+  ...(CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING as Record<string, Partial<ToolProfile>>),
   ...YRKE_HUB_KNOWN,
   ...YRKES_HUB_KNOWN,
   ...YRKES_HUB_KNOWN_EXTRA,
@@ -571,6 +573,20 @@ const VIRTUAL_HUB_CHILDREN: Record<string, HubChild[]> = {
       excerpt: 'Stable Diffusion-baserad bildgenerator med 150 gratis tokens per dag — bra för småprojekt.',
       featured_image: null, category: null, published_at: null,
       affiliate_url: null, rating: null, isUpcoming: true,
+    },
+  ],
+
+  // /ai-verktyg/larare — Khanmigo har redan en egen recension under
+  // /ai-verktyg/utbildning (student + lärare). Cross-refererad hit med
+  // path till den riktiga sidan i stället för en duplicerad recension;
+  // profil/betyg hämtas från samma KNOWN-post via lookupKnownBySlug.
+  'larare': [
+    {
+      slug: 'khanmigo', title: 'Khanmigo för lärare',
+      path: '/ai-verktyg/khanmigo',
+      excerpt: 'Khan Academys AI — gratis för lärare: lektionsplaner, elevsammanfattningar och rubriker kopplat till Khan Academys innehåll.',
+      featured_image: null, category: null, published_at: null,
+      affiliate_url: null, rating: null,
     },
   ],
 };

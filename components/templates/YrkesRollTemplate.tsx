@@ -209,7 +209,7 @@ const SPEC_BY_SLUG: Record<string, YrkesRollSpec> = {
       },
       {
         title: 'UI/UX',
-        description: 'Figma AI, Galileo AI och Uizard — AI som sänker tröskeln från idé till färdig UI-design.',
+        description: 'Figma AI, Google Stitch och Uizard — AI som sänker tröskeln från idé till färdig UI-design.',
         href: '/ai-verktyg/ui-ux',
         icon: '◫',
         accent: 'bg-indigo-100 text-indigo-700',
@@ -234,7 +234,7 @@ const SPEC_BY_SLUG: Record<string, YrkesRollSpec> = {
       { label: 'Grafisk design',  brand: 'Adobe Firefly', href: '/ai-verktyg/adobe-firefly' },
       { label: 'Logotyper',       brand: 'Looka',         href: '/ai-verktyg/looka-design' },
       { label: 'UI/UX',           brand: 'Figma AI',      href: '/ai-verktyg/figma-ai-ux' },
-      { label: 'UI/UX',           brand: 'Galileo AI',    href: '/ai-verktyg/galileo-ai-ux' },
+      { label: 'UI/UX',           brand: 'Google Stitch', href: '/ai-verktyg/google-stitch' },
       { label: 'UI/UX',           brand: 'Uizard',        href: '/ai-verktyg/uizard-ux' },
       { label: 'Webbsidor',       brand: 'Framer AI',     href: '/ai-verktyg/framer-ai' },
       { label: 'Bildgenerering',  brand: 'Midjourney',    href: '/ai-verktyg/midjourney' },
