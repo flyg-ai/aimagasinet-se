@@ -13,6 +13,7 @@ import { CategoryRowsSection } from '@/components/CategoryRowsSection';
 import { ShortNewsCarousel } from '@/components/ShortNewsCarousel';
 import { MoreToReadSection } from '@/components/MoreToReadSection';
 import { ExploreCategoriesSection } from '@/components/ExploreCategoriesSection';
+import { LatestToolPagesSection } from '@/components/LatestToolPagesSection';
 import { readingTimeMinutes } from '@/lib/reading-time';
 import { fetchAuthorsMap, type Author } from '@/lib/authors';
 
@@ -196,6 +197,12 @@ export default async function HomePage() {
       {/* ── Band 2: Utforska AI-verktyg — bg-white quick-jump cards ── */}
       <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
         <ExploreCategoriesSection />
+      </div>
+
+      {/* ── Band 2.5: Senast uppdaterat — bg-white, färska djuplänkar till
+           både hubbar och enskilda verktygsrecensioner ── */}
+      <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+        <LatestToolPagesSection />
       </div>
 
       {/* ── Band 3: Trending — bg-slate-50 tint ─────────────── */}
