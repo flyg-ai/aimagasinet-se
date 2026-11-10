@@ -94,6 +94,16 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'khan-academy-ai', 'duolingo-ai', 'coursera-ai', 'synthesis-ai', 'khanmigo',
     'quizlet-ai', 'socratic', 'photomath-ai', 'grammarly', 'turnitin-ai',
   ],
+
+  // '/ai-verktyg/sociala-medier' hade bara 3 DB-barn (feedhive, publer, flick)
+  // trots att 9 recensioner av sociala medier-verktyg redan fanns — bara
+  // kopplade till /ai-verktyg/marknadsforing/sociala-medier istället. Kuraterad
+  // lista slår ihop båda (minus "flick-ai", en dubblett av "flick") så hubben
+  // faktiskt täcker de ~10-12 verktyg dess "Topp 10"-rubrik lovar.
+  '/ai-verktyg/sociala-medier': [
+    'feedhive', 'publer', 'flick', 'hootsuite-ai', 'buffer-ai', 'predis-ai',
+    'lately-ai', 'ocoya', 'postwise', 'taplio', 'fedica',
+  ],
 };
 
 /* Depth-3 subcategory hubs that classify() must treat as 'hub' rather than
