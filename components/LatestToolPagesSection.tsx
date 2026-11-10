@@ -57,18 +57,18 @@ export async function LatestToolPagesSection() {
     <section>
       <div className="mb-6 flex items-baseline justify-between border-b border-line pb-3">
         <h2 className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-fg-muted">
-          ▍ Senast uppdaterat
+          ▍ Senast uppdaterat inom AI-verktyg
         </h2>
       </div>
       <div className="flex flex-col gap-10">
         <Row
-          title="Senaste topplistorna"
+          title="Senaste AI-topplistorna"
           subtitle="Nya och uppdaterade kategoriguider"
           accent="text-indigo-700"
           items={hubs}
         />
         <Row
-          title="Senaste recensionerna"
+          title="Senaste AI-verktygsrecensionerna"
           subtitle="Enskilda AI-verktyg vi just testat eller uppdaterat"
           accent="text-emerald-700"
           items={reviews}
@@ -92,10 +92,13 @@ function Row({
   if (items.length === 0) return null;
   return (
     <div>
-      <div className="mb-3 flex items-baseline justify-between gap-4">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h3 className="font-black uppercase tracking-tight text-fg">{title}</h3>
         <span className={`hidden font-mono text-[10px] font-bold uppercase tracking-wider sm:inline ${accent}`}>
           {subtitle}
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
+          Scrolla horisontellt →
         </span>
       </div>
 
