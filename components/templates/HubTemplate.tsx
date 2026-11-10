@@ -15,6 +15,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE } from '@/lib/category-hub-tools-ai-humaniserare';
+import { REVIEW_KNOWN } from '@/lib/review-profiles';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 
@@ -100,6 +101,17 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   // ToolProfile share the fields buildProfile reads (logo/tags/pros/cons/offer/
   // label/ctaName/score/fallbackUrl/tagline); the rest is ignored. Listed
   // first so any hub-specific profile below wins on a slug collision.
+  //
+  // REVIEW_KNOWN (lib/review-profiles.ts) is the registry ReviewTemplate uses
+  // for the actual review pages — a separate, parallel list from this file's
+  // hardcoded entries below. Tools only present in REVIEW_KNOWN (e.g.
+  // midjourney, canva-ai) used to fall through to the generic mock here,
+  // which has no ctaName — the "Prova X" button then used the full article
+  // title as its label, overflowed, and visually broke the "Läs recension"
+  // link under it (reported on /ai-verktyg/ai-bild-verktyg/, rank #1 Canva AI
+  // and #2 Midjourney both affected). Listed first so this file's own,
+  // hub-specific entries still win on a slug collision.
+  ...(REVIEW_KNOWN as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN as Record<string, Partial<ToolProfile>>),
   ...(CRM_REVIEW_KNOWN as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN_3 as Record<string, Partial<ToolProfile>>),
