@@ -18,6 +18,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE } from '@/lib/category-hub-tools-ai-humaniserare';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -110,6 +111,10 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* AI-trading-hubben (TradingView, Tickeron, Danelfin, Cryptohopper, 3Commas, …) —
    * genererade i lib/category-hub-tools-ai-trading.ts av scripts/seed-ai-trading-hub.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING,
+
+  /* AI-humaniserare-hubben (Undetectable AI, StealthGPT, WriteHuman, Walter Writes, …) —
+   * genererade i lib/category-hub-tools-ai-humaniserare.ts av scripts/seed-ai-humaniserare-hub.ts. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {

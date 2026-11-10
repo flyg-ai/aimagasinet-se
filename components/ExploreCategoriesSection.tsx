@@ -7,7 +7,7 @@ import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
   MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
-  ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash, TrendingUp,
+  ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash, TrendingUp, Wand2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -121,6 +121,7 @@ const CARDS: Card[] = [
   { href: '/ai-verktyg/crm', title: 'AI-CRM', icon: Handshake, bg: `${STORAGE}/ai-crm-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
   { href: '/ai-verktyg/dataanalys', title: 'AI-dataanalys', icon: BarChart3, bg: `${STORAGE}/ai-dataanalys-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-800' },
   { href: '/ai-verktyg/utbildning', title: 'AI för utbildning', icon: GraduationCap, bg: `${STORAGE}/ai-utbildning-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-800' },
+  { href: '/ai-verktyg/ai-humaniserare', title: 'AI-humaniserare', icon: Wand2, bg: null, fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900' },
 ];
 
 /** Quick-jump category cards under the hero. Desktop (lg+) shows the first

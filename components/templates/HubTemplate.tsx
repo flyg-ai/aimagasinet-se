@@ -14,6 +14,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN_3 } from '@/lib/category-hub-tools-3';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-ai-sakerhet';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE } from '@/lib/category-hub-tools-ai-humaniserare';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 
@@ -105,6 +106,7 @@ const KNOWN: Record<string, Partial<ToolProfile>> = {
   ...(CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER as Record<string, Partial<ToolProfile>>),
   ...(CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING as Record<string, Partial<ToolProfile>>),
+  ...(CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE as Record<string, Partial<ToolProfile>>),
   ...YRKE_HUB_KNOWN,
   ...YRKES_HUB_KNOWN,
   ...YRKES_HUB_KNOWN_EXTRA,

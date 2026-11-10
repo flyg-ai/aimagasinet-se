@@ -523,6 +523,15 @@ const CATEGORIES: {
     fallbackGradient: 'bg-gradient-to-br from-purple-700 to-pink-900',
     group: 'Yrke & bransch',
   },
+  {
+    href: '/ai-verktyg/ai-humaniserare',
+    title: 'AI-humaniserare',
+    description: 'Undetectable AI, StealthGPT, WriteHuman — få AI-text att låta mänsklig.',
+    icon: '✒',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900',
+    group: 'Text & skrivande',
+  },
 ];
 
 /** Ordning på snabbfilter-chipsen — matchar grupperna ovan. */
