@@ -446,7 +446,7 @@ function TopPicks({ picks }: { picks: YrkesRollTopPick[] }) {
                   <span className="shrink-0 text-sm font-medium text-fg-subtle sm:min-w-[16rem]">
                     {p.label}
                   </span>
-                  <span className="truncate text-sm font-bold text-fg group-hover:text-indigo-600">
+                  <span className="min-w-0 break-words text-sm font-bold text-fg group-hover:text-indigo-600">
                     {p.brand}
                   </span>
                 </div>

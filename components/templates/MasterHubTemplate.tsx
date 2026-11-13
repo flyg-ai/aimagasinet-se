@@ -173,7 +173,7 @@ function Top10Section() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="truncate font-black tracking-tight text-fg group-hover:text-indigo-600">
+                      <div className="min-w-0 break-words font-black tracking-tight text-fg group-hover:text-indigo-600">
                         {item.name}
                       </div>
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-black text-amber-600">
@@ -181,7 +181,7 @@ function Top10Section() {
                         <span aria-hidden>★</span>
                       </span>
                     </div>
-                    <p className="truncate text-sm text-fg-muted">{item.tagline}</p>
+                    <p className="line-clamp-2 text-sm text-fg-muted">{item.tagline}</p>
                   </div>
                   <ChevronRight
                     aria-hidden

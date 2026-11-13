@@ -1389,7 +1389,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={to(child.path)}
-              className="min-w-0 truncate text-left text-xl font-black uppercase tracking-tight text-fg hover:text-indigo-600"
+              className="min-w-0 break-words text-left text-xl font-black uppercase tracking-tight text-fg hover:text-indigo-600"
             >
               {name}
             </Link>
@@ -1494,7 +1494,7 @@ function BestInTest({ child }: { child: HubChild }) {
             <div className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
               🏆 Bäst i test {year}
             </div>
-            <h3 className="mt-2 truncate text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+            <h3 className="mt-2 break-words text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
               {name}
             </h3>
             {description && (
@@ -1818,7 +1818,7 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
               {isTop ? '🏆 Redaktionens val' : p.label}
             </span>
           </div>
-          <h3 className="mt-2 truncate text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
+          <h3 className="mt-2 break-words text-left text-3xl font-black uppercase tracking-tight text-fg sm:text-4xl">
             {name}
           </h3>
           {p.tagline && (

@@ -207,8 +207,8 @@ function Snabbfakta({ a, b }: { a: ComparedTool; b: ComparedTool }) {
       <div className="overflow-hidden rounded-2xl border border-line bg-card">
         <div className="grid grid-cols-[88px_1fr_1fr] items-center gap-3 border-b border-line bg-soft px-4 py-3 sm:grid-cols-[120px_1fr_1fr] sm:px-6">
           <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">Snabbfakta</span>
-          <span className={`truncate text-sm font-black tracking-tight ${SIDE.a.text}`}>{a.ref.name}</span>
-          <span className={`truncate text-sm font-black tracking-tight ${SIDE.b.text}`}>{b.ref.name}</span>
+          <span className={`min-w-0 break-words text-sm font-black tracking-tight ${SIDE.a.text}`}>{a.ref.name}</span>
+          <span className={`min-w-0 break-words text-sm font-black tracking-tight ${SIDE.b.text}`}>{b.ref.name}</span>
         </div>
         {rows.map((r, i) => (
           <div
