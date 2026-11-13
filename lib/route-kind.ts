@@ -104,6 +104,31 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'feedhive', 'publer', 'flick', 'hootsuite-ai', 'buffer-ai', 'predis-ai',
     'lately-ai', 'ocoya', 'postwise', 'taplio', 'fedica',
   ],
+
+  // Vibe coding — blandar 5 befintliga ai-kod-verktyg-recensioner (behåller
+  // sitt parent_slug där) med 6 nya recensioner (parent_slug='vibe-coding',
+  // syntetisk — se scripts/seed-vibe-coding-reviews.ts).
+  '/ai-verktyg/vibe-coding': [
+    'cursor-ai', 'replit-ai', 'windsurf', 'github-copilot', 'claude-code',
+    'lovable', 'bolt-new', 'v0', 'base44', 'google-antigravity', 'magic-patterns',
+  ],
+
+  // Transkribering — blandar 3 befintliga recensioner (otter-ai/fireflies-ai
+  // under motesverktyg, descript under podcast-ljudredigering — behåller sina
+  // parent_slug) med 7 nya (parent_slug='transkribering', syntetisk — se
+  // scripts/seed-transkribering-reviews.ts).
+  '/ai-verktyg/transkribering': [
+    'otter-ai', 'fireflies-ai', 'descript',
+    'sonix', 'trint', 'rev-com', 'happy-scribe', 'notta', 'assemblyai', 'deepgram',
+  ],
+
+  // Produktbilder — blandar 1 befintlig recension (removebg-bredig under
+  // ai-bild-verktyg, behåller sitt parent_slug) med 9 nya (parent_slug=
+  // 'produktbilder', syntetisk — se scripts/seed-produktbilder-reviews.ts).
+  '/ai-verktyg/produktbilder': [
+    'removebg-bredig', 'photoroom', 'pebblely', 'bria', 'pixelcut',
+    'flair-ai', 'claid-ai', 'botika', 'pixc', 'autoretouch',
+  ],
 };
 
 /* Depth-3 subcategory hubs that classify() must treat as 'hub' rather than

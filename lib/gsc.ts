@@ -70,6 +70,8 @@ export type GscQueryOpts = {
   dimensions?: ('query' | 'page' | 'date' | 'country' | 'device')[];
   /** Filtrera på en specifik sida (dimensionFilterGroups mot dimension "page"). */
   page?: string;
+  /** Filtrera på en exakt sökfras (dimensionFilterGroups mot dimension "query"). */
+  query?: string;
   rowLimit?: number;
   startRow?: number;
 };
@@ -85,9 +87,10 @@ export async function querySearchAnalytics(opts: GscQueryOpts): Promise<GscRow[]
     rowLimit: opts.rowLimit ?? 1000,
     startRow: opts.startRow ?? 0,
   };
-  if (opts.page) {
-    body.dimensionFilterGroups = [{ filters: [{ dimension: 'page', operator: 'equals', expression: opts.page }] }];
-  }
+  const filters: Record<string, unknown>[] = [];
+  if (opts.page) filters.push({ dimension: 'page', operator: 'equals', expression: opts.page });
+  if (opts.query) filters.push({ dimension: 'query', operator: 'equals', expression: opts.query });
+  if (filters.length) body.dimensionFilterGroups = [{ filters }];
   const res = await fetch(
     `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
     { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) },

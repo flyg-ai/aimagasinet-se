@@ -29,6 +29,10 @@ export const seoTestSupersededSources = new Set([
   '/ai-verktyg/foretag/yrke/marknadsforing/seo',
   '/ai-verktyg/foretag/yrke/ekonomi-redovisning/bokforing',
   '/ai-verktyg/ekonomi/bokforare',
+  '/ai-verktyg/ui-ux/galileo-ai-ux',
+  '/ai-verktyg/foretag/yrke/designer/ui-ux/galileo-ai-ux',
+  '/ai-verktyg/utbildning/larare',
+  '/ai-verktyg/ai-kod-verktyg/utvecklare',
 ]);
 
 export const seoTestRedirects = [
@@ -97,6 +101,82 @@ export const seoTestRedirects = [
   {
     source: '/vilken-ai-ar-bast-pa-svenska-vi-testade-chatgpt-claude-och-gemini',
     destination: '/chatgpt-vs-claude-vs-gemini-2026',
+    statusCode: 301,
+  },
+
+  // ── Test 6: Galileo AI → Google Stitch (5 november 2026) ───────
+  // Galileo AI köptes av Google i maj 2025 och relanserades samma dag som
+  // Google Stitch, gratis via Google Labs — de betalda planerna försvann i
+  // bytet. Samma recensionssida, ny slug/URL som matchar det faktiska namnet.
+  {
+    source: '/ai-verktyg/galileo-ai-ux',
+    destination: '/ai-verktyg/google-stitch',
+    statusCode: 301,
+  },
+  {
+    // Direkthopp i stället för kedja via flatten-redirecten.
+    source: '/ai-verktyg/ui-ux/galileo-ai-ux',
+    destination: '/ai-verktyg/google-stitch',
+    statusCode: 301,
+  },
+  {
+    // Direkthopp i stället för kedja via redirects-designer-fotograf.mjs.
+    source: '/ai-verktyg/foretag/yrke/designer/ui-ux/galileo-ai-ux',
+    destination: '/ai-verktyg/google-stitch',
+    statusCode: 301,
+  },
+
+  // ── Test 7: designer (5 november 2026) ──────────────────────────
+  // Yrkesroll-sidan /foretag/yrke/designer (depth 4, djupt nästlad, svag
+  // intern länkning) hade ~0 exponeringar på 90 dagar för "designer"-
+  // relaterade sökord sajt-övergripande. Flyttad till en flat artikel,
+  // samma mönster som sälj/SEO-testerna.
+  {
+    source: '/ai-verktyg/foretag/yrke/designer',
+    destination: '/basta-ai-verktyg-for-designers-2026',
+    statusCode: 301,
+  },
+
+  // ── Test 8: HR (5 november 2026) ─────────────────────────────────
+  // /ai-verktyg/rekrytering/hr var en föräldralös yrkesguide (692
+  // exponeringar/16 mån, pos 35 — mest trafik att mäta på av de fyra
+  // kvarvarande yrkessidorna). HR är ett eget ämne från rekrytering
+  // (se /ai-verktyg/rekrytering), så den fick en egen kategori-hub i
+  // samma tunga HubTemplate-stil som ai-text-verktyg, istället för en
+  // flat artikel — motpol till designer-testet ovan.
+  {
+    source: '/ai-verktyg/rekrytering/hr',
+    destination: '/ai-verktyg/hr',
+    statusCode: 301,
+  },
+
+  // ── Test 9: lärare (6 november 2026) ─────────────────────────────
+  // /ai-verktyg/utbildning/larare var en föräldralös yrkesguide (102
+  // exponeringar/16 mån, pos 18,6) med skev search intent mot
+  // /ai-verktyg/utbildning-hubben, som är student/plugg-fokuserad och inte
+  // samma ämne (se kannibalisering.md). Lärare fick en egen kategori-hub
+  // i samma mönster som HR-testet ovan, med riktiga verktyg (MagicSchool
+  // AI, Brisk Teaching, Curipod) plus en cross-ref till den redan
+  // publicerade Khanmigo-recensionen under /ai-verktyg/utbildning.
+  {
+    source: '/ai-verktyg/utbildning/larare',
+    destination: '/ai-verktyg/larare',
+    statusCode: 301,
+  },
+
+  // ── Test 10: utvecklare → konsolidering (6 november 2026) ────────
+  // /ai-verktyg/ai-kod-verktyg/utvecklare var en djupt nästlad
+  // arbetsflödesguide ("så jobbar du som utvecklare") med bara 39
+  // exponeringar/16 mån (pos 23,9). Till skillnad från lärare/HR är detta
+  // INTE ett eget ämne — /ai-verktyg/ai-kod-verktyg redan rankar starkt
+  // (5 352 exponeringar/16 mån, pos 5,6) på exakt den sökintention
+  // ("ai utvecklare", "ai för utvecklare") den smala sidan tävlade om.
+  // Konsoliderad rakt in i den redan vinnande hubben, samma logik som
+  // SEO/bokförings-testerna ovan men i motsatt riktning (smal sida →
+  // befintlig stark hub, inte en ny artikel).
+  {
+    source: '/ai-verktyg/ai-kod-verktyg/utvecklare',
+    destination: '/ai-verktyg/ai-kod-verktyg',
     statusCode: 301,
   },
 ];

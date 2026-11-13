@@ -145,6 +145,36 @@ async function getSiblings(parentSlug: string | null, excludeSlug: string) {
   return await selectCards({ parentSlug, excludeSlug });
 }
 
+/** AI-detektorer (gptzero, originality-ai, winston-ai, zerogpt, copyleaks) delar
+ *  parent_slug "ai-text-verktyg" med AI-textgenererare (chatgpt, claude, …), så
+ *  standard-siblings (alfabetiskt inom samma parent_slug) kan visa ChatGPT som
+ *  "alternativ" till en detektor. Styr om till samma syfte för dessa slugs. */
+const AI_DETECTION_SLUGS = ['gptzero', 'originality-ai', 'winston-ai', 'zerogpt', 'copyleaks'];
+const REVIEW_ALTERNATIVES_OVERRIDE: Record<string, string[]> = Object.fromEntries(
+  AI_DETECTION_SLUGS.map((slug) => [slug, AI_DETECTION_SLUGS])
+);
+
+async function getSiblingsBySlugs(slugs: string[], excludeSlug: string): Promise<ArticleCardData[]> {
+  const tryQuery = async (withAffiliate: boolean) => {
+    const cols = CARD_COLS + (withAffiliate ? ',affiliate_url' : '');
+    return supabase
+      .from('articles')
+      .select(cols)
+      .in('slug', slugs)
+      .neq('slug', excludeSlug)
+      .order('title', { ascending: true });
+  };
+  let { data, error } = await tryQuery(true);
+  if (error && /affiliate_url/.test(error.message)) {
+    ({ data, error } = await tryQuery(false));
+  }
+  if (error) {
+    console.error('[getSiblingsBySlugs] supabase error:', error.message);
+    return [];
+  }
+  return (data ?? []) as unknown as ArticleCardData[];
+}
+
 /** Same-category published posts for the ArticleTemplate sidebar
  *  ("Relaterade artiklar"). Excludes the current article. */
 async function getRelated(category: string | null, excludeSlug: string): Promise<ArticleCardData[]> {
@@ -372,8 +402,9 @@ export default async function CatchAllPage({ params }: Props) {
   }
 
   if (decision.kind === 'review') {
+    const overrideSlugs = REVIEW_ALTERNATIVES_OVERRIDE[a.slug];
     const [siblings, related] = await Promise.all([
-      getSiblings(a.parent_slug, a.slug),
+      overrideSlugs ? getSiblingsBySlugs(overrideSlugs, a.slug) : getSiblings(a.parent_slug, a.slug),
       loadRelatedArticles(a.path, a.slug),
     ]);
     return <ReviewTemplate article={a} siblings={siblings} related={related} />;

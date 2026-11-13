@@ -1645,6 +1645,21 @@ function stripAiToolBoxes(html: string): string {
   return html;
 }
 
+/** Plockar ut ämnet ur en hub-titel ("Bästa AI-verktyg för vibe coding 2026"
+ *  -> "vibe coding") så H2:an blir unik och nyckelordsrik per sida istället
+ *  för identisk text på alla hubbar. Titlar utan "...för X"-mönster (t.ex.
+ *  "Bästa AI-kodverktygen 2026") faller tillbaka till null -> generisk rubrik. */
+function hubTopicFromTitle(title: string): string | null {
+  const t = title
+    .split(/[–—]/)[0]
+    .replace(/\(?\b20\d\d\)?/g, '')
+    .trim();
+  const m = t.match(/\bför\s+(.+)$/i);
+  if (!m) return null;
+  const topic = m[1].trim().replace(/[-–—:]+$/, '').trim();
+  return topic && topic.length <= 40 ? topic : null;
+}
+
 function EditorialSection({
   article: a,
   ranked,
@@ -1652,6 +1667,7 @@ function EditorialSection({
   article: Article;
   ranked: HubChild[];
 }) {
+  const topic = hubTopicFromTitle(a.title);
   // Strip legacy WP "ai-tool-box" review-cards from content_mdx on every hub:
   // the new ReviewsSection at the bottom renders them programmatically with
   // proper CTAs, curated pros/cons and consistent typography, so the WP cards
@@ -1687,10 +1703,10 @@ function EditorialSection({
           id="editorial"
           className="min-w-0 max-w-full text-balance break-words text-4xl font-black uppercase leading-[1.05] tracking-tight text-fg sm:text-5xl"
         >
-          {ranked.length > 0 ? 'Recensioner' : 'Översikt'}
+          {topic ? `Guide: ${topic}` : 'Guide'}
         </h2>
         <span className="hidden font-mono text-[11px] uppercase tracking-wider text-fg-faint sm:inline">
-          {ranked.length > 0 ? 'Verktyg för verktyg' : 'Djupgående guide'}
+          Djupgående guide
         </span>
       </div>
 

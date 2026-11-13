@@ -221,6 +221,14 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // Kannibaliserade huvudhubben på "ai bild/bilder" (GSC: pos 27,6 vs
+        // huvudhubbens pos 8,5 på samma fras) — mergad in som gratis-sektion
+        // i stället, se build-bild-verktyg-and-gratis.ts.
+        source: '/ai-verktyg/gratis/ai-bilder',
+        destination: '/ai-verktyg/ai-bild-verktyg',
+        statusCode: 301,
+      },
+      {
         // Kort alternativ slug → kanonisk full slug (samma artikel i DB).
         source: '/trump-stoppar-anthropic-pentagon-sakerhetsrisk',
         destination: '/trump-stoppar-anthropic-i-usa-pentagon-klassar-ai-bolaget-som-sakerhetsrisk',

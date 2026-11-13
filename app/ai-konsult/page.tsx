@@ -53,10 +53,10 @@ export default function AiKonsultHub() {
             Utforska konsulter inom AI, automation och data. Hitta kompetensen som passar era mål och ert nästa steg.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/ai-konsult/stockholm/#kontakta" className="rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white hover:bg-indigo-700">
+            <Link href="#hitta-ratt" className="rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white hover:bg-indigo-700">
               Få hjälp att hitta rätt →
             </Link>
-            <Link href="/ai-konsult/stockholm/" className="rounded-lg px-6 py-3 font-medium text-indigo-600 hover:underline">
+            <Link href="#stader" className="rounded-lg px-6 py-3 font-medium text-indigo-600 hover:underline">
               Utforska konsulter efter stad ↓
             </Link>
           </div>
@@ -69,7 +69,7 @@ export default function AiKonsultHub() {
               <div key={opt} className="rounded-xl border border-black/10 p-4 text-sm font-medium text-fg dark:border-white/10">{opt}</div>
             ))}
           </div>
-          <Link href="/ai-konsult/stockholm/#kontakta" className="mt-5 block rounded-lg bg-indigo-600 px-4 py-3 text-center font-medium text-white hover:bg-indigo-700">
+          <Link href="#hitta-ratt" className="mt-5 block rounded-lg bg-indigo-600 px-4 py-3 text-center font-medium text-white hover:bg-indigo-700">
             Nästa steg →
           </Link>
           <p className="mt-3 text-center text-xs text-fg/60">Osäker? Beskriv ert behov, så hjälper vi er vidare.</p>
@@ -77,10 +77,9 @@ export default function AiKonsultHub() {
       </section>
 
       {/* Städer */}
-      <section className="mx-auto mt-20 w-full max-w-6xl px-4 sm:px-6">
+      <section id="stader" className="mx-auto mt-20 w-full max-w-6xl scroll-mt-24 px-4 sm:px-6">
         <div className="flex items-end justify-between">
           <h2 className="text-3xl font-semibold tracking-tight text-fg">Hitta AI-konsult i din stad</h2>
-          <Link href="/ai-konsult/stockholm/" className="text-sm font-medium text-indigo-600 hover:underline">Se alla orter →</Link>
         </div>
         <ul className="mt-8 grid gap-6 md:grid-cols-3">
           {HUB_CITIES.map((c) => (
@@ -96,7 +95,7 @@ export default function AiKonsultHub() {
       </section>
 
       {/* Guide */}
-      <section className="mx-auto mt-20 w-full max-w-6xl px-4 sm:px-6">
+      <section id="hitta-ratt" className="mx-auto mt-20 w-full max-w-6xl scroll-mt-24 px-4 sm:px-6">
         <AiKonsultWizard />
       </section>
 
@@ -157,7 +156,7 @@ export default function AiKonsultHub() {
           <p className="mt-3 text-sm text-white/85">
             Berätta kort om er verksamhet och vad ni vill uppnå. Vi hjälper er att hitta rätt typ av AI-konsult och nästa steg.
           </p>
-          <Link href="/ai-konsult/stockholm/#kontakta" className="mt-6 block rounded-lg bg-white px-4 py-3 text-center font-medium text-indigo-700 hover:bg-indigo-50">
+          <Link href="#hitta-ratt" className="mt-6 block rounded-lg bg-white px-4 py-3 text-center font-medium text-indigo-700 hover:bg-indigo-50">
             Beskriv ert behov →
           </Link>
         </aside>

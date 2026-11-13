@@ -19,6 +19,10 @@ import { CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET } from '@/lib/category-hub-tools-
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER } from '@/lib/category-hub-tools-ai-agenter';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_TRADING } from '@/lib/category-hub-tools-ai-trading';
 import { CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE } from '@/lib/category-hub-tools-ai-humaniserare';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_KODGRANSKNING } from '@/lib/category-hub-tools-ai-kodgranskning';
+import { CATEGORY_HUB_REVIEW_KNOWN_VIBE_CODING } from '@/lib/category-hub-tools-vibe-coding';
+import { CATEGORY_HUB_REVIEW_KNOWN_TRANSKRIBERING } from '@/lib/category-hub-tools-transkribering';
+import { CATEGORY_HUB_REVIEW_KNOWN_PRODUKTBILDER } from '@/lib/category-hub-tools-produktbilder';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -115,6 +119,24 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
   /* AI-humaniserare-hubben (Undetectable AI, StealthGPT, WriteHuman, Walter Writes, …) —
    * genererade i lib/category-hub-tools-ai-humaniserare.ts av scripts/seed-ai-humaniserare-hub.ts. */
   ...CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE,
+
+  /* AI-kodgranskning (CodeRabbit, Qodo, Greptile, …) — fristående recensioner,
+   * se lib/category-hub-tools-ai-kodgranskning.ts och basta-ai-for-kodgranskning-2026. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_KODGRANSKNING,
+
+  /* Vibe coding (Lovable, Bolt, v0, …) — nya recensioner, se
+   * lib/category-hub-tools-vibe-coding.ts och /ai-verktyg/vibe-coding. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_VIBE_CODING,
+
+  /* AI-transkribering (Sonix, Trint, Rev, HappyScribe, Notta, AssemblyAI,
+   * Deepgram) — nya recensioner, se lib/category-hub-tools-transkribering.ts
+   * och /ai-verktyg/transkribering. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_TRANSKRIBERING,
+
+  /* AI-produktbilder (Photoroom, Pebblely, Bria, Pixelcut, Flair, Claid,
+   * Botika, Pixc, AutoRetouch) — nya recensioner, se
+   * lib/category-hub-tools-produktbilder.ts och /ai-verktyg/produktbilder. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_PRODUKTBILDER,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {

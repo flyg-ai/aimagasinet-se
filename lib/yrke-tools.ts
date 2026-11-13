@@ -12,6 +12,8 @@
 
 import { EXTENDED_TOOLS } from './yrke-tools-extended';
 import { DESIGNER_FOTOGRAF_TOOLS } from './yrke-tools-designer-fotograf';
+import { HR_TOOLS } from './yrke-tools-hr';
+import { LARARE_TOOLS } from './yrke-tools-larare';
 
 export type YrkeParent =
   | 'seo'
@@ -38,7 +40,11 @@ export type YrkeParent =
   | 'bildredigering'
   | 'videoklippning'
   | 'foto-bildgenerering'
-  | 'ljudsattning';
+  | 'ljudsattning'
+  // HR
+  | 'hr'
+  // Lärare
+  | 'larare';
 
 export type YrkeTool = {
   slug: string;
@@ -105,6 +111,9 @@ const CRITERIA_BY_PARENT: Record<YrkeParent, string[]> = {
   videoklippning: ['Klippkvalitet', 'AI-stöd', 'Auto-redigering', 'Plattformsstöd', 'Pris / prestanda', 'Mobil app'],
   'foto-bildgenerering': ['Fotorealism', 'Stil-kontroll', 'Konsistens', 'Iteration', 'Pris / prestanda', 'Kommersiell licens'],
   ljudsattning: ['Ljudkvalitet', 'AI-stöd', 'Bibliotek', 'Sync med video', 'Pris / prestanda', 'Royaltyfri'],
+  // HR
+  hr: ['AI kopplad till egen data', 'Transparent prissättning', 'Compliance', 'Skalbarhet', 'Pris / prestanda', 'Integrationer'],
+  larare: ['Byggd för undervisning', 'Gratisnivå', 'Läroplansanpassning', 'Integritet för elevdata', 'Pris / prestanda', 'Tidsbesparing'],
 };
 
 /** Deterministic 6-criterion matrix around `score` ± 0.4. */
@@ -960,6 +969,8 @@ export const YRKE_TOOLS: YrkeTool[] = [
   },
   ...EXTENDED_TOOLS,
   ...DESIGNER_FOTOGRAF_TOOLS,
+  ...HR_TOOLS,
+  ...LARARE_TOOLS,
 ];
 
 /* ── Helpers — single source of truth → templates + DB ───────── */

@@ -26,11 +26,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://aimagasinet.se'),
   title: {
-    default: 'AI-Magasinet — svenska AI-nyheter, guider och recensioner',
+    default: 'AI-Magasinet — AI-verktyg, nyheter och recensioner på svenska',
     template: '%s | AI-Magasinet',
   },
   description:
-    'AI-Magasinet är ditt svenska magasin om AI: nyheter, djupgående guider och recensioner av AI-verktyg.',
+    'AI-Magasinet är ditt svenska magasin om AI: verktygsrecensioner, djupgående guider och nyheter.',
   // Self-referencing hreflang — the site is Swedish-only, so we just
   // declare sv-SE for every URL by default. Per-page metadata overrides
   // alternates when needed (currently only on article pages, which

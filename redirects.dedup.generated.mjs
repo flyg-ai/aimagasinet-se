@@ -96,5 +96,15 @@ export const dedupRedirects = [
     "source": "/ai-verktyg/ocoya-sociala-medier",
     "destination": "/ai-verktyg/ocoya",
     "statusCode": 301
+  },
+  {
+    "source": "/ai-verktyg/jasper-content",
+    "destination": "/ai-verktyg/jasper-ai",
+    "statusCode": 301
+  },
+  {
+    "source": "/ai-verktyg/lately",
+    "destination": "/ai-verktyg/lately-ai",
+    "statusCode": 301
   }
 ];

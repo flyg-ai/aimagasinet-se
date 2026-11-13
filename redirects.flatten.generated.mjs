@@ -519,7 +519,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/sociala-medier/lately",
-    "destination": "/ai-verktyg/lately",
+    "destination": "/ai-verktyg/lately-ai",
     "statusCode": 301
   },
   {
@@ -714,7 +714,7 @@ export const flattenRedirects = [
   },
   {
     "source": "/ai-verktyg/marknadsforing/jasper-content",
-    "destination": "/ai-verktyg/jasper-content",
+    "destination": "/ai-verktyg/jasper-ai",
     "statusCode": 301
   },
   {

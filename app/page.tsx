@@ -49,9 +49,10 @@ export default async function HomePage() {
       .select('slug,title,excerpt,featured_image,category,published_at,path,content_mdx,author_slug')
       // Endast riktiga artiklar/nyheter (+ ev. framtida type='guide'). Hubbar/
       // recensioner är type='page'; yrkes-guiderna är type='post' men ligger
-      // under /ai-verktyg/ — uteslut dem så de inte flödar nyhetssektionerna.
-      .in('type', ['post', 'guide'])
-      .not('path', 'like', '/ai-verktyg/%')
+      // under /ai-verktyg/ — uteslut dem så de inte flödar nyhetssektionerna,
+      // UTOM när en hub/recension manuellt flaggats med featured_in_news=true
+      // (redaktionellt beslut, aldrig automatiskt — se migration 0023).
+      .or('and(type.in.(post,guide),path.not.like./ai-verktyg/%),featured_in_news.eq.true')
       .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(INITIAL_TOTAL),

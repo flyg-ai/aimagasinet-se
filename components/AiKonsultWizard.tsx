@@ -17,7 +17,7 @@ const SCOPES = [
   { id: 'vet-ej', label: 'Vet inte än', text: 'Vi behöver hjälp att bedöma det.' },
 ];
 
-export default function AiKonsultWizard({ city = 'Stockholm' }: { city?: string }) {
+export default function AiKonsultWizard({ city }: { city?: string }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [need, setNeed] = useState<string | null>(null);
   const [scope, setScope] = useState<string | null>(null);

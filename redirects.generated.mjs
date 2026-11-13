@@ -619,7 +619,7 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/marknadsforing/content-copywriting/jasper-content",
-    "destination": "/ai-verktyg/jasper-content",
+    "destination": "/ai-verktyg/jasper-ai",
     "statusCode": 301
   },
   {

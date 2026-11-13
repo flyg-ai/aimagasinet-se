@@ -4,9 +4,13 @@ import { useState } from 'react';
 
 /** Formulär för att låta redaktionen förmedla en förfrågan till AI-konsulter.
  *  Upplysningen visas alltid före knappen. Kryssrutan är inte förkryssad. */
-export default function AiKonsultForm({ city = 'Stockholm', presetNeed = '' }: { city?: string; presetNeed?: string }) {
+export default function AiKonsultForm({ city, presetNeed = '' }: { city?: string; presetNeed?: string }) {
   const [need, setNeed] = useState(presetNeed);
   const [email, setEmail] = useState('');
+  // Fylls bara i av besökaren när sidan inte redan vet orten (t.ex. huvudsidans
+  // generiska wizard). På en stadssida (city-prop satt) är orten redan känd av
+  // sammanhanget och frågas inte igen.
+  const [cityInput, setCityInput] = useState('');
   const [consent, setConsent] = useState(false);
   const [forward, setForward] = useState(false);
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -19,7 +23,7 @@ export default function AiKonsultForm({ city = 'Stockholm', presetNeed = '' }: {
       const res = await fetch('/api/ai-konsult-forfragan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ need, email, consent: true, forward, city }),
+        body: JSON.stringify({ need, email, consent: true, forward, city: city ?? cityInput }),
       });
       setState(res.ok ? 'done' : 'error');
     } catch {
@@ -57,6 +61,21 @@ export default function AiKonsultForm({ city = 'Stockholm', presetNeed = '' }: {
         Beskriv kort vad ni vill uppnå, så hjälper vi er hitta rätt bolag i listan.
         Vi kan förmedla kontakten vidare till AI-konsulter.
       </p>
+
+      {!city && (
+        <>
+          <label className="mt-5 block text-sm font-medium text-fg" htmlFor="city">Vilken ort?</label>
+          <input
+            id="city"
+            type="text"
+            required
+            value={cityInput}
+            onChange={(e) => setCityInput(e.target.value)}
+            className="mt-2 w-full rounded-lg border border-black/15 bg-white px-3 py-2 text-fg dark:border-white/15 dark:bg-white/5"
+            placeholder="Till exempel: Göteborg"
+          />
+        </>
+      )}
 
       <label className="mt-5 block text-sm font-medium text-fg" htmlFor="need">Vad behöver ni hjälp med?</label>
       <textarea
