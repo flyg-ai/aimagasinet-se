@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Skydd mot sidledes skroll på mobil ────────────────────────
+   Två rotorsaker gjorde /ai-verktyg/ bredare än skärmen på en
+   320 px-telefon (uppmätt 467 px), och båda är generella:
+
+   1. Ett grid-item har `min-width: auto` som standard och kan
+      därför inte bli smalare än sitt innehåll. Ett kort med
+      ikoner och text tvingade grid-kolumnen till 450 px i en
+      288 px-spalt. `min-width: 0` låter kolumnen krympa, så att
+      kortets egen `truncate` får göra sitt jobb.
+
+   2. Ett långt sammansatt ord i en rubrik ("verktygskategorier")
+      kan inte brytas, och i en flexrad med en nowrap-länk bredvid
+      blev raden bredare än spalten. `overflow-wrap: anywhere`
+      påverkar, till skillnad från `break-word`, även den minsta
+      bredd webbläsaren räknar fram, vilket är det som behövs här.
+      Regeln slår bara till när ordet faktiskt inte får plats.
+   ────────────────────────────────────────────────────────────── */
+
+:where(ul, ol).grid > li {
+  min-width: 0;
+}
+
+h1, h2, h3, h4 {
+  overflow-wrap: anywhere;
+}
+
 /* ─── Theme tokens ──────────────────────────────────────────────
    Light theme is the default. Toggle dark mode later by adding
    `class="dark"` to the <html> element — no further changes needed.
