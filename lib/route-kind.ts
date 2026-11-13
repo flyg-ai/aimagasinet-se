@@ -129,6 +129,16 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'removebg-bredig', 'photoroom', 'pebblely', 'bria', 'pixelcut',
     'flair-ai', 'claid-ai', 'botika', 'pixc', 'autoretouch',
   ],
+
+  // Foto & bildredigering — fotoförbättring/uppskalning/restaurering av
+  // BEFINTLIGA foton (parent_slug='foto-bildredigering', syntetisk — se
+  // scripts/seed-foto-bildredigering-reviews.ts). Alla 10 är nya recensioner,
+  // ingen återanvänd från ai-bild-verktyg/produktbilder (skild intention:
+  // generering resp. e-handel).
+  '/ai-verktyg/foto-bildredigering': [
+    'topaz-photo-ai', 'remini', 'lets-enhance', 'vanceai', 'fotor',
+    'picsart', 'luminar-neo', 'magnific-ai', 'pixlr', 'cutout-pro',
+  ],
 };
 
 /* Depth-3 subcategory hubs that classify() must treat as 'hub' rather than

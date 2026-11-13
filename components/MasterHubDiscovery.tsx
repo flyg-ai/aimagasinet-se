@@ -172,12 +172,12 @@ export function MasterHubDiscovery({
                   href={to(y.href)}
                   className="group flex items-center justify-between gap-3 rounded-lg border border-line bg-card px-5 py-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md"
                 >
-                  <span className="font-bold tracking-tight text-fg group-hover:text-sky-700">
+                  <span className="min-w-0 break-words font-bold tracking-tight text-fg group-hover:text-sky-700">
                     {y.label}
                   </span>
                   <span
                     aria-hidden
-                    className="font-mono text-sky-600 transition-transform group-hover:translate-x-1"
+                    className="shrink-0 font-mono text-sky-600 transition-transform group-hover:translate-x-1"
                   >
                     →
                   </span>

@@ -579,9 +579,12 @@ function Hero({ article: a }: { article: Article }) {
           <span className="text-white/80">AI-verktyg</span>
         </nav>
 
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white/90 ring-1 ring-white/20">
-          <span aria-hidden>✦</span> {MASTER_HUB_TOOL_COUNT} verktyg · {CATEGORIES.length} kategorier
-          {updatedLabel ? ` · Uppdaterad ${updatedLabel}` : ` · ${new Date().getFullYear()}`}
+        <span className="inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white/90 ring-1 ring-white/20">
+          <span aria-hidden>✦</span>
+          <span className="break-words">
+            {MASTER_HUB_TOOL_COUNT} verktyg · {CATEGORIES.length} kategorier
+            {updatedLabel ? ` · Uppdaterad ${updatedLabel}` : ` · ${new Date().getFullYear()}`}
+          </span>
         </span>
 
         <h1 className="mt-6 max-w-4xl text-balance break-words text-2xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
@@ -765,9 +768,9 @@ function MoreCategoriesSection() {
               href={to(c.href)}
               className="group flex items-center justify-between gap-3 rounded-xl border border-line bg-card px-5 py-4 transition-colors hover:border-indigo-300"
             >
-              <span className="flex items-center gap-3">
-                <span aria-hidden className="text-lg">{c.icon}</span>
-                <span className="font-semibold text-fg">{c.title}</span>
+              <span className="flex min-w-0 items-center gap-3">
+                <span aria-hidden className="shrink-0 text-lg">{c.icon}</span>
+                <span className="min-w-0 break-words font-semibold text-fg">{c.title}</span>
               </span>
               <ChevronRight
                 aria-hidden

@@ -23,6 +23,7 @@ import { CATEGORY_HUB_REVIEW_KNOWN_AI_KODGRANSKNING } from '@/lib/category-hub-t
 import { CATEGORY_HUB_REVIEW_KNOWN_VIBE_CODING } from '@/lib/category-hub-tools-vibe-coding';
 import { CATEGORY_HUB_REVIEW_KNOWN_TRANSKRIBERING } from '@/lib/category-hub-tools-transkribering';
 import { CATEGORY_HUB_REVIEW_KNOWN_PRODUKTBILDER } from '@/lib/category-hub-tools-produktbilder';
+import { CATEGORY_HUB_REVIEW_KNOWN_FOTO_BILDREDIGERING } from '@/lib/category-hub-tools-foto-bildredigering';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -137,6 +138,12 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
    * Botika, Pixc, AutoRetouch) — nya recensioner, se
    * lib/category-hub-tools-produktbilder.ts och /ai-verktyg/produktbilder. */
   ...CATEGORY_HUB_REVIEW_KNOWN_PRODUKTBILDER,
+
+  /* AI för foto & bildredigering (Topaz Photo AI, Remini, Let's Enhance,
+     VanceAI, Fotor, Picsart, Luminar Neo, Magnific, Pixlr, Cutout.pro) —
+     nya recensioner, se lib/category-hub-tools-foto-bildredigering.ts
+     och /ai-verktyg/foto-bildredigering. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_FOTO_BILDREDIGERING,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
