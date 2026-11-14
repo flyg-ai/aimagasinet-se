@@ -87,7 +87,7 @@ function Faq() {
     },
     {
       q: 'Tar ni betalt för att rekommendera verktyg?',
-      a: 'Nej. Placeringar i topplistor och rankningar är aldrig till salu. Vi tjänar provision på vissa affiliate-länkar, men det påverkar inte rankningen och vi skriver alltid ut när en länk är sponsrad.',
+      a: 'Vår rankning baseras på hur verktygen presterar i test. Vi tjänar provision på vissa affiliate-länkar, men det styr inte vårt omdöme, och sponsrat innehåll märks alltid tydligt.',
     },
     {
       q: 'Kan jag tipsa er om ett verktyg ni borde testa?',
