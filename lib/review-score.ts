@@ -12,10 +12,11 @@
  * `score: null` i profilen betyder "ännu ej betygsatt" (t.ex. sora-2): då
  * visas ingen siffra.
  *
- * En nedlagd tjänst (profilens label "Nedlagd") får ingen siffra i listorna.
- * Recensionssidan visar fortfarande sin siffra för de nedlagda som har en
- * (Windsurf, Codeium, Relay.app) men sätter "Nedlagd" som etikett; listorna
- * visar bara etiketten, så de säger aldrig emot sidan.
+ * En nedlagd tjänst (profilens label "Nedlagd") får ALDRIG en siffra någonstans
+ * — varken i listorna, på recensionssidan eller i dess Review-schema.org-data.
+ * Betyget beskriver produkten som den en gång var, men ett nedlagt verktyg ska
+ * aldrig se ut som ett aktivt, nyss testat verktyg (se incident 2026-11-14:
+ * Google/Gemini citerade "Windsurf 8,9/10" trots att den lagts ner).
  *
  * Ren TypeScript; körs även från tsx-skript (scripts/print-review-scores.ts).
  */
@@ -64,7 +65,7 @@ export function reviewScore(a: ReviewScoreInput): ReviewScore {
   const profile = resolveToolProfile(a.slug, toolNameFromTitle(a.title));
   const unrated = profile.score === null;
   const discontinued = profile.label === DISCONTINUED_LABEL;
-  const score = unrated ? null : reviewRating(a).score;
+  const score = (unrated || discontinued) ? null : reviewRating(a).score;
   return {
     score,
     max: 10,

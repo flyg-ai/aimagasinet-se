@@ -1432,16 +1432,18 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
         <div className="mt-1 text-xs text-fg-subtle">{p.offer.price}</div>
       </div>
 
-      {/* Betyg */}
+      {/* Betyg — nedlagda verktyg visar aldrig siffra/stjärnor, bara etiketten. */}
       <div className="flex items-center gap-3 lg:flex-col lg:items-center lg:gap-1">
-        <RatingCircle score={r.score} />
+        {!isDiscontinued(child) && <RatingCircle score={r.score} />}
         <div className="flex flex-col gap-0.5 lg:items-center">
-          <span className="text-sm leading-none tracking-widest text-indigo-600">
-            {'★'.repeat(starsFromScore(r.score))}
-            <span className="text-line-strong">
-              {'★'.repeat(5 - starsFromScore(r.score))}
+          {!isDiscontinued(child) && (
+            <span className="text-sm leading-none tracking-widest text-indigo-600">
+              {'★'.repeat(starsFromScore(r.score))}
+              <span className="text-line-strong">
+                {'★'.repeat(5 - starsFromScore(r.score))}
+              </span>
             </span>
-          </span>
+          )}
           <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-subtle">
             {isTop ? 'Redaktionens val' : p.label}
           </span>
@@ -1592,8 +1594,14 @@ function ComparisonTable({ ranked }: { ranked: HubChild[] }) {
                   <td className="px-4 py-3 text-fg-muted">{p.offer.bestFor}</td>
                   <td className="px-4 py-3 text-fg-muted">{p.offer.price}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-right font-mono font-bold text-teal-600">
-                    {r.score.toFixed(1)}
-                    <span className="text-fg-faint">/10</span>
+                    {isDiscontinued(child) ? (
+                      <span className="font-mono text-xs font-bold uppercase text-fg-subtle">Nedlagd</span>
+                    ) : (
+                      <>
+                        {r.score.toFixed(1)}
+                        <span className="text-fg-faint">/10</span>
+                      </>
+                    )}
                   </td>
                 </tr>
               );
@@ -1828,13 +1836,15 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-1 sm:items-end">
-          <RatingCircle score={r.score} />
-          <span className="text-sm leading-none tracking-widest text-indigo-600">
-            {'★'.repeat(stars)}
-            <span className="text-line-strong">{'★'.repeat(5 - stars)}</span>
-          </span>
-        </div>
+        {!isDiscontinued(child) && (
+          <div className="flex flex-col items-center gap-1 sm:items-end">
+            <RatingCircle score={r.score} />
+            <span className="text-sm leading-none tracking-widest text-indigo-600">
+              {'★'.repeat(stars)}
+              <span className="text-line-strong">{'★'.repeat(5 - stars)}</span>
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -1881,7 +1891,7 @@ function ReviewCard({ child, rank }: { child: HubChild; rank: number }) {
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line-subtle pt-5">
         <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-fg-faint">
-          ⓘ Sammanvägt betyg · {r.score.toFixed(1)} / 10
+          {isDiscontinued(child) ? 'ⓘ Nedlagd tjänst' : `ⓘ Sammanvägt betyg · ${r.score.toFixed(1)} / 10`}
         </span>
         <Link
           href={to(child.path)}

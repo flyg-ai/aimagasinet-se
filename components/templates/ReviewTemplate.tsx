@@ -69,7 +69,9 @@ export function ReviewTemplate({
   // Betyget kommer ur lib/review-score.ts — samma funktion som topplistblocket
   // och "Verktyg i guiden" i artiklarna läser, så de visar alltid samma siffra.
   const scored = reviewScore(a);
-  const noScore = scored.unrated;
+  // Ett nedlagt verktyg ska aldrig visa betyg, stjärnor, rank eller
+  // Review-schema som om det vore aktivt och nyss testat.
+  const noScore = scored.unrated || scored.discontinued;
   const rating = reviewRating(a);
   const rank = noScore ? null : rankAmongSiblings(a, siblings);
   const crumbs = buildCrumbs(a.path);
@@ -378,12 +380,20 @@ function Verdict({
         Vårt omdöme om {toolName}
       </h2>
       <p className="mt-4 max-w-prose text-[17px] leading-[1.75] text-fg-muted">
-        {excerpt
-          ? excerpt + ' '
-          : ''}
-        {toolName} levererar en konsekvent stark upplevelse i AI-Magasinets test.
-        Vår sammanvägda bedömning placerar verktyget tydligt i premiumklassen för
-        sin kategori — särskilt om du värdesätter {profile.useCases[0]?.toLowerCase() ?? 'kvalitet'}.
+        {excerpt ? excerpt + ' ' : ''}
+        {profile.label === 'Nedlagd' ? (
+          <>
+            {toolName} är nedlagd och går inte längre att teckna eller använda i sin
+            tidigare form. Recensionen nedan ligger kvar som referens — den beskriver
+            produkten som den en gång var, inte dagens läge.
+          </>
+        ) : (
+          <>
+            {toolName} levererar en konsekvent stark upplevelse i AI-Magasinets test.
+            Vår sammanvägda bedömning placerar verktyget tydligt i premiumklassen för
+            sin kategori — särskilt om du värdesätter {profile.useCases[0]?.toLowerCase() ?? 'kvalitet'}.
+          </>
+        )}
       </p>
     </section>
   );
@@ -392,6 +402,8 @@ function Verdict({
 function RatingMatrixSection({ profile }: { profile: ReviewProfile }) {
   // Inga kriterier (t.ex. ännu ej betygsatt verktyg) → hoppa över sektionen.
   if (profile.ratingCriteria.length === 0) return null;
+  // Nedlagd tjänst — ingen kriteriebrytning som ser ut som ett aktivt betyg.
+  if (profile.label === 'Nedlagd') return null;
   return (
     <section className="mt-10 rounded-2xl border border-line bg-card p-6 sm:p-8">
       <Eyebrow>Så testade vi</Eyebrow>
@@ -567,6 +579,7 @@ function Alternatives({
           };
           const sp = buildReviewProfile(fakeArticle);
           const sr = reviewRating(fakeArticle);
+          const siblingDiscontinued = sp.label === 'Nedlagd';
           return (
             <Link
               key={s.slug}
@@ -583,9 +596,11 @@ function Alternatives({
                     {sp.label}
                   </div>
                 </div>
-                <span className="shrink-0 font-black text-teal-600">
-                  {formatScore(sr.score)}
-                </span>
+                {!siblingDiscontinued && (
+                  <span className="shrink-0 font-black text-teal-600">
+                    {formatScore(sr.score)}
+                  </span>
+                )}
               </div>
               {s.excerpt && (
                 <p className="line-clamp-2 text-xs text-fg-subtle">{s.excerpt}</p>
