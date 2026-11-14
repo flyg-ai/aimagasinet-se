@@ -24,6 +24,8 @@ import { CATEGORY_HUB_REVIEW_KNOWN_VIBE_CODING } from '@/lib/category-hub-tools-
 import { CATEGORY_HUB_REVIEW_KNOWN_TRANSKRIBERING } from '@/lib/category-hub-tools-transkribering';
 import { CATEGORY_HUB_REVIEW_KNOWN_PRODUKTBILDER } from '@/lib/category-hub-tools-produktbilder';
 import { CATEGORY_HUB_REVIEW_KNOWN_FOTO_BILDREDIGERING } from '@/lib/category-hub-tools-foto-bildredigering';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_BILD_VERKTYG_EXT } from '@/lib/category-hub-tools-ai-bild-verktyg-ext';
+import { CATEGORY_HUB_REVIEW_KNOWN_AI_TEXT_VERKTYG_EXT } from '@/lib/category-hub-tools-ai-text-verktyg-ext';
 
 
 /* ─── Types ────────────────────────────────────────────────────── */
@@ -144,6 +146,13 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
      nya recensioner, se lib/category-hub-tools-foto-bildredigering.ts
      och /ai-verktyg/foto-bildredigering. */
   ...CATEGORY_HUB_REVIEW_KNOWN_FOTO_BILDREDIGERING,
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_BILD_VERKTYG_EXT,
+
+  /* AI för text — utökning från 11 till 20 verktyg (QuillBot, Sudowrite,
+     Rytr, Mistral Vibe, Sapling AI, Wordtune, BrandWell, ProWritingAid,
+     Jenni AI) — se lib/category-hub-tools-ai-text-verktyg-ext.ts och
+     /ai-verktyg/ai-text-verktyg. */
+  ...CATEGORY_HUB_REVIEW_KNOWN_AI_TEXT_VERKTYG_EXT,
 
   /* ── Text ─────────────────────────────────────────────── */
   chatgpt: {
