@@ -37,6 +37,11 @@ const DEAD_TOOL_SLUGS = new Set([
   // Domän-audit: påhittad/ej verifierbar (klara-ai) + nedlagda produkter
   // (pattern89 uppgått i Shutterstock, replica-studios stängt 2025-06-30).
   'klara-ai', 'pattern89', 'replica-studios',
+  // Avpublicerade 2026-11-15 — nedlagda verktyg som låg kvar rankade i
+  // topplistor med sitt gamla betyg (incident: Windsurf 8,9/10 citerat av
+  // Gemini trots nedläggningen). Windsurf/Codeium uppgick i Devin, Relay.app
+  // och Play.ht stängde, Sora 2 lades ner av OpenAI.
+  'windsurf', 'codeium', 'relay-app', 'play-ht', 'sora-2',
 ]);
 
 function gone() {

@@ -75,6 +75,7 @@ async function selectCards(opts: {
       .from('articles')
       .select(cols)
       .eq('parent_slug', opts.parentSlug)
+      .not('published_at', 'is', null)
       .order('title', { ascending: true });
     if (opts.excludeSlug) q = q.neq('slug', opts.excludeSlug);
     return q;
@@ -120,7 +121,7 @@ async function getHubChildren(parentSlug: string): Promise<HubChild[]> {
 async function getCuratedChildren(slugs: string[]): Promise<HubChild[]> {
   const tryQuery = async (withAffiliate: boolean) => {
     const cols = CARD_COLS + (withAffiliate ? ',affiliate_url' : '') + ',content_mdx';
-    return supabase.from('articles').select(cols).in('slug', slugs);
+    return supabase.from('articles').select(cols).in('slug', slugs).not('published_at', 'is', null);
   };
   let { data, error } = await tryQuery(true);
   if (error && /affiliate_url/.test(error.message)) {
@@ -162,6 +163,7 @@ async function getSiblingsBySlugs(slugs: string[], excludeSlug: string): Promise
       .select(cols)
       .in('slug', slugs)
       .neq('slug', excludeSlug)
+      .not('published_at', 'is', null)
       .order('title', { ascending: true });
   };
   let { data, error } = await tryQuery(true);
