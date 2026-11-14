@@ -302,6 +302,18 @@ const nextConfig = {
         destination: '/ai-verktyg/ai-video/:tool',
         statusCode: 301,
       },
+      // Tunna "-bredig"-recensionerna slogs ihop med de nyare, djupare
+      // recensionerna av samma verktyg under ai-bild-verktyg-hubben, nov 2026.
+      {
+        source: '/ai-verktyg/luminar-neo-bredig',
+        destination: '/ai-verktyg/luminar-neo',
+        statusCode: 301,
+      },
+      {
+        source: '/ai-verktyg/topaz-photo-bredig',
+        destination: '/ai-verktyg/topaz-photo-ai',
+        statusCode: 301,
+      },
       // Older Dec 2025 short-form article superseded by the
       // comprehensive Dec 12 "Topp 50 AI-låtar"-listan. 301 forwards
       // link equity to the newer page.

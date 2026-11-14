@@ -194,9 +194,22 @@ export default async function RootLayout({
                 <ul className="space-y-2 text-sm">
                   <li><Link href="/kategori/ai-nyheter" className="text-zinc-300 hover:text-white">AI-Nyheter</Link></li>
                   <li><Link href="/ai-verktyg" className="text-zinc-300 hover:text-white">AI-Verktyg</Link></li>
-                  <li><Link href="/ai-verktyg/ai-video" className="text-zinc-300 hover:text-white">AI-Video</Link></li>
                   <li><Link href="/ai-guiden" className="text-zinc-300 hover:text-white">AI-Guiden</Link></li>
                   <li><Link href="/ai-konsult/" className="text-zinc-300 hover:text-white">AI-konsult</Link></li>
+                </ul>
+              </nav>
+
+              <nav aria-label="Populära AI-verktyg">
+                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                  Populära verktyg
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/ai-verktyg/ai-text-verktyg" className="text-zinc-300 hover:text-white">AI för text</Link></li>
+                  <li><Link href="/ai-verktyg/ai-bild-verktyg" className="text-zinc-300 hover:text-white">AI för bild</Link></li>
+                  <li><Link href="/ai-verktyg/ai-video" className="text-zinc-300 hover:text-white">AI för video</Link></li>
+                  <li><Link href="/ai-verktyg/ai-kod-verktyg" className="text-zinc-300 hover:text-white">AI för kod</Link></li>
+                  <li><Link href="/ai-verktyg/ai-ljud-och-musik" className="text-zinc-300 hover:text-white">AI för ljud & musik</Link></li>
+                  <li><Link href="/ai-verktyg/ai-sakerhet" className="text-zinc-300 hover:text-white">AI för cybersäkerhet</Link></li>
                 </ul>
               </nav>
 
@@ -215,26 +228,18 @@ export default async function RootLayout({
 
               <nav aria-label="Om oss">
                 <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Om
+                  Om & Kontakt
                 </h3>
                 <ul className="space-y-2 text-sm">
                   <li><Link href="/om-oss" className="text-zinc-300 hover:text-white">Om Oss</Link></li>
                   <li><Link href="/kontakt" className="text-zinc-300 hover:text-white">Kontakt</Link></li>
-                </ul>
-              </nav>
-
-              <div>
-                <h3 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-                  Kontakt
-                </h3>
-                <ul className="space-y-2 text-sm">
                   <li>
                     <a href="mailto:kontakt@aimagasinet.se" className="text-zinc-300 hover:text-white">
                       kontakt@aimagasinet.se
                     </a>
                   </li>
                 </ul>
-              </div>
+              </nav>
             </div>
 
             <div className="mt-10 border-t border-zinc-800 pt-6">

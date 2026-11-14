@@ -82,7 +82,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/bildredigering/luminar-neo-bredig",
-    "destination": "/ai-verktyg/luminar-neo-bredig",
+    "destination": "/ai-verktyg/luminar-neo",
     "statusCode": 301
   },
   {
@@ -92,7 +92,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/bildredigering/topaz-photo-bredig",
-    "destination": "/ai-verktyg/topaz-photo-bredig",
+    "destination": "/ai-verktyg/topaz-photo-ai",
     "statusCode": 301
   },
   {

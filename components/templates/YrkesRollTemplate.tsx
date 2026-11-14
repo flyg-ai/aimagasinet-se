@@ -276,8 +276,8 @@ const SPEC_BY_SLUG: Record<string, YrkesRollSpec> = {
       },
     ],
     topPicks: [
-      { label: 'Bildredigering',       brand: 'Luminar Neo AI', href: '/ai-verktyg/luminar-neo-bredig' },
-      { label: 'Upscale',              brand: 'Topaz Photo AI', href: '/ai-verktyg/topaz-photo-bredig' },
+      { label: 'Bildredigering',       brand: 'Luminar Neo AI', href: '/ai-verktyg/luminar-neo' },
+      { label: 'Upscale',              brand: 'Topaz Photo AI', href: '/ai-verktyg/topaz-photo-ai' },
       { label: 'Bakgrundsborttagning', brand: 'Remove.bg',      href: '/ai-verktyg/removebg-bredig' },
       { label: 'Videoklippning',       brand: 'CapCut AI',      href: '/ai-verktyg/ai-video/capcut-ai-vklipp' },
       { label: 'Videoklippning',       brand: 'Canva Video',    href: '/ai-verktyg/canva-ai' },

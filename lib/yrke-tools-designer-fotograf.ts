@@ -104,7 +104,7 @@ export const DESIGNER_FOTOGRAF_TOOLS: YrkeTool[] = [
   /* ── DESIGNER · Videoredigering ────────────────────────────── */
   /* ── FOTOGRAF · Bildredigering ─────────────────────────────── */
   {
-    slug: 'luminar-neo-bredig', parent: 'bildredigering',
+    slug: 'luminar-neo', parent: 'bildredigering',
     brand: 'Luminar Neo AI', company: 'Skylum', founded: 2008, hq: 'Bellevue, USA',
     score: 9.1, fallbackUrl: 'https://skylum.com/luminar',
     title: 'Luminar Neo AI — Recension 2026',
@@ -120,7 +120,7 @@ export const DESIGNER_FOTOGRAF_TOOLS: YrkeTool[] = [
     label: 'Redaktionens val', logo: 'bg-indigo-700',
   },
   {
-    slug: 'topaz-photo-bredig', parent: 'bildredigering',
+    slug: 'topaz-photo-ai', parent: 'bildredigering',
     brand: 'Topaz Photo AI', company: 'Topaz Labs', founded: 2005, hq: 'Dallas, USA',
     score: 9.2, fallbackUrl: 'https://www.topazlabs.com/topaz-photo-ai',
     title: 'Topaz Photo AI — Recension 2026',
