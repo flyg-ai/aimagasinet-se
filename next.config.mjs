@@ -229,14 +229,11 @@ const nextConfig = {
         statusCode: 301,
       },
       {
-        // Omskriven med skarpare vinkel (spara pengar via referensbild-först),
-        // avpublicerad 2026-11-14 — GSC visade 1 impression/30 dagar och noll
-        // interna länkar. TILLFÄLLIGT satt till hubben: ersättningsartikeln
-        // (generera-referensbild-forst-ai-video-guide-2026) är skriven men
-        // väntar på granskning + omslagsbild innan publicering — peka om
-        // hit igen när den är publicerad.
+        // Omskriven med skarpare vinkel (spara pengar via referensbild-först)
+        // och avpublicerad — GSC visade 1 impression/30 dagar och noll
+        // interna länkar, se diskussion 2026-11-14.
         source: '/sa-gor-du-proffsiga-ai-videor-2026',
-        destination: '/ai-verktyg/ai-video',
+        destination: '/generera-referensbild-forst-ai-video-guide-2026',
         statusCode: 301,
       },
       {
