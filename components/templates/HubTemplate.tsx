@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { to } from '@/lib/links';
+import { to, goLink } from '@/lib/links';
 import type { ArticleCardData } from '@/components/ArticleCard';
 import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
@@ -1451,6 +1451,7 @@ function RankRow({ child, rank }: { child: HubChild; rank: number }) {
       {/* Besök */}
       <div className="flex flex-col items-stretch gap-2 lg:items-end">
         <AffiliateButton
+          slug={child.slug}
           affiliateUrl={child.affiliate_url}
           discontinued={p.label === DISCONTINUED_LABEL}
           fallbackUrl={p.fallbackUrl}
@@ -1514,6 +1515,7 @@ function BestInTest({ child }: { child: HubChild }) {
 
           <div className="shrink-0">
             <AffiliateButton
+              slug={child.slug}
               affiliateUrl={child.affiliate_url}
               discontinued={p.label === DISCONTINUED_LABEL}
               fallbackUrl={p.fallbackUrl}
@@ -2031,12 +2033,15 @@ function RatingCircle({ score }: { score: number }) {
 }
 
 function AffiliateButton({
+  slug,
   affiliateUrl,
   fallbackUrl,
   label,
   size = 'md',
   discontinued = false,
 }: {
+  /** Saknas den (bör inte hända) går länken direkt, ologgad. */
+  slug?: string;
   affiliateUrl: string | null | undefined;
   fallbackUrl: string | null | undefined;
   label: string;
@@ -2063,8 +2068,9 @@ function AffiliateButton({
       </span>
     );
   }
+  const href = slug ? goLink(slug, url, { source: 'hub-toplist', isAffiliate: !!affiliateUrl }) : to(url);
   return (
-    <a href={to(url)} target="_blank" rel={rel} className={cls}>
+    <a href={href} target="_blank" rel={rel} className={cls}>
       <span>{label}</span>
       <span aria-hidden>↗</span>
     </a>

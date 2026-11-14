@@ -20,3 +20,25 @@ export function to(href: string | null | undefined): string {
   if (pathPart.endsWith('/')) return href;
   return `${pathPart}/${rest}`;
 }
+
+/**
+ * Bygger en klick-spårad /go/[slug]-länk för en verktygsknapp ("Prova X" /
+ * "Läs recension"). Loggas i tool_clicks (migration 0024) innan besökaren
+ * 302:as vidare till den riktiga affiliate- eller fallback-URL:en.
+ *
+ * `source` identifierar VAR på sajten knappen satt (t.ex. "review-hero",
+ * "hub-toplist") så klicken går att bryta ner per placering, inte bara per
+ * verktyg.
+ */
+export function goLink(
+  slug: string,
+  targetUrl: string,
+  opts: { source: string; isAffiliate: boolean },
+): string {
+  const params = new URLSearchParams({
+    u: targetUrl,
+    src: opts.source,
+    aff: opts.isAffiliate ? '1' : '0',
+  });
+  return `/go/${encodeURIComponent(slug)}?${params.toString()}`;
+}

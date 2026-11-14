@@ -72,5 +72,5 @@ export const config = {
   // Hoppa over Next-interna assets, API-rutter och de fa statiska filerna i
   // roten. GONE-monstren galler sidvagar — middleware behover inte kora pa
   // varje favicon- och sitemap-traff.
-  matcher: ['/((?!_next/|api/|favicon\.ico|robots\.txt|sitemap\.xml|llms\.txt|icon\.png|apple-icon\.png).*)'],
+  matcher: ['/((?!_next/|api/|go/|favicon\.ico|robots\.txt|sitemap\.xml|llms\.txt|icon\.png|apple-icon\.png).*)'],
 };

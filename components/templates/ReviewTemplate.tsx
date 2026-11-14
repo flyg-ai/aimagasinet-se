@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { to } from '@/lib/links';
+import { to, goLink } from '@/lib/links';
 import { ArticleCard } from '@/components/ArticleCard';
 import type { RelatedArticles } from '@/lib/related-articles';
 import { toolNameFromTitle, type Rating } from '@/lib/rating';
@@ -127,7 +127,7 @@ export function ReviewTemplate({
         updatedLabel={updatedLabel}
       />
 
-      <OfferBanner profile={profile} toolName={toolName} affiliateUrl={a.affiliate_url} />
+      <OfferBanner slug={a.slug} profile={profile} toolName={toolName} affiliateUrl={a.affiliate_url} />
 
       <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr,320px] lg:gap-14">
@@ -138,7 +138,7 @@ export function ReviewTemplate({
             <UseCases toolName={toolName} profile={profile} />
             <Djupanalys toolName={toolName} html={toc.html} items={toc.items} />
             <Alternatives siblings={siblings} parentPath={parentPathOf(a.path)} />
-            <BottomCta toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
+            <BottomCta slug={a.slug} toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
             <NextPrev siblings={siblings} />
           </main>
 
@@ -146,7 +146,7 @@ export function ReviewTemplate({
           <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:pb-2">
             <Toc items={toc.items} variant="sidebar" />
             <Snabbfakta profile={profile} />
-            <SidebarOffer toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
+            <SidebarOffer slug={a.slug} toolName={toolName} profile={profile} affiliateUrl={a.affiliate_url} />
             <BackToTopplistan parentPath={parentPathOf(a.path)} />
           </aside>
         </div>
@@ -323,10 +323,12 @@ function Hero({
 /* ─── Offer banner (just under hero) ──────────────────────────── */
 
 function OfferBanner({
+  slug,
   profile,
   toolName,
   affiliateUrl,
 }: {
+  slug: string;
   profile: ReviewProfile;
   toolName: string;
   affiliateUrl: string | null;
@@ -352,7 +354,7 @@ function OfferBanner({
             </div>
           </div>
         </div>
-        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} />
+        <AffiliateBtn slug={slug} source="review-offer-banner" discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} />
       </div>
     </div>
   );
@@ -606,10 +608,12 @@ function Alternatives({
 /* ─── Bottom CTA ───────────────────────────────────────────────── */
 
 function BottomCta({
+  slug,
   toolName,
   profile,
   affiliateUrl,
 }: {
+  slug: string;
   toolName: string;
   profile: ReviewProfile;
   affiliateUrl: string | null;
@@ -633,7 +637,7 @@ function BottomCta({
             </p>
           </div>
         </div>
-        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} size="lg" />
+        <AffiliateBtn slug={slug} source="review-bottom-cta" discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} size="lg" />
       </div>
     </section>
   );
@@ -709,10 +713,12 @@ function Snabbfakta({ profile }: { profile: ReviewProfile }) {
 }
 
 function SidebarOffer({
+  slug,
   toolName,
   profile,
   affiliateUrl,
 }: {
+  slug: string;
   toolName: string;
   profile: ReviewProfile;
   affiliateUrl: string | null;
@@ -726,7 +732,7 @@ function SidebarOffer({
         {profile.offer.title}
       </div>
       <div className="mt-3">
-        <AffiliateBtn discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} fullWidth />
+        <AffiliateBtn slug={slug} source="review-sidebar-offer" discontinued={profile.label === 'Nedlagd'} affiliateUrl={affiliateUrl} fallbackUrl={profile.fallbackUrl} label={`Prova ${profile.ctaName ?? toolName}`} fullWidth />
       </div>
     </div>
   );
@@ -799,6 +805,8 @@ function ToolLogo({
 }
 
 function AffiliateBtn({
+  slug,
+  source,
   affiliateUrl,
   fallbackUrl,
   label,
@@ -806,6 +814,10 @@ function AffiliateBtn({
   fullWidth = false,
   discontinued = false,
 }: {
+  /** Artikelns slug — saknas den (bör inte hända) går länken direkt, ologgad. */
+  slug?: string;
+  /** Var på sidan knappen sitter, för att bryta ner klick per placering. */
+  source: string;
   affiliateUrl: string | null | undefined;
   fallbackUrl: string | null | undefined;
   label: string;
@@ -833,8 +845,9 @@ function AffiliateBtn({
       </span>
     );
   }
+  const href = slug ? goLink(slug, url, { source, isAffiliate: !!affiliateUrl }) : to(url);
   const link = (
-    <a href={to(url)} target="_blank" rel={rel} className={cls}>
+    <a href={href} target="_blank" rel={rel} className={cls}>
       <span>{label}</span>
       <span aria-hidden>↗</span>
     </a>
