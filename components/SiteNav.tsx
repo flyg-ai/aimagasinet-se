@@ -83,13 +83,13 @@ const NAV: NavItem[] = [
       },
       {
         label: 'AI-video',
-        href: '/ai-video',
+        href: '/ai-verktyg/ai-video',
         links: [
-          { href: '/ai-video/kling-ai',     label: 'Kling AI' },
-          { href: '/ai-video/runway-gen-3', label: 'Runway' },
-          { href: '/ai-video/pika-labs',    label: 'Pika Labs' },
-          { href: '/ai-video/sora-2',       label: 'Sora 2' },
-          { href: '/ai-video/heygen',       label: 'HeyGen' },
+          { href: '/ai-verktyg/ai-video/kling-ai',     label: 'Kling AI' },
+          { href: '/ai-verktyg/ai-video/runway-gen-3', label: 'Runway' },
+          { href: '/ai-verktyg/ai-video/pika-labs',    label: 'Pika Labs' },
+          { href: '/ai-verktyg/ai-video/sora-2',       label: 'Sora 2' },
+          { href: '/ai-verktyg/ai-video/heygen',       label: 'HeyGen' },
         ],
       },
       {

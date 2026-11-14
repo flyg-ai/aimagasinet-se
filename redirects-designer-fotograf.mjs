@@ -27,7 +27,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/designer/videoredigering/runway-design",
-    "destination": "/ai-video/runway-gen-3",
+    "destination": "/ai-verktyg/ai-video/runway-gen-3",
     "statusCode": 301
   },
   {
@@ -37,12 +37,12 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/bildgenerering/pika-fbild",
-    "destination": "/ai-video/pika-labs",
+    "destination": "/ai-verktyg/ai-video/pika-labs",
     "statusCode": 301
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/bildgenerering/runway-fbild",
-    "destination": "/ai-video/runway-gen-3",
+    "destination": "/ai-verktyg/ai-video/runway-gen-3",
     "statusCode": 301
   },
   {
@@ -102,7 +102,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/videoklippning/capcut-ai-vklipp",
-    "destination": "/ai-video/capcut-ai-vklipp",
+    "destination": "/ai-verktyg/ai-video/capcut-ai-vklipp",
     "statusCode": 301
   },
   {
@@ -122,7 +122,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/designer/videoredigering",
-    "destination": "/ai-video",
+    "destination": "/ai-verktyg/ai-video",
     "statusCode": 301
   },
   {
@@ -137,7 +137,7 @@ export const designerFotografRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/fotograf-video/videoklippning",
-    "destination": "/ai-video",
+    "destination": "/ai-verktyg/ai-video",
     "statusCode": 301
   },
   {

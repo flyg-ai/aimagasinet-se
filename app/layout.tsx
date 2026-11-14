@@ -194,7 +194,7 @@ export default async function RootLayout({
                 <ul className="space-y-2 text-sm">
                   <li><Link href="/kategori/ai-nyheter" className="text-zinc-300 hover:text-white">AI-Nyheter</Link></li>
                   <li><Link href="/ai-verktyg" className="text-zinc-300 hover:text-white">AI-Verktyg</Link></li>
-                  <li><Link href="/ai-video" className="text-zinc-300 hover:text-white">AI-Video</Link></li>
+                  <li><Link href="/ai-verktyg/ai-video" className="text-zinc-300 hover:text-white">AI-Video</Link></li>
                   <li><Link href="/ai-guiden" className="text-zinc-300 hover:text-white">AI-Guiden</Link></li>
                   <li><Link href="/ai-konsult/" className="text-zinc-300 hover:text-white">AI-konsult</Link></li>
                 </ul>

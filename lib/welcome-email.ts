@@ -102,7 +102,7 @@ const KATEGORI_BG =
 
 const TOOL_CATEGORIES: { title: string; href: string; bg: string }[] = [
   { title: 'AI-text',   href: `${SITE}/ai-verktyg/ai-text-verktyg/`, bg: `${KATEGORI_BG}/ai-text-kategori.webp` },
-  { title: 'AI-video',  href: `${SITE}/ai-video/`,                   bg: `${KATEGORI_BG}/ai-video-kategori.webp` },
+  { title: 'AI-video',  href: `${SITE}/ai-verktyg/ai-video/`,         bg: `${KATEGORI_BG}/ai-video-kategori.webp` },
   { title: 'AI-bilder', href: `${SITE}/ai-verktyg/ai-bild-verktyg/`, bg: `${KATEGORI_BG}/ai-bild-kategori.webp` },
   { title: 'AI-kod',    href: `${SITE}/ai-verktyg/ai-kod-verktyg/`,  bg: `${KATEGORI_BG}/ai-kod-programmering-kategori.webp` },
 ];

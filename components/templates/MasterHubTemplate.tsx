@@ -52,7 +52,7 @@ type Pick = { category: string; name: string; key: string; tagline: string; href
 const EDITORS_PICKS: Pick[] = [
   { category: 'AI-text',   name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',  href: '/ai-verktyg/claude/' },
   { category: 'AI-bilder', name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',         href: '/ai-verktyg/midjourney/' },
-  { category: 'AI-video',  name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',     href: '/ai-video/kling-ai/' },
+  { category: 'AI-video',  name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',     href: '/ai-verktyg/ai-video/kling-ai/' },
   { category: 'AI-ljud',   name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',       href: '/ai-verktyg/suno-ai/' },
   { category: 'AI-kod',    name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',       href: '/ai-verktyg/cursor-ai/' },
 ];
@@ -126,7 +126,7 @@ const TOP_10: Top10Item[] = [
   { rank: 2,  category: 'AI-text',       name: 'Claude',     key: 'claude',     tagline: 'Bäst för längre texter & kod',                     href: '/ai-verktyg/claude/' },
   { rank: 3,  category: 'AI-bilder',     name: 'Midjourney', key: 'midjourney', tagline: 'Bäst bildkvalitet 2026',                           href: '/ai-verktyg/midjourney/' },
   { rank: 4,  category: 'AI-text',       name: 'Gemini',     key: 'gemini',     tagline: 'Bäst integrerad i Google Workspace',               href: '/ai-verktyg/gemini/' },
-  { rank: 5,  category: 'AI-video',      name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',                       href: '/ai-video/kling-ai/' },
+  { rank: 5,  category: 'AI-video',      name: 'Kling AI',   key: 'kling-ai',   tagline: 'Redaktionens val för video',                       href: '/ai-verktyg/ai-video/kling-ai/' },
   { rank: 6,  category: 'AI-bilder',     name: 'Canva AI',   key: 'canva-ai',   tagline: 'Bäst för snabb design utan designkunskap',         href: '/ai-verktyg/canva-ai/' },
   { rank: 7,  category: 'AI-kod',        name: 'Cursor AI',  key: 'cursor-ai',  tagline: 'Bäst för utvecklare 2026',                         href: '/ai-verktyg/cursor-ai/' },
   { rank: 8,  category: 'AI-ljud',       name: 'Suno AI',    key: 'suno-ai',    tagline: 'Bäst för musikgenerering',                         href: '/ai-verktyg/suno-ai/' },
@@ -227,7 +227,7 @@ const CATEGORIES: {
     group: 'Text & skrivande',
   },
   {
-    href: '/ai-video',
+    href: '/ai-verktyg/ai-video',
     title: 'AI för video',
     description: 'Kling, Runway, Pika, Sora — realistisk AI-video från text eller bild.',
     icon: '▶',
@@ -670,7 +670,7 @@ const TOP_GROUPS: TopGroup[] = [
   {
     title: 'Video',
     examples: 'Kling, Runway, Sora',
-    href: '/ai-video',
+    href: '/ai-verktyg/ai-video',
     icon: Video,
     tint: 'bg-emerald-50 hover:bg-emerald-100',
     iconBg: 'bg-emerald-600',

@@ -33,7 +33,7 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-indigo-500 to-indigo-800',
   },
   {
-    href: '/ai-video',
+    href: '/ai-verktyg/ai-video',
     title: 'AI-video',
     icon: Video,
     bg: `${STORAGE}/ai-video-kategori.webp`,

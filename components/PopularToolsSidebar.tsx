@@ -18,7 +18,7 @@ const TOOLS: Tool[] = [
   { slug: 'claude',    name: 'Claude',   path: '/ai-verktyg/claude',    blurb: 'Bästa skrivande AI 2026',   swatch: 'bg-amber-600' },
   { slug: 'chatgpt',   name: 'ChatGPT',  path: '/ai-verktyg/chatgpt',   blurb: 'Branschstandard, GPT-5',    swatch: 'bg-emerald-600' },
   { slug: 'cursor-ai', name: 'Cursor',   path: '/ai-verktyg/cursor-ai',  blurb: 'Bästa AI för kod',          swatch: 'bg-indigo-700' },
-  { slug: 'kling-ai',  name: 'Kling AI', path: '/ai-video/kling-ai',                    blurb: 'Bästa AI-videoverktyget',   swatch: 'bg-fuchsia-700' },
+  { slug: 'kling-ai',  name: 'Kling AI', path: '/ai-verktyg/ai-video/kling-ai',                    blurb: 'Bästa AI-videoverktyget',   swatch: 'bg-fuchsia-700' },
   { slug: 'suno-ai',   name: 'Suno AI',  path: '/ai-verktyg/suno-ai', blurb: 'AI-musik på sekunder',      swatch: 'bg-rose-600' },
 ];
 

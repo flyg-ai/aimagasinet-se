@@ -229,6 +229,14 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // Omskriven med skarpare vinkel (spara pengar via referensbild-först)
+        // och avpublicerad — GSC visade 1 impression/30 dagar och noll
+        // interna länkar, se diskussion 2026-11-14.
+        source: '/sa-gor-du-proffsiga-ai-videor-2026',
+        destination: '/generera-referensbild-forst-ai-video-guide-2026',
+        statusCode: 301,
+      },
+      {
         // Kort alternativ slug → kanonisk full slug (samma artikel i DB).
         source: '/trump-stoppar-anthropic-pentagon-sakerhetsrisk',
         destination: '/trump-stoppar-anthropic-i-usa-pentagon-klassar-ai-bolaget-som-sakerhetsrisk',
@@ -262,25 +270,28 @@ const nextConfig = {
         destination: '/ai-verktyg/claude',
         statusCode: 301,
       },
-      // Video tools moved from /ai-verktyg/ai-video-verktyg/* to /ai-video/*
+      // AI-video-hubben flyttad in i standardstrukturen, nov 2026:
+      // /ai-video/* -> /ai-verktyg/ai-video/* (samma mönster som övriga
+      // kategori-hubbar). Den gamla dubblettsidan /ai-verktyg/ai-video-verktyg
+      // pekas direkt till slutdestinationen för att undvika dubbla hopp.
       {
         source: '/ai-verktyg/ai-video-verktyg',
-        destination: '/ai-video',
+        destination: '/ai-verktyg/ai-video',
         statusCode: 301,
       },
       {
-        source: '/ai-verktyg/ai-video-verktyg/sora-2',
-        destination: '/ai-video/sora-2',
+        source: '/ai-verktyg/ai-video-verktyg/:tool',
+        destination: '/ai-verktyg/ai-video/:tool',
         statusCode: 301,
       },
       {
-        source: '/ai-verktyg/ai-video-verktyg/pika-labs',
-        destination: '/ai-video/pika-labs',
+        source: '/ai-video',
+        destination: '/ai-verktyg/ai-video',
         statusCode: 301,
       },
       {
-        source: '/ai-verktyg/ai-video-verktyg/runway-gen-3',
-        destination: '/ai-video/runway-gen-3',
+        source: '/ai-video/:tool',
+        destination: '/ai-verktyg/ai-video/:tool',
         statusCode: 301,
       },
       // Older Dec 2025 short-form article superseded by the

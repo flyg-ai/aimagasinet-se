@@ -13,7 +13,7 @@ const POPULAR_TOOLS: ToolLink[] = [
   { slug: 'claude',    name: 'Claude',     path: '/ai-verktyg/claude' },
   { slug: 'chatgpt',   name: 'ChatGPT',    path: '/ai-verktyg/chatgpt' },
   { slug: 'cursor-ai', name: 'Cursor AI',  path: '/ai-verktyg/cursor-ai' },
-  { slug: 'kling-ai',  name: 'Kling AI',   path: '/ai-video/kling-ai' },
+  { slug: 'kling-ai',  name: 'Kling AI',   path: '/ai-verktyg/ai-video/kling-ai' },
   { slug: 'suno-ai',   name: 'Suno AI',    path: '/ai-verktyg/suno-ai' },
 ];
 

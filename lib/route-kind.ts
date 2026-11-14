@@ -235,14 +235,6 @@ export function classify(path: string, depth: number, articleType: 'post' | 'pag
     return { kind: 'article', reason: '/ai-verktyg/gratis/* sub-page → ArticleTemplate' };
   }
 
-  // /ai-video som depth-1 hub (specialfall — andra hubbar är depth 2)
-  if (path === '/ai-video') return { kind: 'hub', reason: '/ai-video depth-1 hub' };
-
-  // /ai-video/* depth 2 → review
-  if (path.startsWith('/ai-video/') && depth === 2) {
-    return { kind: 'review', reason: '/ai-video/[tool] depth-2 review' };
-  }
-
   // /ai-verktyg/[kategori] depth 2 → hub
   if (path.startsWith('/ai-verktyg/') && depth === 2) {
     // After review-flattening, depth-2 under /ai-verktyg holds BOTH the category

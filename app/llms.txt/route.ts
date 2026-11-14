@@ -25,7 +25,7 @@ men slutredigering görs alltid av en mänsklig redaktör.
 - [AI för bild](https://aimagasinet.se/ai-verktyg/ai-bild-verktyg/): Midjourney, DALL-E 3, Adobe Firefly, Stable Diffusion, Leonardo
 - [AI för kod](https://aimagasinet.se/ai-verktyg/ai-kod-verktyg/): Cursor, GitHub Copilot, Windsurf, Tabnine, Codeium
 - [AI för ljud & musik](https://aimagasinet.se/ai-verktyg/ai-ljud-och-musik/): Suno, ElevenLabs, Udio, Mubert, AIVA
-- [AI Video](https://aimagasinet.se/ai-video/): Kling, Runway, Pika, Sora, HeyGen
+- [AI Video](https://aimagasinet.se/ai-verktyg/ai-video/): Kling, Runway, Pika, Sora, HeyGen
 - [AI för företag](https://aimagasinet.se/ai-verktyg/foretag/): B2B-verktyg per yrke
 - [AI för marknadsföring](https://aimagasinet.se/ai-verktyg/foretag/yrke/marknadsforing/): SEO, content, annonser, sociala medier
 - [AI för juridik](https://aimagasinet.se/ai-verktyg/foretag/yrke/juridik/): avtalsgranskning, due diligence, rättsutredningar
