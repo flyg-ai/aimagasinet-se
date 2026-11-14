@@ -229,11 +229,19 @@ const nextConfig = {
         statusCode: 301,
       },
       {
-        // Omskriven med skarpare vinkel (spara pengar via referensbild-först)
-        // och avpublicerad — GSC visade 1 impression/30 dagar och noll
-        // interna länkar, se diskussion 2026-11-14.
+        // Ersatt av en bred steg-för-steg-nybörjarguide 2026-11-14 (den gamla
+        // avpublicerades — GSC visade 1 impression/30 dagar och noll interna
+        // länkar). Ersättningsartikeln bytte i sin tur vinkel och slug samma
+        // dag (från en för smal "referensbild-först"-vinkel), se nästa regel.
         source: '/sa-gor-du-proffsiga-ai-videor-2026',
-        destination: '/generera-referensbild-forst-ai-video-guide-2026',
+        destination: '/skapa-ai-video-steg-for-steg-2026',
+        statusCode: 301,
+      },
+      {
+        // Artikeln hann publiceras kort med den smala vinkeln/slugen innan
+        // den breddades till en fullständig nybörjarguide samma dag.
+        source: '/generera-referensbild-forst-ai-video-guide-2026',
+        destination: '/skapa-ai-video-steg-for-steg-2026',
         statusCode: 301,
       },
       {
