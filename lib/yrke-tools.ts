@@ -786,7 +786,7 @@ export const YRKE_TOOLS: YrkeTool[] = [
     label: 'Bäst för outsourcing', logo: 'bg-fuchsia-700',
   },
   {
-    slug: 'speedledger-ai', parent: 'bokforing', brand: 'SpeedLedger', company: 'SpeedLedger', founded: 2003, hq: 'Göteborg, Sverige',
+    slug: 'speedledger-ai', parent: 'bokforing', brand: 'SpeedLedger', company: 'SpeedLedger (del av Visma sedan 2015)', founded: 2003, hq: 'Göteborg, Sverige',
     score: 8.4, fallbackUrl: 'https://www.speedledger.se',
     title: 'SpeedLedger e-bokföring — webbaserad bokföring med smart kategorisering',
     oneliner: 'Webbaserad bokföring med smart kategorisering och stark bankintegration.',

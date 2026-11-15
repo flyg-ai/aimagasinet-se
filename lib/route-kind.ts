@@ -40,8 +40,10 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'adcreative-ai', 'pencil-ai', 'persado', 'smartly-io', 'albert-ai',
     'motionapp', 'madgicx', 'revealbot',
   ],
+  // 'flick-ai' ersatt med 'flick' (samma produkt, Flick Social Ltd., slogs
+  // ihop till en kanonisk recension nov 2026, se next.config.mjs-redirecten).
   '/ai-verktyg/marknadsforing/sociala-medier': [
-    'hootsuite-ai', 'buffer-ai', 'predis-ai', 'flick-ai', 'lately-ai',
+    'hootsuite-ai', 'buffer-ai', 'predis-ai', 'flick', 'lately-ai',
     'ocoya', 'postwise', 'taplio', 'fedica',
   ],
   '/ai-verktyg/ekonomi/bokforing': [
@@ -80,7 +82,9 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   ],
   '/ai-verktyg/produktivitet': [
     'notion-ai', 'obsidian-ai', 'mem-ai', 'reclaim-ai', 'todoist-ai',
-    'sunsama', 'motion', 'akiflow', 'cron', 'reflect',
+    // cron uppgick i Notion Calendar (Notion förvärvade Cron 2022) — ersatt
+    // av Vimcal 2026-11-16.
+    'sunsama', 'motion', 'akiflow', 'vimcal', 'reflect',
   ],
   '/ai-verktyg/e-postmarknadsforing': [
     'mailchimp-ai', 'klaviyo-ai', 'activecampaign-ai', 'brevo-ai', 'hubspot-email',

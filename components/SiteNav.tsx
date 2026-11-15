@@ -65,9 +65,9 @@ const NAV: NavItem[] = [
         links: [
           { href: '/ai-verktyg/cursor-ai',      label: 'Cursor AI' },
           { href: '/ai-verktyg/github-copilot', label: 'GitHub Copilot' },
-          { href: '/ai-verktyg/windsurf',       label: 'Windsurf' },
+          { href: '/ai-verktyg/claude-code',    label: 'Claude Code' },
           { href: '/ai-verktyg/tabnine',        label: 'Tabnine' },
-          { href: '/ai-verktyg/codeium',        label: 'Codeium' },
+          { href: '/ai-verktyg/cline',          label: 'Cline' },
         ],
       },
       {

@@ -197,10 +197,10 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
   },
   "mistral-le-chat": {
     "logo": "bg-sky-500",
-    "ctaName": "Mistral Le Chat",
+    "ctaName": "Mistral Vibe",
     "fallbackUrl": "https://chat.mistral.ai",
     "company": "Mistral AI",
-    "model": "Mistral Medium 3.5 (Mistral Vibe, tidigare Le Chat)",
+    "model": "Mistral Medium 3.5 (tidigare Le Chat, döpt om till Mistral Vibe maj 2026)",
     "founded": 2023,
     "hq": "Paris, Frankrike",
     "useCases": [
@@ -1922,6 +1922,70 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
     "label": "",
     "score": 8.6
   },
+  "vimcal": {
+    "logo": "bg-blue-600",
+    "ctaName": "Vimcal",
+    "fallbackUrl": "https://vimcal.com",
+    "company": "Vimcal Inc.",
+    "model": "Tangentbordsfokuserad AI-kalender",
+    "founded": 2018,
+    "hq": "USA",
+    "useCases": [
+      "Tangentbordsstyrd kalenderhantering för mötestäta scheman",
+      "AI-schemaläggning utifrån fri text om tillgänglighet",
+      "Bokningslänkar och omröstningar för gruppschemaläggning",
+      "Tidszonsöversikt för team och kunder i olika länder",
+      "Teamschemaläggning och administratörskontroller för företag"
+    ],
+    "ratingCriteria": [
+      {
+        "label": "AI-funktioner",
+        "score": 8.3
+      },
+      {
+        "label": "Tidsplanering",
+        "score": 9.4
+      },
+      {
+        "label": "Anteckningar",
+        "score": 6.8
+      },
+      {
+        "label": "Integrationer",
+        "score": 8.5
+      },
+      {
+        "label": "Pris/prestanda",
+        "score": 7.6
+      },
+      {
+        "label": "Användarvänlighet",
+        "score": 9.2
+      }
+    ],
+    "tags": [
+      "Kalender",
+      "Tangentbord",
+      "AI-schemaläggning",
+      "Produktivitet"
+    ],
+    "pros": [
+      "Mycket snabb och tangentbordsstyrd upplevelse, byggd för power users utan mus",
+      "AI-schemaläggning direkt från fri text sparar tid jämfört med manuell bokning",
+      "Bokningslänkar, omröstningar och teamschemaläggning täcker det mesta av mötesflödet"
+    ],
+    "cons": [
+      "Gratisnivån är begränsad till iOS — ingen gratis desktop-app eller gratis bokningslänkar",
+      "Betalplanen (35 USD/mån, eller 25 USD/mån årsvis) är dyrare än flera konkurrenter med liknande funktioner"
+    ],
+    "offer": {
+      "title": "Vimcal",
+      "price": "35 USD/mån · 25 USD/mån vid årsfakturering (~300 USD/år) · Gratis (iOS, begränsad)",
+      "bestFor": "Chefer och power users med mötestäta kalendrar som vill jobba snabbt utan att lämna tangentbordet"
+    },
+    "label": "",
+    "score": 8.5
+  },
   "reflect": {
     "logo": "bg-emerald-500",
     "ctaName": "Reflect",
@@ -2043,8 +2107,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_3: Record<string, Partial<ReviewProfile>>
       "Avancerad segmentering kräver dyrare planer"
     ],
     "offer": {
-      "title": "Mailchimp Free / Standard / Premium",
-      "price": "Gratis · Standard från 13 USD/mån",
+      "title": "Mailchimp Free / Essentials / Standard / Premium",
+      "price": "Gratis · Essentials från 13 USD/mån · Standard från 20 USD/mån",
       "bestFor": "Småföretag och soloprenörer som vill ha ett välbeprövat allt-i-ett-verktyg"
     },
     "label": "",

@@ -314,6 +314,32 @@ const nextConfig = {
         destination: '/ai-verktyg/topaz-photo-ai',
         statusCode: 301,
       },
+      // Flick AI och Flick var två separata recensioner av samma produkt
+      // (Flick Social Ltd., grundat 2018) med olika betyg — slogs ihop till
+      // "flick" (högre kvalitet, redan vald som kanonisk i route-kind.ts),
+      // nov 2026.
+      {
+        source: '/ai-verktyg/flick-ai',
+        destination: '/ai-verktyg/flick',
+        statusCode: 301,
+      },
+      // descript-ljud (ai-ljud-och-musik-hubben) var en andra, nästan
+      // identisk recension av samma Descript-produkt som redan täcktes av
+      // "descript" (podcast-ljudredigering- och transkribering-hubbarna),
+      // nov 2026.
+      {
+        source: '/ai-verktyg/descript-ljud',
+        destination: '/ai-verktyg/descript',
+        statusCode: 301,
+      },
+      // Casetext köptes upp av Thomson Reuters 2023 och den fristående
+      // produkten stängdes våren 2025 — casetext.com redirectar nu till
+      // CoCounsel/Westlaw. Pekar om till vår nya CoCounsel-recension, nov 2026.
+      {
+        source: '/ai-verktyg/casetext',
+        destination: '/ai-verktyg/cocounsel',
+        statusCode: 301,
+      },
       // Older Dec 2025 short-form article superseded by the
       // comprehensive Dec 12 "Topp 50 AI-låtar"-listan. 301 forwards
       // link equity to the newer page.

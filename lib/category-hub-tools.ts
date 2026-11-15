@@ -900,6 +900,70 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     "label": "Bäst för storytelling",
     "score": 8.8
   },
+  "slidebean": {
+    "logo": "bg-amber-500",
+    "ctaName": "Slidebean",
+    "fallbackUrl": "https://slidebean.com",
+    "company": "Slidebean Incorporated",
+    "model": "Slidebean AI",
+    "founded": 2014,
+    "hq": "New York, USA",
+    "useCases": [
+      "Pitchdeck för startups",
+      "Investerarpresentationer",
+      "Fundraising-material",
+      "Finansiella modeller",
+      "Cap table-hantering"
+    ],
+    "ratingCriteria": [
+      {
+        "label": "Designkvalitet",
+        "score": 8.3
+      },
+      {
+        "label": "AI-generering",
+        "score": 8.4
+      },
+      {
+        "label": "Mallbibliotek",
+        "score": 8.6
+      },
+      {
+        "label": "Export & delning",
+        "score": 8.2
+      },
+      {
+        "label": "Pris/prestanda",
+        "score": 8.8
+      },
+      {
+        "label": "Användarvänlighet",
+        "score": 8.5
+      }
+    ],
+    "tags": [
+      "Startup-fokus",
+      "Fundraising",
+      "Investerarpitchar",
+      "Finansiell modellering"
+    ],
+    "pros": [
+      "Byggt specifikt för startups som ska pitcha investerare, inte generella presentationer",
+      "Över 100 investerarvänliga mallar plus en cap table-modul och finansiell modellering",
+      "Pitchdeck-granskning och visningsstatistik visar hur investerare interagerar med decket"
+    ],
+    "cons": [
+      "Mindre lämpat för allmänna företagspresentationer utanför fundraising-sammanhang",
+      "De dyrare Accelerate-planerna med personlig rådgivning är en stor prisnivå över grundplanen"
+    ],
+    "offer": {
+      "title": "Slidebean Starter",
+      "price": "Gratis testperiod · Starter 7 USD/mån (årsvis) · Accelerate från 99 USD/mån",
+      "bestFor": "Startups som förbereder en investerarrunda"
+    },
+    "label": "Bäst för startups och fundraising",
+    "score": 8.5
+  },
   "pitch": {
     "logo": "bg-violet-600",
     "ctaName": "Pitch",
@@ -3198,7 +3262,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     ],
     "offer": {
       "title": "Shopify Basic med AI",
-      "price": "Från 29 USD/mån",
+      "price": "Från 39 USD/mån (29 USD/mån vid årsbetalning)",
       "bestFor": "Små till medelstora butiker som vill ha allt under ett tak"
     },
     "label": "Redaktionens val",
@@ -4354,6 +4418,70 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
       "bestFor": "Flerspråkig kundtjänst i stor skala"
     },
     "label": "Bäst för kundtjänst",
+    "score": 8.7
+  },
+  "crowdin": {
+    "logo": "bg-blue-600",
+    "ctaName": "Crowdin",
+    "fallbackUrl": "https://crowdin.com",
+    "company": "Crowdin",
+    "model": "Crowdin AI Localization Platform 2026",
+    "founded": 2009,
+    "hq": "Tallinn, Estland",
+    "useCases": [
+      "Lokalisering av mjukvara och appar",
+      "Open source-projekt",
+      "GitHub/GitLab-integration",
+      "Continuous localization",
+      "Figma- och designverktygsflöden"
+    ],
+    "ratingCriteria": [
+      {
+        "label": "Översättningskvalitet",
+        "score": 8.5
+      },
+      {
+        "label": "Svenska språkstöd",
+        "score": 8.5
+      },
+      {
+        "label": "Antal språk",
+        "score": 8.8
+      },
+      {
+        "label": "Integrationer",
+        "score": 9.2
+      },
+      {
+        "label": "Pris/prestanda",
+        "score": 8.7
+      },
+      {
+        "label": "Användarvänlighet",
+        "score": 8.6
+      }
+    ],
+    "tags": [
+      "Open source",
+      "GitHub/GitLab",
+      "Continuous localization",
+      "AI-översättning"
+    ],
+    "pros": [
+      "Generöst gratis alternativ för open source-projekt med aktivt community-fokus",
+      "Djup integration mot GitHub, GitLab och över 700 andra verktyg",
+      "Kombinerar AI-maskinöversättning med kontextuell QA och in-context-redigering"
+    ],
+    "cons": [
+      "Gratisplanens hosted-words-gräns gör den opraktisk för större privata projekt",
+      "Enterprise-nivån (Team/Business) kräver årsbindning och blir dyr vid skalning"
+    ],
+    "offer": {
+      "title": "Crowdin Free / Pro / Team",
+      "price": "Gratis för publika/open source-projekt · Pro från 70 EUR/mån (årsvis) · Team från 423 EUR/mån",
+      "bestFor": "Mjukvaruteam och open source-projekt som lokaliserar appar"
+    },
+    "label": "Bäst för open source-lokalisering",
     "score": 8.7
   },
   "modernmt": {

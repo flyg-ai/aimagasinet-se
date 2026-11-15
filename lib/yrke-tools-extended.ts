@@ -155,7 +155,7 @@ const BASE: BaseTool[] = [
     label: 'Bäst för DD cross-border', logo: 'bg-rose-700',
   },
   {
-    baseSlug: 'ebrevia', yrkesroll: 'juridik', brand: 'eBrevia', company: 'Donnelley Financial (eBrevia)', founded: 2012, hq: 'Stamford, USA',
+    baseSlug: 'ebrevia', yrkesroll: 'juridik', brand: 'eBrevia', company: 'eBrevia (fristående sedan återköp från Donnelley Financial, dec 2023)', founded: 2012, hq: 'Stamford, USA',
     score: 7.9, fallbackUrl: 'https://ebrevia.com',
     oneliner: 'Extraktion av nyckelvillkor från stora avtalsportföljer — populärt under DD och regulatory exercises.',
     features: ['Klausul- och datapunkts-extraktion', 'Hög volymhantering', 'Anpassningsbara extraktionsmallar', 'Donnelley-integration för finans'],

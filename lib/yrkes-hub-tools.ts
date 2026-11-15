@@ -116,6 +116,34 @@ export const YRKES_HUB_KNOWN = {
     },
     "label": "Bäst för US-rätt"
   },
+  "cocounsel": {
+    "logo": "bg-blue-800",
+    "ctaName": "CoCounsel",
+    "score": 8.9,
+    "fallbackUrl": "https://www.thomsonreuters.com/en/cocounsel",
+    "tagline": "Thomson Reuters AI-juristassistent — Casetexts efterträdare, nu integrerad med Westlaw och Practical Law.",
+    "tags": [
+      "Thomson Reuters",
+      "Westlaw",
+      "Legal Research",
+      "Document Review"
+    ],
+    "pros": [
+      "Djup integration med Westlaw och Practical Law",
+      "Bred funktionsyta: research, drafting, granskning, deposition prep",
+      "Aktivt vidareutvecklad produkt med stort R&D-stöd från Thomson Reuters"
+    ],
+    "cons": [
+      "Ingen publik prislista — kräver säljkontakt",
+      "Fokus på US/UK-rätt, svensk täckning saknas i praktiken"
+    ],
+    "offer": {
+      "title": "Demo via Thomson Reuters-säljare",
+      "price": "Kontakta säljare — från ca 340 USD/mån (in-house Essentials)",
+      "bestFor": "Advokatbyråer och inhouse-team som redan kör Westlaw eller Practical Law"
+    },
+    "label": "Casetexts efterträdare"
+  },
   "spellbook": {
     "logo": "bg-amber-700",
     "ctaName": "Spellbook",
@@ -1103,6 +1131,70 @@ export const YRKES_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     },
     "label": "Bäst för US-rätt"
   },
+  "cocounsel": {
+    "logo": "bg-blue-800",
+    "ctaName": "CoCounsel",
+    "score": 8.9,
+    "fallbackUrl": "https://www.thomsonreuters.com/en/cocounsel",
+    "company": "Thomson Reuters",
+    "model": "CoCounsel plattform",
+    "founded": 1851,
+    "hq": "Toronto, Kanada",
+    "useCases": [
+      "Dokumentgranskning",
+      "Legal research",
+      "Contract analysis",
+      "Deposition prep",
+      "Memo drafting"
+    ],
+    "ratingCriteria": [
+      {
+        "label": "Granskningskvalitet",
+        "score": 9.0
+      },
+      {
+        "label": "Playbook-anpassning",
+        "score": 8.8
+      },
+      {
+        "label": "Risk-flagging",
+        "score": 8.8
+      },
+      {
+        "label": "Pris / prestanda",
+        "score": 8.2
+      },
+      {
+        "label": "Integrationer",
+        "score": 9.3
+      },
+      {
+        "label": "Svensk juridik",
+        "score": 7.5
+      }
+    ],
+    "tags": [
+      "Thomson Reuters",
+      "Westlaw",
+      "Legal Research",
+      "Document Review"
+    ],
+    "pros": [
+      "Djup integration med Westlaw och Practical Law",
+      "Bred funktionsyta: research, drafting, granskning, deposition prep",
+      "Aktivt vidareutvecklad produkt med stort R&D-stöd från Thomson Reuters"
+    ],
+    "cons": [
+      "Ingen publik prislista — kräver säljkontakt",
+      "Fokus på US/UK-rätt, svensk täckning saknas i praktiken"
+    ],
+    "offer": {
+      "title": "Demo via Thomson Reuters-säljare",
+      "price": "Kontakta säljare — från ca 340 USD/mån (in-house Essentials)",
+      "bestFor": "Advokatbyråer och inhouse-team som redan kör Westlaw eller Practical Law"
+    },
+    "label": "Casetexts efterträdare"
+  },
   "spellbook": {
     "logo": "bg-amber-700",
     "ctaName": "Spellbook",
@@ -1364,7 +1456,7 @@ export const YRKES_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     "ctaName": "eBrevia",
     "score": 7.9,
     "fallbackUrl": "https://ebrevia.com",
-    "company": "Donnelley Financial (eBrevia)",
+    "company": "eBrevia (fristående sedan återköp från Donnelley Financial, dec 2023)",
     "model": "eBrevia plattform",
     "founded": 2012,
     "hq": "Stamford, USA",

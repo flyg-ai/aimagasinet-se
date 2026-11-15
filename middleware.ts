@@ -42,6 +42,15 @@ const DEAD_TOOL_SLUGS = new Set([
   // Gemini trots nedläggningen). Windsurf/Codeium uppgick i Devin, Relay.app
   // och Play.ht stängde, Sora 2 lades ner av OpenAI.
   'windsurf', 'codeium', 'relay-app', 'play-ht', 'sora-2',
+  // tome lades ner april 2025, grundarna pivotade till Lightfield (ingen
+  // direkt efterträdare för slutanvändare) — ersatt av Slidebean 2026-11-16.
+  'tome',
+  // unbabel köptes av TransPerfect aug 2025, Widn.AI avvecklas, ersatt av
+  // Crowdin 2026-11-16.
+  'unbabel',
+  // cron uppgick i Notion Calendar (Notion förvärvade Cron 2022) — ersatt av
+  // Vimcal 2026-11-16.
+  'cron',
 ]);
 
 function gone() {

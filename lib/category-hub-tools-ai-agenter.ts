@@ -61,8 +61,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER: Record<string, Partial<Review
       "Fortfarande i tidig fas med ojämn tillförlitlighet på svåra uppgifter"
     ],
     "offer": {
-      "title": "Invite-baserad tillgång",
-      "price": "Begränsad betaåtkomst, pris ej offentligt",
+      "title": "Gratisplan finns",
+      "price": "Free 0 USD · Starter 20 USD/mån (4 000 credits) · Pro 40 USD/mån (8 000 credits) · Max 200 USD/mån (40 000 credits)",
       "bestFor": "Tidiga adoptörer som vill testa frontlinjen av AI-autonomi"
     },
     "label": "Mest autonom",
