@@ -1493,15 +1493,15 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     ],
     "ratingCriteria": [
       {
-        "label": "Transkriberingskvalitet",
-        "score": 7.8
+        "label": "Skrivhjälp & redigering",
+        "score": 8.6
       },
       {
         "label": "Svenska språkstöd",
         "score": 8.2
       },
       {
-        "label": "Sammanfattningar",
+        "label": "Sammanfattningar & sökning",
         "score": 9.1
       },
       {
