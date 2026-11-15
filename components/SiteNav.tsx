@@ -88,7 +88,7 @@ const NAV: NavItem[] = [
           { href: '/ai-verktyg/ai-video/kling-ai',     label: 'Kling AI' },
           { href: '/ai-verktyg/ai-video/runway-gen-3', label: 'Runway' },
           { href: '/ai-verktyg/ai-video/pika-labs',    label: 'Pika Labs' },
-          { href: '/ai-verktyg/ai-video/sora-2',       label: 'Sora 2' },
+          { href: '/ai-verktyg/ai-video/luma-dream-machine', label: 'Luma Dream Machine' },
           { href: '/ai-verktyg/ai-video/heygen',       label: 'HeyGen' },
         ],
       },
