@@ -743,6 +743,23 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     offer: { title: 'Gratis för individer', price: 'Gratis · Pro 19 USD/mån', bestFor: 'AWS-utvecklare' },
     label: 'Bäst för AWS-stack',
   },
+  cline: {
+    logo: 'bg-amber-600',
+    ctaName: 'Cline', score: 9.0, fallbackUrl: 'https://cline.bot',
+    company: 'Cline (open source)', model: 'Bring-your-own-key — Claude, GPT, Gemini eller lokala modeller via Ollama', founded: 2024, hq: 'Öppen källkod, community-drivet',
+    tagline: 'Gratis, öppen AI-kodagent i VS Code — du väljer modell och betalar leverantören direkt',
+    useCases: ['Utvecklare som vill fritt modellval', 'Teams med egna API-avtal', 'Soloutvecklare som vill undvika abonnemang', 'JetBrains- och VS Code-användare'],
+    ratingCriteria: [
+      { label: 'Gratis-värde', score: 9.7 }, { label: 'Öppen källkod', score: 9.8 },
+      { label: 'Modellval (BYOK)', score: 9.5 }, { label: 'Editor-integration', score: 8.8 },
+      { label: 'Agentiskt arbete', score: 8.7 }, { label: 'Pris / prestanda', score: 9.2 },
+    ],
+    tags: ['Open source', 'BYOK', 'VS Code', 'MCP Marketplace'],
+    pros: ['Helt gratis och öppen källkod (Apache-2.0)', 'Fritt modellval — koppla egen API-nyckel till Claude, GPT, Gemini eller lokala modeller', 'Stort community (miljontals installationer) och snabb utveckling'],
+    cons: ['Ingen modell ingår — du betalar leverantören separat för tokens', 'Kräver mer konfiguration än färdigpaketerade verktyg som Copilot'],
+    offer: { title: 'Gratis, öppen källkod', price: 'Gratis (BYOK) · ClinePass ~10 USD/mån för kurerade modeller · Enterprise på offert', bestFor: 'Utvecklare som vill välja egen modell och betala per användning' },
+    label: 'Bäst gratis & öppen källkod',
+  },
   'replit-ai': {
     logo: 'bg-orange-500',
     ctaName: 'Replit AI', score: 8.3, fallbackUrl: 'https://replit.com',

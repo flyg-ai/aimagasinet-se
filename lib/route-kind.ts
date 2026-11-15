@@ -108,9 +108,21 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   // Vibe coding — blandar 5 befintliga ai-kod-verktyg-recensioner (behåller
   // sitt parent_slug där) med 6 nya recensioner (parent_slug='vibe-coding',
   // syntetisk — se scripts/seed-vibe-coding-reviews.ts).
+  // 'windsurf' ersatt med 'cline' 2026-11-15 (Windsurf nedlagd/uppgick i Devin,
+  // se scripts/unpublish-discontinued-tools.ts) — håller listan på 11 verktyg.
   '/ai-verktyg/vibe-coding': [
-    'cursor-ai', 'replit-ai', 'windsurf', 'github-copilot', 'claude-code',
+    'cursor-ai', 'replit-ai', 'cline', 'github-copilot', 'claude-code',
     'lovable', 'bolt-new', 'v0', 'base44', 'google-antigravity', 'magic-patterns',
+  ],
+
+  // ai-kod-verktyg — kuraterad 2026-11-15 för att dra in Devin (recension
+  // finns redan, men lever under parent_slug='ai-agenter-hub' eftersom den
+  // också hör hemma i AI-agenter-hubben) och nytillagda Cline, som ersättare
+  // för de nedlagda Windsurf/Codeium. Behåller sina riktiga parent_slug.
+  '/ai-verktyg/ai-kod-verktyg': [
+    'amazon-codewhisperer', 'claude-code', 'cursor-ai', 'github-copilot',
+    'jetbrains-ai', 'pieces', 'replit-ai', 'sourcegraph-cody', 'tabnine',
+    'cline', 'devin',
   ],
 
   // Transkribering — blandar 3 befintliga recensioner (otter-ai/fireflies-ai

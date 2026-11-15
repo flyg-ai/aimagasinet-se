@@ -298,7 +298,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER: Record<string, Partial<Review
       },
       {
         "label": "Pris/prestanda",
-        "score": 7.2
+        "score": 8.0
       },
       {
         "label": "Användarvänlighet",
@@ -321,8 +321,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_AI_AGENTER: Record<string, Partial<Review
       "Kräver tydlig och väldefinierad uppgiftsformulering för bästa resultat"
     ],
     "offer": {
-      "title": "Devin Teams / Enterprise",
-      "price": "Från 500 USD/mån (Teams) / Kontakta säljare (Enterprise)",
+      "title": "Gratisplan finns",
+      "price": "Free 0 USD · Pro 20 USD/mån · Max 200 USD/mån · Teams 80 USD + 40 USD/säte",
       "bestFor": "Ingenjörsteam som vill accelerera mjukvaruutveckling med autonom AI"
     },
     "label": "Bäst för kodning",
