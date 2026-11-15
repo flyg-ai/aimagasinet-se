@@ -664,7 +664,9 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     tags: ['Open source', 'AI-pieces', 'Self-host', 'Generös gratis'],
     pros: ['Open source-alternativ till Zapier', 'Generös gratisversion', 'AI-pieces inbyggt'],
     cons: ['Färre integrationer', 'Mindre community'],
-    offer: { title: '5000 tasks gratis/mån', price: 'Gratis · Pro 10 USD/mån', bestFor: 'Open source-team med tight budget' },
+    // Prisnamnen bytte från "Pro" till "Plus"/"Team" under 2026 — verifierat
+    // mot activepieces.com/pricing 2026-11-16.
+    offer: { title: 'Gratis Community Edition', price: 'Gratis · Plus 20 USD/mån · Team 200 USD/mån', bestFor: 'Open source-team med tight budget' },
     label: 'Bäst gratis open source',
   },
   pipedream: {
@@ -763,11 +765,13 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
       { label: 'Kodkvalitet', score: 8.0 }, { label: 'Editor-integration', score: 8.7 },
       { label: 'Pris / prestanda', score: 9.0 }, { label: 'Språkbredd', score: 8.2 },
     ],
-    tags: ['AWS', 'Security scan', 'Gratis individuell', 'Q Developer'],
-    pros: ['AWS-optimerad', 'Inbyggd security scan', 'Gratis för enskilda'],
-    cons: ['AWS-bias i förslag', 'Mindre stark utanför AWS'],
-    offer: { title: 'Gratis för individer', price: 'Gratis · Pro 19 USD/mån', bestFor: 'AWS-utvecklare' },
-    label: 'Bäst för AWS-stack',
+    tags: ['AWS', 'Security scan', 'Q Developer'],
+    pros: ['AWS-optimerad', 'Inbyggd security scan', 'Befintliga användare kör gratis vidare'],
+    // AWS stängde nya gratis-signups 2026-05-15 (Builder ID/ny prenumeration);
+    // befintliga konton påverkas inte. AWS pekar själva ut Kiro som ersättare.
+    cons: ['AWS-bias i förslag', 'Mindre stark utanför AWS', 'Gratisnivån stängd för nya användare sedan maj 2026 — AWS rekommenderar Kiro istället'],
+    offer: { title: 'Gratis endast för befintliga konton', price: 'Pro 19 USD/mån · nya användare se Kiro', bestFor: 'Befintliga AWS-utvecklare med Q Developer-konto' },
+    label: 'Bäst för AWS-stack (befintliga konton)',
   },
   cline: {
     logo: 'bg-amber-600',
@@ -846,8 +850,8 @@ export const REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     ],
     tags: ['Snippet-minne', 'Lokal AI', 'Kontext', 'Cross-app'],
     pros: ['Lokal AI för privacy', 'Minne över sessioner', 'Cross-app-snippet-hantering'],
-    cons: ['Smalt användningsområde', 'Tidig produkt'],
-    offer: { title: 'Helt gratis', price: 'Gratis · Pro kommer', bestFor: 'Snippets och AI-kontext' },
+    cons: ['Smalt användningsområde', 'Exakt Pro-pris anges inte öppet — bekräfta i kassan'],
+    offer: { title: 'Gratis + Pieces Pro', price: 'Gratis · Pro-pris varierar (se pieces.app/pricing)', bestFor: 'Snippets och AI-kontext' },
     label: 'Bäst för snippets',
   },
 

@@ -77,8 +77,10 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'wellsaid-labs', 'lovo-ai', 'voicemaker', 'amazon-polly',
   ],
   '/ai-verktyg/podcast-ljudredigering': [
+    // 'otter-ai' borttaget 2026-11-16 — mötestranskribering, inte
+    // ljudredigering. Hör hemma i /ai-verktyg/transkribering (se nedan).
     'descript', 'adobe-podcast', 'riverside-fm', 'cleanvoice-ai', 'auphonic',
-    'podcastle', 'alitu', 'headliner', 'buzzsprout-ai', 'otter-ai',
+    'podcastle', 'alitu', 'headliner', 'buzzsprout-ai',
   ],
   '/ai-verktyg/produktivitet': [
     'notion-ai', 'obsidian-ai', 'mem-ai', 'reclaim-ai', 'todoist-ai',

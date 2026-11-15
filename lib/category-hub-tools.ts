@@ -1481,15 +1481,15 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     "ctaName": "Notion AI",
     "fallbackUrl": "https://www.notion.so",
     "company": "Notion Labs",
-    "model": "Notion AI Meetings 2026",
+    "model": "Notion AI",
     "founded": 2016,
     "hq": "San Francisco, USA",
     "useCases": [
-      "Mötesanteckningar direkt i Notion-dokument",
-      "AI-genererade sammanfattningar i arbetsytan",
-      "Projektuppföljning kopplad till mötesbeslut",
-      "Kunskapshantering från mötesinnehåll",
-      "Teamwiki baserad på mötesutdata"
+      "AI-skrivassistent direkt i Notion-dokument",
+      "Sök och svar över hela arbetsytan (Q&A)",
+      "Sammanfattning och omskrivning av långa sidor",
+      "Automatiska mötesanteckningar som ett av flera AI-flöden",
+      "Kunskapshantering och teamwiki"
     ],
     "ratingCriteria": [
       {
@@ -1526,15 +1526,17 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     "pros": [
       "Sömlös integration med Notions övriga arbetsyta",
       "Sammanfattningar håller hög kvalitet och är välstrukturerade",
-      "Rimlig merkostnad för befintliga Notion-användare"
+      "Ingår i Business-planen istället för löst tillägg"
     ],
     "cons": [
       "Fungerar primärt för team som redan lever i Notion",
-      "Transkriberingsfunktionen är inte lika mogen som hos renodlade mötes-AI-verktyg"
+      "Mötestranskribering är inte lika mogen som hos renodlade mötes-AI-verktyg"
     ],
     "offer": {
-      "title": "Notion AI Add-on",
-      "price": "8 USD/mån per användare som tillägg till Notion-plan",
+      "title": "Notion AI i Business-planen",
+      // 10 USD/mån-tillägget avskaffades 2026 — AI ingår nu i Business-planen.
+      // Verifierat mot notion.com/pricing 2026-11-16.
+      "price": "Business 20 USD/mån per medlem (årsbetalning) · 24 USD/mån (månadsbetalning)",
       "bestFor": "Team som redan använder Notion som primär arbetsyta"
     },
     "label": "Bäst för Notion-användare",
@@ -1598,7 +1600,7 @@ export const CATEGORY_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> =
     ],
     "offer": {
       "title": "Fathom Free & Premium",
-      "price": "Gratis · Premium 19 USD/mån · Team 29 USD/mån per användare",
+      "price": "Gratis · Premium 20 USD/mån · Team 19 USD/mån per användare (min. 2 användare)",
       "bestFor": "Individer och småteam som vill ha bra sammanfattningar utan kostnad"
     },
     "label": "Bästa gratisalternativ",

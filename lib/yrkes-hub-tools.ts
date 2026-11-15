@@ -592,34 +592,6 @@ export const YRKES_HUB_KNOWN = {
     },
     "label": "Bäst no-code"
   },
-  "workday-ai": {
-    "logo": "bg-orange-700",
-    "ctaName": "Workday AI",
-    "score": 9,
-    "fallbackUrl": "https://www.workday.com",
-    "tagline": "Workdays HCM-plattform med inbyggd AI-rekrytering — branschstandard för stora företag.",
-    "tags": [
-      "Enterprise",
-      "HCM",
-      "Skills Cloud",
-      "Recruiting Agent"
-    ],
-    "pros": [
-      "Branschstandard för stora företag",
-      "AI fully integrated",
-      "Stark compliance"
-    ],
-    "cons": [
-      "Lågfart för ändringar",
-      "Enterprise-pris"
-    ],
-    "offer": {
-      "title": "Demo via Workday-sales",
-      "price": "Från ~$30/anställd/år",
-      "bestFor": "Företag med 1000+ anställda som redan kör Workday"
-    },
-    "label": "Branschstandard enterprise"
-  },
   "eightfold-ai": {
     "logo": "bg-indigo-700",
     "ctaName": "Eightfold AI",
@@ -2278,7 +2250,7 @@ export const YRKES_HUB_REVIEW_KNOWN: Record<string, Partial<ReviewProfile>> = {
     ],
     "offer": {
       "title": "Demo via Workday-sales",
-      "price": "Från ~$30/anställd/år",
+      "price": "Kontakta säljare (ingen offentlig prislista)",
       "bestFor": "Företag med 1000+ anställda som redan kör Workday"
     },
     "label": "Branschstandard enterprise"

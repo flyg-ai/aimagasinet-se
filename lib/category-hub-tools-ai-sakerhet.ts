@@ -513,7 +513,8 @@ export const CATEGORY_HUB_REVIEW_KNOWN_AI_SAKERHET: Record<string, Partial<Revie
     ],
     "cons": [
       "Begränsad runtime-detektering jämfört med agentbaserade alternativ",
-      "Prissättningen kan bli hög för organisationer med många molntjänster"
+      "Prissättningen kan bli hög för organisationer med många molntjänster",
+      "Sedan mars 2026 en del av Google Cloud (32 miljarder USD-förvärv) — fortsätter dock som fristående produkt även för AWS/Azure"
     ],
     "offer": {
       "title": "Wiz Enterprise",
