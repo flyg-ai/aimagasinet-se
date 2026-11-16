@@ -461,6 +461,20 @@ const CATEGORIES: {
     group: 'Marknadsföring & sälj',
   },
   {
+    // Ingen HubTemplate-sida — detta är formattestets artikelversion
+    // (redirects.seo-test.mjs, 1 sep 2026): hubben /ai-verktyg/marknadsforing/seo
+    // rankade uselt och 301:ades till denna long-form-artikel. Kortet här
+    // länkar dit direkt så kategorin ändå går att hitta/klicka sig till från
+    // huvudhubben, trots att den tekniskt sett är en artikel och inte en hub.
+    href: '/basta-ai-seo-verktyg-2026',
+    title: 'AI för SEO',
+    description: 'Semrush AI, Surfer SEO, Rank Math — keyword-research, SERP-analys och teknisk SEO med AI.',
+    icon: '🔍',
+    bg: null,
+    fallbackGradient: 'bg-gradient-to-br from-fuchsia-700 to-indigo-900',
+    group: 'Marknadsföring & sälj',
+  },
+  {
     href: '/ai-verktyg/juridik',
     title: 'AI för juridik',
     description: 'Harvey AI, Spellbook, Luminance — AI för advokater och jurister.',
