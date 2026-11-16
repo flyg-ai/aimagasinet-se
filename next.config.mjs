@@ -162,6 +162,16 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // Röstklon-dubblett (upptäckt 16 nov 2026): kortare generell artikel
+        // publicerad 17 sep 2026 om samma ämne som den nya steg-för-steg-guiden
+        // (15 nov 2026), som är ett strikt superset — även "vad du inte får
+        // göra"-vinkeln (samtycke/missbruk) täcks i nya guidens avsnitt
+        // "Ansvarsfullt bruk". Avpublicerad och konsolideras in här.
+        source: '/sa-klonar-du-din-egen-rost-och-vad-du-inte-far-gora-med-den',
+        destination: '/sa-klonar-du-din-rost-med-ai-steg-for-steg-2026',
+        statusCode: 301,
+      },
+      {
         // GEO-guiden flyttad från /ai-guiden/* (StandalonePageTemplate, "död"
         // sektion utan startsides-synlighet) till en vanlig article-sida så
         // den dyker upp som senaste publicerade på startsidan (22 okt 2026).
