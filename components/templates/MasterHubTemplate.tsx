@@ -6,11 +6,12 @@ import { MasterHubDiscovery } from '@/components/MasterHubDiscovery';
 import { YRKEN } from '@/components/templates/ForetagHubTemplate';
 import { JsonLd } from '@/components/JsonLd';
 import { FaqAccordion } from '@/components/FaqAccordion';
+import { SearchAutocomplete } from '@/components/SearchAutocomplete';
 import { faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
 import {
   Type, Image as ImageIcon, Video, Code2, Music, Workflow,
-  ChevronRight, ArrowRight, Search as SearchIcon,
+  ChevronRight, ArrowRight,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -208,7 +209,7 @@ const KATEGORI_BG = 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/
 /** `group` buckets the 34 kategorier under ~9 "vad vill du göra"-ämnen för
  *  snabbfiltret i CategoryGrid — rent frontend-lager, rör inte DB eller
  *  parent_slug. Håll i synk manuellt när en ny kategori läggs till. */
-const CATEGORIES: {
+export type MasterHubCategoryEntry = {
   href: string;
   title: string;
   description: string;
@@ -216,7 +217,9 @@ const CATEGORIES: {
   bg: string | null;
   fallbackGradient: string;
   group: string;
-}[] = [
+};
+
+export const CATEGORIES: MasterHubCategoryEntry[] = [
   {
     href: '/ai-verktyg/ai-text-verktyg',
     title: 'AI för text',
@@ -564,6 +567,64 @@ const CATEGORIES: {
     fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900',
     group: 'Text & skrivande',
   },
+  // De 6 nedan fanns redan som publicerade hubbar i DB men saknade kort här
+  // och på startsidan — helt orörbara från navigeringen, bara nåbara via
+  // direkt URL eller sitemap. Hade redan featured_image, så inga nya bilder
+  // behövdes, bara att koppla in dem (nov 2026).
+  {
+    href: '/ai-verktyg/foto-bildredigering',
+    title: 'AI för foto & bildredigering',
+    description: 'Topaz Photo AI, Remini, Let’s Enhance, Magnific — AI för foto och bildredigering.',
+    icon: '🖼',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/foto-bildredigering.webp',
+    fallbackGradient: 'bg-gradient-to-br from-violet-600 to-fuchsia-800',
+    group: 'Bild & video',
+  },
+  {
+    href: '/ai-verktyg/produktbilder',
+    title: 'AI för produktbilder',
+    description: 'AI-verktyg för att skapa och redigera produktbilder till e-handel.',
+    icon: '📦',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/produktbilder-featured.webp',
+    fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-800',
+    group: 'Bild & video',
+  },
+  {
+    href: '/ai-verktyg/transkribering',
+    title: 'AI för transkribering',
+    description: 'Sonix, Trint, Rev, HappyScribe, Notta, AssemblyAI, Deepgram — AI för transkribering.',
+    icon: '🎙',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/transkribering-featured.webp',
+    fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800',
+    group: 'Ljud & röst',
+  },
+  {
+    href: '/ai-verktyg/vibe-coding',
+    title: 'AI för vibe coding',
+    description: 'Lovable, Bolt, v0, Base44, Google Antigravity — AI för vibe coding.',
+    icon: '⌨',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/vibe-coding.webp',
+    fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-teal-800',
+    group: 'Kod & utveckling',
+  },
+  {
+    href: '/ai-verktyg/hr',
+    title: 'AI för HR',
+    description: 'Medarbetarsamtal, prestationsuppföljning, engagemang och lönehantering med AI.',
+    icon: '🧑‍💼',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/hr.webp',
+    fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800',
+    group: 'Yrke & bransch',
+  },
+  {
+    href: '/ai-verktyg/larare',
+    title: 'AI för lärare',
+    description: 'MagicSchool AI, Brisk Teaching, Curipod, Khanmigo — AI för lärares eget arbete.',
+    icon: '🍎',
+    bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/larare.webp',
+    fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-800',
+    group: 'Yrke & bransch',
+  },
 ];
 
 /** Ordning på snabbfilter-chipsen — matchar grupperna ovan. */
@@ -629,28 +690,7 @@ function Hero({ article: a }: { article: Article }) {
           </p>
         )}
 
-        <form action="/sok/" method="GET" className="mt-8 max-w-xl">
-          <label className="relative block">
-            <span className="sr-only">Sök bland AI-verktyg</span>
-            <SearchIcon
-              aria-hidden
-              className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/50"
-            />
-            <input
-              type="search"
-              name="q"
-              placeholder="Vad letar du efter för verktyg?"
-              className="w-full rounded-xl border border-white/15 bg-white/10 py-4 pl-12 pr-14 text-base text-white placeholder:text-white/50 shadow-sm backdrop-blur-sm focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
-            />
-            <button
-              type="submit"
-              aria-label="Sök"
-              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-white text-indigo-700 transition-colors hover:bg-white/90"
-            >
-              <ArrowRight className="h-5 w-5" aria-hidden />
-            </button>
-          </label>
-        </form>
+        <SearchAutocomplete />
 
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
           <span className="font-semibold text-white/60">Populärt:</span>

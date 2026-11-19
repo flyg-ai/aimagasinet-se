@@ -8,6 +8,7 @@ import {
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
   MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
   ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash, TrendingUp, Wand2, Receipt,
+  Camera, Package, Captions, Terminal, Users, School,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -124,6 +125,15 @@ const CARDS: Card[] = [
   { href: '/ai-verktyg/dataanalys', title: 'AI-dataanalys', icon: BarChart3, bg: `${STORAGE}/ai-dataanalys-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-800' },
   { href: '/ai-verktyg/utbildning', title: 'AI för utbildning', icon: GraduationCap, bg: `${STORAGE}/ai-utbildning-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-800' },
   { href: '/ai-verktyg/ai-humaniserare', title: 'AI-humaniserare', icon: Wand2, bg: null, fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900' },
+  // De 6 nedan fanns redan som publicerade hubbar i DB men saknade kort
+  // här — orörbara från navigeringen förutom via direkt URL/sitemap.
+  // Hade redan featured_image, så inga nya bilder behövdes (nov 2026).
+  { href: '/ai-verktyg/foto-bildredigering', title: 'AI för foto & bildredigering', icon: Camera, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/foto-bildredigering.webp', fallbackGradient: 'bg-gradient-to-br from-violet-600 to-fuchsia-800' },
+  { href: '/ai-verktyg/produktbilder', title: 'AI för produktbilder', icon: Package, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/produktbilder-featured.webp', fallbackGradient: 'bg-gradient-to-br from-amber-500 to-orange-800' },
+  { href: '/ai-verktyg/transkribering', title: 'AI för transkribering', icon: Captions, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/transkribering-featured.webp', fallbackGradient: 'bg-gradient-to-br from-teal-500 to-emerald-800' },
+  { href: '/ai-verktyg/vibe-coding', title: 'AI för vibe coding', icon: Terminal, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/vibe-coding.webp', fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-teal-800' },
+  { href: '/ai-verktyg/hr', title: 'AI för HR', icon: Users, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/hr.webp', fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800' },
+  { href: '/ai-verktyg/larare', title: 'AI för lärare', icon: School, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/larare.webp', fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-800' },
 ];
 
 /** Quick-jump category cards under the hero. Desktop (lg+) shows the first
