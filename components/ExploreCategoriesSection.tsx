@@ -7,7 +7,7 @@ import {
   Type, Video, Code2, Briefcase, Image as ImageIcon, Music, Workflow, Sparkles,
   Globe, Presentation, Mic, Share2, ListChecks, ShoppingCart, Languages, FileText,
   MessageSquare, Speech, Headphones, Zap, Mail, Handshake, BarChart3, GraduationCap,
-  ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash, TrendingUp, Wand2,
+  ShieldCheck, Scale, Headset, Megaphone, UserPlus, PenTool, Wallet, Hash, TrendingUp, Wand2, Receipt,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -102,7 +102,9 @@ const CARDS: Card[] = [
   { href: '/ai-verktyg/kundservice', title: 'AI-kundservice', icon: Headset, bg: `${STORAGE}/ai-kundservice-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-cyan-600 to-blue-900' },
   { href: '/ai-verktyg/rekrytering', title: 'AI för rekrytering', icon: UserPlus, bg: `${STORAGE}/ai-rekrytering-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800' },
   { href: '/ai-verktyg/ui-ux', title: 'AI för UI/UX-design', icon: PenTool, bg: `${STORAGE}/ai-ui-ux-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-violet-600 to-indigo-900' },
-  { href: '/ai-verktyg/ekonomi', title: 'AI för ekonomi', icon: Wallet, bg: null, fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-900' },
+  { href: '/ai-verktyg/ekonomi', title: 'AI för ekonomi', icon: Wallet, bg: `${STORAGE}/ekonomi.webp`, fallbackGradient: 'bg-gradient-to-br from-emerald-600 to-green-900' },
+  { href: '/ai-verktyg/redovisning', title: 'AI för redovisning', icon: BarChart3, bg: `${STORAGE}/redovisning.webp`, fallbackGradient: 'bg-gradient-to-br from-blue-700 to-indigo-900' },
+  { href: '/ai-verktyg/fakturering', title: 'AI för fakturering', icon: Receipt, bg: `${STORAGE}/fakturering.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-600 to-blue-900' },
   { href: '/ai-verktyg/tiktok', title: 'AI för TikTok', icon: Hash, bg: `${STORAGE}/ai-tiktok-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-rose-600 to-fuchsia-900' },
   { href: '/ai-verktyg/ai-trading', title: 'AI för trading', icon: TrendingUp, bg: `${STORAGE}/ai-trading-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-purple-700 to-pink-900' },
   { href: '/ai-verktyg/hemsidebyggare', title: 'AI-hemsidebyggare', icon: Globe, bg: `${STORAGE}/ai-hemsidebyggare-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },

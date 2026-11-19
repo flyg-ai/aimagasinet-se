@@ -51,6 +51,15 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'billogram-ai', 'wint-ai', 'pleo-ai',
   ],
   '/ai-verktyg/ekonomi/redovisning': [
+    // Legacy — sidan är flyttad (301) till /ai-verktyg/redovisning, se
+    // nedan. Nyckeln lämnas kvar bara för att SUBHUB_LABELS/SUBHUB_BY_SLUG i
+    // lib/review-refs.ts ska fortsätta tagga dessa verktyg "Redovisning" på
+    // sina egna recensionssidor; ingen trafik når längre denna path.
+    'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
+    'xero-ai', 'quickbooks-ai', 'taxdome-ai',
+  ],
+  // ── Flat redovisning-hub (test 11, 18 nov 2026) ──
+  '/ai-verktyg/redovisning': [
     'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
     'xero-ai', 'quickbooks-ai', 'taxdome-ai',
   ],
@@ -61,10 +70,14 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'copy-ai', 'anyword', 'adcreative-ai', 'madgicx',
     'hootsuite-ai', 'buffer-ai', 'ocoya',
   ],
-  '/ai-verktyg/ekonomi': [
-    'fortnox-ai', 'visma-ai', 'bokio-ai', 'dooer', 'pleo-ai',
-    'billogram-ai', 'wint-ai', 'fortnox-redovisning', 'xero-ai', 'quickbooks-ai',
-  ],
+  // Tom (18 nov 2026, test 13): ekonomi-hubben byggdes om till en ren
+  // katalogsida ("Ekonomi & ekonomistyrning") som länkar ut till Bokföring
+  // (artikel), Redovisning (egen hub) och Fakturering (egen hub) istället
+  // för att ha en egen topplista — en topplista här skulle bara återskapa
+  // precis den sökords-kollisionen test 11/12 löste. Tom array (inte borttagen
+  // nyckel) så HubTemplate inte faller tillbaka på getHubChildren() och drar
+  // in alla kvarvarande DB-barn (inkl. Big4/byrå-verktygen).
+  '/ai-verktyg/ekonomi': [],
 
   // ── Kategori-hubbar (batch 3): blandar nya recensioner med befintliga
   //    flata reviews (ChatGPT, Claude … skapas inte om). Se seed-category-hubs-3.ts.

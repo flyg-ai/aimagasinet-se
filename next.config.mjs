@@ -377,7 +377,25 @@ const nextConfig = {
       { source: '/ai-verktyg/marknadsforing/marknadsforing-yrke', destination: '/ai-verktyg/marknadsforing', statusCode: 301 },
       { source: '/ai-verktyg/juridik/advokat', destination: '/ai-verktyg/juridik', statusCode: 301 },
       { source: '/ai-verktyg/ekonomi/bokforare', destination: '/ai-verktyg/ekonomi/bokforing', statusCode: 301 },
-      { source: '/ai-verktyg/ekonomi/revisor', destination: '/ai-verktyg/ekonomi/redovisning', statusCode: 301 },
+      {
+        // Direkthopp efter flatten-testet nedan (revisor-yrket pekade på gamla
+        // nästlade redovisning-hubben; inte direkt mot kedja).
+        source: '/ai-verktyg/ekonomi/revisor',
+        destination: '/ai-verktyg/redovisning',
+        statusCode: 301,
+      },
+      {
+        // ── Test 11 (18 nov 2026): redovisning bryts loss från ekonomi-hubben
+        //    till en egen, flat hub under /ai-verktyg — samma mönster som
+        //    HR/lärare-testerna (eget ämne, egen köpargrupp: byrå/revisor,
+        //    inte samma marknad som bokförings-artikeln). Omdöpt samtidigt
+        //    till en tydligare Big4/byrå-vinkel (se uppdaterad titel i DB).
+        //    ÅTERSTÄLLNING: ta bort denna regel + regeln ovan (revisor), sätt
+        //    tillbaka path/parent_slug/slug i DB till det nästlade läget.
+        source: '/ai-verktyg/ekonomi/redovisning',
+        destination: '/ai-verktyg/redovisning',
+        statusCode: 301,
+      },
       ...yrkesRedirects,
       // Designer/fotograf-video-uppstädning: dubbletter → kanonisk, orphans
       // flyttade till kategori-hub, tomma topplista-hubbar → kategori-hub.

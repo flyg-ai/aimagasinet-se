@@ -273,7 +273,7 @@ export function SiteNav() {
                             <Link
                               href={to(item.topLink.href)}
                               onClick={closeMobile}
-                              className="mb-2 mt-2 flex items-center gap-1.5 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700"
+                              className="mb-2 mt-2 flex items-center gap-1.5 rounded-md border border-indigo-700 bg-indigo-600 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-wider text-white"
                             >
                               <span aria-hidden>⚔</span> {item.topLink.label} <span aria-hidden>→</span>
                             </Link>
@@ -385,7 +385,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
       {topLink && (
         <Link
           href={to(topLink.href)}
-          className="mb-5 flex items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-indigo-700 transition-colors hover:bg-indigo-100"
+          className="mb-5 flex items-center justify-center gap-2 rounded-md border border-indigo-700 bg-indigo-600 px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white shadow-sm transition-colors hover:bg-indigo-700"
         >
           <span aria-hidden>⚔</span> {topLink.label} <span aria-hidden>→</span>
         </Link>
@@ -395,7 +395,7 @@ function MegaPanel({ groups, mainHref, topLink }: { groups: NavGroup[]; mainHref
           <div key={g.href} className="flex flex-col">
             <Link
               href={to(g.href)}
-              className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-indigo-700 hover:underline"
+              className="mb-3 self-start rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-700 transition-colors hover:bg-indigo-100"
             >
               {g.label}
             </Link>

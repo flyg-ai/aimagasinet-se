@@ -18,6 +18,15 @@ import { CATEGORY_HUB_REVIEW_KNOWN_AI_HUMANISERARE } from '@/lib/category-hub-to
 import { REVIEW_KNOWN } from '@/lib/review-profiles';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import { formatSvDate, contentModifiedIso } from '@/lib/format-date';
+import { EconomyClusterNav } from '@/components/EconomyClusterNav';
+
+/** De fyra ekonomi-klustersidorna (test 13/14, 18 nov 2026) — se
+ *  EconomyClusterNav.tsx för varför navigeringen är asymmetrisk. */
+const ECONOMY_CLUSTER_FULL = new Set(['/ai-verktyg/ekonomi']);
+const ECONOMY_CLUSTER_LIGHT: Record<string, 'redovisning' | 'fakturering'> = {
+  '/ai-verktyg/redovisning': 'redovisning',
+  '/ai-verktyg/fakturering': 'fakturering',
+};
 
 export type HubChild = ArticleCardData & {
   rating: Rating | null;
@@ -1033,7 +1042,11 @@ const HUB_SUBCATEGORIES: Record<string, SubcategoryCard[]> = {
   ],
   '/ai-verktyg/ekonomi': [
     { title: 'AI för bokföring', href: '/ai-verktyg/ekonomi/bokforing', icon: '📒', desc: 'Automatisk kontering, kvittotolkning och avstämning.' },
-    { title: 'AI för redovisning', href: '/ai-verktyg/ekonomi/redovisning', icon: '📊', desc: 'Månadsbokslut, revision och practice management.' },
+    // 'AI för redovisning' borttagen (18 nov 2026, test 11) — redovisning är
+    // inte längre en nästlad undersida, den har flyttat till en egen flat
+    // hub /ai-verktyg/redovisning (byrå/Big4-vinkel). Ingen ersättningslänk
+    // här än — återkommer när ekonomi-hubben byggs om (test 13) och den nya
+    // fakturerings-hubben är publicerad.
   ],
 };
 
@@ -1042,9 +1055,15 @@ const HUB_SUBCATEGORIES: Record<string, SubcategoryCard[]> = {
 export function HubTemplate({
   article: a,
   items,
+  news,
 }: {
   article: Article;
   items: HubChild[];
+  /** Related news articles (from a matching `articles.category`) rendered
+   *  as a horizontal-scroll shortcut carousel. Optional — most hubs don't
+   *  have a matching news category yet (see HUB_NEWS_CATEGORY in
+   *  app/[...slug]/page.tsx) and simply render without this section. */
+  news?: ArticleCardData[];
 }) {
   const virtuals = VIRTUAL_HUB_CHILDREN[a.slug] ?? [];
   const ranked = [...items, ...virtuals].sort((x, y) => {
@@ -1082,6 +1101,10 @@ export function HubTemplate({
         facts={facts}
       />
 
+      {ECONOMY_CLUSTER_FULL.has(a.path) && (
+        <EconomyClusterNav current="ekonomi" variant="full" />
+      )}
+
       {HUB_SUBCATEGORIES[a.path] && (
         <SubcategoryGrid subs={HUB_SUBCATEGORIES[a.path]} />
       )}
@@ -1105,17 +1128,66 @@ export function HubTemplate({
 
       <EditorialSection article={a} ranked={ranked} />
 
+      {news && news.length > 0 && <NewsCarousel items={news} />}
+
       {Array.isArray(a.faq) && a.faq.length > 0 && (
         <>
           <FaqAccordion items={a.faq} />
           <JsonLd data={faqPageSchema(a.faq)} />
         </>
       )}
+
+      {ECONOMY_CLUSTER_LIGHT[a.path] && (
+        <EconomyClusterNav current={ECONOMY_CLUSTER_LIGHT[a.path]} variant="light" />
+      )}
     </article>
   );
 }
 
 /* ─── Sections ─────────────────────────────────────────────────── */
+
+/** Horizontal-scroll shortcut carousel linking to recent news articles in a
+ *  matching category (e.g. "AI-säkerhet & etik" news on the ai-sakerhet
+ *  tool hub) — bridges the verktyg-hub and the nyheter-side of the site in
+ *  both directions. See HUB_NEWS_CATEGORY in app/[...slug]/page.tsx. */
+function NewsCarousel({ items }: { items: ArticleCardData[] }) {
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-indigo-600">
+        Senaste nytt
+      </div>
+      <h2 className="mb-6 border-b border-line pb-3 text-2xl font-black uppercase tracking-tight text-fg break-words sm:text-3xl">
+        Aktuellt inom området
+      </h2>
+      <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 [scrollbar-width:thin]">
+        {items.map((n) => (
+          <Link
+            key={n.slug}
+            href={to(n.path ?? `/${n.slug}`)}
+            className="group block w-64 shrink-0 overflow-hidden rounded-md border border-line bg-card transition-colors hover:border-line-strong"
+          >
+            <div className="aspect-[16/9] w-full overflow-hidden bg-soft">
+              {n.featured_image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={n.featured_image}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              )}
+            </div>
+            <div className="p-3">
+              <p className="line-clamp-3 text-sm font-semibold leading-snug text-fg group-hover:text-accent">
+                {n.title}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function SubcategoryGrid({ subs }: { subs: SubcategoryCard[] }) {
   return (

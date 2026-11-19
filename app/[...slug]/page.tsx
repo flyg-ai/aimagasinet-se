@@ -34,6 +34,15 @@ import { contentModifiedIso } from '@/lib/format-date';
 
 export const revalidate = false;
 
+/** Maps a hub's slug to the news `articles.category` it should show a
+ *  "Senaste nytt"-carousel for in HubTemplate. Only hubs with a clean 1:1
+ *  match against the site's small, broad category taxonomy (see
+ *  `categories` table) are listed here — most tool hubs don't have a
+ *  matching news category yet, so they simply render without the carousel. */
+const HUB_NEWS_CATEGORY: Record<string, string> = {
+  'ai-sakerhet': 'ai-sakerhet-etik',
+};
+
 type Props = { params: { slug: string[] } };
 
 // Base columns guaranteed to exist on `articles`. `affiliate_url` is only
@@ -397,10 +406,22 @@ export default async function CatchAllPage({ params }: Props) {
     // hand-picked tool subset by slug; every other hub pulls its DB children
     // by parent_slug.
     const curated = CURATED_HUB_TOOL_SLUGS[a.path];
-    const items = curated
-      ? await getCuratedChildren(curated)
-      : await getHubChildren(a.slug);
-    return <HubTemplate article={a} items={items} />;
+    const newsCategory = HUB_NEWS_CATEGORY[a.slug];
+    const [items, newsRes] = await Promise.all([
+      curated ? getCuratedChildren(curated) : getHubChildren(a.slug),
+      newsCategory
+        ? supabase
+            .from('articles')
+            .select(CARD_COLS)
+            .eq('category', newsCategory)
+            .eq('type', 'post')
+            .not('published_at', 'is', null)
+            .order('published_at', { ascending: false })
+            .limit(8)
+        : Promise.resolve({ data: null }),
+    ]);
+    const news = (newsRes.data ?? []) as unknown as ArticleCardData[];
+    return <HubTemplate article={a} items={items} news={news} />;
   }
 
   if (decision.kind === 'review') {

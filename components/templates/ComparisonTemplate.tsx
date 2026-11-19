@@ -5,6 +5,7 @@ import { formatSvDate } from '@/lib/format-date';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { breadcrumbSchema, faqPageSchema } from '@/lib/schemas';
 import {
+  CATEGORY_HUBS,
   COMPARE_TOOLS,
   FEATURED_COMPARISONS,
   SYFTE_OPTIONS,
@@ -39,9 +40,15 @@ export function ComparisonTemplate({
   const loser = a.score >= b.score ? b : a;
   const path = `/ai-verktyg/jamfor/${slug}`;
 
+  // Kategori-hubben är bara entydig när båda verktygen delar kategori —
+  // cross-category-dueller (t.ex. ChatGPT vs Cursor) hoppar över den crumben
+  // hellre än att peka på en hub som bara halva jämförelsen hör hemma i.
+  const sharedHub = a.ref.category === b.ref.category ? CATEGORY_HUBS[a.ref.category] : null;
+
   const crumbs = [
     { label: 'Hem', href: '/' },
     { label: 'AI-verktyg', href: '/ai-verktyg' },
+    ...(sharedHub ? [{ label: sharedHub.label, href: sharedHub.href }] : []),
     { label: 'Jämför', href: '/ai-verktyg/jamfor' },
     { label: `${a.ref.name} vs ${b.ref.name}`, href: path },
   ];

@@ -230,6 +230,19 @@ export const SYFTE_CATEGORY_HINTS: Record<string, ToolCategory[]> = {
   automation: ['AI-automation'],
 };
 
+/** Hub-sidan för varje kategori — används för att länka jämförelsesidor
+ *  tillbaka till rätt kategori-hub. Bara meningsfullt när båda verktygen i
+ *  en duell delar kategori (annars är "rätt hub" inte entydig — t.ex.
+ *  ChatGPT vs Cursor spänner AI-text och AI-kod). */
+export const CATEGORY_HUBS: Record<ToolCategory, { href: string; label: string }> = {
+  'AI-text': { href: '/ai-verktyg/ai-text-verktyg', label: 'AI för text' },
+  'AI-video': { href: '/ai-verktyg/ai-video', label: 'AI för video' },
+  'AI-bilder': { href: '/ai-verktyg/ai-bild-verktyg', label: 'AI för bild' },
+  'AI-kod': { href: '/ai-verktyg/ai-kod-verktyg', label: 'AI för kod' },
+  'AI-ljud': { href: '/ai-verktyg/ai-ljud-och-musik', label: 'AI för ljud & musik' },
+  'AI-automation': { href: '/ai-verktyg/ai-automation', label: 'AI för automation' },
+};
+
 export const SEPARATOR = '-eller-';
 
 export function comparisonSlug(aToken: string, bToken: string): string {

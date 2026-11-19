@@ -564,7 +564,7 @@ export const yrkesRedirects = [
   },
   {
     "source": "/ai-verktyg/foretag/yrke/ekonomi-redovisning/redovisning",
-    "destination": "/ai-verktyg/ekonomi/redovisning",
+    "destination": "/ai-verktyg/redovisning",
     "statusCode": 301
   },
   {
