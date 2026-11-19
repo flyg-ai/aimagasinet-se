@@ -63,6 +63,26 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
     'fortnox-redovisning', 'pw-ai', 'deloitte-ai', 'kpmg-ai', 'ey-ai',
     'xero-ai', 'quickbooks-ai', 'taxdome-ai',
   ],
+  // Juni-2026-hubben nämnde redan Notion AI i brödtexten som ett bra val
+  // för mindre team, men den fanns bara under /ai-verktyg/motesverktyg
+  // (dess parent_slug) — alltså osynlig i topplistan här. Kuraterad lista
+  // = samma 8 som redan fanns (parent_slug=projektledning) + notion-ai,
+  // ingen flytt/dubblett av Notions egen recension (nov 2026, content-
+  // refresh-rundan).
+  '/ai-verktyg/projektledning': [
+    'asana-ai', 'basecamp-ai', 'clickup-ai', 'jira-ai', 'linear-ai',
+    'monday-ai', 'motion', 'trello-ai', 'notion-ai',
+  ],
+  // Samma content-refresh-runda (nov 2026): 'workflows' är en generisk
+  // guide-sida (parent_slug=ai-automation av misstag), inte en verktygs-
+  // recension — exkluderas från topplistan. Gumloop var redan en riktig,
+  // publicerad recension (2 nov) men bara synlig under ai-agenter; läggs
+  // till här också (ingen flytt/dubblett). Relay.app (utkast, samma hubb)
+  // las INTE till — verifierat 19 nov att tjänsten lades ner sep 2026.
+  '/ai-verktyg/ai-automation': [
+    'activepieces', 'bardeen', 'make', 'power-automate', 'n8n',
+    'pipedream', 'zapier-ai', 'gumloop',
+  ],
 
   // ── Parent nav-hubs: broad cross-section, not subcategory-specific ──
   '/ai-verktyg/marknadsforing': [
