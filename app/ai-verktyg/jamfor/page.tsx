@@ -5,9 +5,11 @@ import { supabase } from '@/lib/supabase';
 import {
   resolveToolProfile,
   toolOverallScore,
+  REVIEW_KNOWN,
 } from '@/components/templates/ReviewTemplate';
+import { toolNameFromTitle } from '@/lib/rating';
+import { CURATED_HUB_TOOL_SLUGS } from '@/lib/route-kind';
 import {
-  COMPARE_TOOLS,
   FEATURED_COMPARISONS,
   TOOL_CATEGORIES,
   comparisonSlug,
@@ -15,8 +17,106 @@ import {
   resolveToken,
 } from '@/lib/compare';
 import { breadcrumbSchema } from '@/lib/schemas';
-import { ComparisonWizard, type CatalogTool } from '@/components/ComparisonWizard';
+import { ComparisonWizard, type CatalogTool, type CatalogCategory } from '@/components/ComparisonWizard';
 import { JAMFOR_SEO_HTML } from '@/lib/jamfor-seo';
+
+/** Kategori-hubbar som inte är riktiga verktygskategorier och därför aldrig
+ *  ska ge en egen flik i jämför-väljaren: navigeringshubbar ('foretag' har
+ *  bara ett enda barn, 'yrke', som leder in i ett helt eget 6-nivåers träd;
+ *  'gratis' listar bara om samma verktyg under ett pris-filter) och hubbar
+ *  utan egna publicerade barn eller en tom kuraterad lista (ai-verktyg-
+ *  ekonomi är en ren länksida sedan 18 nov 2026 — CURATED_HUB_TOOL_SLUGS har
+ *  den som [] med flit — tiktok har 0 DB-rader). OBS: ai-verktyg-redovisning
+ *  (path /ai-verktyg/redovisning) ska INTE stå här — den har en riktig
+ *  kuraterad lista på 8 verktyg, bara 0 egna DB-barn. ai-video-verktyg stod
+ *  här tidigare av samma skäl ("0 DB-rader") — felaktigt: hub-SIDAN heter
+ *  ai-video-verktyg, men dess 11 recenserade verktyg (HeyGen, Kling, Runway
+ *  m.fl.) ligger i DB med parent_slug='ai-video', ett annat slug än hubbens
+ *  eget. Se HUB_PARENT_SLUG_ALIAS nedan — hela kategorin saknades i
+ *  jämföraren tills detta upptäcktes. */
+const EXCLUDED_HUB_SLUGS = new Set([
+  'foretag', 'gratis', 'ai-verktyg-ekonomi', 'tiktok',
+]);
+
+/** Hub-sidans eget slug matchar inte alltid dess barns parent_slug i DB
+ *  (se ai-video-verktyg ovan) — slå upp DB-frågans parent_slug här istället
+ *  för att anta att den alltid är samma som h.slug. */
+const HUB_PARENT_SLUG_ALIAS: Record<string, string> = {
+  'ai-video-verktyg': 'ai-video',
+};
+
+/** Djup-3-underhubbar (marknadsforing/ekonomi) — samma CURATED_HUB_TOOL_
+ *  SLUGS-källa som de riktiga hub-sidorna själva, men de ligger inte som
+ *  direkta barn till /ai-verktyg i DB (utan under t.ex. /ai-verktyg/
+ *  marknadsforing), så den vanliga hub-frågan missar dem helt. ekonomi/
+ *  redovisning är explicit UTESLUTEN — route-kind.ts säger uttryckligen att
+ *  "ingen trafik når längre denna path" (301:ad till /ai-verktyg/redovisning,
+ *  som redan täcks via den riktiga hub-raden ovan). */
+const SUBHUB_EXTRAS: { path: string; slug: string; label: string }[] = [
+  { path: '/ai-verktyg/marknadsforing/seo', slug: 'marknadsforing-seo', label: 'Marknadsföring: SEO' },
+  { path: '/ai-verktyg/marknadsforing/content-copywriting', slug: 'marknadsforing-content', label: 'Marknadsföring: Content & copy' },
+  { path: '/ai-verktyg/marknadsforing/annonser', slug: 'marknadsforing-annonser', label: 'Marknadsföring: Annonser' },
+  { path: '/ai-verktyg/marknadsforing/sociala-medier', slug: 'marknadsforing-sociala-medier', label: 'Marknadsföring: Sociala medier' },
+  { path: '/ai-verktyg/ekonomi/bokforing', slug: 'ekonomi-bokforing', label: 'Bokföring' },
+];
+
+/** Korta, lasbara flik-etiketter per hub-slug — hub-titlarna sjalva ar
+ *  SEO-rubriker ("Basta AI-verktygen for cybersakerhet 2026") och duger inte
+ *  som flik-text. En rad per hub, satt en gang; nya hubbar far ett fallback
+ *  (hub.title) tills de laggs till har. */
+const CATEGORY_LABELS: Record<string, string> = {
+  'ai-text-verktyg': 'Text',
+  'ai-bild-verktyg': 'Bild',
+  'ai-video-verktyg': 'Video',
+  'ai-kod-verktyg': 'Kod',
+  'ai-ljud-och-musik': 'Ljud & musik',
+  'ai-automation': 'Automation',
+  'ai-agenter-hub': 'AI-agenter',
+  'ai-assistenter': 'AI-assistenter',
+  'ai-humaniserare': 'AI-humaniserare',
+  'ai-sakerhet': 'Cybersäkerhet',
+  'ai-trading': 'Trading',
+  'ai-verktyg-fakturering': 'Fakturering',
+  'ai-verktyg-juridik': 'Juridik',
+  'ai-verktyg-kundservice': 'Kundservice',
+  'ai-verktyg-marknadsforing': 'Marknadsföring',
+  'ai-verktyg-rekrytering': 'Rekrytering',
+  crm: 'CRM',
+  dataanalys: 'Dataanalys',
+  dokumenthantering: 'Dokumenthantering',
+  'e-handel': 'E-handel',
+  'e-postmarknadsforing': 'E-postmarknadsföring',
+  'foto-bildredigering': 'Foto & bildredigering',
+  hemsidebyggare: 'Hemsidebyggare',
+  hr: 'HR',
+  larare: 'Lärare',
+  motesverktyg: 'Mötesverktyg',
+  oversattning: 'Översättning',
+  'podcast-ljudredigering': 'Podcast & ljudredigering',
+  presentationer: 'Presentationer',
+  produktbilder: 'Produktbilder',
+  produktivitet: 'Produktivitet',
+  projektledning: 'Projektledning',
+  'rost-och-tal': 'Röst & tal',
+  'sociala-medier-hub': 'Sociala medier',
+  transkribering: 'Transkribering',
+  'ui-ux': 'UI/UX-design',
+  utbildning: 'Utbildning',
+  'vibe-coding': 'Vibe coding',
+  'marknadsforing-seo': 'Marknadsföring: SEO',
+  'marknadsforing-content': 'Marknadsföring: Content & copy',
+  'marknadsforing-annonser': 'Marknadsföring: Annonser',
+  'marknadsforing-sociala-medier': 'Marknadsföring: Sociala medier',
+  'ekonomi-bokforing': 'Bokföring',
+};
+
+/** Hubbar i den ordning de ska visas som flikar — de sex ursprungliga
+ *  kategorierna forst (storst volym/mest sokt), resten i den ordning de
+ *  raknades upp har. Hub som saknas i listan hamnar sist, alfabetiskt. */
+const CATEGORY_ORDER_HINT = [
+  'ai-text-verktyg', 'ai-bild-verktyg', 'ai-video-verktyg', 'ai-kod-verktyg',
+  'ai-ljud-och-musik', 'ai-automation',
+];
 
 export const revalidate = 3600;
 
@@ -49,6 +149,115 @@ async function fetchImages(keys: string[]): Promise<Record<string, string | null
     map[row.slug] = row.featured_image;
   }
   return map;
+}
+
+/** Bygger hela jämför-väljarens katalog från den riktiga verktygsbanken —
+ *  alla hubbar under /ai-verktyg, inte bara de sex ursprungliga (text/bild/
+ *  video/kod/ljud/automation). Samma princip som hub-sidorna själva: en
+ *  hub med en CURATED_HUB_TOOL_SLUGS-post använder den listan (annars skulle
+ *  t.ex. workflows-guiden eller nedlagda Relay.app dyka upp), övriga hämtar
+ *  sina publicerade barn direkt via parent_slug.
+ *
+ *  Varje verktyg kräver en RIKTIG REVIEW_KNOWN-rad för att tas med — annars
+ *  faller resolveToolProfile tillbaka på påhittad mock-data (pris/kriterier/
+ *  pros&cons), vilket är precis den sortens fabricerat innehåll som inte får
+ *  visas. I praktiken filtrerar detta automatiskt bort de fåtal verktyg som
+ *  ännu inte fått en skriven recension, plus guide-/listsidor som av misstag
+ *  fått fel parent_slug (samma slags bugg som workflows-fallet) — de har
+ *  aldrig haft en REVIEW_KNOWN-rad och exkluderas utan en separat blocklista.
+ *
+ *  Ett verktyg som förekommer under flera hubbar (t.ex. ChatGPT i både
+ *  ai-assistenter och ai-text-verktyg) får en enda kategori — den första
+ *  hubben den hittas i, i CATEGORY_ORDER_HINT-ordning. */
+async function buildFullCatalog(): Promise<{ catalog: CatalogTool[]; categories: CatalogCategory[] }> {
+  const { data: hubRows, error: hubErr } = await supabase
+    .from('articles')
+    .select('slug,title,path')
+    .eq('parent_slug', 'ai-verktyg')
+    .eq('type', 'page');
+  if (hubErr || !hubRows) {
+    console.error('[jamfor] buildFullCatalog hub query error:', hubErr?.message);
+    return { catalog: [], categories: [] };
+  }
+
+  const hubs = hubRows
+    .filter((h) => !EXCLUDED_HUB_SLUGS.has(h.slug))
+    .concat(SUBHUB_EXTRAS.map((e) => ({ slug: e.slug, title: e.label, path: e.path })))
+    .sort((a, b) => {
+      const ia = CATEGORY_ORDER_HINT.indexOf(a.slug);
+      const ib = CATEGORY_ORDER_HINT.indexOf(b.slug);
+      if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      return (CATEGORY_LABELS[a.slug] ?? a.title).localeCompare(CATEGORY_LABELS[b.slug] ?? b.title, 'sv');
+    });
+
+  // Per hub: curated slug-lista om en finns, annars publicerade DB-barn.
+  const hubToolSlugs = new Map<string, string[]>();
+  const titleBySlug = new Map<string, string>();
+  for (const h of hubs) {
+    const curated = CURATED_HUB_TOOL_SLUGS[h.path];
+    if (curated) {
+      hubToolSlugs.set(h.slug, curated);
+      continue;
+    }
+    const { data: kids, error } = await supabase
+      .from('articles')
+      .select('slug,title')
+      .eq('parent_slug', HUB_PARENT_SLUG_ALIAS[h.slug] ?? h.slug)
+      .not('published_at', 'is', null);
+    if (error) { console.error('[jamfor] hub children error', h.slug, error.message); continue; }
+    hubToolSlugs.set(h.slug, (kids ?? []).map((k) => k.slug));
+    for (const k of kids ?? []) titleBySlug.set(k.slug, k.title);
+  }
+
+  // Curaterade listor ger bara slugs, inte titlar — hämta de saknade i en
+  // samlad fråga istället för en fråga per verktyg.
+  const allSlugs = Array.from(new Set(Array.from(hubToolSlugs.values()).flat()));
+  const needTitles = allSlugs.filter((s) => !titleBySlug.has(s));
+  if (needTitles.length > 0) {
+    const { data: titleRows } = await supabase.from('articles').select('slug,title').in('slug', needTitles);
+    for (const r of titleRows ?? []) titleBySlug.set(r.slug, r.title as string);
+  }
+
+  const images = await fetchImages(allSlugs);
+
+  // Ett verktyg -> en kategori (första hubben den dyker upp i).
+  const categoryBySlug = new Map<string, { slug: string; label: string }>();
+  for (const h of hubs) {
+    const label = CATEGORY_LABELS[h.slug] ?? h.title;
+    for (const toolSlug of hubToolSlugs.get(h.slug) ?? []) {
+      if (!categoryBySlug.has(toolSlug)) categoryBySlug.set(toolSlug, { slug: h.slug, label });
+    }
+  }
+
+  const catalog: CatalogTool[] = [];
+  for (const [toolSlug, cat] of Array.from(categoryBySlug)) {
+    if (!(toolSlug in REVIEW_KNOWN)) continue; // ingen riktig recension — hoppa, fabricera inte
+    const title = titleBySlug.get(toolSlug) ?? toolSlug;
+    const name = toolNameFromTitle(title);
+    const profile = resolveToolProfile(toolSlug, name);
+    if (profile.label === 'Nedlagd') continue;
+    catalog.push({
+      token: toolSlug,
+      name,
+      category: cat.slug,
+      categoryLabel: cat.label,
+      score: toolOverallScore(profile),
+      image: images[toolSlug] ?? null,
+      logo: profile.logo,
+      price: profile.offer.price,
+      bestFor: profile.offer.bestFor,
+      criteria: profile.ratingCriteria,
+      useCases: profile.useCases,
+      ctaUrl: profile.fallbackUrl ?? null,
+      ctaName: profile.ctaName ?? name,
+    });
+  }
+
+  const categories: CatalogCategory[] = hubs
+    .map((h) => ({ slug: h.slug, label: CATEGORY_LABELS[h.slug] ?? h.title, count: catalog.filter((t) => t.category === h.slug).length }))
+    .filter((c) => c.count > 0);
+
+  return { catalog, categories };
 }
 
 function display(token: string) {
@@ -93,25 +302,13 @@ function WizardSkeleton() {
 }
 
 export default async function JamforHub() {
-  const images = await fetchImages(COMPARE_TOOLS.map((t) => t.key));
-
-  const catalog: CatalogTool[] = COMPARE_TOOLS.map((t) => {
-    const profile = resolveToolProfile(t.key, t.name);
-    return {
-      token: t.token,
-      name: t.name,
-      category: t.category,
-      score: toolOverallScore(profile),
-      image: images[t.key] ?? null,
-      logo: profile.logo,
-      price: profile.offer.price,
-      bestFor: profile.offer.bestFor,
-      criteria: profile.ratingCriteria,
-      useCases: profile.useCases,
-      ctaUrl: profile.fallbackUrl ?? null,
-      ctaName: profile.ctaName ?? t.name,
-    };
-  });
+  // Valjaren (steg 1-4) dras fran HELA den riktiga verktygsbanken (373
+  // recensioner i ~37 kategorier), inte bara de ursprungliga 52 i 6 fasta
+  // kategorier — se buildFullCatalog(). De fardiga duellerna langre ner pa
+  // sidan ("Populara jamforelser") anvander fortfarande COMPARE_TOOLS/
+  // FEATURED_COMPARISONS: det ar 29 fardigskrivna SEO-sidor, inte valjaren,
+  // och en egen, storre fas att utoka till hela banken.
+  const { catalog, categories } = await buildFullCatalog();
 
   /** Duellerna grupperade per kategori. Som platt lista gick de tolv forsta
    *  an, men med tjugonio blir det en vagg dar inget hittas — rubrikerna gor
@@ -166,7 +363,7 @@ export default async function JamforHub() {
 
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <Suspense fallback={<WizardSkeleton />}>
-          <ComparisonWizard catalog={catalog} />
+          <ComparisonWizard catalog={catalog} categories={categories} />
         </Suspense>
       </section>
 

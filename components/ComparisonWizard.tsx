@@ -1,14 +1,18 @@
 'use client';
 
-import { Fragment, useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { SYFTE_OPTIONS as SYFTE, type ToolCategory } from '@/lib/compare';
+import { resolveToken } from '@/lib/compare';
+import { PURPOSE_TAXONOMY } from '@/lib/compare-purposes';
 
 export type CatalogTool = {
   token: string;
   name: string;
-  category: ToolCategory;
+  /** Hub-slug ("ai-bild-verktyg", "projektledning", ...) — hela den riktiga
+   *  verktygsbanken, inte bara de sex ursprungliga kategorierna. */
+  category: string;
+  categoryLabel: string;
   score: number;
   image: string | null;
   logo: string; // tailwind bg-* fallback accent
@@ -20,21 +24,26 @@ export type CatalogTool = {
   ctaName: string;
 };
 
+export type CatalogCategory = { slug: string; label: string; count: number };
+
 type Step = 1 | 2 | 3 | 'result';
 
-const CATEGORY_ORDER: ToolCategory[] = [
-  'AI-text', 'AI-bilder', 'AI-video', 'AI-kod', 'AI-ljud', 'AI-automation',
+/** Deterministisk gradient-fargsattning for en kategori utan egen bild —
+ *  samma princip som LOGO_COLORS i lib/review-profiles.ts, men for bakgrunder.
+ *  Nagra tiotals kategorier ska inte krava en handskriven farg var. */
+const GRADIENT_PALETTE = [
+  'from-indigo-500 to-violet-700', 'from-fuchsia-500 to-rose-700',
+  'from-cyan-500 to-sky-700', 'from-zinc-700 to-zinc-900',
+  'from-amber-500 to-orange-700', 'from-emerald-500 to-teal-700',
+  'from-blue-500 to-indigo-800', 'from-rose-500 to-pink-700',
+  'from-teal-500 to-cyan-800', 'from-orange-500 to-red-700',
+  'from-violet-500 to-purple-800', 'from-lime-600 to-emerald-800',
 ];
-
-/** Per-category gradient fallback when a tool has no featured image. */
-const CATEGORY_GRADIENT: Record<ToolCategory, string> = {
-  'AI-text': 'from-indigo-500 to-violet-700',
-  'AI-bilder': 'from-fuchsia-500 to-rose-700',
-  'AI-video': 'from-cyan-500 to-sky-700',
-  'AI-kod': 'from-zinc-700 to-zinc-900',
-  'AI-ljud': 'from-amber-500 to-orange-700',
-  'AI-automation': 'from-emerald-500 to-teal-700',
-};
+function categoryGradient(category: string): string {
+  let h = 0;
+  for (let i = 0; i < category.length; i++) h = (h * 31 + category.charCodeAt(i)) >>> 0;
+  return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length];
+}
 
 const BUDGET: { slug: string; label: string }[] = [
   { slug: 'gratis', label: 'Gratis' },
@@ -45,12 +54,35 @@ const BUDGET: { slug: string; label: string }[] = [
 
 const MAX = 4;
 
+/** Syftesalternativ for steg 2 + resultatvyn. Kategorier med en kurerad,
+ *  research-baserad taxonomi (lib/compare-purposes.ts) visar den istallet
+ *  for de valda verktygens egna useCases-rader, som ar for inkonsekventa
+ *  mellan verktyg for att fungera som ett rent syftesval. Kategorier utan
+ *  egen taxonomi faller fortfarande tillbaka pa den gamla useCases-unionen. */
+function purposeOptionsForTools(tools: CatalogTool[]): { slug: string; label: string }[] {
+  const seen = new Set<string>();
+  const out: { slug: string; label: string }[] = [];
+  const curatedCats = Array.from(new Set(tools.map((t) => t.category).filter((c) => PURPOSE_TAXONOMY[c])));
+  for (const cat of curatedCats) {
+    for (const o of PURPOSE_TAXONOMY[cat]) {
+      if (!seen.has(o.slug)) { seen.add(o.slug); out.push(o); }
+    }
+  }
+  for (const t of tools) {
+    if (PURPOSE_TAXONOMY[t.category]) continue;
+    for (const uc of t.useCases) {
+      if (!seen.has(uc)) { seen.add(uc); out.push({ slug: uc, label: uc }); }
+    }
+  }
+  return out;
+}
+
 /** Primary CTA — saturated indigo, real elevation, inviting even when
  *  disabled (muted indigo, never grey-dead). */
 const CTA_CLASS =
   'inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-indigo-600/25 transition-all hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-600/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:bg-indigo-300 disabled:shadow-none disabled:hover:bg-indigo-300';
 
-export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
+export function ComparisonWizard({ catalog, categories }: { catalog: CatalogTool[]; categories: CatalogCategory[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -67,7 +99,7 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
   );
   const [budget, setBudget] = useState<string>(hasInit ? (params.get('budget') ?? '') : '');
   const [step, setStep] = useState<Step>(hasInit ? 'result' : 1);
-  const [activeCat, setActiveCat] = useState<ToolCategory>('AI-text');
+  const [activeCat, setActiveCat] = useState<string>(categories[0]?.slug ?? '');
 
   const [rec, setRec] = useState<{ winner: string; recommendation: string } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -76,6 +108,26 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
 
   const currentKey = JSON.stringify([selected, syfte, budget]);
   const dirty = generatedKey !== null && generatedKey !== currentKey;
+
+  // "Vad ska du anvanda det till" byggs av de VALDA VERKTYGENS EGNA riktiga
+  // anvandningsomraden (t.ex. Midjourney: konceptkonst/reklamvisualer/
+  // bokomslag) istallet for en fast lista med atta generiska syften — den
+  // skulle aldrig passa alla ~37 kategorier (bokforing och bildgenerering
+  // har inget gemensamt "syfte"). Ingen fabricering: det ar samma text som
+  // redan star i respektive recension. Byter man verktyg sa ett tidigare
+  // valt syfte inte langre finns bland alternativen, plockas det bort.
+  const purposeOptions = useMemo(() => {
+    const tools = selected.map((tok) => catalog.find((c) => c.token === tok)).filter((t): t is CatalogTool => !!t);
+    return purposeOptionsForTools(tools);
+  }, [selected, catalog]);
+  useEffect(() => {
+    setSyfte((prev) => {
+      const allowed = new Set(purposeOptions.map((o) => o.slug));
+      const next = prev.filter((s) => allowed.has(s));
+      return next.length === prev.length ? prev : next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purposeOptions]);
 
   function runGenerate() {
     if (selected.length < 2) return;
@@ -121,7 +173,7 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
   function reset() {
     router.replace(pathname, { scroll: false });
     setSelected([]); setSyfte([]); setBudget(''); setRec(null); setErr(false);
-    setGeneratedKey(null); setStep(1); setActiveCat('AI-text');
+    setGeneratedKey(null); setStep(1); setActiveCat(categories[0]?.slug ?? '');
   }
 
   const stepIndex: 1 | 2 | 3 | 4 = step === 'result' ? 4 : step;
@@ -136,6 +188,7 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
         {step === 1 && (
           <StepTools
             catalog={catalog}
+            categories={categories}
             selected={selected}
             activeCat={activeCat}
             setActiveCat={setActiveCat}
@@ -148,8 +201,8 @@ export function ComparisonWizard({ catalog }: { catalog: CatalogTool[] }) {
           <StepPills
             current={2}
             title="Vad ska du använda det till?"
-            subtitle="Välj en eller flera — det hjälper oss ge en vassare rekommendation."
-            options={SYFTE}
+            subtitle="Välj en eller flera av de valda verktygens egna användningsområden — det hjälper oss ge en vassare rekommendation."
+            options={purposeOptions}
             selected={syfte}
             onToggle={toggleSyfte}
             onBack={() => setStep(1)}
@@ -248,58 +301,72 @@ function StepBar({ current }: { current: 1 | 2 | 3 | 4 }) {
 /* ─── Step 1: tool grid ────────────────────────────────────────── */
 
 function StepTools({
-  catalog, selected, activeCat, setActiveCat, onToggle, onNext,
+  catalog, categories, selected, activeCat, setActiveCat, onToggle, onNext,
 }: {
   catalog: CatalogTool[];
+  categories: CatalogCategory[];
   selected: string[];
-  activeCat: ToolCategory;
-  setActiveCat: (c: ToolCategory) => void;
+  activeCat: string;
+  setActiveCat: (c: string) => void;
   onToggle: (token: string) => void;
   onNext: () => void;
 }) {
   const full = selected.length >= MAX;
+  const [catFilter, setCatFilter] = useState('');
+  const visibleCategories = catFilter.trim()
+    ? categories.filter((c) => c.label.toLowerCase().includes(catFilter.trim().toLowerCase()))
+    : categories;
   const tools = catalog.filter((t) => t.category === activeCat);
 
   return (
     <StepPanel
       current={1}
       title="Välj verktyg att jämföra"
-      subtitle="Markera 2–4 verktyg. Bläddra mellan kategorierna nedan."
+      subtitle={`Markera 2–4 verktyg. ${categories.length} kategorier, ${catalog.length} verktyg totalt — sök eller bläddra nedan.`}
     >
-      {/* Kategorivalet lag tidigare som sma piller i 11 px och lastes som
-          dekoration — det syntes inte att verktygen bakom dem var andra. Nu
-          en rad riktiga flikar: storre yta, verktygsantalet per kategori
-          utskrivet, och antalet valda som prick i hornet. */}
+      {/* ~37 riktiga kategorier (hela verktygsbanken, inte bara de sex
+          ursprungliga) ryms inte som en fast flik-grid — ett sokfalt filtrerar
+          flikraden, som i sig ar en horisontellt skrollbar rad piller
+          (samma monster som PillRow) istallet for en grid som skulle bli en
+          vagg av rutor. Antalet valda som prick i hornet, som innan. */}
+      <div className="mb-4 relative">
+        <input
+          type="search"
+          value={catFilter}
+          onChange={(e) => setCatFilter(e.target.value)}
+          placeholder="Sök kategori (t.ex. bild, bokföring, HR...)"
+          className="w-full rounded-xl border border-line bg-card px-4 py-2.5 text-sm text-fg placeholder:text-fg-subtle focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </div>
       <div
         role="tablist"
         aria-label="Verktygskategori"
-        className="mb-7 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
+        className="mb-7 flex max-h-56 flex-wrap gap-2 overflow-y-auto pr-1"
       >
-        {CATEGORY_ORDER.map((c) => {
-          const active = c === activeCat;
-          const total = catalog.filter((t) => t.category === c).length;
-          const count = selected.filter((tok) => catalog.find((t) => t.token === tok)?.category === c).length;
+        {visibleCategories.map((c) => {
+          const active = c.slug === activeCat;
+          const count = selected.filter((tok) => catalog.find((t) => t.token === tok)?.category === c.slug).length;
           return (
             <button
-              key={c}
+              key={c.slug}
               type="button"
               role="tab"
               aria-selected={active}
-              onClick={() => setActiveCat(c)}
-              className={`relative flex flex-col items-start gap-0.5 rounded-xl border-2 px-4 py-3 text-left transition-all ${
+              onClick={() => setActiveCat(c.slug)}
+              className={`relative inline-flex shrink-0 items-center gap-1.5 rounded-full border-2 px-4 py-2 text-left text-sm font-bold transition-all ${
                 active
                   ? 'border-indigo-600 bg-indigo-600 text-white shadow-md'
                   : 'border-line bg-card text-fg hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-sm'
               }`}
             >
-              <span className="text-sm font-bold leading-tight">{c}</span>
-              <span className={`font-mono text-[11px] ${active ? 'text-indigo-200' : 'text-fg-subtle'}`}>
-                {total} verktyg
+              {c.label}
+              <span className={`font-mono text-[10px] font-normal ${active ? 'text-indigo-200' : 'text-fg-subtle'}`}>
+                {c.count}
               </span>
               {count > 0 && (
                 <span
                   aria-label={`${count} valda`}
-                  className={`absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
+                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
                     active ? 'bg-white text-indigo-700' : 'bg-indigo-600 text-white'
                   }`}
                 >
@@ -309,6 +376,9 @@ function StepTools({
             </button>
           );
         })}
+        {visibleCategories.length === 0 && (
+          <p className="px-1 py-2 text-sm text-fg-subtle">Ingen kategori matchar &quot;{catFilter}&quot;.</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
@@ -402,7 +472,7 @@ function SelectableCard({
         // eslint-disable-next-line @next/next/no-img-element
         <img src={tool.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
       ) : (
-        <div className={`absolute inset-0 bg-gradient-to-br ${CATEGORY_GRADIENT[tool.category]}`} />
+        <div className={`absolute inset-0 bg-gradient-to-br ${categoryGradient(tool.category)}`} />
       )}
       <div className={`absolute inset-0 ${disabled ? 'bg-black/70' : 'bg-black/50 group-hover:bg-black/40'} transition-colors`} />
       {selected && (
@@ -525,30 +595,19 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-const CAT_RATING_DIMS = [
-  { emoji: '✍️', label: 'Skrivande' },
-  { emoji: '💻', label: 'Kodning' },
-  { emoji: '🎨', label: 'Kreativitet' },
-  { emoji: '📊', label: 'Analys' },
-  { emoji: '🤝', label: 'Företag' },
-];
-const CAT_RATING_BASE: Record<ToolCategory, number[]> = {
-  'AI-text':       [4.7, 3.6, 4.0, 4.6, 4.2],
-  'AI-bilder':     [3.2, 2.8, 4.9, 3.4, 3.9],
-  'AI-video':      [3.0, 2.6, 4.8, 3.2, 3.8],
-  'AI-kod':        [3.4, 4.8, 3.6, 4.2, 4.3],
-  'AI-ljud':       [3.1, 2.7, 4.7, 3.3, 3.8],
-  'AI-automation': [3.3, 4.0, 3.2, 4.4, 4.6],
-};
-
-/** Derive the five /5 category ratings from the tool's category profile,
- *  scaled by its overall score so stronger tools rate a touch higher. */
-function categoryRatings(category: ToolCategory, score: number) {
-  const base = CAT_RATING_BASE[category];
-  const f = score / 9;
-  return CAT_RATING_DIMS.map((d, i) => ({
-    ...d,
-    value: Math.max(1, Math.min(5, Math.round(base[i] * f * 10) / 10)),
+/** "Kategoribedömningar" används att vara en FAST femaxlig tabell
+ *  (Skrivande/Kodning/Kreativitet/Analys/Företag) med påhittade baivärden
+ *  skalade med helhetsbetyget — fel axlar för en bildjämförelse (ingen
+ *  "Bildgenerering"-rad) och siffror som inte kom från recensionen. Riktiga,
+ *  kategorianpassade kriterier finns redan per verktyg i tool.criteria
+ *  (textverktyg får textkvalitet/svenska, videoverktyg får visuell
+ *  kvalitet/promptföljsamhet osv.) — använd dem i stället för att hitta
+ *  på nya. /10-betyget skalas till /5 för stjärnformatet. */
+function criteriaAsStars(criteria: { label: string; score: number }[]) {
+  return criteria.map((c) => ({
+    emoji: criterionEmoji(c.label),
+    label: c.label,
+    value: Math.max(1, Math.min(5, Math.round((c.score / 2) * 10) / 10)),
   }));
 }
 
@@ -576,6 +635,12 @@ function ResultView({
     .map((tok) => catalog.find((t) => t.token === tok))
     .filter((t): t is CatalogTool => !!t);
   const winner = rec?.winner ?? null;
+  const purposeOptions = purposeOptionsForTools(tools);
+  // "Se detaljerad jamforelse" lankar bara till en av de 29 fardigskrivna
+  // SEO-duellsidorna — de tacker bara verktyg i den gamla COMPARE_TOOLS-
+  // listan, inte hela banken. Lanken visas darfor bara nar bada verktygen
+  // faktiskt har en sadan sida, annars 404:ar den.
+  const hasDetailedDuel = tools.length === 2 && !!resolveToken(tools[0].token) && !!resolveToken(tools[1].token);
 
   const cols =
     tools.length >= 4 ? 'sm:grid-cols-2 lg:grid-cols-4'
@@ -597,7 +662,7 @@ function ResultView({
       </div>
 
       {/* Detailed pairwise link when exactly two tools */}
-      {tools.length === 2 && (
+      {hasDetailedDuel && (
         <div className="mt-5 text-center">
           <Link
             href={`/ai-verktyg/jamfor/${tools[0].token}-eller-${tools[1].token}`}
@@ -615,7 +680,7 @@ function ResultView({
 
         <div className="mt-5">
           <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle">Syfte</p>
-          <PillRow options={SYFTE} selected={syfte} onToggle={onToggleSyfte} />
+          <PillRow options={purposeOptions} selected={syfte} onToggle={onToggleSyfte} />
         </div>
         <div className="mt-5">
           <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-wider text-fg-subtle">Budget</p>
@@ -661,12 +726,11 @@ function ResultView({
 }
 
 function DetailColumn({ tool, isWinner }: { tool: CatalogTool; isWinner: boolean }) {
-  const cats = categoryRatings(tool.category, tool.score);
+  const cats = criteriaAsStars(tool.criteria);
   const detailRows: { emoji: string; label: string; value: string }[] = [
     { emoji: '⭐', label: 'Helhetsbetyg', value: tool.score.toFixed(1) },
     { emoji: '💰', label: 'Pris', value: tool.price },
     { emoji: '🏆', label: 'Bäst för', value: tool.bestFor },
-    ...tool.criteria.map((c) => ({ emoji: criterionEmoji(c.label), label: c.label, value: `${c.score.toFixed(1)}/10` })),
   ];
 
   return (
@@ -677,7 +741,7 @@ function DetailColumn({ tool, isWinner }: { tool: CatalogTool; isWinner: boolean
           // eslint-disable-next-line @next/next/no-img-element
           <img src={tool.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
-          <div className={`absolute inset-0 bg-gradient-to-br ${CATEGORY_GRADIENT[tool.category]}`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${categoryGradient(tool.category)}`} />
         )}
         <div className="absolute inset-0 bg-black/50" />
         {isWinner && (

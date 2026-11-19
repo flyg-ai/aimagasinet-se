@@ -158,10 +158,17 @@ export const CURATED_HUB_TOOL_SLUGS: Record<string, string[]> = {
   // finns redan, men lever under parent_slug='ai-agenter-hub' eftersom den
   // också hör hemma i AI-agenter-hubben) och nytillagda Cline, som ersättare
   // för de nedlagda Windsurf/Codeium. Behåller sina riktiga parent_slug.
+  // Utökad 2026-11-19 med 6 kodgranskningsverktyg (riktiga recensioner i
+  // lib/category-hub-tools-ai-kodgranskning.ts) som låg under parent_slug=
+  // 'ai-kodgranskning' — ett slug som aldrig matchat någon hub-sida, så de
+  // var helt osynliga både här och i jämför-väljaren (samma buggmönster som
+  // Video-kategorin, se app/ai-verktyg/jamfor/page.tsx).
   '/ai-verktyg/ai-kod-verktyg': [
     'amazon-codewhisperer', 'claude-code', 'cursor-ai', 'github-copilot',
     'jetbrains-ai', 'pieces', 'replit-ai', 'sourcegraph-cody', 'tabnine',
     'cline', 'devin',
+    'coderabbit', 'qodo', 'graphite', 'korbit-ai', 'greptile',
+    'github-copilot-code-review',
   ],
 
   // Transkribering — blandar 3 befintliga recensioner (otter-ai/fireflies-ai
