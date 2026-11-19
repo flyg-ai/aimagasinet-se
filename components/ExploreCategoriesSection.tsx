@@ -99,7 +99,7 @@ const CARDS: Card[] = [
     fallbackGradient: 'bg-gradient-to-br from-blue-600 to-indigo-800',
   },
   { href: '/ai-verktyg/marknadsforing', title: 'AI-marknadsföring', icon: Megaphone, bg: `${STORAGE}/ai-marknadsforing-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-pink-900' },
-  { href: '/ai-verktyg/juridik', title: 'AI för juridik', icon: Scale, bg: null, fallbackGradient: 'bg-gradient-to-br from-slate-600 to-slate-900' },
+  { href: '/ai-verktyg/juridik', title: 'AI för juridik', icon: Scale, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-verktyg-juridik.webp', fallbackGradient: 'bg-gradient-to-br from-slate-600 to-slate-900' },
   { href: '/ai-verktyg/kundservice', title: 'AI-kundservice', icon: Headset, bg: `${STORAGE}/ai-kundservice-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-cyan-600 to-blue-900' },
   { href: '/ai-verktyg/rekrytering', title: 'AI för rekrytering', icon: UserPlus, bg: `${STORAGE}/ai-rekrytering-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-amber-600 to-red-800' },
   { href: '/ai-verktyg/ui-ux', title: 'AI för UI/UX-design', icon: PenTool, bg: `${STORAGE}/ai-ui-ux-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-violet-600 to-indigo-900' },
@@ -124,7 +124,7 @@ const CARDS: Card[] = [
   { href: '/ai-verktyg/crm', title: 'AI-CRM', icon: Handshake, bg: `${STORAGE}/ai-crm-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-sky-500 to-blue-800' },
   { href: '/ai-verktyg/dataanalys', title: 'AI-dataanalys', icon: BarChart3, bg: `${STORAGE}/ai-dataanalys-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-fuchsia-600 to-rose-800' },
   { href: '/ai-verktyg/utbildning', title: 'AI för utbildning', icon: GraduationCap, bg: `${STORAGE}/ai-utbildning-kategori.webp`, fallbackGradient: 'bg-gradient-to-br from-emerald-500 to-green-800' },
-  { href: '/ai-verktyg/ai-humaniserare', title: 'AI-humaniserare', icon: Wand2, bg: null, fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900' },
+  { href: '/ai-verktyg/ai-humaniserare', title: 'AI-humaniserare', icon: Wand2, bg: 'https://dhsilzbxbimobgcnlilj.supabase.co/storage/v1/object/public/featured-images/2026/11/ai-humaniserare.webp', fallbackGradient: 'bg-gradient-to-br from-slate-700 to-indigo-900' },
   // De 6 nedan fanns redan som publicerade hubbar i DB men saknade kort
   // här — orörbara från navigeringen förutom via direkt URL/sitemap.
   // Hade redan featured_image, så inga nya bilder behövdes (nov 2026).

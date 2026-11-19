@@ -20,6 +20,11 @@ export function organizationSchema() {
     '@type': 'Organization',
     '@id': `${SITE_URL}/#organization`,
     name: SITE_NAME,
+    // Google tolkar annars sökningar på det hopskrivna domännamnet som en
+    // felstavning av "magasinet" (inga sidor skrev det hopskrivet någonstans
+    // som läsbar text). alternateName är schema.org:s egna mekanism för att
+    // deklarera ett giltigt andranamn för en entitet (nov 2026).
+    alternateName: 'aimagasinet',
     url: `${SITE_URL}/`,
     logo: {
       '@type': 'ImageObject',
@@ -45,6 +50,7 @@ export function websiteSchema() {
     '@id': `${SITE_URL}/#website`,
     url: `${SITE_URL}/`,
     name: SITE_NAME,
+    alternateName: 'aimagasinet',
     inLanguage: 'sv-SE',
     publisher: { '@id': `${SITE_URL}/#organization` },
     potentialAction: {

@@ -653,9 +653,11 @@ function Hero({ article: a }: { article: Article }) {
   const updatedIso = contentModifiedIso(a) ?? a.published_at ?? null;
   const updatedLabel = updatedIso ? formatSvDate(updatedIso) : null;
   return (
-    <header className="relative overflow-hidden border-b border-line bg-gradient-to-br from-indigo-950 via-violet-950 to-fuchsia-950 text-white">
+    <header className="relative border-b border-line bg-gradient-to-br from-indigo-950 via-violet-950 to-fuchsia-950 text-white">
       {/* Rent dekorativa, suddiga färgklumpar — ingen bild behövs, håller
-          sidan snabb och ger samma "produkt"-djup som referensmockupen. */}
+          sidan snabb och ger samma "produkt"-djup som referensmockupen.
+          Egen overflow-hidden-wrapper (inte på <header>) så att den inte
+          klipper av sökrutans dropdown, som sträcker sig under headern. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-fuchsia-500/30 blur-3xl" />
         <div className="absolute -left-20 top-1/3 h-80 w-80 rounded-full bg-indigo-500/30 blur-3xl" />
@@ -824,7 +826,7 @@ function MoreCategoriesSection() {
   return (
     <section className="border-t border-line bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
-        <div className="mb-6 flex items-baseline justify-between gap-4">
+        <div className="mb-6 flex flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
           <h2 className="text-2xl font-black tracking-tight text-fg sm:text-3xl">
             Fler verktygskategorier
           </h2>
