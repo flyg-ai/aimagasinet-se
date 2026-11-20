@@ -74,7 +74,16 @@ export async function ArticleTemplate({
   // Ärligt ändringsdatum (title/content_mdx), inte radens updated_at som
   // bumpas av alla skrivningar. Visas bara om det är en annan dag än publicering.
   const modifiedIso = contentModifiedIso(a);
-  const showUpdated = !!(modifiedIso && a.published_at && !sameDay(modifiedIso, a.published_at));
+  // content_updated_at kan ligga FÖRE published_at (sattes under redigering
+  // innan artikeln gick live) — visa bara "Uppdaterad" när den faktiska
+  // ändringen skedde EFTER publicering, annars blir "Uppdaterad 18 nov /
+  // Publicerad 19 nov" en förvirrande motsägelse för läsaren.
+  const showUpdated = !!(
+    modifiedIso &&
+    a.published_at &&
+    new Date(modifiedIso).getTime() > new Date(a.published_at).getTime() &&
+    !sameDay(modifiedIso, a.published_at)
+  );
   const bodyHtml = toolLinkCards(toc.html);
   // Recensionerna som topplistblocken och "Verktyg i guiden" visar — en fråga,
   // och betyget räknas som på recensionssidan (lib/review-score.ts).

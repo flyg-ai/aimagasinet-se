@@ -94,6 +94,14 @@ function articleNode(a: Article, author?: AuthorRef | null, opts?: { speakable?:
       }
     : { '@type': 'Organization', name: SITE_NAME, url: `${SITE_URL}/` };
   const keywords = (a.keywords ?? []).filter(Boolean);
+  // content_updated_at kan ligga FÖRE published_at (satt under redigering
+  // innan artikeln gick live) — klampa så dateModified aldrig syns som
+  // tidigare än datePublished i strukturerad data.
+  const rawModified = a.content_updated_at ?? a.updated_at ?? a.published_at ?? undefined;
+  const dateModified =
+    rawModified && a.published_at && new Date(rawModified).getTime() < new Date(a.published_at).getTime()
+      ? a.published_at
+      : rawModified;
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -104,7 +112,7 @@ function articleNode(a: Article, author?: AuthorRef | null, opts?: { speakable?:
     url,
     inLanguage: 'sv-SE',
     datePublished: a.published_at ?? undefined,
-    dateModified: a.content_updated_at ?? a.updated_at ?? a.published_at ?? undefined,
+    dateModified,
     image: a.featured_image ? [a.featured_image] : undefined,
     author: authorNode,
     publisher: {

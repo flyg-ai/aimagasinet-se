@@ -993,7 +993,11 @@ function pickN<T>(arr: T[], n: number, h: number): T[] {
   const out: T[] = [];
   const used = new Set<number>();
   for (let i = 0; out.length < n && i < n * 4; i++) {
-    const idx = ((h >> i) ^ (h * (i + 1))) % arr.length;
+    // (h * (i + 1)) overflows into a negative 32-bit int for many h/i, and JS's
+    // % keeps that sign — idx could land negative, so arr[idx] was `undefined`
+    // (rendered as a blank "Användningsområden"-kort). Normalize into [0, len).
+    const raw = ((h >> i) ^ (h * (i + 1))) % arr.length;
+    const idx = raw < 0 ? raw + arr.length : raw;
     if (!used.has(idx)) { used.add(idx); out.push(arr[idx]); }
   }
   return out;

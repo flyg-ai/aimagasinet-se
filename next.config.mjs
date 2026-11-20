@@ -106,6 +106,15 @@ const nextConfig = {
         statusCode: 301,
       },
       {
+        // ChatGPT Wallet skrevs två gånger med 3 dagars mellanrum (2026-11-16
+        // och 2026-11-19) — samma nyhet, nästan samma titel. Den äldre,
+        // tunnare versionen raderad ur DB (backup: tmp/deleted-chatgpt-
+        // wallet-dupe-backup.json) och 301:ad till den som behålls.
+        source: '/chatgpt-wallet-ai-agenter-handlar-at-dig',
+        destination: '/openai-chatgpt-wallet-ai-agenter-shoppar',
+        statusCode: 301,
+      },
+      {
         // Felstavad variant ("und" i stället för "och") som aldrig publicerats
         // men ändå fått 26 visningar/90 dagar i GSC — troligen en extern
         // felskriven länk. Svarade 404; fångar in trafiken i stället för att
